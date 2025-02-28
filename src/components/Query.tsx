@@ -14,6 +14,7 @@ import QueryIcon from '../assets/types/type-icon-query.svg?react';
 import {View} from './View';
 import {Visualization} from './Visualization';
 import {ViewMenu} from './ViewMenu';
+import {ViewDefinition} from './ViewDefinition';
 
 export interface QueryProps {
   source: Malloy.SourceInfo;
@@ -21,29 +22,20 @@ export interface QueryProps {
   path: string[];
 }
 
-const queryStyles = stylex.create({
-  header: {
-    justifyContent: 'space-between',
-    display: 'flex',
-    direction: 'row',
-    width: '100%',
-  },
-});
-
 export function Query({source, query, path}: QueryProps) {
   return (
     <div {...stylex.props(styles.heading)}>
-      <div {...stylex.props(queryStyles.header)}>
+      <div {...stylex.props(styles.queryHeader)}>
         <div {...stylex.props(styles.title)}>Query:</div>
-        <ViewMenu source={source} />
+        <ViewMenu source={source} query={query} path={path} />
       </div>
       <Visualization annotations={query.annotations} />
       {query.definition.kind === 'arrow' ? (
-        <View
+        <ViewDefinition
           source={source}
           query={query}
           path={path}
-          view={query.definition.view}
+          viewDef={query.definition.view}
         />
       ) : query.definition.kind === 'query_reference' ? (
         <div {...stylex.props(styles.labelWithIcon)}>
@@ -52,11 +44,11 @@ export function Query({source, query, path}: QueryProps) {
         </div>
       ) : (
         <div>
-          <View
+          <ViewDefinition
             source={source}
             query={query}
             path={path}
-            view={query.definition.refinement}
+            viewDef={query.definition.refinement}
           />
         </div>
       )}

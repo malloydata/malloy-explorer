@@ -18,10 +18,10 @@ export interface OperationsProps {
   source: Malloy.SourceInfo;
   query: Malloy.Query;
   path: string[];
-  view: Malloy.ViewDefinitionWithSegment;
+  viewDef: Malloy.ViewDefinitionWithSegment;
 }
 
-export function Operations({source, query, path, view}: OperationsProps) {
+export function Operations({source, query, path, viewDef}: OperationsProps) {
   const groupBys: Malloy.ViewOperationWithGroupBy[] = [];
   const aggregates: Malloy.ViewOperationWithAggregate[] = [];
   const wheres: Malloy.ViewOperationWithWhere[] = [];
@@ -29,7 +29,7 @@ export function Operations({source, query, path, view}: OperationsProps) {
   const nests: Malloy.ViewOperationWithNest[] = [];
   let limit: Malloy.ViewOperationWithLimit | undefined;
 
-  view.operations.forEach(operation => {
+  viewDef.operations.forEach(operation => {
     if (operation.kind === 'group_by') {
       groupBys.push(operation);
     } else if (operation.kind === 'aggregate') {

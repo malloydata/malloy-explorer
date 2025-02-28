@@ -9,41 +9,29 @@ import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
-import QueryIcon from '../assets/types/type-icon-query.svg?react';
-import {Operations} from './Operations';
+import {ViewDefinition} from './ViewDefinition';
+import {ViewMenu} from './ViewMenu';
 
 export interface ViewProps {
   source: Malloy.SourceInfo;
   query: Malloy.Query;
   path: string[];
-  view: Malloy.ViewDefinition;
+  view: Malloy.View;
 }
 
 export function View({source, query, path, view}: ViewProps) {
   return (
     <div>
-      {view.kind === 'arrow' ? (
-        <div>
-          <View source={source} query={query} path={path} view={view.view} />
-        </div>
-      ) : view.kind === 'refinement' ? (
-        <div>
-          <View source={source} query={query} path={path} view={view.base} />
-          <View
-            source={source}
-            query={query}
-            path={path}
-            view={view.refinement}
-          />
-        </div>
-      ) : view.kind === 'segment' ? (
-        <Operations source={source} query={query} path={path} view={view} />
-      ) : (
-        <div {...stylex.props(styles.labelWithIcon)}>
-          <QueryIcon {...stylex.props(styles.icon)} />
-          {view.name}
-        </div>
-      )}
+      <div {...stylex.props(styles.queryHeader)}>
+        <div {...stylex.props(styles.title)}>Query:</div>
+        <ViewMenu source={source} query={query} path={path} />
+      </div>
+      <ViewDefinition
+        source={source}
+        query={query}
+        path={path}
+        viewDef={view.definition}
+      />
     </div>
   );
 }

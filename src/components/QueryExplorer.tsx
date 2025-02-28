@@ -7,9 +7,6 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
-import {useQueryBuilder} from '../hooks/useQueryBuilder';
-import {ErrorElement} from './ErrorElement';
 import stylex from '@stylexjs/stylex';
 
 import {Query} from './Query';
@@ -37,12 +34,10 @@ export function QueryExplorer({}: QueryExplorerProps) {
   }
 
   return (
-    <ErrorElement fallback={<div>Doh!</div>}>
-      <div {...stylex.props(queryExplorerStyles.main)}>
-        <Source source={source} />
-        <Parameters parameters={source.parameters} />
-        <Query source={source} query={query} path={[]} />
-      </div>
-    </ErrorElement>
+    <div {...stylex.props(queryExplorerStyles.main)}>
+      <Source source={source} />
+      <Parameters parameters={source.parameters} />
+      <Query source={source} query={query} path={[]} />
+    </div>
   );
 }

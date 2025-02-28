@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/malloydata/malloy-explorer#readme",
   "dependencies": {
-    "@malloydata/malloy": "file:../malloy/out/malloydata-malloy-0.0.239.tgz",
     "@malloydata/malloy-filter": "file:../malloy/out/malloydata-malloy-filter-0.0.239.tgz",
     "@malloydata/malloy-interfaces": "file:../malloy/out/malloydata-malloy-interfaces-0.0.239.tgz",
     "@malloydata/malloy-query-builder": "file:../malloy/out/malloydata-malloy-query-builder-0.0.239.tgz",

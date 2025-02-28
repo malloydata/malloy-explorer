@@ -41,8 +41,8 @@ export function NestOperations({
             key={key}
             source={source}
             query={query}
-            path={[...path, `${key}`]}
-            view={nest.view.definition}
+            path={[...path, nest.name ?? `${key}`]}
+            view={nest.view}
           />
         ))}
       </div>

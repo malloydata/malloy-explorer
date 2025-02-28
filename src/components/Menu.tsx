@@ -50,6 +50,7 @@ export interface MenuItem {
   icon?: ReactElement;
   label: string;
   onClick?: (modifiers: Modifiers) => void;
+  when?: () => boolean;
 }
 
 export interface MenuProps {
@@ -65,17 +66,22 @@ export function Menu({icon, items}: MenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent {...stylex.props(menuStyles.content)}>
-          {items.map((item, key) => (
-            <DropdownMenuItem
-              key={key}
-              onClick={({altKey, ctrlKey, metaKey, shiftKey}) => {
-                item.onClick?.({altKey, ctrlKey, metaKey, shiftKey});
-              }}
-              {...stylex.props(menuStyles.item)}
-            >
-              {item.icon} {item.label}
-            </DropdownMenuItem>
-          ))}
+          {items.map((item, key) => {
+            if (item.when?.() ?? true) {
+              return (
+                <DropdownMenuItem
+                  key={key}
+                  onClick={({altKey, ctrlKey, metaKey, shiftKey}) => {
+                    item.onClick?.({altKey, ctrlKey, metaKey, shiftKey});
+                  }}
+                  {...stylex.props(menuStyles.item)}
+                >
+                  {item.icon} {item.label}
+                </DropdownMenuItem>
+              );
+            }
+            return null;
+          })}
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenu>

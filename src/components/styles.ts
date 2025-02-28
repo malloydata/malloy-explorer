@@ -24,11 +24,20 @@ export const styles = stylex.create({
     flexDirection: 'column',
     padding: 5,
   },
+
+  queryHeader: {
+    justifyContent: 'space-between',
+    display: 'flex',
+    direction: 'row',
+    width: '100%',
+  },
+
   title: {
     fontWeight: 'bold',
   },
   tokenContainer: {
     display: 'flex',
+    flexWrap: 'wrap',
     gap: 8,
   },
   token: {
