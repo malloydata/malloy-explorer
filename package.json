@@ -1,0 +1,53 @@
+{
+  "name": "@malloydata/malloy-explorer",
+  "version": "0.0.1",
+  "description": "Malloy visual query builder",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run build-bundle && npm run build-types",
+    "build-bundle": "vite build --outDir 'dist' --config vite.config.ts",
+    "build-types": "tsc --declaration --emitDeclarationOnly",
+    "dev": "vite dev --config vite.config.ts",
+    "lint": "tsc --noEmit && eslint .",
+    "test": "jest src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malloydata/malloy-explorer.git"
+  },
+  "keywords": [
+    "malloy",
+    "analytics"
+  ],
+  "author": "scullin@meta.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/malloydata/malloy-explorer/issues"
+  },
+  "homepage": "https://github.com/malloydata/malloy-explorer#readme",
+  "dependencies": {
+    "@malloydata/malloy": "file:../malloy/out/malloydata-malloy-0.0.239.tgz",
+    "@malloydata/malloy-filter": "file:../malloy/out/malloydata-malloy-filter-0.0.239.tgz",
+    "@malloydata/malloy-interfaces": "file:../malloy/out/malloydata-malloy-interfaces-0.0.239.tgz",
+    "@malloydata/malloy-query-builder": "file:../malloy/out/malloydata-malloy-query-builder-0.0.239.tgz",
+    "@malloydata/malloy-tag": "file:../malloy/out/malloydata-malloy-tag-0.0.239.tgz",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@rollup/plugin-replace": "^6.0.2",
+    "@stylexjs/stylex": "^0.10.1",
+    "assert": "^2.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@stylexjs/rollup-plugin": "^0.10.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.0.1",
+    "jest": "^29.7.0",
+    "vite": "^6.1.0",
+    "vite-plugin-svgr": "^4.3.0"
+  }
+}
