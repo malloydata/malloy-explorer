@@ -6,14 +6,14 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTAnnotationList} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
 
 import LineChartIcon from '../assets/visualizations/viz_line.svg?react';
 
 export interface VisualizationProps {
-  annotations?: Malloy.Annotation[];
+  annotations?: ASTAnnotationList;
 }
 
 export function Visualization({annotations}: VisualizationProps) {
@@ -26,7 +26,7 @@ export function Visualization({annotations}: VisualizationProps) {
       <LineChartIcon {...stylex.props(styles.icon)} />#
     </div>
     <div>
-      {annotations.map((annotation, key) => (
+      {annotations.items.map((annotation, key) => (
         <div key={key}>{annotation.value}</div>
       ))}
     </div>

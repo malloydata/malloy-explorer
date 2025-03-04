@@ -19,24 +19,23 @@ import {styles} from './styles';
 import stylex from '@stylexjs/stylex';
 import {QueryContext} from '../contexts/QueryContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
+import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 
 export interface ViewMenuProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
+  astQuery: ASTQuery;
+  view: ASTView | ASTQuery;
 }
 
-export function ViewMenu({source, query, path}: ViewMenuProps) {
+export function ViewMenu({astQuery, view}: ViewMenuProps) {
+  const {source} = useContext(QueryContext);
   const {setQuery} = useContext(QueryContext);
-  const qb = useQueryBuilder(source, query);
 
-  if (path.length) {
+  if (!source) {
     return null;
   }
 
-  const segment = path.length
-    ? qb.findView(path).getOrAddDefaultSegment()
-    : qb.getOrAddDefaultSegment();
+  // console.log('here!', path);
+  const segment = view.getOrAddDefaultSegment();
 
   return (
     <Menu
@@ -50,10 +49,9 @@ export function ViewMenu({source, query, path}: ViewMenuProps) {
               source.schema.fields.filter(
                 field =>
                   field.kind === 'dimension' && !segment.hasField(field.name)
-              )[0].name,
-              path
+              )[0].name
             );
-            setQuery?.(qb.build());
+            setQuery?.(astQuery.build());
           },
           when: () => {
             return (
@@ -66,7 +64,7 @@ export function ViewMenu({source, query, path}: ViewMenuProps) {
         },
         {
           icon: <AggregateIcon {...stylex.props(styles.icon)} />,
-          label: 'Add Measure...',
+          label: 'Add Aggregate...',
           onClick: () => {
             segment.addAggregate(
               source.schema.fields.filter(
@@ -74,7 +72,7 @@ export function ViewMenu({source, query, path}: ViewMenuProps) {
                   field.kind === 'measure' && !segment.hasField(field.name)
               )[0].name
             );
-            setQuery?.(qb.build());
+            setQuery?.(astQuery.build());
           },
           when: () => {
             return (
@@ -90,19 +88,20 @@ export function ViewMenu({source, query, path}: ViewMenuProps) {
           label: 'Add Limit...',
           onClick: () => {
             segment.setLimit(10);
-            setQuery?.(qb.build());
+            setQuery?.(astQuery.build());
           },
         },
         {
           icon: <OrderByIcon {...stylex.props(styles.icon)} />,
           label: 'Add Order By...',
           onClick: () => {
+            debugger;
             segment.addOrderBy(
               source.schema.fields.filter(
                 field => field.kind === 'measure' || field.kind === 'dimension'
               )[0].name
             );
-            setQuery?.(qb.build());
+            setQuery?.(astQuery.build());
           },
         },
         {
@@ -110,7 +109,7 @@ export function ViewMenu({source, query, path}: ViewMenuProps) {
           label: 'Add Nest...',
           onClick: () => {
             segment.addEmptyNest('nest');
-            setQuery?.(qb.build());
+            setQuery?.(astQuery.build());
           },
         },
       ]}

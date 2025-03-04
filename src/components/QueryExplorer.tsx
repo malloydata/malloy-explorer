@@ -13,6 +13,7 @@ import {Query} from './Query';
 import {Source} from './Source';
 import {Parameters} from './Parameters';
 import {QueryContext} from '../contexts/QueryContext';
+import {useQueryBuilder} from '../hooks/useQueryBuilder';
 
 export interface QueryExplorerProps {}
 
@@ -28,16 +29,17 @@ const queryExplorerStyles = stylex.create({
 
 export function QueryExplorer({}: QueryExplorerProps) {
   const {source, query} = useContext(QueryContext);
+  const astQuery = useQueryBuilder(source, query);
 
-  if (!source || !query) {
+  if (!source || !query || !astQuery) {
     return null;
   }
 
   return (
     <div {...stylex.props(queryExplorerStyles.main)}>
-      <Source source={source} />
-      <Parameters parameters={source.parameters} />
-      <Query source={source} query={query} path={[]} />
+      <Source astQuery={astQuery} />
+      <Parameters astQuery={astQuery} />
+      <Query astQuery={astQuery} query={astQuery} />
     </div>
   );
 }

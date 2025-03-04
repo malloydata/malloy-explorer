@@ -6,16 +6,17 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {
+  ASTQuery,
+  ASTWhereViewOperation,
+} from '@malloydata/malloy-query-builder';
 import WhereIcon from '../../assets/refinements/insert_filter.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 
 export interface WhereOperationsProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  wheres: Malloy.ViewOperationWithWhere[];
+  astQuery: ASTQuery;
+  wheres: ASTWhereViewOperation[];
 }
 
 export function WhereOperations({wheres}: WhereOperationsProps) {
@@ -32,7 +33,7 @@ export function WhereOperations({wheres}: WhereOperationsProps) {
       <div {...stylex.props(styles.tokenContainer)}>
         {wheres.map((where, key) => (
           <div key={key} {...stylex.props(styles.token)}>
-            {where.filter.field_reference.name} {where.filter.filter}
+            {where.filter.fieldReference.name} {where.filter.filterString}
           </div>
         ))}
       </div>

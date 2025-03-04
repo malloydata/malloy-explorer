@@ -6,27 +6,20 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTQuery, ASTReference} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {RawReference} from './RawReference';
 import {styles} from './styles';
 
 export interface ReferenceProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  reference: Malloy.Reference;
+  astQuery: ASTQuery;
+  reference: ASTReference;
 }
 
-export function Reference({source, query, path, reference}: ReferenceProps) {
+export function Reference({astQuery, reference}: ReferenceProps) {
   return (
     <div {...stylex.props(styles.token)}>
-      <RawReference
-        source={source}
-        query={query}
-        path={path}
-        reference={reference}
-      />
+      <RawReference astQuery={astQuery} reference={reference} />
     </div>
   );
 }

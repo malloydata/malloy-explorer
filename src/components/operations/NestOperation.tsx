@@ -6,25 +6,18 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTNestViewOperation, ASTQuery} from '@malloydata/malloy-query-builder';
 import NestIcon from '../../assets/refinements/insert_nest.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {View} from '../View';
 
 export interface NestOperationsProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  nests: Malloy.ViewOperationWithNest[];
+  astQuery: ASTQuery;
+  nests: ASTNestViewOperation[];
 }
 
-export function NestOperations({
-  source,
-  query,
-  path,
-  nests,
-}: NestOperationsProps) {
+export function NestOperations({astQuery, nests}: NestOperationsProps) {
   if (nests.length === 0) {
     return null;
   }
@@ -37,13 +30,7 @@ export function NestOperations({
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {nests.map((nest, key) => (
-          <View
-            key={key}
-            source={source}
-            query={query}
-            path={[...path, nest.name ?? `${key}`]}
-            view={nest.view}
-          />
+          <View key={key} astQuery={astQuery} view={nest.view} />
         ))}
       </div>
     </div>

@@ -1596,7 +1596,7 @@ const query0: Malloy.Query = {
     source_reference: {name: 'flights'},
     view: {
       kind: 'view_reference',
-      name: 'by_carrier',
+      name: 'top_carriers',
     },
   },
 };
@@ -1611,7 +1611,7 @@ const query1: Malloy.Query = {
       kind: 'refinement',
       base: {
         kind: 'view_reference',
-        name: 'by_carrier',
+        name: 'top_carriers',
       },
       refinement: {
         kind: 'segment',
@@ -1630,14 +1630,15 @@ const query1: Malloy.Query = {
             field: {
               expression: {
                 kind: 'field_reference',
-                name: 'origin.state',
+                name: 'state',
+                path: ['origin'],
               },
             },
           },
           {
             kind: 'order_by',
             field_reference: {
-              name: 'origin.state',
+              name: 'carrier',
             },
             direction: 'desc',
           },
@@ -1657,7 +1658,7 @@ const query2: Malloy.Query = {
       kind: 'refinement',
       base: {
         kind: 'view_reference',
-        name: 'by_carrier',
+        name: 'top_carriers',
       },
       refinement: {
         kind: 'segment',
@@ -1680,7 +1681,7 @@ const query3: Malloy.Query = {
       kind: 'refinement',
       base: {
         kind: 'view_reference',
-        name: 'by_carrier',
+        name: 'top_carriers',
       },
       refinement: {
         kind: 'segment',
@@ -1707,7 +1708,7 @@ const query4: Malloy.Query = {
       kind: 'refinement',
       base: {
         kind: 'view_reference',
-        name: 'by_carrier',
+        name: 'top_carriers',
       },
       refinement: {
         kind: 'segment',

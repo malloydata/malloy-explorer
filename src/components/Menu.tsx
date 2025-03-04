@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
@@ -38,6 +39,8 @@ const menuStyles = stylex.create({
     paddingTop: 4,
     paddingLeft: 16,
     paddingRight: 16,
+    cursor: 'default',
+    userSelect: 'none',
   },
 });
 
@@ -56,9 +59,10 @@ export interface MenuItem {
 export interface MenuProps {
   icon: ReactElement;
   items: MenuItem[];
+  title?: string;
 }
 
-export function Menu({icon, items}: MenuProps) {
+export function Menu({icon, items, title}: MenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger {...stylex.props(menuStyles.trigger)}>
@@ -66,6 +70,7 @@ export function Menu({icon, items}: MenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent {...stylex.props(menuStyles.content)}>
+          {title && <DropdownMenuLabel>{title}</DropdownMenuLabel>}
           {items.map((item, key) => {
             if (item.when?.() ?? true) {
               return (

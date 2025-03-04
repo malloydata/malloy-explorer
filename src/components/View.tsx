@@ -11,27 +11,28 @@ import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
 import {ViewDefinition} from './ViewDefinition';
 import {ViewMenu} from './ViewMenu';
+import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+
+const viewStyles = stylex.create({
+  indent: {
+    marginLeft: 12,
+    width: '100%',
+  },
+});
 
 export interface ViewProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  view: Malloy.View;
+  astQuery: ASTQuery;
+  view: ASTView;
 }
 
-export function View({source, query, path, view}: ViewProps) {
+export function View({astQuery, view}: ViewProps) {
   return (
-    <div>
+    <div {...stylex.props(viewStyles.indent)}>
       <div {...stylex.props(styles.queryHeader)}>
         <div {...stylex.props(styles.title)}>Query:</div>
-        <ViewMenu source={source} query={query} path={path} />
+        <ViewMenu astQuery={astQuery} view={view} />
       </div>
-      <ViewDefinition
-        source={source}
-        query={query}
-        path={path}
-        viewDef={view.definition}
-      />
+      <ViewDefinition astQuery={astQuery} viewDef={view.definition} />
     </div>
   );
 }

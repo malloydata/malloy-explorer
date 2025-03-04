@@ -6,31 +6,38 @@
  */
 
 import * as React from 'react';
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {MalloyPreview, QueryExplorer, RawPreview} from '../src';
+import {ErrorElement} from '../src/components/ErrorElement';
 import {QueryContext} from '../src/contexts/QueryContext';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {modelInfo, queries} from './example_model';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
-  const [queryIdx, setQueryIdx] = useState(0);
+  const [queryIdx, setQueryIdx] = useState(
+    +(document.location.hash?.slice(1) || 0)
+  );
   const [query, setQuery] = useState<Malloy.Query>(queries[queryIdx]);
 
   useEffect(() => {
+    document.location.hash = `#${queryIdx}`;
     setQuery(queries[queryIdx]);
   }, [queryIdx]);
 
   return (
     <QueryContext.Provider value={{query, setQuery, source}}>
       <div style={{width: 500}}>
+        Query: {queryIdx}{' '}
         <button onClick={() => setQueryIdx((queryIdx + 1) % queries.length)}>
           Change Query
         </button>{' '}
-        <span>{queryIdx}</span>
+        <button onClick={() => setQuery(queries[queryIdx])}>Reset</button>
         <hr />
-        <QueryExplorer />
+        <ErrorElement fallback={<div>Oops</div>}>
+          <QueryExplorer />
+        </ErrorElement>
         <hr />
         <MalloyPreview source={source} query={query} />
         <hr />

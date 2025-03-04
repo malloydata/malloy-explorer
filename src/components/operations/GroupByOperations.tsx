@@ -11,18 +11,18 @@ import GroupByIcon from '../../assets/refinements/insert_group_by.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Field} from '../Field';
+import {
+  ASTGroupByViewOperation,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 
 export interface GroupByOperationsProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  groupBys: Malloy.ViewOperationWithGroupBy[];
+  astQuery: ASTQuery;
+  groupBys: ASTGroupByViewOperation[];
 }
 
 export function GroupByOperations({
-  source,
-  query,
-  path,
+  astQuery,
   groupBys,
 }: GroupByOperationsProps) {
   if (groupBys.length === 0) {
@@ -32,17 +32,11 @@ export function GroupByOperations({
     <div>
       <div {...stylex.props(styles.labelWithIcon)}>
         <GroupByIcon {...stylex.props(styles.icon)} />
-        group_by:
+        <div {...stylex.props(styles.title)}>group_by:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {groupBys.map((groupBy, key) => (
-          <Field
-            key={key}
-            source={source}
-            query={query}
-            path={path}
-            field={groupBy.field}
-          />
+          <Field key={key} astQuery={astQuery} field={groupBy.field} />
         ))}
       </div>
     </div>

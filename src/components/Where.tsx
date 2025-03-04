@@ -8,16 +8,19 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {Filter} from './Filter';
+import {
+  ASTQuery,
+  ASTWhere,
+  ASTWhereList,
+} from '@malloydata/malloy-query-builder';
 
 export interface WhereProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  where: Malloy.Where[];
+  astQuery: ASTQuery;
+  where: ASTWhereList;
 }
 
-export function Where({source, query, path, where}: WhereProps) {
-  return where.map((clause, key) => (
-    <Filter source={source} query={query} path={path} filter={clause.filter} />
+export function Where({astQuery, where}: WhereProps) {
+  return [...where.iter()].map((clause, key) => (
+    <Filter key={key} astQuery={astQuery} filter={clause.filter} />
   ));
 }

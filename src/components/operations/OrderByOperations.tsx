@@ -6,23 +6,22 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {
+  ASTOrderByViewOperation,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 import OrderByIcon from '../../assets/refinements/insert_order_by.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {RawReference} from '../RawReference';
 
 export interface OrderByOperationsProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  orderBys: Malloy.ViewOperationWithOrderBy[];
+  astQuery: ASTQuery;
+  orderBys: ASTOrderByViewOperation[];
 }
 
 export function OrderByOperations({
-  source,
-  query,
-  path,
+  astQuery,
   orderBys,
 }: OrderByOperationsProps) {
   if (orderBys.length === 0) {
@@ -32,16 +31,14 @@ export function OrderByOperations({
     <div>
       <div {...stylex.props(styles.labelWithIcon)}>
         <OrderByIcon {...stylex.props(styles.icon)} />
-        orderBy:
+        <div {...stylex.props(styles.title)}>order_by:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {orderBys.map((orderBy, key) => (
           <div key={key} {...stylex.props(styles.token)}>
             <RawReference
-              source={source}
-              query={query}
-              path={path}
-              reference={orderBy.field_reference}
+              astQuery={astQuery}
+              reference={orderBy.fieldReference}
             />
             <div>
               {orderBy.direction === 'asc' ? ' ascending' : ''}

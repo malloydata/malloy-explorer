@@ -11,18 +11,18 @@ import AggregateIcon from '../../assets/refinements/insert_aggregate.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Field} from '../Field';
+import {
+  ASTAggregateViewOperation,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 
 export interface AggregateOperationsProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  aggregates: Malloy.ViewOperationWithAggregate[];
+  astQuery: ASTQuery;
+  aggregates: ASTAggregateViewOperation[];
 }
 
 export function AggregateOperations({
-  source,
-  query,
-  path,
+  astQuery,
   aggregates,
 }: AggregateOperationsProps) {
   if (aggregates.length === 0) {
@@ -36,13 +36,7 @@ export function AggregateOperations({
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {aggregates.map((aggregate, key) => (
-          <Field
-            key={key}
-            source={source}
-            query={query}
-            path={path}
-            field={aggregate.field}
-          />
+          <Field key={key} astQuery={astQuery} field={aggregate.field} />
         ))}
       </div>
     </div>

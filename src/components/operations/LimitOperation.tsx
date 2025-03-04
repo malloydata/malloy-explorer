@@ -6,25 +6,21 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {
+  ASTLimitViewOperation,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 import LimitIcon from '../../assets/refinements/insert_limit.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Field} from '../Field';
 
 export interface LimitOperationProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  limit: Malloy.ViewOperationWithLimit | undefined;
+  astQuery: ASTQuery;
+  limit: ASTLimitViewOperation | undefined;
 }
 
-export function LimitOperation({
-  source,
-  query,
-  path,
-  limit,
-}: LimitOperationProps) {
+export function LimitOperation({astQuery, limit}: LimitOperationProps) {
   if (!limit) {
     return null;
   }
@@ -32,7 +28,7 @@ export function LimitOperation({
     <div>
       <div {...stylex.props(styles.labelWithIcon)}>
         <LimitIcon {...stylex.props(styles.icon)} />
-        limit:
+        <div {...stylex.props(styles.title)}>limit:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         <div {...stylex.props(styles.token)}>{limit.limit}</div>

@@ -5,7 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as Malloy from '@malloydata/malloy-interfaces';
+import * as React from 'react';
+import {
+  ASTArrowQueryDefinition,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import DatabaseIcon from '../assets/types/type-icon-database.svg?react';
 import {styles} from './styles';
@@ -14,17 +18,20 @@ import {styles} from './styles';
  * Source
  */
 export interface SourceProps {
-  source: Malloy.SourceInfo;
+  astQuery: ASTQuery;
 }
 
-export function Source({source}: SourceProps) {
-  return (
-    <div {...stylex.props(styles.heading)}>
-      <div {...stylex.props(styles.title)}>Source:</div>
-      <div {...stylex.props(styles.labelWithIcon)}>
-        <DatabaseIcon {...stylex.props(styles.menuIcon)} />
-        {source.name}
+export function Source({astQuery}: SourceProps) {
+  if (astQuery.definition instanceof ASTArrowQueryDefinition) {
+    return (
+      <div {...stylex.props(styles.heading)}>
+        <div {...stylex.props(styles.title)}>Source:</div>
+        <div {...stylex.props(styles.labelWithIcon)}>
+          <DatabaseIcon {...stylex.props(styles.icon)} />
+          {astQuery.definition.sourceReference.name}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+  return null;
 }

@@ -6,26 +6,19 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTFilter, ASTQuery} from '@malloydata/malloy-query-builder';
 import {Reference} from './Reference';
 
 export interface FilterProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  filter: Malloy.Filter;
+  astQuery: ASTQuery;
+  filter: ASTFilter;
 }
 
-export function Filter({source, query, path, filter}: FilterProps) {
+export function Filter({astQuery, filter}: FilterProps) {
   return (
     <div>
-      <Reference
-        source={source}
-        query={query}
-        path={path}
-        reference={filter.field_reference}
-      />{' '}
-      {filter.filter}
+      <Reference astQuery={astQuery} reference={filter.fieldReference} />{' '}
+      {filter.filterString}
     </div>
   );
 }

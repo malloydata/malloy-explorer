@@ -7,51 +7,38 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
+import {
+  ASTArrowQueryDefinition,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
-import QueryIcon from '../assets/types/type-icon-query.svg?react';
-import {View} from './View';
 import {Visualization} from './Visualization';
 import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
 
 export interface QueryProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
+  astQuery: ASTQuery;
+  query: ASTQuery;
 }
 
-export function Query({source, query, path}: QueryProps) {
+export function Query({astQuery, query}: QueryProps) {
+  // TODO AST the rest of this stuff
+
+  console.log('xxx', query);
+
   return (
     <div {...stylex.props(styles.heading)}>
       <div {...stylex.props(styles.queryHeader)}>
         <div {...stylex.props(styles.title)}>Query:</div>
-        <ViewMenu source={source} query={query} path={path} />
+        <ViewMenu astQuery={astQuery} view={query} />
       </div>
       <Visualization annotations={query.annotations} />
-      {query.definition.kind === 'arrow' ? (
-        <ViewDefinition
-          source={source}
-          query={query}
-          path={path}
-          viewDef={query.definition.view}
-        />
-      ) : query.definition.kind === 'query_reference' ? (
-        <div {...stylex.props(styles.labelWithIcon)}>
-          <QueryIcon {...stylex.props(styles.icon)} />
-          {query.definition.name}
-        </div>
-      ) : (
+      {query.definition instanceof ASTArrowQueryDefinition ? (
         <div>
-          <ViewDefinition
-            source={source}
-            query={query}
-            path={path}
-            viewDef={query.definition.refinement}
-          />
+          <ViewDefinition astQuery={astQuery} viewDef={query.definition.view} />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

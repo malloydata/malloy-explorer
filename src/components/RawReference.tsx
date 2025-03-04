@@ -6,23 +6,25 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {
+  ASTFieldReference,
+  ASTQuery,
+  ASTReference,
+} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
 import {TypeIcon} from './TypeIcon';
-import {findField} from '../tools/source';
 import QueryIcon from '../assets/types/type-icon-query.svg?react';
+import DatabaseIcon from '../assets/types/type-icon-database.svg?react';
 
 export interface RawReferenceProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  reference: Malloy.Reference;
+  astQuery: ASTQuery;
+  reference: ASTReference;
 }
 
-export function RawReference({source, reference}: RawReferenceProps) {
-  const fieldInfo = findField(source, reference.name);
-  if (fieldInfo) {
+export function RawReference({astQuery, reference}: RawReferenceProps) {
+  if (reference instanceof ASTFieldReference) {
+    const fieldInfo = reference.getFieldInfo();
     if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
       return (
         <div {...stylex.props(styles.labelWithIcon)}>
@@ -41,6 +43,11 @@ export function RawReference({source, reference}: RawReferenceProps) {
         </div>
       );
     }
+  } else {
+    return (
+      <div {...stylex.props(styles.labelWithIcon)}>
+        <DatabaseIcon {...stylex.props(styles.icon)} /> {reference.name}
+      </div>
+    );
   }
-  return <div>Bad field reference {reference.name}</div>;
 }

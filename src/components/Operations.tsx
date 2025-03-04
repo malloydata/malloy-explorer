@@ -6,7 +6,16 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {
+  ASTAggregateViewOperation,
+  ASTGroupByViewOperation,
+  ASTLimitViewOperation,
+  ASTNestViewOperation,
+  ASTOrderByViewOperation,
+  ASTQuery,
+  ASTViewDefinition,
+  ASTWhereViewOperation,
+} from '@malloydata/malloy-query-builder';
 import {GroupByOperations} from './operations/GroupByOperations';
 import {WhereOperations} from './operations/WhereOperations';
 import {LimitOperation} from './operations/LimitOperation';
@@ -15,64 +24,44 @@ import {OrderByOperations} from './operations/OrderByOperations';
 import {NestOperations} from './operations/NestOperation';
 
 export interface OperationsProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-  path: string[];
-  viewDef: Malloy.ViewDefinitionWithSegment;
+  astQuery: ASTQuery;
+  viewDef: ASTViewDefinition;
 }
 
-export function Operations({source, query, path, viewDef}: OperationsProps) {
-  const groupBys: Malloy.ViewOperationWithGroupBy[] = [];
-  const aggregates: Malloy.ViewOperationWithAggregate[] = [];
-  const wheres: Malloy.ViewOperationWithWhere[] = [];
-  const orderBys: Malloy.ViewOperationWithOrderBy[] = [];
-  const nests: Malloy.ViewOperationWithNest[] = [];
-  let limit: Malloy.ViewOperationWithLimit | undefined;
+export function Operations({astQuery, viewDef}: OperationsProps) {
+  const groupBys: ASTGroupByViewOperation[] = [];
+  const aggregates: ASTAggregateViewOperation[] = [];
+  const wheres: ASTWhereViewOperation[] = [];
+  const orderBys: ASTOrderByViewOperation[] = [];
+  const nests: ASTNestViewOperation[] = [];
+  let limit: ASTLimitViewOperation | undefined;
 
-  viewDef.operations.forEach(operation => {
-    if (operation.kind === 'group_by') {
-      groupBys.push(operation);
-    } else if (operation.kind === 'aggregate') {
-      aggregates.push(operation);
-    } else if (operation.kind === 'where') {
-      wheres.push(operation);
-    } else if (operation.kind === 'order_by') {
-      orderBys.push(operation);
-    } else if (operation.kind === 'nest') {
-      nests.push(operation);
-    } else {
-      limit = operation;
-    }
-  });
+  viewDef
+    .getOrAddDefaultSegment()
+    .operations.items.forEach((operation, idx) => {
+      if (operation instanceof ASTGroupByViewOperation) {
+        groupBys.push(operation);
+      } else if (operation instanceof ASTAggregateViewOperation) {
+        aggregates.push(operation);
+      } else if (operation instanceof ASTWhereViewOperation) {
+        wheres.push(operation);
+      } else if (operation instanceof ASTOrderByViewOperation) {
+        orderBys.push(operation);
+      } else if (operation instanceof ASTNestViewOperation) {
+        nests.push(operation);
+      } else {
+        limit = operation;
+      }
+    });
 
   return (
     <div>
-      <GroupByOperations
-        source={source}
-        query={query}
-        path={path}
-        groupBys={groupBys}
-      />
-      <AggregateOperations
-        source={source}
-        query={query}
-        path={path}
-        aggregates={aggregates}
-      />
-      <WhereOperations
-        source={source}
-        query={query}
-        path={path}
-        wheres={wheres}
-      />
-      <OrderByOperations
-        source={source}
-        query={query}
-        path={path}
-        orderBys={orderBys}
-      />
-      <NestOperations source={source} query={query} path={path} nests={nests} />
-      <LimitOperation source={source} query={query} path={path} limit={limit} />
+      <GroupByOperations astQuery={astQuery} groupBys={groupBys} />
+      <AggregateOperations astQuery={astQuery} aggregates={aggregates} />
+      <WhereOperations astQuery={astQuery} wheres={wheres} />
+      <OrderByOperations astQuery={astQuery} orderBys={orderBys} />
+      <NestOperations astQuery={astQuery} nests={nests} />
+      <LimitOperation astQuery={astQuery} limit={limit} />
     </div>
   );
 }

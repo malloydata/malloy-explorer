@@ -10,10 +10,14 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 
 export function useQueryBuilder(
-  source: Malloy.SourceInfo,
+  source?: Malloy.SourceInfo,
   query?: Malloy.Query
 ) {
   return useMemo(() => {
-    return new QB.ASTQuery({query, source});
+    if (source) {
+      return new QB.ASTQuery({query, source});
+    } else {
+      return undefined;
+    }
   }, [source, query]);
 }
