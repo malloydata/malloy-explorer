@@ -13,11 +13,11 @@ import {styles} from '../styles';
 import {View} from '../View';
 
 export interface NestOperationsProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   nests: ASTNestViewOperation[];
 }
 
-export function NestOperations({astQuery, nests}: NestOperationsProps) {
+export function NestOperations({rootQuery, nests}: NestOperationsProps) {
   if (nests.length === 0) {
     return null;
   }
@@ -30,7 +30,7 @@ export function NestOperations({astQuery, nests}: NestOperationsProps) {
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {nests.map((nest, key) => (
-          <View key={key} astQuery={astQuery} view={nest.view} />
+          <View key={key} rootQuery={rootQuery} view={nest.view} />
         ))}
       </div>
     </div>

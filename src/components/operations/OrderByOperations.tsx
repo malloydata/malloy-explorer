@@ -16,12 +16,12 @@ import {styles} from '../styles';
 import {RawReference} from '../RawReference';
 
 export interface OrderByOperationsProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   orderBys: ASTOrderByViewOperation[];
 }
 
 export function OrderByOperations({
-  astQuery,
+  rootQuery,
   orderBys,
 }: OrderByOperationsProps) {
   if (orderBys.length === 0) {
@@ -37,7 +37,7 @@ export function OrderByOperations({
         {orderBys.map((orderBy, key) => (
           <div key={key} {...stylex.props(styles.token)}>
             <RawReference
-              astQuery={astQuery}
+              rootQuery={rootQuery}
               reference={orderBy.fieldReference}
             />
             <div>

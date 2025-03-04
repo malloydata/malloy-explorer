@@ -18,11 +18,11 @@ import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
 
 export interface QueryProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   query: ASTQuery;
 }
 
-export function Query({astQuery, query}: QueryProps) {
+export function Query({rootQuery, query}: QueryProps) {
   // TODO AST the rest of this stuff
 
   console.log('xxx', query);
@@ -31,12 +31,15 @@ export function Query({astQuery, query}: QueryProps) {
     <div {...stylex.props(styles.heading)}>
       <div {...stylex.props(styles.queryHeader)}>
         <div {...stylex.props(styles.title)}>Query:</div>
-        <ViewMenu astQuery={astQuery} view={query} />
+        <ViewMenu rootQuery={rootQuery} view={query} />
       </div>
       <Visualization annotations={query.annotations} />
       {query.definition instanceof ASTArrowQueryDefinition ? (
         <div>
-          <ViewDefinition astQuery={astQuery} viewDef={query.definition.view} />
+          <ViewDefinition
+            rootQuery={rootQuery}
+            viewDef={query.definition.view}
+          />
         </div>
       ) : null}
     </div>

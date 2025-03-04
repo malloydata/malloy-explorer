@@ -15,12 +15,12 @@ import {
 } from '@malloydata/malloy-query-builder';
 
 export interface WhereProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   where: ASTWhereList;
 }
 
-export function Where({astQuery, where}: WhereProps) {
+export function Where({rootQuery, where}: WhereProps) {
   return [...where.iter()].map((clause, key) => (
-    <Filter key={key} astQuery={astQuery} filter={clause.filter} />
+    <Filter key={key} rootQuery={rootQuery} filter={clause.filter} />
   ));
 }

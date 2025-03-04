@@ -20,12 +20,12 @@ import {LiteralIcon} from './LiteralIcon';
  * Source
  */
 export interface ParametersProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
 }
 
-export function Parameters({astQuery}: ParametersProps) {
-  if (astQuery.definition instanceof ASTArrowQueryDefinition) {
-    const parameters = astQuery.definition.sourceReference.parameters;
+export function Parameters({rootQuery}: ParametersProps) {
+  if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
+    const parameters = rootQuery.definition.sourceReference.parameters;
     if (!parameters || parameters.length === 0) {
       return null;
     }

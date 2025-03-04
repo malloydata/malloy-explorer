@@ -17,12 +17,12 @@ import {
 } from '@malloydata/malloy-query-builder';
 
 export interface GroupByOperationsProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   groupBys: ASTGroupByViewOperation[];
 }
 
 export function GroupByOperations({
-  astQuery,
+  rootQuery,
   groupBys,
 }: GroupByOperationsProps) {
   if (groupBys.length === 0) {
@@ -36,7 +36,7 @@ export function GroupByOperations({
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {groupBys.map((groupBy, key) => (
-          <Field key={key} astQuery={astQuery} field={groupBy.field} />
+          <Field key={key} rootQuery={rootQuery} field={groupBy.field} />
         ))}
       </div>
     </div>

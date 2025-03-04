@@ -18,11 +18,11 @@ import QueryIcon from '../assets/types/type-icon-query.svg?react';
 import DatabaseIcon from '../assets/types/type-icon-database.svg?react';
 
 export interface RawReferenceProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   reference: ASTReference;
 }
 
-export function RawReference({astQuery, reference}: RawReferenceProps) {
+export function RawReference({rootQuery, reference}: RawReferenceProps) {
   if (reference instanceof ASTFieldReference) {
     const fieldInfo = reference.getFieldInfo();
     if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {

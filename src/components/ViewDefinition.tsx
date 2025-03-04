@@ -20,24 +20,24 @@ import {
 } from '@malloydata/malloy-query-builder';
 
 export interface ViewProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   viewDef: ASTViewDefinition;
 }
 
-export function ViewDefinition({astQuery, viewDef}: ViewProps) {
+export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
   return (
     <div>
       {viewDef instanceof ASTArrowViewDefinition ? (
         <div>
-          <ViewDefinition astQuery={astQuery} viewDef={viewDef.view} />
+          <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.view} />
         </div>
       ) : viewDef instanceof ASTRefinementViewDefinition ? (
         <div>
-          <ViewDefinition astQuery={astQuery} viewDef={viewDef.base} />
-          <ViewDefinition astQuery={astQuery} viewDef={viewDef.refinement} />
+          <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.base} />
+          <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.refinement} />
         </div>
       ) : viewDef instanceof ASTSegmentViewDefinition ? (
-        <Operations astQuery={astQuery} viewDef={viewDef} />
+        <Operations rootQuery={rootQuery} viewDef={viewDef} />
       ) : (
         <div {...stylex.props(styles.labelWithIcon)}>
           <QueryIcon {...stylex.props(styles.icon)} />

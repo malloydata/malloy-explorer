@@ -15,9 +15,9 @@ export interface MalloyPreviewProps {
 }
 
 export function MalloyPreview({source, query}: MalloyPreviewProps) {
-  const astQuery = useQueryBuilder(source, query);
-  if (!astQuery) {
+  const rootQuery = useQueryBuilder(source, query);
+  if (!rootQuery) {
     return null;
   }
-  return <pre>{astQuery.toMalloy()}</pre>;
+  return <pre>{rootQuery.toMalloy()}</pre>;
 }

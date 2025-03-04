@@ -29,17 +29,17 @@ const queryExplorerStyles = stylex.create({
 
 export function QueryExplorer({}: QueryExplorerProps) {
   const {source, query} = useContext(QueryContext);
-  const astQuery = useQueryBuilder(source, query);
+  const rootQuery = useQueryBuilder(source, query);
 
-  if (!source || !query || !astQuery) {
+  if (!source || !query || !rootQuery) {
     return null;
   }
 
   return (
     <div {...stylex.props(queryExplorerStyles.main)}>
-      <Source astQuery={astQuery} />
-      <Parameters astQuery={astQuery} />
-      <Query astQuery={astQuery} query={astQuery} />
+      <Source rootQuery={rootQuery} />
+      <Parameters rootQuery={rootQuery} />
+      <Query rootQuery={rootQuery} query={rootQuery} />
     </div>
   );
 }

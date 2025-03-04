@@ -10,14 +10,14 @@ import {ASTFilter, ASTQuery} from '@malloydata/malloy-query-builder';
 import {Reference} from './Reference';
 
 export interface FilterProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   filter: ASTFilter;
 }
 
-export function Filter({astQuery, filter}: FilterProps) {
+export function Filter({rootQuery, filter}: FilterProps) {
   return (
     <div>
-      <Reference astQuery={astQuery} reference={filter.fieldReference} />{' '}
+      <Reference rootQuery={rootQuery} reference={filter.fieldReference} />{' '}
       {filter.filterString}
     </div>
   );

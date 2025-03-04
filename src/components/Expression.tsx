@@ -20,11 +20,11 @@ import {TypeIcon} from './TypeIcon';
 import {Where} from './Where';
 
 export interface ExpressionProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   expression: ASTExpression;
 }
 
-export function Expression({astQuery, expression}: ExpressionProps) {
+export function Expression({rootQuery, expression}: ExpressionProps) {
   return (
     <div>
       {expression instanceof ASTReferenceExpression ? (
@@ -35,7 +35,7 @@ export function Expression({astQuery, expression}: ExpressionProps) {
         <div {...stylex.props(styles.labelWithIcon)}>
           <TypeIcon type={expression.fieldType} />
           {expression.name}
-          <Where astQuery={astQuery} where={expression.where} />
+          <Where rootQuery={rootQuery} where={expression.where} />
         </div>
       ) : (
         <div {...stylex.props(styles.labelWithIcon)}>

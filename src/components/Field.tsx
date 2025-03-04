@@ -20,14 +20,14 @@ const fieldStyles = stylex.create({
 });
 
 export interface FieldProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   field: ASTField;
 }
 
-export function Field({astQuery, field}: FieldProps) {
+export function Field({rootQuery, field}: FieldProps) {
   return (
     <div {...stylex.props(styles.token)}>
-      <Expression astQuery={astQuery} expression={field.expression} />
+      <Expression rootQuery={rootQuery} expression={field.expression} />
     </div>
   );
 }

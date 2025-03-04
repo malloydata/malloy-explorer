@@ -18,17 +18,17 @@ import {styles} from './styles';
  * Source
  */
 export interface SourceProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
 }
 
-export function Source({astQuery}: SourceProps) {
-  if (astQuery.definition instanceof ASTArrowQueryDefinition) {
+export function Source({rootQuery}: SourceProps) {
+  if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
     return (
       <div {...stylex.props(styles.heading)}>
         <div {...stylex.props(styles.title)}>Source:</div>
         <div {...stylex.props(styles.labelWithIcon)}>
           <DatabaseIcon {...stylex.props(styles.icon)} />
-          {astQuery.definition.sourceReference.name}
+          {rootQuery.definition.sourceReference.name}
         </div>
       </div>
     );

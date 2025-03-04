@@ -24,11 +24,11 @@ import {OrderByOperations} from './operations/OrderByOperations';
 import {NestOperations} from './operations/NestOperation';
 
 export interface OperationsProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   viewDef: ASTViewDefinition;
 }
 
-export function Operations({astQuery, viewDef}: OperationsProps) {
+export function Operations({rootQuery, viewDef}: OperationsProps) {
   const groupBys: ASTGroupByViewOperation[] = [];
   const aggregates: ASTAggregateViewOperation[] = [];
   const wheres: ASTWhereViewOperation[] = [];
@@ -56,12 +56,12 @@ export function Operations({astQuery, viewDef}: OperationsProps) {
 
   return (
     <div>
-      <GroupByOperations astQuery={astQuery} groupBys={groupBys} />
-      <AggregateOperations astQuery={astQuery} aggregates={aggregates} />
-      <WhereOperations astQuery={astQuery} wheres={wheres} />
-      <OrderByOperations astQuery={astQuery} orderBys={orderBys} />
-      <NestOperations astQuery={astQuery} nests={nests} />
-      <LimitOperation astQuery={astQuery} limit={limit} />
+      <GroupByOperations rootQuery={rootQuery} groupBys={groupBys} />
+      <AggregateOperations rootQuery={rootQuery} aggregates={aggregates} />
+      <WhereOperations rootQuery={rootQuery} wheres={wheres} />
+      <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
+      <NestOperations rootQuery={rootQuery} nests={nests} />
+      <LimitOperation rootQuery={rootQuery} limit={limit} />
     </div>
   );
 }

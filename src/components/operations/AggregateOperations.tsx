@@ -17,12 +17,12 @@ import {
 } from '@malloydata/malloy-query-builder';
 
 export interface AggregateOperationsProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   aggregates: ASTAggregateViewOperation[];
 }
 
 export function AggregateOperations({
-  astQuery,
+  rootQuery,
   aggregates,
 }: AggregateOperationsProps) {
   if (aggregates.length === 0) {
@@ -36,7 +36,7 @@ export function AggregateOperations({
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {aggregates.map((aggregate, key) => (
-          <Field key={key} astQuery={astQuery} field={aggregate.field} />
+          <Field key={key} rootQuery={rootQuery} field={aggregate.field} />
         ))}
       </div>
     </div>

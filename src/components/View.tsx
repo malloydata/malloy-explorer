@@ -21,18 +21,18 @@ const viewStyles = stylex.create({
 });
 
 export interface ViewProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   view: ASTView;
 }
 
-export function View({astQuery, view}: ViewProps) {
+export function View({rootQuery, view}: ViewProps) {
   return (
     <div {...stylex.props(viewStyles.indent)}>
       <div {...stylex.props(styles.queryHeader)}>
         <div {...stylex.props(styles.title)}>Query:</div>
-        <ViewMenu astQuery={astQuery} view={view} />
+        <ViewMenu rootQuery={rootQuery} view={view} />
       </div>
-      <ViewDefinition astQuery={astQuery} viewDef={view.definition} />
+      <ViewDefinition rootQuery={rootQuery} viewDef={view.definition} />
     </div>
   );
 }

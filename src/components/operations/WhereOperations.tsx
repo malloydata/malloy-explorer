@@ -15,7 +15,7 @@ import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 
 export interface WhereOperationsProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   wheres: ASTWhereViewOperation[];
 }
 

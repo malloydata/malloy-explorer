@@ -12,14 +12,14 @@ import {RawReference} from './RawReference';
 import {styles} from './styles';
 
 export interface ReferenceProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   reference: ASTReference;
 }
 
-export function Reference({astQuery, reference}: ReferenceProps) {
+export function Reference({rootQuery, reference}: ReferenceProps) {
   return (
     <div {...stylex.props(styles.token)}>
-      <RawReference astQuery={astQuery} reference={reference} />
+      <RawReference rootQuery={rootQuery} reference={reference} />
     </div>
   );
 }

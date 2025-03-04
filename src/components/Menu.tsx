@@ -11,10 +11,16 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import stylex from '@stylexjs/stylex';
 import {ReactElement} from 'react';
+import ChevronRight from '../assets/chevrons/chevron_right.svg?react';
+import {styles} from './styles';
+import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
 
 const menuStyles = stylex.create({
   trigger: {
@@ -41,6 +47,17 @@ const menuStyles = stylex.create({
     paddingRight: 16,
     cursor: 'default',
     userSelect: 'none',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  label: {
+    display: 'flex',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+    width: '100%',
+  },
+  arrow: {
+    marginLeft: 16,
   },
 });
 
@@ -52,8 +69,10 @@ export type Modifiers = Pick<
 export interface MenuItem {
   icon?: ReactElement;
   label: string;
+  detail?: ReactElement;
   onClick?: (modifiers: Modifiers) => void;
   when?: () => boolean;
+  subMenu?: MenuItem[];
 }
 
 export interface MenuProps {
@@ -73,6 +92,63 @@ export function Menu({icon, items, title}: MenuProps) {
           {title && <DropdownMenuLabel>{title}</DropdownMenuLabel>}
           {items.map((item, key) => {
             if (item.when?.() ?? true) {
+              if (item.subMenu) {
+                return <SubMenu key={key} item={item} />;
+              } else {
+                return (
+                  <DropdownMenuItem
+                    key={key}
+                    onClick={({altKey, ctrlKey, metaKey, shiftKey}) => {
+                      item.onClick?.({altKey, ctrlKey, metaKey, shiftKey});
+                    }}
+                    {...stylex.props(menuStyles.item)}
+                  >
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div {...stylex.props(menuStyles.label)}>
+                          {item.icon} {item.label}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        {...stylex.props(styles.tooltip)}
+                        side="right"
+                      >
+                        {item.detail}
+                      </TooltipContent>
+                    </Tooltip>
+                  </DropdownMenuItem>
+                );
+              }
+            }
+            return null;
+          })}
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenu>
+  );
+}
+
+interface SubMenuProps {
+  item: MenuItem;
+}
+
+function SubMenu({item}: SubMenuProps) {
+  return (
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger {...stylex.props(menuStyles.item)}>
+        <div {...stylex.props(menuStyles.label)}>
+          {item.icon} {item.label}
+        </div>
+        <div {...stylex.props(menuStyles.arrow)}>
+          <ChevronRight {...stylex.props(styles.icon)} />
+        </div>
+      </DropdownMenuSubTrigger>
+      <DropdownMenuSubContent {...stylex.props(menuStyles.content)}>
+        {item.subMenu?.map((item, key) => {
+          if (item.when?.() ?? true) {
+            if (item.subMenu) {
+              return <SubMenu key={key} item={item} />;
+            } else {
               return (
                 <DropdownMenuItem
                   key={key}
@@ -81,14 +157,26 @@ export function Menu({icon, items, title}: MenuProps) {
                   }}
                   {...stylex.props(menuStyles.item)}
                 >
-                  {item.icon} {item.label}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div {...stylex.props(menuStyles.label)}>
+                        {item.icon} {item.label}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      {...stylex.props(styles.tooltip)}
+                      side="right"
+                    >
+                      {item.detail}
+                    </TooltipContent>
+                  </Tooltip>
                 </DropdownMenuItem>
               );
             }
-            return null;
-          })}
-        </DropdownMenuContent>
-      </DropdownMenuPortal>
-    </DropdownMenu>
+          }
+          return null;
+        })}
+      </DropdownMenuSubContent>
+    </DropdownMenuSub>
   );
 }

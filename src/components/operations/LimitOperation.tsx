@@ -16,11 +16,11 @@ import {styles} from '../styles';
 import {Field} from '../Field';
 
 export interface LimitOperationProps {
-  astQuery: ASTQuery;
+  rootQuery: ASTQuery;
   limit: ASTLimitViewOperation | undefined;
 }
 
-export function LimitOperation({astQuery, limit}: LimitOperationProps) {
+export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
   if (!limit) {
     return null;
   }

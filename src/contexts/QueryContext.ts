@@ -10,7 +10,7 @@ import {createContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 
 export interface QueryContextProps {
-  setQuery?: (astQuery: Malloy.Query) => void;
+  setQuery?: (rootQuery: Malloy.Query) => void;
   source?: Malloy.SourceInfo;
   query?: Malloy.Query;
 }

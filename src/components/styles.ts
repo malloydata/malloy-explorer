@@ -47,4 +47,11 @@ export const styles = stylex.create({
     display: 'flex',
     gap: 8,
   },
+  tooltip: {
+    backgroundColor: 'lightgrey',
+    borderRadius: 5,
+    padding: '2px 12px 2px 6px',
+    display: 'flex',
+    gap: 8,
+  },
 });

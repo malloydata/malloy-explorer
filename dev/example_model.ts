@@ -1350,6 +1350,7 @@ export const modelInfo: Malloy.ModelInfo = {
           {
             kind: 'view',
             name: 'carrier_dashboard',
+            annotations: [{value: '# bar_chart'}],
             schema: {
               fields: [
                 {
@@ -1596,7 +1597,7 @@ const query0: Malloy.Query = {
     source_reference: {name: 'flights'},
     view: {
       kind: 'view_reference',
-      name: 'top_carriers',
+      name: 'carrier_dashboard',
     },
   },
 };
