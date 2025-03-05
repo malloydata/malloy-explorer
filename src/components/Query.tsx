@@ -25,7 +25,7 @@ export interface QueryProps {
 export function Query({rootQuery, query}: QueryProps) {
   // TODO AST the rest of this stuff
 
-  console.log('xxx', query);
+  console.log({query});
 
   return (
     <div {...stylex.props(styles.heading)}>

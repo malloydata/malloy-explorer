@@ -11,6 +11,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {Menu, MenuItem} from './Menu';
 import AggregateIcon from '../assets/refinements/insert_measure.svg?react';
 import GroupByIcon from '../assets/refinements/insert_group_by.svg?react';
+import FilterIcon from '../assets/refinements/insert_filter.svg?react';
 import LimitIcon from '../assets/refinements/insert_limit.svg?react';
 import OrderByIcon from '../assets/refinements/insert_order_by.svg?react';
 import NestIcon from '../assets/refinements/insert_nest.svg?react';
@@ -19,23 +20,37 @@ import QueryIcon from '../assets/types/type-icon-query.svg?react';
 import {styles} from './styles';
 import stylex from '@stylexjs/stylex';
 import {QueryContext} from '../contexts/QueryContext';
-import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+import {ASTField, ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {TypeIcon} from './TypeIcon';
 import {JoinIcon} from './JoinIcon';
+import {LimitDialog} from './dialogs/LimitDialog';
+import {FilterDialog} from './dialogs/FilterDialog';
 
 export interface ViewMenuProps {
   rootQuery: ASTQuery;
   view: ASTView | ASTQuery;
 }
 
+const FILTERABLE_TYPES: Malloy.AtomicTypeType[] = [
+  'string_type',
+  'number_type',
+  'boolean_type',
+  'date_type',
+  'timestamp_type',
+] as const;
+
 export function ViewMenu({rootQuery, view}: ViewMenuProps) {
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+  const [filterField, setFilterField] = useState<
+    Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure | undefined
+  >(undefined);
+  const [limitDialogOpen, setLimitDialogOpen] = useState(false);
+
   const {setQuery} = useContext(QueryContext);
 
   const segment = view.getOrAddDefaultSegment();
 
   const schema = segment.getInputSchema();
-
-  console.log('ViewMenu schema', schema);
 
   const createGroupByMenu = (
     fields: Malloy.FieldInfo[],
@@ -97,14 +112,54 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       });
   };
 
+  const createFilterMenu = (
+    fields: Malloy.FieldInfo[],
+    path: string[]
+  ): MenuItem[] => {
+    return fields
+      .filter(
+        field =>
+          field.kind === 'dimension' ||
+          field.kind === 'measure' ||
+          field.kind === 'join'
+      )
+      .filter(
+        field =>
+          field.kind === 'join' || FILTERABLE_TYPES.includes(field.type.kind)
+      )
+      .map(field => {
+        if (field.kind === 'dimension' || field.kind === 'measure') {
+          return {
+            icon: <TypeIcon type={field.type} />,
+            label: field.name,
+            detail: <div>Path: {[...path, field.name].join('.')}</div>,
+            onClick: () => {
+              setFilterDialogOpen(true);
+              setFilterField(field);
+            },
+          };
+        } else {
+          return {
+            icon: <JoinIcon relationship={field.relationship} />,
+            label: field.name,
+            subMenu: createFilterMenu(field.schema.fields, [
+              ...path,
+              field.name,
+            ]),
+          };
+        }
+      });
+  };
+
   const groupByMenu: MenuItem[] = createGroupByMenu(schema.fields, []);
   const aggregateMenu: MenuItem[] = createAggregateMenu(schema.fields, []);
+  const filterMenu: MenuItem[] = createFilterMenu(schema.fields, []);
 
   let outputSchemaFields: Malloy.FieldInfo[] = [];
 
   try {
     outputSchemaFields = segment.getOutputSchema().fields;
-    console.log(outputSchemaFields);
+    console.log({outputSchemaFields});
   } catch (error) {
     console.error(error); // TODO remove when fixed
     debugger;
@@ -145,38 +200,57 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   });
 
   return (
-    <Menu
-      icon={<InsertIcon {...stylex.props(styles.menuIcon)} />}
-      items={[
-        {
-          icon: <GroupByIcon {...stylex.props(styles.icon)} />,
-          label: 'Add Group By',
-          subMenu: groupByMenu,
-        },
-        {
-          icon: <AggregateIcon {...stylex.props(styles.icon)} />,
-          label: 'Add Aggregate',
-          subMenu: aggregateMenu,
-        },
-        {
-          icon: <OrderByIcon {...stylex.props(styles.icon)} />,
-          label: 'Add Order By',
-          subMenu: orderByMenu,
-        },
-        {
-          icon: <NestIcon {...stylex.props(styles.icon)} />,
-          label: 'Add Nest',
-          subMenu: nestMenu,
-        },
-        {
-          icon: <LimitIcon {...stylex.props(styles.icon)} />,
-          label: 'Set Limit...',
-          onClick: () => {
-            segment.setLimit(10);
-            setQuery?.(rootQuery.build());
+    <>
+      <Menu
+        icon={<InsertIcon {...stylex.props(styles.menuIcon)} />}
+        items={[
+          {
+            icon: <GroupByIcon {...stylex.props(styles.icon)} />,
+            label: 'Add Group By',
+            subMenu: groupByMenu,
           },
-        },
-      ]}
-    />
+          {
+            icon: <AggregateIcon {...stylex.props(styles.icon)} />,
+            label: 'Add Aggregate',
+            subMenu: aggregateMenu,
+          },
+          {
+            icon: <FilterIcon {...stylex.props(styles.icon)} />,
+            label: 'Add Filter',
+            subMenu: filterMenu,
+          },
+          {
+            icon: <OrderByIcon {...stylex.props(styles.icon)} />,
+            label: 'Add Order By',
+            subMenu: orderByMenu,
+          },
+          {
+            icon: <NestIcon {...stylex.props(styles.icon)} />,
+            label: 'Add Nest',
+            subMenu: nestMenu,
+          },
+          {
+            icon: <LimitIcon {...stylex.props(styles.icon)} />,
+            label: 'Set Limit...',
+            onClick: () => {
+              setLimitDialogOpen(true);
+            },
+          },
+        ]}
+      />
+      <LimitDialog
+        open={limitDialogOpen}
+        setOpen={setLimitDialogOpen}
+        rootQuery={rootQuery}
+        segment={segment}
+      />
+      <FilterDialog
+        open={filterDialogOpen}
+        setOpen={setFilterDialogOpen}
+        rootQuery={rootQuery}
+        segment={segment}
+        filterField={filterField}
+      />
+    </>
   );
 }

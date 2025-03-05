@@ -10,15 +10,6 @@ import stylex from '@stylexjs/stylex';
 import {ASTField, ASTQuery} from '@malloydata/malloy-query-builder';
 import {Expression} from './Expression';
 import {styles} from './styles';
-
-const fieldStyles = stylex.create({
-  container: {
-    backgroundColor: 'lightgrey',
-    borderRadius: 5,
-    padding: '2px 12px 2px 6px',
-  },
-});
-
 export interface FieldProps {
   rootQuery: ASTQuery;
   field: ASTField;
