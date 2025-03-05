@@ -20,7 +20,7 @@ import QueryIcon from '../assets/types/type-icon-query.svg?react';
 import {styles} from './styles';
 import stylex from '@stylexjs/stylex';
 import {QueryContext} from '../contexts/QueryContext';
-import {ASTField, ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {TypeIcon} from './TypeIcon';
 import {JoinIcon} from './JoinIcon';
 import {LimitDialog} from './dialogs/LimitDialog';
@@ -32,6 +32,14 @@ export interface ViewMenuProps {
 }
 
 const FILTERABLE_TYPES: Malloy.AtomicTypeType[] = [
+  'string_type',
+  'number_type',
+  'boolean_type',
+  'date_type',
+  'timestamp_type',
+] as const;
+
+const ORDERABLE_TYPES: Malloy.AtomicTypeType[] = [
   'string_type',
   'number_type',
   'boolean_type',
@@ -58,6 +66,9 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   ): MenuItem[] => {
     return fields
       .filter(field => field.kind === 'dimension' || field.kind === 'join')
+      .filter(
+        field => field.kind === 'join' || !segment.hasField(field.name, path)
+      )
       .map(field => {
         if (field.kind === 'dimension') {
           return {
@@ -88,6 +99,9 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   ): MenuItem[] => {
     return fields
       .filter(field => field.kind === 'measure' || field.kind === 'join')
+      .filter(
+        field => field.kind === 'join' || !segment.hasField(field.name, path)
+      )
       .map(field => {
         if (field.kind === 'measure') {
           return {
@@ -166,15 +180,28 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   }
 
   const orderByMenu: MenuItem[] = outputSchemaFields
-    .filter(field => field.kind === 'dimension' || field.kind === 'measure')
+    .filter(field => field.kind === 'dimension')
+    .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
     .map(field => {
       return {
         icon: <TypeIcon type={field.type} />,
         label: field.name,
-        onClick: () => {
-          segment.addOrderBy(field.name);
-          setQuery?.(rootQuery.build());
-        },
+        subMenu: [
+          {
+            label: 'Ascending',
+            onClick: () => {
+              segment.addOrderBy(field.name, 'asc');
+              setQuery?.(rootQuery.build());
+            },
+          },
+          {
+            label: 'Descending',
+            onClick: () => {
+              segment.addOrderBy(field.name, 'desc');
+              setQuery?.(rootQuery.build());
+            },
+          },
+        ],
       };
     });
 
