@@ -16,6 +16,7 @@ import {styles} from './styles';
 import {TypeIcon} from './TypeIcon';
 import QueryIcon from '../assets/types/type-icon-query.svg?react';
 import DatabaseIcon from '../assets/types/type-icon-database.svg?react';
+import {Label} from './Label';
 
 export interface RawReferenceProps {
   rootQuery: ASTQuery;
@@ -28,25 +29,29 @@ export function RawReference({rootQuery, reference}: RawReferenceProps) {
     if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
       return (
         <div {...stylex.props(styles.labelWithIcon)}>
-          <TypeIcon type={fieldInfo.type} /> {fieldInfo.name}
+          <TypeIcon type={fieldInfo.type} />
+          <Label>{fieldInfo.name}</Label>
         </div>
       );
     } else if (fieldInfo.kind === 'join') {
       return (
-        <div {...stylex.props(styles.labelWithIcon)}>{fieldInfo.name}</div>
+        <div {...stylex.props(styles.labelWithIcon)}>
+          <Label>{fieldInfo.name}</Label>
+        </div>
       );
     } else {
       return (
         <div {...stylex.props(styles.labelWithIcon)}>
           <QueryIcon {...stylex.props(styles.icon)} />
-          {fieldInfo.name}
+          <Label>{fieldInfo.name}</Label>
         </div>
       );
     }
   } else {
     return (
       <div {...stylex.props(styles.labelWithIcon)}>
-        <DatabaseIcon {...stylex.props(styles.icon)} /> {reference.name}
+        <DatabaseIcon {...stylex.props(styles.icon)} />
+        <Label>{reference.name}</Label>
       </div>
     );
   }

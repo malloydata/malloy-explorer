@@ -9,6 +9,7 @@ import * as React from 'react';
 import {
   ASTLimitViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import LimitIcon from '../../assets/refinements/insert_limit.svg?react';
 import stylex from '@stylexjs/stylex';
@@ -17,6 +18,7 @@ import {Field} from '../Field';
 
 export interface LimitOperationProps {
   rootQuery: ASTQuery;
+  segment: ASTSegmentViewDefinition;
   limit: ASTLimitViewOperation | undefined;
 }
 

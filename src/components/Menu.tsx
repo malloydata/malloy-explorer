@@ -21,6 +21,7 @@ import {ReactElement} from 'react';
 import ChevronRight from '../assets/chevrons/chevron_right.svg?react';
 import {styles} from './styles';
 import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
+import {Label} from './Label';
 
 const menuStyles = stylex.create({
   trigger: {
@@ -49,12 +50,17 @@ const menuStyles = stylex.create({
     userSelect: 'none',
     display: 'flex',
     justifyContent: 'space-between',
+    borderRadius: 3,
+    backgroundColor: {
+      ':hover': 'lightgrey',
+    },
   },
   label: {
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
     width: '100%',
+    gap: 8,
   },
   arrow: {
     marginLeft: 16,
@@ -106,7 +112,8 @@ export function Menu({icon, items, title}: MenuProps) {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div {...stylex.props(menuStyles.label)}>
-                          {item.icon} {item.label}
+                          {item.icon}
+                          <Label>{item.label}</Label>
                         </div>
                       </TooltipTrigger>
                       <TooltipContent
@@ -137,7 +144,8 @@ function SubMenu({item}: SubMenuProps) {
     <DropdownMenuSub>
       <DropdownMenuSubTrigger {...stylex.props(menuStyles.item)}>
         <div {...stylex.props(menuStyles.label)}>
-          {item.icon} {item.label}
+          {item.icon}
+          <Label>{item.label}</Label>
         </div>
         <div {...stylex.props(menuStyles.arrow)}>
           <ChevronRight {...stylex.props(styles.icon)} />
@@ -160,7 +168,8 @@ function SubMenu({item}: SubMenuProps) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div {...stylex.props(menuStyles.label)}>
-                        {item.icon} {item.label}
+                        {item.icon}
+                        <Label>{item.label}</Label>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent

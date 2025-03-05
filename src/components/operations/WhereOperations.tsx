@@ -8,14 +8,17 @@
 import * as React from 'react';
 import {
   ASTQuery,
+  ASTSegmentViewDefinition,
   ASTWhereViewOperation,
 } from '@malloydata/malloy-query-builder';
 import WhereIcon from '../../assets/refinements/insert_filter.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
+import {Label} from '../Label';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
+  segment: ASTSegmentViewDefinition;
   wheres: ASTWhereViewOperation[];
 }
 
@@ -28,7 +31,7 @@ export function WhereOperations({wheres}: WhereOperationsProps) {
     <div>
       <div {...stylex.props(styles.labelWithIcon)}>
         <WhereIcon {...stylex.props(styles.icon)} />
-        where:
+        <div {...stylex.props(styles.title)}>where:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
         {wheres.map((where, key) => (

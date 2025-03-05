@@ -15,6 +15,7 @@ import {styles} from './styles';
 import {TypeIcon} from './TypeIcon';
 import {LiteralValue} from './LiteralValue';
 import {LiteralIcon} from './LiteralIcon';
+import {Label} from './Label';
 
 /**
  * Source
@@ -35,9 +36,11 @@ export function Parameters({rootQuery}: ParametersProps) {
         <div {...stylex.props(styles.title)}>Parameters:</div>
         {[...parameters.iter()].map((parameter, key) => (
           <div key={key} {...stylex.props(styles.labelWithIcon)}>
-            <LiteralIcon value={parameter.parameter.value} />{' '}
-            {parameter.parameter.name}{' '}
-            <LiteralValue value={parameter.parameter.value} />
+            <LiteralIcon value={parameter.parameter.value} />
+            <Label>
+              {parameter.parameter.name}{' '}
+              <LiteralValue value={parameter.parameter.value} />
+            </Label>
           </div>
         ))}
       </div>

@@ -8,14 +8,17 @@
 import stylex from '@stylexjs/stylex';
 
 export const styles = stylex.create({
-  icon: {width: 18, height: 18, display: 'inline-block', paddingRight: 8},
+  icon: {width: 18, height: 18, display: 'inline-block'},
   menuIcon: {width: 24, height: 24},
 
   labelWithIcon: {
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
+    gap: 8,
   },
+
+  label: {},
 
   heading: {
     border: '1px solid black',
@@ -46,6 +49,7 @@ export const styles = stylex.create({
     padding: '2px 12px 2px 6px',
     display: 'flex',
     gap: 8,
+    alignItems: 'center',
   },
   tooltip: {
     backgroundColor: 'lightgrey',

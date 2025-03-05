@@ -14,15 +14,18 @@ import {Field} from '../Field';
 import {
   ASTAggregateViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
+  segment: ASTSegmentViewDefinition;
   aggregates: ASTAggregateViewOperation[];
 }
 
 export function AggregateOperations({
   rootQuery,
+  segment,
   aggregates,
 }: AggregateOperationsProps) {
   if (aggregates.length === 0) {
@@ -32,11 +35,16 @@ export function AggregateOperations({
     <div>
       <div {...stylex.props(styles.labelWithIcon)}>
         <AggregateIcon {...stylex.props(styles.icon)} />
-        aggregate:
+        <div {...stylex.props(styles.title)}>aggregate:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
-        {aggregates.map((aggregate, key) => (
-          <Field key={key} rootQuery={rootQuery} field={aggregate.field} />
+        {aggregates.map(({field}, key) => (
+          <Field
+            key={key}
+            rootQuery={rootQuery}
+            field={field}
+            onDelete={field => window.alert('not implemented in query builder')}
+          />
         ))}
       </div>
     </div>

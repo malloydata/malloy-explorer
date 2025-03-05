@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {Children} from 'react';
 import {
   ASTExpression,
   ASTFilteredFieldExpression,
@@ -18,6 +19,7 @@ import {RawReference} from './RawReference';
 import {styles} from './styles';
 import {TypeIcon} from './TypeIcon';
 import {Where} from './Where';
+import {Label} from './Label';
 
 export interface ExpressionProps {
   rootQuery: ASTQuery;
@@ -29,18 +31,23 @@ export function Expression({rootQuery, expression}: ExpressionProps) {
     <div>
       {expression instanceof ASTReferenceExpression ? (
         <div {...stylex.props(styles.labelWithIcon)}>
-          <TypeIcon type={expression.fieldType} /> {expression.name}
+          <TypeIcon type={expression.fieldType} />
+          <Label>{expression.name}</Label>
         </div>
       ) : expression instanceof ASTFilteredFieldExpression ? (
         <div {...stylex.props(styles.labelWithIcon)}>
           <TypeIcon type={expression.fieldType} />
-          {expression.name}
-          <Where rootQuery={rootQuery} where={expression.where} />
+          <Label>
+            {expression.name}
+            <Where rootQuery={rootQuery} where={expression.where} />
+          </Label>
         </div>
       ) : (
         <div {...stylex.props(styles.labelWithIcon)}>
           <TypeIcon type={expression.fieldType} />
-          {expression.name}.{expression.truncation}
+          <Label>
+            {expression.name}.{expression.truncation}
+          </Label>
         </div>
       )}
     </div>

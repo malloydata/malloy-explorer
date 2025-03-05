@@ -18,6 +18,7 @@ import {
   ASTSegmentViewDefinition,
   ASTViewDefinition,
 } from '@malloydata/malloy-query-builder';
+import {Label} from './Label';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
@@ -41,7 +42,7 @@ export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
       ) : (
         <div {...stylex.props(styles.labelWithIcon)}>
           <QueryIcon {...stylex.props(styles.icon)} />
-          {viewDef.name}
+          <Label>{viewDef.name}</Label>
         </div>
       )}
     </div>

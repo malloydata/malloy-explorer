@@ -14,17 +14,22 @@ import {Field} from '../Field';
 import {
   ASTGroupByViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
+import {QueryContext} from '../../contexts/QueryContext';
 
 export interface GroupByOperationsProps {
   rootQuery: ASTQuery;
+  segment: ASTSegmentViewDefinition;
   groupBys: ASTGroupByViewOperation[];
 }
 
 export function GroupByOperations({
   rootQuery,
+  segment,
   groupBys,
 }: GroupByOperationsProps) {
+  const {setQuery} = React.useContext(QueryContext);
   if (groupBys.length === 0) {
     return null;
   }
@@ -35,8 +40,16 @@ export function GroupByOperations({
         <div {...stylex.props(styles.title)}>group_by:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
-        {groupBys.map((groupBy, key) => (
-          <Field key={key} rootQuery={rootQuery} field={groupBy.field} />
+        {groupBys.map(({field}, key) => (
+          <Field
+            key={key}
+            rootQuery={rootQuery}
+            field={field}
+            onDelete={() => {
+              segment.removeGroupBy(field.name);
+              setQuery?.(rootQuery.build());
+            }}
+          />
         ))}
       </div>
     </div>

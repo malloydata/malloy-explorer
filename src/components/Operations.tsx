@@ -36,32 +36,48 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
   const nests: ASTNestViewOperation[] = [];
   let limit: ASTLimitViewOperation | undefined;
 
-  viewDef
-    .getOrAddDefaultSegment()
-    .operations.items.forEach((operation, idx) => {
-      if (operation instanceof ASTGroupByViewOperation) {
-        groupBys.push(operation);
-      } else if (operation instanceof ASTAggregateViewOperation) {
-        aggregates.push(operation);
-      } else if (operation instanceof ASTWhereViewOperation) {
-        wheres.push(operation);
-      } else if (operation instanceof ASTOrderByViewOperation) {
-        orderBys.push(operation);
-      } else if (operation instanceof ASTNestViewOperation) {
-        nests.push(operation);
-      } else {
-        limit = operation;
-      }
-    });
+  const segment = viewDef.getOrAddDefaultSegment();
+
+  segment.operations.items.forEach((operation, idx) => {
+    if (operation instanceof ASTGroupByViewOperation) {
+      groupBys.push(operation);
+    } else if (operation instanceof ASTAggregateViewOperation) {
+      aggregates.push(operation);
+    } else if (operation instanceof ASTWhereViewOperation) {
+      wheres.push(operation);
+    } else if (operation instanceof ASTOrderByViewOperation) {
+      orderBys.push(operation);
+    } else if (operation instanceof ASTNestViewOperation) {
+      nests.push(operation);
+    } else {
+      limit = operation;
+    }
+  });
 
   return (
     <div>
-      <GroupByOperations rootQuery={rootQuery} groupBys={groupBys} />
-      <AggregateOperations rootQuery={rootQuery} aggregates={aggregates} />
-      <WhereOperations rootQuery={rootQuery} wheres={wheres} />
-      <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
-      <NestOperations rootQuery={rootQuery} nests={nests} />
-      <LimitOperation rootQuery={rootQuery} limit={limit} />
+      <GroupByOperations
+        rootQuery={rootQuery}
+        segment={segment}
+        groupBys={groupBys}
+      />
+      <AggregateOperations
+        rootQuery={rootQuery}
+        segment={segment}
+        aggregates={aggregates}
+      />
+      <WhereOperations
+        rootQuery={rootQuery}
+        segment={segment}
+        wheres={wheres}
+      />
+      <OrderByOperations
+        rootQuery={rootQuery}
+        segment={segment}
+        orderBys={orderBys}
+      />
+      <NestOperations rootQuery={rootQuery} segment={segment} nests={nests} />
+      <LimitOperation rootQuery={rootQuery} segment={segment} limit={limit} />
     </div>
   );
 }

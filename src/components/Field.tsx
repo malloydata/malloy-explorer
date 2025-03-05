@@ -10,15 +10,22 @@ import stylex from '@stylexjs/stylex';
 import {ASTField, ASTQuery} from '@malloydata/malloy-query-builder';
 import {Expression} from './Expression';
 import {styles} from './styles';
+import ClearIcon from '../assets/refinements/clear.svg?react';
+
 export interface FieldProps {
   rootQuery: ASTQuery;
   field: ASTField;
+  onDelete: (field: ASTField) => void;
 }
 
-export function Field({rootQuery, field}: FieldProps) {
+export function Field({rootQuery, field, onDelete}: FieldProps) {
   return (
     <div {...stylex.props(styles.token)}>
       <Expression rootQuery={rootQuery} expression={field.expression} />
+      <ClearIcon
+        {...stylex.props(styles.icon)}
+        onClick={() => onDelete(field)}
+      />
     </div>
   );
 }

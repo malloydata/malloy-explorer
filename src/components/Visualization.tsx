@@ -11,6 +11,7 @@ import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
 
 import LineChartIcon from '../assets/visualizations/viz_line.svg?react';
+import {Label} from '@radix-ui/react-dropdown-menu';
 
 export interface VisualizationProps {
   annotations?: ASTAnnotationList;
@@ -23,7 +24,8 @@ export function Visualization({annotations}: VisualizationProps) {
 
   <div>
     <div {...stylex.props(styles.labelWithIcon)}>
-      <LineChartIcon {...stylex.props(styles.icon)} />#
+      <LineChartIcon {...stylex.props(styles.icon)} />
+      <Label>#</Label>
     </div>
     <div>
       {annotations.items.map((annotation, key) => (
