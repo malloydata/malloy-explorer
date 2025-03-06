@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import {
   ASTQuery,
   ASTSegmentViewDefinition,
@@ -15,6 +16,9 @@ import WhereIcon from '../../assets/refinements/insert_filter.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Label} from '../Label';
+import {RawReference} from '../RawReference';
+import ClearIcon from '../../assets/refinements/clear.svg?react';
+import {QueryContext} from '../../contexts/QueryContext';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
@@ -22,7 +26,8 @@ export interface WhereOperationsProps {
   wheres: ASTWhereViewOperation[];
 }
 
-export function WhereOperations({wheres}: WhereOperationsProps) {
+export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
+  const {setQuery} = useContext(QueryContext);
   if (wheres.length === 0) {
     return null;
   }
@@ -36,7 +41,18 @@ export function WhereOperations({wheres}: WhereOperationsProps) {
       <div {...stylex.props(styles.tokenContainer)}>
         {wheres.map((where, key) => (
           <div key={key} {...stylex.props(styles.token)}>
-            {where.filter.fieldReference.name} {where.filter.filterString}
+            <RawReference
+              rootQuery={rootQuery}
+              reference={where.filter.fieldReference}
+            />
+            <Label>{where.filter.filterString}</Label>
+            <ClearIcon
+              {...stylex.props(styles.icon)}
+              onClick={() => {
+                where.delete();
+                setQuery?.(rootQuery.build());
+              }}
+            />
           </div>
         ))}
       </div>

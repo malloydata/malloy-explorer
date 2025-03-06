@@ -6,8 +6,7 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
-import AggregateIcon from '../../assets/refinements/insert_aggregate.svg?react';
+import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Field} from '../Field';
@@ -16,6 +15,8 @@ import {
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
+import {QueryContext} from '../../contexts/QueryContext';
+import AggregateIcon from '../../assets/refinements/insert_aggregate.svg?react';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
@@ -25,9 +26,9 @@ export interface AggregateOperationsProps {
 
 export function AggregateOperations({
   rootQuery,
-  segment,
   aggregates,
 }: AggregateOperationsProps) {
+  const {setQuery} = useContext(QueryContext);
   if (aggregates.length === 0) {
     return null;
   }
@@ -38,12 +39,15 @@ export function AggregateOperations({
         <div {...stylex.props(styles.title)}>aggregate:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
-        {aggregates.map(({field}, key) => (
+        {aggregates.map((aggregate, key) => (
           <Field
             key={key}
             rootQuery={rootQuery}
-            field={field}
-            onDelete={field => window.alert('not implemented in query builder')}
+            field={aggregate.field}
+            onDelete={() => {
+              aggregate.delete();
+              setQuery?.(rootQuery.build());
+            }}
           />
         ))}
       </div>

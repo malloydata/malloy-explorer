@@ -30,7 +30,7 @@ import {
 import {dialogStyles} from './styles';
 import {useContext, useState} from 'react';
 import {QueryContext} from '../../contexts/QueryContext';
-import {parseString} from '@malloydata/malloy-tag/dist/util';
+
 export interface FilterDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;

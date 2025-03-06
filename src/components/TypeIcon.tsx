@@ -15,10 +15,8 @@ import BooleanTypeIcon from '../assets/types/type-icon-on-off.svg?react';
 import DateTypeIcon from '../assets/types/type-icon-date.svg?react';
 import JsonTypeIcon from '../assets/types/type-icon-json.svg?react';
 import NumberTypeIcon from '../assets/types/type-icon-number.svg?react';
-import RecordTypeIcon from '../assets/types/type-icon-json.svg?react';
 import SqlNativeTypeIcon from '../assets/types/type-icon-sql-native.svg?react';
 import StringTypeIcon from '../assets/types/type-icon-string.svg?react';
-import TimestampTypeIcon from '../assets/types/type-icon-date.svg?react';
 
 export interface TypeIconParameters {
   type: Malloy.AtomicType;
@@ -37,12 +35,12 @@ export function TypeIcon({type}: TypeIconParameters) {
     case 'number_type':
       return <NumberTypeIcon {...stylex.props(styles.icon)} />;
     case 'record_type':
-      return <RecordTypeIcon {...stylex.props(styles.icon)} />;
+      return <JsonTypeIcon {...stylex.props(styles.icon)} />;
     case 'sql_native_type':
       return <SqlNativeTypeIcon {...stylex.props(styles.icon)} />;
     case 'string_type':
       return <StringTypeIcon {...stylex.props(styles.icon)} />;
     case 'timestamp_type':
-      return <TimestampTypeIcon {...stylex.props(styles.icon)} />;
+      return <DateTypeIcon {...stylex.props(styles.icon)} />;
   }
 }

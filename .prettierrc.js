@@ -1,7 +1,8 @@
+// eslint-disable-next-line no-undef
 module.exports = {
-  arrowParens: "avoid",
+  arrowParens: 'avoid',
   bracketSpacing: false,
   semi: true,
   singleQuote: true,
-  trailingComma: "es5",
-}
+  trailingComma: 'es5',
+};

@@ -6,16 +6,13 @@
  */
 
 import * as React from 'react';
-import {Children} from 'react';
 import {
   ASTExpression,
   ASTFilteredFieldExpression,
   ASTQuery,
-  ASTReference,
   ASTReferenceExpression,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
-import {RawReference} from './RawReference';
 import {styles} from './styles';
 import {TypeIcon} from './TypeIcon';
 import {Where} from './Where';

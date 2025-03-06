@@ -12,7 +12,6 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
-import {TypeIcon} from './TypeIcon';
 import {LiteralValue} from './LiteralValue';
 import {LiteralIcon} from './LiteralIcon';
 import {Label} from './Label';

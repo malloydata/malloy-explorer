@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import {
   ASTOrderByViewOperation,
   ASTQuery,
@@ -15,6 +16,8 @@ import OrderByIcon from '../../assets/refinements/insert_order_by.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {RawReference} from '../RawReference';
+import {QueryContext} from '../../contexts/QueryContext';
+import ClearIcon from '../../assets/refinements/clear.svg?react';
 
 export interface OrderByOperationsProps {
   rootQuery: ASTQuery;
@@ -26,6 +29,7 @@ export function OrderByOperations({
   rootQuery,
   orderBys,
 }: OrderByOperationsProps) {
+  const {setQuery} = useContext(QueryContext);
   if (orderBys.length === 0) {
     return null;
   }
@@ -46,6 +50,13 @@ export function OrderByOperations({
               {orderBy.direction === 'asc' ? ' ascending' : ''}
               {orderBy.direction === 'desc' ? ' descending' : ''}
             </div>
+            <ClearIcon
+              {...stylex.props(styles.icon)}
+              onClick={() => {
+                orderBy.delete();
+                setQuery?.(rootQuery.build());
+              }}
+            />
           </div>
         ))}
       </div>

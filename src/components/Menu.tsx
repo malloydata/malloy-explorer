@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import * as React from 'react';
+import {ReactElement} from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import stylex from '@stylexjs/stylex';
-import {ReactElement} from 'react';
 import ChevronRight from '../assets/chevrons/chevron_right.svg?react';
 import {styles} from './styles';
 import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';

@@ -10,7 +10,6 @@ import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
 import QueryIcon from '../assets/types/type-icon-query.svg?react';
 import {Operations} from './Operations';
-import {View} from './View';
 import {
   ASTArrowViewDefinition,
   ASTQuery,

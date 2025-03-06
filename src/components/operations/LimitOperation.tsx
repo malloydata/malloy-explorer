@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import {
   ASTLimitViewOperation,
   ASTQuery,
@@ -14,7 +15,9 @@ import {
 import LimitIcon from '../../assets/refinements/insert_limit.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
-import {Field} from '../Field';
+import {Label} from '../Label';
+import {QueryContext} from '../../contexts/QueryContext';
+import ClearIcon from '../../assets/refinements/clear.svg?react';
 
 export interface LimitOperationProps {
   rootQuery: ASTQuery;
@@ -23,6 +26,7 @@ export interface LimitOperationProps {
 }
 
 export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
+  const {setQuery} = useContext(QueryContext);
   if (!limit) {
     return null;
   }
@@ -33,7 +37,16 @@ export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
         <div {...stylex.props(styles.title)}>limit:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
-        <div {...stylex.props(styles.token)}>{limit.limit}</div>
+        <div {...stylex.props(styles.token)}>
+          <Label>{limit.limit}</Label>
+          <ClearIcon
+            {...stylex.props(styles.icon)}
+            onClick={() => {
+              limit.delete();
+              setQuery?.(rootQuery.build());
+            }}
+          />
+        </div>
       </div>
     </div>
   );

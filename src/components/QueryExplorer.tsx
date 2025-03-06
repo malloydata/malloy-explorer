@@ -6,16 +6,18 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
+import * as Malloy from '@malloydata/malloy-interfaces';
 
 import {Query} from './Query';
 import {Source} from './Source';
 import {Parameters} from './Parameters';
-import {QueryContext} from '../contexts/QueryContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
 
-export interface QueryExplorerProps {}
+export interface QueryExplorerProps {
+  source: Malloy.SourceInfo;
+  query: Malloy.Query;
+}
 
 const queryExplorerStyles = stylex.create({
   main: {
@@ -27,8 +29,7 @@ const queryExplorerStyles = stylex.create({
   },
 });
 
-export function QueryExplorer({}: QueryExplorerProps) {
-  const {source, query} = useContext(QueryContext);
+export function QueryExplorer({source, query}: QueryExplorerProps) {
   const rootQuery = useQueryBuilder(source, query);
 
   if (!source || !query || !rootQuery) {

@@ -23,7 +23,7 @@ export interface RawReferenceProps {
   reference: ASTReference;
 }
 
-export function RawReference({rootQuery, reference}: RawReferenceProps) {
+export function RawReference({reference}: RawReferenceProps) {
   if (reference instanceof ASTFieldReference) {
     const fieldInfo = reference.getFieldInfo();
     if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {

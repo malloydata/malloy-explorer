@@ -169,15 +169,8 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   const aggregateMenu: MenuItem[] = createAggregateMenu(schema.fields, []);
   const filterMenu: MenuItem[] = createFilterMenu(schema.fields, []);
 
-  let outputSchemaFields: Malloy.FieldInfo[] = [];
-
-  try {
-    outputSchemaFields = segment.getOutputSchema().fields;
-    console.log({outputSchemaFields});
-  } catch (error) {
-    console.error(error); // TODO remove when fixed
-    debugger;
-  }
+  const outputSchemaFields: Malloy.FieldInfo[] =
+    segment.getOutputSchema().fields;
 
   const orderByMenu: MenuItem[] = outputSchemaFields
     .filter(field => field.kind === 'dimension')
@@ -205,26 +198,27 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       };
     });
 
-  const nestMenu: MenuItem[] = schema.fields
-    .filter(field => field.kind === 'view')
-    .map(field => {
-      return {
-        icon: <QueryIcon {...stylex.props(styles.icon)} />,
-        label: field.name,
-        onClick: () => {
-          segment.addNest(field.name);
-          setQuery?.(rootQuery.build());
-        },
-      };
-    });
-
-  nestMenu.unshift({
-    label: 'New Nest...',
-    onClick: () => {
-      segment.addEmptyNest('nest');
-      setQuery?.(rootQuery.build());
+  const nestMenu: MenuItem[] = [
+    {
+      label: 'New Nest...',
+      onClick: () => {
+        segment.addEmptyNest('nest');
+        setQuery?.(rootQuery.build());
+      },
     },
-  });
+    ...schema.fields
+      .filter(field => field.kind === 'view')
+      .map(field => {
+        return {
+          icon: <QueryIcon {...stylex.props(styles.icon)} />,
+          label: field.name,
+          onClick: () => {
+            segment.addNest(field.name);
+            setQuery?.(rootQuery.build());
+          },
+        };
+      }),
+  ];
 
   return (
     <>

@@ -38,7 +38,7 @@ const App = () => {
           <button onClick={() => setQuery(queries[queryIdx])}>Reset</button>
           <hr />
           <ErrorElement fallback={<div>Oops</div>}>
-            <QueryExplorer />
+            <QueryExplorer source={source} query={query} />
           </ErrorElement>
           <hr />
           <MalloyPreview source={source} query={query} />

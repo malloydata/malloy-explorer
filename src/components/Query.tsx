@@ -6,7 +6,6 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
   ASTQuery,
@@ -25,7 +24,8 @@ export interface QueryProps {
 export function Query({rootQuery, query}: QueryProps) {
   // TODO AST the rest of this stuff
 
-  console.log({query});
+  // eslint-disable-next-line no-console
+  console.log({query, annotations: query.annotations});
 
   return (
     <div {...stylex.props(styles.heading)}>

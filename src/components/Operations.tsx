@@ -38,7 +38,7 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
 
   const segment = viewDef.getOrAddDefaultSegment();
 
-  segment.operations.items.forEach((operation, idx) => {
+  segment.operations.items.forEach(operation => {
     if (operation instanceof ASTGroupByViewOperation) {
       groupBys.push(operation);
     } else if (operation instanceof ASTAggregateViewOperation) {

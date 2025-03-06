@@ -13,6 +13,6 @@ export interface RawPreviewProps {
   query: Malloy.Query;
 }
 
-export function RawPreview({source, query}: RawPreviewProps) {
+export function RawPreview({query}: RawPreviewProps) {
   return <pre>{JSON.stringify(query, null, 2)}</pre>;
 }

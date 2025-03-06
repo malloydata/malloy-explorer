@@ -1716,11 +1716,11 @@ const query4: Malloy.Query = {
         operations: [
           {
             kind: 'nest',
-            name: 'by_state',
+            name: 'top_destinations',
             view: {
               definition: {
                 kind: 'view_reference',
-                name: 'by_state',
+                name: 'top_destinations',
               },
             },
           },

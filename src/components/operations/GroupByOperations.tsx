@@ -6,8 +6,7 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
-import GroupByIcon from '../../assets/refinements/insert_group_by.svg?react';
+import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Field} from '../Field';
@@ -17,6 +16,7 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryContext} from '../../contexts/QueryContext';
+import GroupByIcon from '../../assets/refinements/insert_group_by.svg?react';
 
 export interface GroupByOperationsProps {
   rootQuery: ASTQuery;
@@ -26,10 +26,9 @@ export interface GroupByOperationsProps {
 
 export function GroupByOperations({
   rootQuery,
-  segment,
   groupBys,
 }: GroupByOperationsProps) {
-  const {setQuery} = React.useContext(QueryContext);
+  const {setQuery} = useContext(QueryContext);
   if (groupBys.length === 0) {
     return null;
   }
@@ -40,13 +39,13 @@ export function GroupByOperations({
         <div {...stylex.props(styles.title)}>group_by:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
-        {groupBys.map(({field}, key) => (
+        {groupBys.map((groupBy, key) => (
           <Field
             key={key}
             rootQuery={rootQuery}
-            field={field}
+            field={groupBy.field}
             onDelete={() => {
-              segment.removeGroupBy(field.name);
+              groupBy.delete();
               setQuery?.(rootQuery.build());
             }}
           />

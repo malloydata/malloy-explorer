@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as React from 'react';
 import {createContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 

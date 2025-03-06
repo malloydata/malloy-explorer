@@ -14,7 +14,6 @@ import BooleanTypeIcon from '../assets/types/type-icon-on-off.svg?react';
 import DateTypeIcon from '../assets/types/type-icon-date.svg?react';
 import NumberTypeIcon from '../assets/types/type-icon-number.svg?react';
 import StringTypeIcon from '../assets/types/type-icon-string.svg?react';
-import TimestampTypeIcon from '../assets/types/type-icon-date.svg?react';
 
 export interface LiteralIconProps {
   value: Malloy.LiteralValue | undefined;
@@ -37,6 +36,6 @@ export function LiteralIcon({value}: LiteralIconProps) {
     case 'string_literal':
       return <StringTypeIcon {...stylex.props(styles.icon)} />;
     case 'timestamp_literal':
-      return <TimestampTypeIcon {...stylex.props(styles.icon)} />;
+      return <DateTypeIcon {...stylex.props(styles.icon)} />;
   }
 }

@@ -6,13 +6,8 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
 import {Filter} from './Filter';
-import {
-  ASTQuery,
-  ASTWhere,
-  ASTWhereList,
-} from '@malloydata/malloy-query-builder';
+import {ASTQuery, ASTWhereList} from '@malloydata/malloy-query-builder';
 
 export interface WhereProps {
   rootQuery: ASTQuery;
