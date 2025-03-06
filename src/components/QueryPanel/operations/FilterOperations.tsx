@@ -13,6 +13,7 @@ import {
   ASTHavingViewOperation,
   ParsedFilter,
   ASTFilterWithFilterString,
+  ASTReferenceExpression,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -87,18 +88,22 @@ function SingleFilterOperation({
     [filterOperation.filter, rootQuery, setQuery]
   );
 
-  if (!(filterOperation.filter instanceof ASTFilterWithFilterString)) {
+  const {filter} = filterOperation;
+  if (!(filter instanceof ASTFilterWithFilterString)) {
     return null;
   }
 
-  const {fieldReference, filterString} = filterOperation.filter;
-  const filter = filterOperation.filter.getFilter();
-  const fieldInfo = fieldReference.getFieldInfo();
-  if (fieldInfo.kind !== 'dimension' && fieldInfo.kind !== 'measure') {
-    throw new Error(`Invalid filter field kind: ${fieldInfo.kind}`);
+  const {expression, filterString} = filter;
+
+  if (!(expression instanceof ASTReferenceExpression)) {
+    return null;
   }
 
-  const {op, value} = parsedToLabels(filter, filterString);
+  const fieldInfo = filter.getFieldInfo();
+  const parsedFilter = filter.getFilter();
+  const path = expression.path ?? [];
+
+  const {op, value} = parsedToLabels(parsedFilter, filterString);
 
   const label = `${fieldInfo.name} ${op} ${value}`;
 
@@ -106,8 +111,8 @@ function SingleFilterOperation({
     <div {...stylex.props(hoverStyles.main)}>
       <FilterPopover
         fieldInfo={fieldInfo}
-        path={fieldReference.path ?? []}
-        filter={filter}
+        path={path}
+        filter={parsedFilter}
         setFilter={setFilter}
         trigger={<Token icon="filter" color="cyan" label={label} />}
         layoutProps={{align: 'start', side: 'bottom', sideOffset: 1}}

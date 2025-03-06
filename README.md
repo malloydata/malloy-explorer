@@ -1,5 +1,12 @@
 # Development directions
 
+- Initialize git sub-modules
+
+```
+git submodule init
+git submodule update
+```
+
 - Install required packages
 
 ```
