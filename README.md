@@ -5,7 +5,10 @@
 
 ```
 cd malloy
-npm ci && npm run build && npm pack -ws --pack-destination out
+npm ci
+npm run build
+mkdir -p out
+npm pack -ws --pack-destination out
 ```
 
 - In the malloy-explorer directory, install packages
