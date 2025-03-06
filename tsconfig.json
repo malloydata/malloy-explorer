@@ -6,8 +6,8 @@
     "moduleResolution": "bundler",
     "noEmit": false,
     "outDir": "dist/types",
-    "resolveJsonModule": true,
     "rootDir": "src",
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2019"

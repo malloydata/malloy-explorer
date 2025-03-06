@@ -1,0 +1,3 @@
+[submodule "malloy-samples"]
+	path = malloy-samples
+	url = git@github.com:malloydata/malloy-samples

@@ -85,6 +85,8 @@
     "@rollup/plugin-replace": "^6.0.2",
     "@stylexjs/eslint-plugin": "^0.11.1",
     "@stylexjs/postcss-plugin": "^0.11.1",
+    "@malloydata/db-duckdb": "0.0.294",
+    "@malloydata/malloy": "0.0.294",
     "@stylexjs/rollup-plugin": "^0.10.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
