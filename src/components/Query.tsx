@@ -22,8 +22,6 @@ export interface QueryProps {
 }
 
 export function Query({rootQuery, query}: QueryProps) {
-  // TODO AST the rest of this stuff
-
   // eslint-disable-next-line no-console
   console.log({query, annotations: query.annotations});
 
