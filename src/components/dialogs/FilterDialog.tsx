@@ -29,7 +29,7 @@ import {
 } from '@radix-ui/react-dialog';
 import {dialogStyles} from './styles';
 import {useContext, useState} from 'react';
-import {QueryContext} from '../../contexts/QueryContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface FilterDialogProps {
   open: boolean;
@@ -49,7 +49,7 @@ export function FilterDialog({
   segment,
   filterField,
 }: FilterDialogProps) {
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
   const [value, setValue] = useState('');
   const [errors, setErrors] = useState<FilterLog[]>([]);
 

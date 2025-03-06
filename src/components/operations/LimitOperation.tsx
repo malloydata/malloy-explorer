@@ -16,7 +16,7 @@ import LimitIcon from '../../assets/refinements/insert_limit.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Label} from '../Label';
-import {QueryContext} from '../../contexts/QueryContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import ClearIcon from '../../assets/refinements/clear.svg?react';
 
 export interface LimitOperationProps {
@@ -26,7 +26,7 @@ export interface LimitOperationProps {
 }
 
 export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
   if (!limit) {
     return null;
   }

@@ -20,7 +20,7 @@ import {
 } from '@radix-ui/react-dialog';
 import {dialogStyles} from './styles';
 import {useContext, useState} from 'react';
-import {QueryContext} from '../../contexts/QueryContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 export interface LimitDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -34,7 +34,7 @@ export function LimitDialog({
   setOpen,
   segment,
 }: LimitDialogProps) {
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
   const [value, setValue] = useState(10);
   return (
     <Dialog open={open}>

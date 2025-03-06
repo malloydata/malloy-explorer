@@ -6,5 +6,6 @@
  */
 
 export {MalloyPreview} from './components/MalloyPreview';
-export {QueryExplorer} from './components/QueryExplorer';
+export {QueryEditorContext} from './contexts/QueryEditorContext';
+export {QueryEditor} from './components/QueryEditor';
 export {RawPreview} from './components/RawPreview';

@@ -16,7 +16,7 @@ import OrderByIcon from '../../assets/refinements/insert_order_by.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {RawReference} from '../RawReference';
-import {QueryContext} from '../../contexts/QueryContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import ClearIcon from '../../assets/refinements/clear.svg?react';
 
 export interface OrderByOperationsProps {
@@ -29,7 +29,7 @@ export function OrderByOperations({
   rootQuery,
   orderBys,
 }: OrderByOperationsProps) {
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
   if (orderBys.length === 0) {
     return null;
   }

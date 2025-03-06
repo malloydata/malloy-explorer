@@ -14,9 +14,9 @@ import {Source} from './Source';
 import {Parameters} from './Parameters';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
 
-export interface QueryExplorerProps {
+export interface QueryEditorProps {
   source: Malloy.SourceInfo;
-  query: Malloy.Query;
+  query?: Malloy.Query;
 }
 
 const queryExplorerStyles = stylex.create({
@@ -29,10 +29,20 @@ const queryExplorerStyles = stylex.create({
   },
 });
 
-export function QueryExplorer({source, query}: QueryExplorerProps) {
+/**
+ * The Query Viewing and Editing panel. Takes a `SourceInfo` object
+ * and an optional `Query` object.
+ *
+ * Wrap in a [QueryEditorContext] with a `setQuery` method to support editing.
+ *
+ * @param source The source object to be used for query building.
+ * @param query A query to be edited. Omit for a new query.
+ * @returns
+ */
+export function QueryEditor({source, query}: QueryEditorProps) {
   const rootQuery = useQueryBuilder(source, query);
 
-  if (!source || !query || !rootQuery) {
+  if (!rootQuery) {
     return null;
   }
 

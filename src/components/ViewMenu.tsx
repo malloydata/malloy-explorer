@@ -19,7 +19,7 @@ import InsertIcon from '../assets/refinements/insert.svg?react';
 import QueryIcon from '../assets/types/type-icon-query.svg?react';
 import {styles} from './styles';
 import stylex from '@stylexjs/stylex';
-import {QueryContext} from '../contexts/QueryContext';
+import {QueryEditorContext} from '../contexts/QueryEditorContext';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {TypeIcon} from './TypeIcon';
 import {JoinIcon} from './JoinIcon';
@@ -54,7 +54,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   >(undefined);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
 
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
 
   const segment = view.getOrAddDefaultSegment();
 

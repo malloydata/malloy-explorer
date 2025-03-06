@@ -15,7 +15,7 @@ import {
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {QueryContext} from '../../contexts/QueryContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import AggregateIcon from '../../assets/refinements/insert_aggregate.svg?react';
 
 export interface AggregateOperationsProps {
@@ -28,7 +28,7 @@ export function AggregateOperations({
   rootQuery,
   aggregates,
 }: AggregateOperationsProps) {
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
   if (aggregates.length === 0) {
     return null;
   }

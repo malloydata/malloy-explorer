@@ -18,7 +18,7 @@ import {styles} from '../styles';
 import {Label} from '../Label';
 import {RawReference} from '../RawReference';
 import ClearIcon from '../../assets/refinements/clear.svg?react';
-import {QueryContext} from '../../contexts/QueryContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
@@ -27,7 +27,7 @@ export interface WhereOperationsProps {
 }
 
 export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
   if (wheres.length === 0) {
     return null;
   }

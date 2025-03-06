@@ -15,7 +15,7 @@ import {
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {QueryContext} from '../../contexts/QueryContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import GroupByIcon from '../../assets/refinements/insert_group_by.svg?react';
 
 export interface GroupByOperationsProps {
@@ -28,7 +28,7 @@ export function GroupByOperations({
   rootQuery,
   groupBys,
 }: GroupByOperationsProps) {
-  const {setQuery} = useContext(QueryContext);
+  const {setQuery} = useContext(QueryEditorContext);
   if (groupBys.length === 0) {
     return null;
   }

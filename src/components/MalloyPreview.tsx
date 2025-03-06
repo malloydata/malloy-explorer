@@ -11,7 +11,7 @@ import {useQueryBuilder} from '../hooks/useQueryBuilder';
 
 export interface MalloyPreviewProps {
   source: Malloy.SourceInfo;
-  query: Malloy.Query;
+  query?: Malloy.Query;
 }
 
 export function MalloyPreview({source, query}: MalloyPreviewProps) {

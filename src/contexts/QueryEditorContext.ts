@@ -8,10 +8,14 @@
 import {createContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 
-export interface QueryContextProps {
+export interface QueryEditorContextProps {
+  /** Provide to allow editing of the query */
   setQuery?: (rootQuery: Malloy.Query) => void;
-  source?: Malloy.SourceInfo;
-  query?: Malloy.Query;
 }
 
-export const QueryContext = createContext<QueryContextProps>({});
+/**
+ * QueryEditorContext enables query editing by providing the setQuery
+ * callback.
+ */
+
+export const QueryEditorContext = createContext<QueryEditorContextProps>({});
