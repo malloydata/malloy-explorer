@@ -461,6 +461,13 @@ export const modelInfo: Malloy.ModelInfo = {
     {
       kind: 'source',
       name: 'flights',
+      parameters: [
+        {
+          name: 'selected_carrier',
+          type: {kind: 'string_type'},
+          default_value: {kind: 'string_literal', string_value: 'AA'},
+        },
+      ],
       schema: {
         fields: [
           {

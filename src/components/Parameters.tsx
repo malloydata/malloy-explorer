@@ -13,8 +13,8 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from './styles';
 import {LiteralValue} from './LiteralValue';
-import {LiteralIcon} from './LiteralIcon';
 import {Label} from './Label';
+import {TypeIcon} from './TypeIcon';
 
 /**
  * Source
@@ -25,7 +25,7 @@ export interface ParametersProps {
 
 export function Parameters({rootQuery}: ParametersProps) {
   if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
-    const parameters = rootQuery.definition.sourceReference.parameters;
+    const parameters = rootQuery.definition.getSourceInfo().parameters;
     if (!parameters || parameters.length === 0) {
       return null;
     }
@@ -33,12 +33,11 @@ export function Parameters({rootQuery}: ParametersProps) {
     return (
       <div {...stylex.props(styles.heading)}>
         <div {...stylex.props(styles.title)}>Parameters:</div>
-        {[...parameters.iter()].map((parameter, key) => (
+        {parameters.map((parameter, key) => (
           <div key={key} {...stylex.props(styles.labelWithIcon)}>
-            <LiteralIcon value={parameter.parameter.value} />
+            <TypeIcon type={parameter.type} />
             <Label>
-              {parameter.parameter.name}{' '}
-              <LiteralValue value={parameter.parameter.value} />
+              {parameter.name} <LiteralValue value={parameter.default_value} />
             </Label>
           </div>
         ))}
