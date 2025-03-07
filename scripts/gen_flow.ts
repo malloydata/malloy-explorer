@@ -24,7 +24,7 @@ async function go() {
   await Promise.all(
     files.map(async file => {
       const inFile = path.resolve(inDir, file);
-      const outFile = path.resolve(outDir, file);
+      const outFile = path.resolve(outDir, file.replace('.d.ts', '.flow.js'));
       console.log(`Generating flow types for file ${file}`);
       const contents = fs.readFileSync(inFile, 'utf8');
       const flow = await unstable_translateTSDefToFlowDef(contents);
