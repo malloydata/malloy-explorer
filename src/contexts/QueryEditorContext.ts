@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {createContext} from 'react';
+import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 
 export interface QueryEditorContextProps {
@@ -18,4 +18,6 @@ export interface QueryEditorContextProps {
  * callback.
  */
 
-export const QueryEditorContext = createContext<QueryEditorContextProps>({});
+export const QueryEditorContext = React.createContext<QueryEditorContextProps>(
+  {}
+);

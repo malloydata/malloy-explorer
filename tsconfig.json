@@ -1,16 +1,15 @@
 {
-    "compilerOptions": {
-        "composite": true,
-        "esModuleInterop": true,
-        "jsx": "react-jsx",
-        "module": "NodeNext",
-        "moduleResolution": "nodenext",
-        "noEmit": false,
-        "outDir": "dist/types",
-        "rootDir": "src",
-        "skipLibCheck": true,
-        "strict": true,
-        "target": "ES2019"
-    },
-    "include": ["src"]
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "noEmit": false,
+    "outDir": "dist/types",
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2019"
+  },
+  "include": ["src"]
 }
