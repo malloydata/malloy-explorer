@@ -1,4 +1,6 @@
 .DS_Store
 .vscode/settings.json
-node_modules
 dist
+node_modules
+flow
+tsconfig.buildinfo
