@@ -12,7 +12,6 @@ import {
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import OrderByIcon from '../../assets/refinements/insert_order_by.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {RawReference} from '../RawReference';

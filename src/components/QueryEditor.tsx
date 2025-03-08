@@ -21,7 +21,7 @@ export interface QueryEditorProps {
 
 const queryExplorerStyles = stylex.create({
   main: {
-    fontFamily: 'monospace',
+    fontFamily: 'sans-serif',
     lineHeight: 1.8,
     display: 'flex',
     flexDirection: 'column',
