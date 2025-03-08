@@ -1723,7 +1723,7 @@ const query4: Malloy.Query = {
         operations: [
           {
             kind: 'nest',
-            name: 'top_destinations',
+            name: 'nest 1',
             view: {
               definition: {
                 kind: 'view_reference',

@@ -16,7 +16,6 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import AggregateIcon from '../../assets/refinements/insert_aggregate.svg?react';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
@@ -34,10 +33,7 @@ export function AggregateOperations({
   }
   return (
     <div>
-      <div {...stylex.props(styles.labelWithIcon)}>
-        <AggregateIcon {...stylex.props(styles.icon)} />
-        <div {...stylex.props(styles.title)}>aggregate:</div>
-      </div>
+      <div {...stylex.props(styles.title)}>aggregate</div>
       <div {...stylex.props(styles.tokenContainer)}>
         {aggregates.map((aggregate, key) => (
           <Field

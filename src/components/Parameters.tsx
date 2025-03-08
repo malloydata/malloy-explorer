@@ -34,8 +34,8 @@ export function Parameters({rootQuery}: ParametersProps) {
     }
 
     return (
-      <div {...stylex.props(styles.heading)}>
-        <div {...stylex.props(styles.title)}>Parameters:</div>
+      <div {...stylex.props(styles.queryCard)}>
+        <div {...stylex.props(styles.title)}>Source parameters</div>
         {parameters.map((parameter, key) => (
           <div key={key} {...stylex.props(styles.labelWithIcon)}>
             <TypeIcon type={parameter.type} />

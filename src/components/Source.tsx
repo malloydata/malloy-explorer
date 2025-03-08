@@ -24,8 +24,7 @@ export interface SourceProps {
 export function Source({rootQuery}: SourceProps) {
   if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
     return (
-      <div {...stylex.props(styles.heading)}>
-        <div {...stylex.props(styles.title)}>Source:</div>
+      <div {...stylex.props(styles.queryCard)}>
         <div {...stylex.props(styles.labelWithIcon)}>
           <DatabaseIcon {...stylex.props(styles.icon)} />
           {

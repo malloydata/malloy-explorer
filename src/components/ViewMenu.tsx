@@ -25,6 +25,13 @@ import {TypeIcon} from './TypeIcon';
 import {JoinIcon} from './JoinIcon';
 import {LimitDialog} from './dialogs/LimitDialog';
 import {FilterDialog} from './dialogs/FilterDialog';
+import {Label} from './Label';
+
+const viewMenuStyles = stylex.create({
+  p6: {
+    padding: 6,
+  },
+});
 
 export interface ViewMenuProps {
   rootQuery: ASTQuery;
@@ -223,7 +230,12 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   return (
     <>
       <Menu
-        icon={<InsertIcon {...stylex.props(styles.menuIcon)} />}
+        icon={
+          <div {...stylex.props(styles.labelWithIcon, viewMenuStyles.p6)}>
+            <InsertIcon {...stylex.props(styles.icon)} />
+            <Label>Add</Label>
+          </div>
+        }
         items={[
           {
             icon: <GroupByIcon {...stylex.props(styles.icon)} />,

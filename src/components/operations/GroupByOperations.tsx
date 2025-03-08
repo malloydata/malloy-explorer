@@ -16,7 +16,6 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import GroupByIcon from '../../assets/refinements/insert_group_by.svg?react';
 
 export interface GroupByOperationsProps {
   rootQuery: ASTQuery;
@@ -34,10 +33,7 @@ export function GroupByOperations({
   }
   return (
     <div>
-      <div {...stylex.props(styles.labelWithIcon)}>
-        <GroupByIcon {...stylex.props(styles.icon)} />
-        <div {...stylex.props(styles.title)}>group_by:</div>
-      </div>
+      <div {...stylex.props(styles.title)}>group by</div>
       <div {...stylex.props(styles.tokenContainer)}>
         {groupBys.map((groupBy, key) => (
           <Field
