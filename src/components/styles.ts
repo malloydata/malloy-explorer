@@ -8,7 +8,11 @@
 import stylex from '@stylexjs/stylex';
 
 export const styles = stylex.create({
-  icon: {width: 18, height: 18, display: 'inline-block'},
+  icon: {
+    width: 18,
+    height: 18,
+    display: 'inline-block',
+  },
   menuIcon: {width: 24, height: 24},
 
   labelWithIcon: {
