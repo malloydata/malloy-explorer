@@ -10,7 +10,12 @@
     "build-flow": "tsx scripts/gen_flow.ts",
     "dev": "vite dev --config vite.config.ts",
     "lint": "tsc --noEmit && eslint .",
+    "malloy-update-next": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.ts next)",
+    "malloy-update": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.ts latest)",
     "test": "jest src"
+  },
+  "bin": {
+    "malloy-packages": "./scripts/malloy-packages.ts"
   },
   "repository": {
     "type": "git",
@@ -27,10 +32,10 @@
   },
   "homepage": "https://github.com/malloydata/malloy-explorer#readme",
   "dependencies": {
-    "@malloydata/malloy-filter": "file:../malloy/out/malloydata-malloy-filter-0.0.240.tgz",
-    "@malloydata/malloy-interfaces": "file:../malloy/out/malloydata-malloy-interfaces-0.0.240.tgz",
-    "@malloydata/malloy-query-builder": "file:../malloy/out/malloydata-malloy-query-builder-0.0.240.tgz",
-    "@malloydata/malloy-tag": "file:../malloy/out/malloydata-malloy-tag-0.0.240.tgz",
+    "@malloydata/malloy-filter": "0.0.242",
+    "@malloydata/malloy-interfaces": "0.0.242",
+    "@malloydata/malloy-query-builder": "0.0.242",
+    "@malloydata/malloy-tag": "0.0.242",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@radix-ui/react-icons": "^1.3.2",
