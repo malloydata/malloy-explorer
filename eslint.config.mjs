@@ -23,6 +23,7 @@ export default [
   {
     ignores: [
       '**/*.d.ts',
+      '**/flow',
       '**/node_modules/',
       '**/dist/',
       '**/build/',
