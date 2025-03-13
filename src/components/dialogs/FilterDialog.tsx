@@ -9,10 +9,10 @@ import * as React from 'react';
 import stylex from '@stylexjs/stylex';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
-  BooleanParser,
-  StringParser,
-  NumberParser,
-  DateParser,
+  BooleanFilterExpression,
+  NumberFilterExpression,
+  StringFilterExpression,
+  TemporalFilterExpression,
   FilterLog,
 } from '@malloydata/malloy-filter';
 import {
@@ -89,42 +89,42 @@ export function FilterDialog({
                   switch (filterField.type.kind) {
                     case 'string_type':
                       {
-                        const result = new StringParser(value).parse();
-                        logs = result.logs;
+                        const result = StringFilterExpression.parse(value);
+                        logs = result.log;
                         filter = {
                           kind: 'string',
-                          clauses: result.clauses,
+                          parsed: result.parsed,
                         };
                       }
                       break;
                     case 'boolean_type':
                       {
-                        const result = new BooleanParser(value).parse();
-                        logs = result.logs;
+                        const result = BooleanFilterExpression.parse(value);
+                        logs = result.log;
                         filter = {
                           kind: 'boolean',
-                          clauses: result.clauses,
+                          parsed: result.parsed,
                         };
                       }
                       break;
                     case 'number_type':
                       {
-                        const result = new NumberParser(value).parse();
-                        logs = result.logs;
+                        const result = NumberFilterExpression.parse(value);
+                        logs = result.log;
                         filter = {
                           kind: 'number',
-                          clauses: result.clauses,
+                          parsed: result.parsed,
                         };
                       }
                       break;
                     case 'timestamp_type':
                     case 'date_type':
                       {
-                        const result = new DateParser(value).parse();
-                        logs = result.logs;
+                        const result = TemporalFilterExpression.parse(value);
+                        logs = result.log;
                         filter = {
-                          kind: 'date',
-                          clauses: result.clauses,
+                          kind: 'temporal',
+                          parsed: result.parsed,
                         };
                       }
                       break;

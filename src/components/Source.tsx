@@ -28,7 +28,11 @@ export function Source({rootQuery}: SourceProps) {
         <div {...stylex.props(styles.title)}>Source:</div>
         <div {...stylex.props(styles.labelWithIcon)}>
           <DatabaseIcon {...stylex.props(styles.icon)} />
-          {rootQuery.definition.sourceReference.name}
+          {
+            rootQuery.definition.as
+              .ArrowQueryDefinition()
+              .source.as.ReferenceQueryArrowSource().name
+          }
         </div>
       </div>
     );

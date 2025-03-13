@@ -25,7 +25,10 @@ export interface ParametersProps {
 
 export function Parameters({rootQuery}: ParametersProps) {
   if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
-    const parameters = rootQuery.definition.getSourceInfo().parameters;
+    const parameters = rootQuery.definition.as
+      .ArrowQueryDefinition()
+      .source.as.ReferenceQueryArrowSource()
+      .getSourceParameters();
     if (!parameters || parameters.length === 0) {
       return null;
     }
