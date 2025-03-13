@@ -7,8 +7,8 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {styles} from './styles';
-import {ViewDefinition} from './ViewDefinition';
+import {styles} from '../styles';
+import {ViewDefinition} from '../ViewDefinition';
 import {ViewMenu} from './ViewMenu';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 export interface ViewProps {

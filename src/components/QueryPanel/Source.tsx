@@ -11,8 +11,8 @@ import {
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
-import DatabaseIcon from '../assets/types/type-icon-database.svg?react';
-import {styles} from './styles';
+import DatabaseIcon from '../../assets/types/type-icon-database.svg?react';
+import {styles} from '../styles';
 
 /**
  * Source

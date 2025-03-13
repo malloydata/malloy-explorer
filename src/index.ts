@@ -6,7 +6,6 @@
  */
 
 export {MalloyPreview} from './components/MalloyPreview';
-export {QueryEditorContext} from './contexts/QueryEditorContext';
-export {QueryEditor} from './components/QueryEditor';
+export {QueryActionBar, QueryEditor} from './components/QueryPanel';
 export {RawPreview} from './components/RawPreview';
 export {SourcePanel} from './components/SourcePanel';

@@ -14,7 +14,7 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Label} from '../Label';
-import {View} from '../View';
+import {View} from '../QueryPanel/View';
 import NestIcon from '../../assets/refinements/insert_nest.svg?react';
 
 export interface NestOperationsProps {

@@ -8,24 +8,24 @@
 import * as React from 'react';
 import {useContext, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {Menu, MenuItem} from './Menu';
-import AggregateIcon from '../assets/refinements/insert_measure.svg?react';
-import GroupByIcon from '../assets/refinements/insert_group_by.svg?react';
-import FilterIcon from '../assets/refinements/insert_filter.svg?react';
-import LimitIcon from '../assets/refinements/insert_limit.svg?react';
-import OrderByIcon from '../assets/refinements/insert_order_by.svg?react';
-import NestIcon from '../assets/refinements/insert_nest.svg?react';
-import InsertIcon from '../assets/refinements/insert.svg?react';
-import QueryIcon from '../assets/types/type-icon-query.svg?react';
-import {styles} from './styles';
+import {Menu, MenuItem} from '../Menu';
+import AggregateIcon from '../../assets/refinements/insert_measure.svg?react';
+import GroupByIcon from '../../assets/refinements/insert_group_by.svg?react';
+import FilterIcon from '../../assets/refinements/insert_filter.svg?react';
+import LimitIcon from '../../assets/refinements/insert_limit.svg?react';
+import OrderByIcon from '../../assets/refinements/insert_order_by.svg?react';
+import NestIcon from '../../assets/refinements/insert_nest.svg?react';
+import InsertIcon from '../../assets/refinements/insert.svg?react';
+import QueryIcon from '../../assets/types/type-icon-query.svg?react';
+import {styles} from '../styles';
 import stylex from '@stylexjs/stylex';
-import {QueryEditorContext} from '../contexts/QueryEditorContext';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
-import {TypeIcon} from './TypeIcon';
-import {JoinIcon} from './JoinIcon';
-import {LimitDialog} from './dialogs/LimitDialog';
-import {FilterDialog} from './dialogs/FilterDialog';
-import {Label} from './Label';
+import {TypeIcon} from '../TypeIcon';
+import {JoinIcon} from '../JoinIcon';
+import {LimitDialog} from '../dialogs/LimitDialog';
+import {FilterDialog} from '../dialogs/FilterDialog';
+import {Label} from '../Label';
 
 const viewMenuStyles = stylex.create({
   p6: {

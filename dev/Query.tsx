@@ -6,14 +6,10 @@
  */
 
 import * as React from 'react';
+import * as QB from '@malloydata/malloy-query-builder';
 import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {
-  MalloyPreview,
-  QueryEditorContext,
-  QueryEditor,
-  RawPreview,
-} from '../src';
+import {MalloyPreview, QueryActionBar, QueryEditor, RawPreview} from '../src';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {modelInfo, queries as exampleQueries} from './example_model';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
@@ -36,25 +32,34 @@ const App = () => {
 
   return (
     <TooltipProvider>
-      <QueryEditorContext.Provider value={{setQuery}}>
-        <div style={{width: 500}}>
-          Query: {queryIdx}{' '}
-          <button onClick={() => setQueryIdx((queryIdx + 1) % queries.length)}>
-            Change Query
-          </button>{' '}
-          <button onClick={() => setQuery(queries[queryIdx])}>Reset</button>
-          <hr />
-          <QueryEditor source={source} query={query} />
-          <hr />
-          <MalloyPreview source={source} query={query} />
-          <hr />
-          {query ? (
-            <RawPreview source={source} query={query} />
-          ) : (
-            <div>No query</div>
-          )}
+      <div style={{width: 500}}>
+        Query: {queryIdx}{' '}
+        <button onClick={() => setQueryIdx((queryIdx + 1) % queries.length)}>
+          Change Query
+        </button>{' '}
+        <button onClick={() => setQuery(queries[queryIdx])}>Reset</button>
+        <hr />
+        <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
+          <QueryActionBar
+            source={source}
+            query={query}
+            clearQuery={() => setQuery(undefined)}
+            runQuery={(source, query) => {
+              const qb = new QB.ASTQuery({source, query});
+              window.alert(qb.toMalloy());
+            }}
+          />
+          <QueryEditor source={source} query={query} setQuery={setQuery} />
         </div>
-      </QueryEditorContext.Provider>
+        <hr />
+        <MalloyPreview source={source} query={query} />
+        <hr />
+        {query ? (
+          <RawPreview source={source} query={query} />
+        ) : (
+          <div>No query</div>
+        )}
+      </div>
     </TooltipProvider>
   );
 };
