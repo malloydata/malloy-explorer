@@ -1,20 +1,8 @@
 # Development directions
 
-- Check out https://github.com/malloydata/malloy and https://github.com/malloydata/malloy-explorer into the same directory
-- In the malloy directory, build local malloy packages
+- Install required packages
 
 ```
-cd malloy
-npm ci
-npm run build
-mkdir -p out
-npm pack -ws --pack-destination out
-```
-
-- In the malloy-explorer directory, install packages
-
-```
-cd ../malloy-explorer
 npm install
 ```
 
