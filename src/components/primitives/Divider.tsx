@@ -7,6 +7,7 @@
 
 import React from 'react';
 import stylex from '@stylexjs/stylex';
+import {StyleXStyles} from '@stylexjs/stylex/lib/StyleXTypes';
 
 const DEFAULT_ORIENTATION = 'horizontal';
 
@@ -17,12 +18,17 @@ interface DividerProps {
    * Either `horizontal` or `vertical`. Defaults to `horizontal`.
    */
   orientation?: Orientation;
+  /**
+   * Custom styles for the divider.
+   */
+  style?: StyleXStyles;
 }
 
 export default function Divider({
   orientation = DEFAULT_ORIENTATION,
+  style,
 }: DividerProps) {
-  return <div {...stylex.props(styles[orientation])}></div>;
+  return <div {...stylex.props(styles[orientation], style)}></div>;
 }
 
 const styles = stylex.create({

@@ -27,7 +27,6 @@ const styles = stylex.create({
   main: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '8px',
     gap: '8px',
   },
 });

@@ -10,7 +10,8 @@ import stylex from '@stylexjs/stylex';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
 
 import * as theme from './styles';
-import {Badge, Icon, List, ListItem, Divider} from './primitives';
+import {Badge, Icon, List, ListItem, Divider, Token} from './primitives';
+import ScrollableArea from './primitives/containers/ScrollableArea';
 
 interface SourcePanelProps {
   source: SourceInfo;
@@ -33,31 +34,59 @@ export function SourcePanel({source}: SourcePanelProps) {
         </div>
       </div>
       <Divider />
-      <div {...stylex.props(styles.content)}>
-        <List>
-          <ListItem
-            key="views"
-            label="Views"
-            startIcon={<Icon name="view" color="purple" />}
-            badge={<Badge label={views.length.toString()} color="purple" />}
-            endIcon={<Icon name="chevronRight" color="secondary" />}
-          />
-          <ListItem
-            key="measures"
-            label="Measures"
-            startIcon={<Icon name="measure" color="green" />}
-            badge={<Badge label={measures.length.toString()} color="green" />}
-            endIcon={<Icon name="chevronRight" color="secondary" />}
-          />
-          <ListItem
-            key="dimensions"
-            label="Dimensions"
-            startIcon={<Icon name="dimension" color="cyan" />}
-            badge={<Badge label={dimensions.length.toString()} color="cyan" />}
-            endIcon={<Icon name="chevronRight" color="secondary" />}
-          />
-        </List>
-      </div>
+      <ScrollableArea>
+        <div {...stylex.props(styles.content)}>
+          <List>
+            <ListItem
+              key="views"
+              label="Views"
+              startIcon={<Icon name="view" color="purple" />}
+              badge={<Badge label={views.length.toString()} color="purple" />}
+              endIcon={<Icon name="chevronRight" color="secondary" />}
+            />
+            <ListItem
+              key="measures"
+              label="Measures"
+              startIcon={<Icon name="measure" color="green" />}
+              badge={<Badge label={measures.length.toString()} color="green" />}
+              endIcon={<Icon name="chevronRight" color="secondary" />}
+            />
+            <ListItem
+              key="dimensions"
+              label="Dimensions"
+              startIcon={<Icon name="dimension" color="cyan" />}
+              badge={
+                <Badge label={dimensions.length.toString()} color="cyan" />
+              }
+              endIcon={<Icon name="chevronRight" color="secondary" />}
+            />
+          </List>
+          <Divider style={styles.divider} />
+          <div {...stylex.props(styles.tokens)}>
+            {fields
+              .filter(field => field.kind !== 'join')
+              .map(field => (
+                <div key={`${field.kind}::${field.name}`}>
+                  <Token
+                    label={field.name}
+                    color={
+                      field.kind === 'view'
+                        ? 'purple'
+                        : field.kind === 'dimension'
+                          ? 'green'
+                          : 'cyan'
+                    }
+                    icon={field.kind}
+                    onClick={() => console.debug('token clicked')}
+                    onHover={isHovered =>
+                      console.debug('token hovered: ', isHovered)
+                    }
+                  />
+                </div>
+              ))}
+          </div>
+        </div>
+      </ScrollableArea>
     </div>
   );
 }
@@ -67,6 +96,7 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     width: '280px',
+    height: '100vh',
     backgroundColor: '#F1F4F7',
     boxShadow: '-1px 0px 0px 0px #C8CCD2 inset',
   },
@@ -74,10 +104,20 @@ const styles = stylex.create({
     display: 'flex',
     justifyContent: 'start',
     padding: '8px',
-    boxShadow: '-1px 0px 0px 0px #C8CCD2 inset',
   },
   content: {
     display: 'flex',
     flexDirection: 'column',
+    padding: '8px',
+  },
+  divider: {
+    margin: '16px 0',
+  },
+  tokens: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '4px',
+    padding: '0px 4px',
   },
 });
