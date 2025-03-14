@@ -39,9 +39,24 @@ export function Query({rootQuery, query}: QueryProps) {
           />
         </div>
       ) : null}
-      <div {...stylex.props(styles.queryFooter)}>
-        <ViewMenu rootQuery={rootQuery} view={query} />
-      </div>
+      {query.isEmpty() ? (
+        <div {...stylex.props(queryStyles.emptyQuery)}>
+          <ViewMenu rootQuery={rootQuery} view={query} />
+        </div>
+      ) : (
+        <div {...stylex.props(styles.queryFooter)}>
+          <ViewMenu rootQuery={rootQuery} view={query} />
+        </div>
+      )}
     </div>
   );
 }
+
+const queryStyles = stylex.create({
+  emptyQuery: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    height: 60,
+  },
+});
