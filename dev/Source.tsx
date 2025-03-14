@@ -11,13 +11,17 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {modelInfo} from './example_model';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import {SourcePanel} from '../src';
+import ShowcaseButtons from './components/Buttons';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   return (
     <TooltipProvider>
-      <div style={{width: 500}}>
+      <div style={{display: 'flex'}}>
         <SourcePanel source={source} />
+        <div style={{padding: '8px'}}>
+          <ShowcaseButtons />
+        </div>
       </div>
     </TooltipProvider>
   );

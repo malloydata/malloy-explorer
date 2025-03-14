@@ -6,24 +6,13 @@
  */
 
 import React from 'react';
-import stylex from '@stylexjs/stylex';
-import {iconColorStyles} from './primitive-styles';
-
-import ChevronRight from '../../assets/chevrons/chevron_right.svg?react';
-import TypeIconDatabase from '../../assets/types/type-icon-database.svg?react';
-import TypeIconNumberMeasure from '../../assets/types/type-icon-number-measure.svg?react';
-import TypeIconProjection from '../../assets/types/type-icon-projection.svg?react';
-import TypeIconString from '../../assets/types/type-icon-string.svg?react';
-
-const ICON_MAP = {
-  chevronRight: ChevronRight,
-  database: TypeIconDatabase,
-  dimension: TypeIconString,
-  measure: TypeIconNumberMeasure,
-  view: TypeIconProjection,
-} as const;
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {ICON_MAP, SMALL_ICONS} from './icons';
+import {iconColors} from './colors.stylex';
 
 type IconName = keyof typeof ICON_MAP;
+
+type Color = keyof typeof colorVariants;
 
 interface IconProps {
   /**
@@ -33,10 +22,14 @@ interface IconProps {
   /**
    * The color of the icon.
    */
-  color: keyof typeof iconColorStyles;
+  color?: Color;
+  /**
+   * Custom styles for the icon.
+   */
+  style?: StyleXStyles;
 }
 
-export default function Icon({name, color}: IconProps) {
+export default function Icon({name, color = 'primary', style}: IconProps) {
   const IconComponent = ICON_MAP[name];
 
   if (!IconComponent) {
@@ -44,7 +37,14 @@ export default function Icon({name, color}: IconProps) {
   }
 
   return (
-    <IconComponent {...stylex.props(styles.main, iconColorStyles[color])} />
+    <IconComponent
+      {...stylex.props(
+        styles.main,
+        colorVariants[color],
+        SMALL_ICONS.includes(name) && styles.scaleUp,
+        style
+      )}
+    />
   );
 }
 
@@ -53,6 +53,36 @@ const styles = stylex.create({
     display: 'inline-block',
     width: '16px',
     height: '16px',
+    overflow: 'visible',
+  },
+  scaleUp: {
     transform: 'scale(1.5)',
+  },
+});
+
+const colorVariants = stylex.create({
+  primary: {
+    color: iconColors.primary,
+  },
+  secondary: {
+    color: iconColors.secondary,
+  },
+  disabled: {
+    color: iconColors.disabled,
+  },
+  primaryOnMedia: {
+    color: iconColors.primaryOnMedia,
+  },
+  gray: {
+    color: iconColors.gray,
+  },
+  purple: {
+    color: iconColors.purple,
+  },
+  green: {
+    color: iconColors.green,
+  },
+  cyan: {
+    color: iconColors.cyan,
   },
 });
