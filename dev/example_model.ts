@@ -1601,7 +1601,10 @@ export const modelInfo: Malloy.ModelInfo = {
 const query0: Malloy.Query = {
   definition: {
     kind: 'arrow',
-    source_reference: {name: 'flights'},
+    source: {
+      kind: 'source_reference',
+      name: 'flights',
+    },
     view: {
       kind: 'view_reference',
       name: 'carrier_dashboard',
@@ -1612,7 +1615,8 @@ const query0: Malloy.Query = {
 const query1: Malloy.Query = {
   definition: {
     kind: 'arrow',
-    source_reference: {
+    source: {
+      kind: 'source_reference',
       name: 'flights',
     },
     view: {
@@ -1659,7 +1663,8 @@ const query1: Malloy.Query = {
 const query2: Malloy.Query = {
   definition: {
     kind: 'arrow',
-    source_reference: {
+    source: {
+      kind: 'source_reference',
       name: 'flights',
     },
     view: {
@@ -1684,7 +1689,10 @@ const query2: Malloy.Query = {
 const query3: Malloy.Query = {
   definition: {
     kind: 'arrow',
-    source_reference: {name: 'flights'},
+    source: {
+      kind: 'source_reference',
+      name: 'flights',
+    },
     view: {
       kind: 'refinement',
       base: {
@@ -1711,7 +1719,10 @@ const query3: Malloy.Query = {
 const query4: Malloy.Query = {
   definition: {
     kind: 'arrow',
-    source_reference: {name: 'flights'},
+    source: {
+      kind: 'source_reference',
+      name: 'flights',
+    },
     view: {
       kind: 'refinement',
       base: {
