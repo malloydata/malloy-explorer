@@ -12,7 +12,6 @@ import {
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import OrderByIcon from '../../assets/refinements/insert_order_by.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {RawReference} from '../RawReference';
@@ -35,10 +34,7 @@ export function OrderByOperations({
   }
   return (
     <div>
-      <div {...stylex.props(styles.labelWithIcon)}>
-        <OrderByIcon {...stylex.props(styles.icon)} />
-        <div {...stylex.props(styles.title)}>order_by:</div>
-      </div>
+      <div {...stylex.props(styles.title)}>order by</div>
       <div {...stylex.props(styles.tokenContainer)}>
         {orderBys.map((orderBy, key) => (
           <div key={key} {...stylex.props(styles.token)}>

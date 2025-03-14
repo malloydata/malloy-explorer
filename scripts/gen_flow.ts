@@ -8,11 +8,12 @@ const inDir = path.resolve('dist/types');
 const files = [
   'index.d.ts',
   'components/MalloyPreview.d.ts',
-  'components/QueryEditor.d.ts',
+  'components/QueryPanel/QueryEditor.d.ts',
+  'components/QueryPanel/QueryActionBar.d.ts',
   'components/RawPreview.d.ts',
-  'contexts/QueryEditorContext.d.ts',
+  'components/SourcePanel.d.ts',
 ];
-const directories = ['components', 'contexts'];
+const directories = ['components', 'components/QueryPanel'];
 
 async function go() {
   if (fs.existsSync(outDir)) {

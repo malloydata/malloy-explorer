@@ -12,7 +12,6 @@ import {
   ASTSegmentViewDefinition,
   ASTWhereViewOperation,
 } from '@malloydata/malloy-query-builder';
-import WhereIcon from '../../assets/refinements/insert_filter.svg?react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {Label} from '../Label';
@@ -34,10 +33,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
 
   return (
     <div>
-      <div {...stylex.props(styles.labelWithIcon)}>
-        <WhereIcon {...stylex.props(styles.icon)} />
-        <div {...stylex.props(styles.title)}>where:</div>
-      </div>
+      <div {...stylex.props(styles.title)}>filter by</div>
       <div {...stylex.props(styles.tokenContainer)}>
         {wheres.map((where, key) => (
           <div key={key} {...stylex.props(styles.token)}>

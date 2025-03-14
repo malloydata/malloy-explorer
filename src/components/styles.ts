@@ -8,7 +8,11 @@
 import stylex from '@stylexjs/stylex';
 
 export const styles = stylex.create({
-  icon: {width: 18, height: 18, display: 'inline-block'},
+  icon: {
+    width: 18,
+    height: 18,
+    display: 'inline-block',
+  },
   menuIcon: {width: 24, height: 24},
 
   labelWithIcon: {
@@ -21,30 +25,40 @@ export const styles = stylex.create({
   label: {},
 
   heading: {
-    border: '1px solid black',
-    borderRadius: 5,
     display: 'flex',
     flexDirection: 'column',
     padding: 5,
   },
-
+  queryCard: {
+    border: '1px solid #CCD3DB',
+    borderRadius: 5,
+    padding: 8,
+  },
   queryHeader: {
     justifyContent: 'space-between',
     display: 'flex',
-    direction: 'row',
+    flexDirection: 'row',
     width: '100%',
   },
-
+  queryFooter: {
+    justifyContent: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    width: 'calc(100% - 40)',
+    padding: 12,
+  },
   title: {
-    fontWeight: 'bold',
+    whiteSpace: 'nowrap',
+    padding: '5px 0',
   },
   tokenContainer: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
+    alignItems: 'start',
     gap: 8,
   },
   token: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#E6EBEF',
     borderRadius: 5,
     padding: '2px 12px 2px 6px',
     display: 'flex',
@@ -52,7 +66,7 @@ export const styles = stylex.create({
     alignItems: 'center',
   },
   tooltip: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#E6EBEF',
     borderRadius: 5,
     padding: '2px 12px 2px 6px',
     display: 'flex',

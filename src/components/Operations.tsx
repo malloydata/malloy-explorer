@@ -22,6 +22,14 @@ import {LimitOperation} from './operations/LimitOperation';
 import {AggregateOperations} from './operations/AggregateOperations';
 import {OrderByOperations} from './operations/OrderByOperations';
 import {NestOperations} from './operations/NestOperation';
+import stylex from '@stylexjs/stylex';
+
+const operationStyles = stylex.create({
+  indent: {
+    marginLeft: 12,
+    width: 'calc(100% - 12px)',
+  },
+});
 
 export interface OperationsProps {
   rootQuery: ASTQuery;
@@ -55,7 +63,7 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
   });
 
   return (
-    <div>
+    <div {...stylex.props(operationStyles.indent)}>
       <GroupByOperations
         rootQuery={rootQuery}
         segment={segment}

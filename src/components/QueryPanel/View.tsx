@@ -7,18 +7,10 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {styles} from './styles';
-import {ViewDefinition} from './ViewDefinition';
+import {styles} from '../styles';
+import {ViewDefinition} from '../ViewDefinition';
 import {ViewMenu} from './ViewMenu';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
-
-const viewStyles = stylex.create({
-  indent: {
-    marginLeft: 12,
-    width: '100%',
-  },
-});
-
 export interface ViewProps {
   rootQuery: ASTQuery;
   view: ASTView;
@@ -26,12 +18,11 @@ export interface ViewProps {
 
 export function View({rootQuery, view}: ViewProps) {
   return (
-    <div {...stylex.props(viewStyles.indent)}>
-      <div {...stylex.props(styles.queryHeader)}>
-        <div {...stylex.props(styles.title)}>Query:</div>
+    <div>
+      <ViewDefinition rootQuery={rootQuery} viewDef={view.definition} />
+      <div {...stylex.props(styles.queryFooter)}>
         <ViewMenu rootQuery={rootQuery} view={view} />
       </div>
-      <ViewDefinition rootQuery={rootQuery} viewDef={view.definition} />
     </div>
   );
 }

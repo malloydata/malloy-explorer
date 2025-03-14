@@ -11,10 +11,10 @@ import {
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
-import {styles} from './styles';
-import {Visualization} from './Visualization';
+import {styles} from '../styles';
+import {Visualization} from '../Visualization';
 import {ViewMenu} from './ViewMenu';
-import {ViewDefinition} from './ViewDefinition';
+import {ViewDefinition} from '../ViewDefinition';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -26,10 +26,9 @@ export function Query({rootQuery, query}: QueryProps) {
   console.log({query, annotations: query.annotations});
 
   return (
-    <div {...stylex.props(styles.heading)}>
+    <div {...stylex.props(styles.queryCard)}>
       <div {...stylex.props(styles.queryHeader)}>
-        <div {...stylex.props(styles.title)}>Query:</div>
-        <ViewMenu rootQuery={rootQuery} view={query} />
+        <div {...stylex.props(styles.title)}>Main query</div>
       </div>
       <Visualization annotations={query.annotations} />
       {query.definition instanceof ASTArrowQueryDefinition ? (
@@ -40,6 +39,9 @@ export function Query({rootQuery, query}: QueryProps) {
           />
         </div>
       ) : null}
+      <div {...stylex.props(styles.queryFooter)}>
+        <ViewMenu rootQuery={rootQuery} view={query} />
+      </div>
     </div>
   );
 }

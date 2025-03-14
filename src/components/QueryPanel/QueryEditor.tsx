@@ -12,16 +12,19 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {Query} from './Query';
 import {Source} from './Source';
 import {Parameters} from './Parameters';
-import {useQueryBuilder} from '../hooks/useQueryBuilder';
+import {useQueryBuilder} from '../../hooks/useQueryBuilder';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface QueryEditorProps {
   source: Malloy.SourceInfo;
   query?: Malloy.Query;
+  setQuery?: (query: Malloy.Query) => void;
 }
 
 const queryExplorerStyles = stylex.create({
   main: {
-    fontFamily: 'monospace',
+    fontFamily: 'sans-serif',
+    fontSize: 14,
     lineHeight: 1.8,
     display: 'flex',
     flexDirection: 'column',
@@ -39,7 +42,7 @@ const queryExplorerStyles = stylex.create({
  * @param query A query to be edited. Omit for a new query.
  * @returns
  */
-export function QueryEditor({source, query}: QueryEditorProps) {
+export function QueryEditor({source, query, setQuery}: QueryEditorProps) {
   const rootQuery = useQueryBuilder(source, query);
 
   if (!rootQuery) {
@@ -47,10 +50,12 @@ export function QueryEditor({source, query}: QueryEditorProps) {
   }
 
   return (
-    <div {...stylex.props(queryExplorerStyles.main)}>
-      <Source rootQuery={rootQuery} />
-      <Parameters rootQuery={rootQuery} />
-      <Query rootQuery={rootQuery} query={rootQuery} />
-    </div>
+    <QueryEditorContext.Provider value={{setQuery}}>
+      <div {...stylex.props(queryExplorerStyles.main)}>
+        <Source rootQuery={rootQuery} />
+        <Parameters rootQuery={rootQuery} />
+        <Query rootQuery={rootQuery} query={rootQuery} />
+      </div>
+    </QueryEditorContext.Provider>
   );
 }
