@@ -17,6 +17,18 @@ export const backgroundColorStyles = stylex.create({
 });
 
 export const textColorStyles = stylex.create({
+  primary: {
+    color: textColors.primary,
+  },
+  secondary: {
+    color: textColors.secondary,
+  },
+  disabled: {
+    color: textColors.disabled,
+  },
+  primaryOnDarkMedia: {
+    color: textColors.primaryOnDarkMedia,
+  },
   gray: {
     color: textColors.gray,
   },
@@ -37,6 +49,12 @@ export const iconColorStyles = stylex.create({
   },
   secondary: {
     color: iconColors.secondary,
+  },
+  disabled: {
+    color: iconColors.disabled,
+  },
+  primaryOnMedia: {
+    color: iconColors.primaryOnMedia,
   },
   gray: {
     color: iconColors.gray,
