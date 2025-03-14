@@ -15,9 +15,9 @@ import {iconVars, labelVars} from './button.stylex';
 const DEFAULT_VARIANT = 'default';
 const DEFAULT_SIZE = 'default';
 
-type Variant = 'default' | 'flat' | 'primary';
+type Variant = keyof typeof colorVariants;
 
-type Size = 'default' | 'compact';
+type Size = keyof typeof sizeVariants;
 
 interface ButtonProps {
   /**

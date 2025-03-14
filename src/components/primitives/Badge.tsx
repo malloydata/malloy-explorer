@@ -7,7 +7,12 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {backgroundColorStyles, textColorStyles} from './primitive-styles';
+import {mainVars, labelVars} from './badge.stylex';
+import {backgroundColors, textColors} from './colors.stylex';
+
+const DEFAULT_COLOR = 'gray';
+
+type Color = keyof typeof colorVariants;
 
 interface BadgeProps {
   /**
@@ -17,16 +22,14 @@ interface BadgeProps {
   /**
    * The color scheme of the badge, which affects both the background and text colors.
    */
-  color: keyof typeof backgroundColorStyles & keyof typeof textColorStyles;
+  color?: Color;
 }
 
-export default function Badge({label, color}: BadgeProps) {
+export default function Badge({label, color = DEFAULT_COLOR}: BadgeProps) {
   return (
-    <span {...stylex.props(styles.main, backgroundColorStyles[color])}>
-      <span {...stylex.props(styles.label, textColorStyles[color])}>
-        {label}
-      </span>
-    </span>
+    <div {...stylex.props(styles.main, colorVariants[color])}>
+      <div {...stylex.props(styles.label)}>{label}</div>
+    </div>
   );
 }
 
@@ -41,6 +44,7 @@ const styles = stylex.create({
     gap: '4px',
     flexShrink: 0,
     borderRadius: '9999px',
+    background: mainVars.background,
   },
   label: {
     overflow: 'hidden',
@@ -54,5 +58,25 @@ const styles = stylex.create({
     fontWeight: 600,
     lineHeight: '16px',
     letterSpacing: '-0.24px',
+    color: labelVars.color,
+  },
+});
+
+const colorVariants = stylex.create({
+  gray: {
+    [mainVars.background]: backgroundColors.gray,
+    [labelVars.color]: textColors.primary,
+  },
+  purple: {
+    [mainVars.background]: backgroundColors.purple,
+    [labelVars.color]: textColors.purple,
+  },
+  green: {
+    [mainVars.background]: backgroundColors.green,
+    [labelVars.color]: textColors.green,
+  },
+  cyan: {
+    [mainVars.background]: backgroundColors.cyan,
+    [labelVars.color]: textColors.cyan,
   },
 });

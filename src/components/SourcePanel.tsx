@@ -10,8 +10,15 @@ import stylex from '@stylexjs/stylex';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
 
 import * as theme from './styles';
-import {Badge, Icon, List, ListItem, Divider, Token} from './primitives';
-import ScrollableArea from './primitives/containers/ScrollableArea';
+import {
+  Badge,
+  Icon,
+  List,
+  ListItem,
+  Divider,
+  Token,
+  ScrollableArea,
+} from './primitives';
 
 interface SourcePanelProps {
   source: SourceInfo;

@@ -14,7 +14,7 @@ import {iconColors, textColors} from './colors.stylex';
 
 const DEFAULT_COLOR = 'default';
 
-type Color = 'default' | 'purple' | 'green' | 'cyan';
+type Color = keyof typeof colorVariants;
 
 interface TokenProps {
   /**
