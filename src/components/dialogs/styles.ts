@@ -10,11 +10,8 @@ import stylex from '@stylexjs/stylex';
 export const dialogStyles = stylex.create({
   content: {
     background: 'white',
-    borderColor: 'black',
-    borderRadius: 5,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    boxShadow: '5px 5px 5px gray',
+    borderRadius: 10,
+    boxShadow: '0px 2px 12px 0px rgba(0, 0, 0, 0.10)',
     fontFamily: 'sans-serif',
     margin: 8,
     padding: 8,
@@ -47,6 +44,6 @@ export const dialogStyles = stylex.create({
     left: 0,
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
 });

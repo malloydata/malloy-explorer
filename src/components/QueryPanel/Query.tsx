@@ -12,9 +12,9 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
-import {Visualization} from '../Visualization';
+import {Visualization} from './Visualization';
 import {ViewMenu} from './ViewMenu';
-import {ViewDefinition} from '../ViewDefinition';
+import {ViewDefinition} from './ViewDefinition';
 
 export interface QueryProps {
   rootQuery: ASTQuery;

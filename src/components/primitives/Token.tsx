@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {ICON_MAP} from './icons';
+import {IconType} from './icons';
 import Icon from './Icon';
 import {iconVars, labelVars} from './button.stylex';
 import {iconColors, textColors} from './colors.stylex';
@@ -24,7 +24,7 @@ interface TokenProps {
   /**
    * The icon to display on the token.
    */
-  icon?: keyof typeof ICON_MAP;
+  icon?: IconType;
   /**
    * The color of the token.
    */

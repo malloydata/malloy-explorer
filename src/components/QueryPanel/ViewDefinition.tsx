@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {styles} from './styles';
+import {styles} from '../styles';
 import {Operations} from './Operations';
 import {
   ASTArrowViewDefinition,
@@ -16,8 +16,8 @@ import {
   ASTSegmentViewDefinition,
   ASTViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {Label} from './Label';
-import QueryIcon from '../assets/refinements/insert_saved_query.svg?react';
+import {Label} from '../Label';
+import QueryIcon from '../../assets/refinements/insert_saved_query.svg?react';
 
 export interface ViewProps {
   rootQuery: ASTQuery;

@@ -30,6 +30,7 @@ import {
 import {dialogStyles} from './styles';
 import {useContext, useState} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {Button} from '../primitives';
 
 export interface FilterDialogProps {
   open: boolean;
@@ -81,8 +82,8 @@ export function FilterDialog({
               ))}
             </div>
             <div {...stylex.props(dialogStyles.footer)}>
-              <button onClick={() => setOpen(false)}>Cancel</button>
-              <button
+              <Button onClick={() => setOpen(false)} label="Cancel" />
+              <Button
                 onClick={() => {
                   let filter: ParsedFilter | undefined;
                   let logs: FilterLog[] = [];
@@ -136,9 +137,9 @@ export function FilterDialog({
                     setOpen(false);
                   }
                 }}
-              >
-                OK
-              </button>
+                label="OK"
+                variant="primary"
+              />
             </div>
           </DialogContent>
         </DialogOverlay>

@@ -12,10 +12,10 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
-import {Label} from '../Label';
-import {View} from '../QueryPanel/View';
-import NestIcon from '../../assets/refinements/insert_nest.svg?react';
+import {styles} from '../../styles';
+import {Label} from '../../Label';
+import {View} from '../View';
+import NestIcon from '../../../assets/refinements/insert_nest.svg?react';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;

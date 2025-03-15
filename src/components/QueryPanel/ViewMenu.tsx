@@ -21,11 +21,11 @@ import {styles} from '../styles';
 import stylex from '@stylexjs/stylex';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
-import {TypeIcon} from '../TypeIcon';
-import {JoinIcon} from '../JoinIcon';
 import {LimitDialog} from '../dialogs/LimitDialog';
 import {FilterDialog} from '../dialogs/FilterDialog';
 import {Label} from '../Label';
+import {Icon} from '../primitives';
+import {atomicTypeToIcon, relationshipToIcon} from './utils/icon';
 
 const viewMenuStyles = stylex.create({
   p6: {
@@ -79,7 +79,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       .map(field => {
         if (field.kind === 'dimension') {
           return {
-            icon: <TypeIcon type={field.type} />,
+            icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
             label: field.name,
             detail: <div>Path: {[...path, field.name].join('.')}</div>,
             onClick: () => {
@@ -89,7 +89,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           };
         } else {
           return {
-            icon: <JoinIcon relationship={field.relationship} />,
+            icon: <Icon name={relationshipToIcon(field.relationship)} />,
             label: field.name,
             subMenu: createGroupByMenu(field.schema.fields, [
               ...path,
@@ -112,7 +112,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       .map(field => {
         if (field.kind === 'measure') {
           return {
-            icon: <TypeIcon type={field.type} />,
+            icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
             label: field.name,
             detail: <div>Path: {[...path, field.name].join('.')}</div>,
             onClick: () => {
@@ -122,7 +122,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           };
         } else {
           return {
-            icon: <JoinIcon relationship={field.relationship} />,
+            icon: <Icon name={relationshipToIcon(field.relationship)} />,
             label: field.name,
             subMenu: createAggregateMenu(field.schema.fields, [
               ...path,
@@ -151,7 +151,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       .map(field => {
         if (field.kind === 'dimension' || field.kind === 'measure') {
           return {
-            icon: <TypeIcon type={field.type} />,
+            icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
             label: field.name,
             detail: <div>Path: {[...path, field.name].join('.')}</div>,
             onClick: () => {
@@ -161,7 +161,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           };
         } else {
           return {
-            icon: <JoinIcon relationship={field.relationship} />,
+            icon: <Icon name={relationshipToIcon(field.relationship)} />,
             label: field.name,
             subMenu: createFilterMenu(field.schema.fields, [
               ...path,
@@ -184,7 +184,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
     .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
     .map(field => {
       return {
-        icon: <TypeIcon type={field.type} />,
+        icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
         label: field.name,
         subMenu: [
           {

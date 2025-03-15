@@ -10,6 +10,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
+import {Button} from '../primitives';
 
 /**
  * Source
@@ -32,18 +33,19 @@ export function QueryActionBar({
     <div {...stylex.props(styles.queryCard, actionBarStyles.root)}>
       <div {...stylex.props(actionBarStyles.title)}>Query</div>
       <div {...stylex.props(actionBarStyles.buttons)}>
-        <button
+        <Button
           onClick={() => clearQuery()}
-          disabled={!rootQuery || rootQuery?.isEmpty()}
-        >
-          Clear
-        </button>
-        <button
+          isDisabled={!rootQuery || rootQuery?.isEmpty()}
+          label="Clear"
+          variant="flat"
+        />
+        <Button
+          icon="chevronRight"
           onClick={() => query && runQuery(source, query)}
-          disabled={!rootQuery?.isRunnable()}
-        >
-          Run
-        </button>
+          isDisabled={!rootQuery?.isRunnable()}
+          label="Run"
+          variant="primary"
+        />
       </div>
     </div>
   );
@@ -53,6 +55,7 @@ const actionBarStyles = stylex.create({
   root: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontFamily: 'sans-serif',
