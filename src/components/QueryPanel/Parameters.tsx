@@ -13,7 +13,7 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
-import {LiteralValueEditor} from '../LiteralValueEditor';
+import {LiteralValueEditor} from './LiteralValueEditor';
 import {Label} from '../Label';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {Icon} from '../primitives';
