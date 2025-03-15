@@ -11,8 +11,8 @@ import {
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
-import DatabaseIcon from '../../assets/types/type-icon-database.svg?react';
 import {styles} from '../styles';
+import {Icon} from '../primitives';
 
 /**
  * Source
@@ -26,7 +26,7 @@ export function Source({rootQuery}: SourceProps) {
     return (
       <div {...stylex.props(styles.queryCard)}>
         <div {...stylex.props(styles.labelWithIcon)}>
-          <DatabaseIcon {...stylex.props(styles.icon)} />
+          <Icon name="database" />
           {
             rootQuery.definition.as
               .ArrowQueryDefinition()

@@ -17,7 +17,7 @@ import {
   ASTViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {Label} from '../Label';
-import QueryIcon from '../../assets/refinements/insert_saved_query.svg?react';
+import {Icon} from '../primitives';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
@@ -40,7 +40,7 @@ export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
         <Operations rootQuery={rootQuery} viewDef={viewDef} />
       ) : (
         <div {...stylex.props(styles.labelWithIcon, styles.token)}>
-          <QueryIcon {...stylex.props(styles.icon)} />
+          <Icon name="query" />
           <Label>{viewDef.name}</Label>
         </div>
       )}
