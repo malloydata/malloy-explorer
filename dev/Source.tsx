@@ -10,7 +10,9 @@ import {createRoot} from 'react-dom/client';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {modelInfo} from './example_model';
 import {MalloyExplorerProvider, SourcePanel} from '../src';
-import ShowcaseButtons from './components/Buttons';
+import Buttons from './components/Buttons';
+import TokenGroups from './components/TokensGroups';
+import EditableTokens from './components/EditableTokens';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
@@ -18,8 +20,17 @@ const App = () => {
     <MalloyExplorerProvider>
       <div style={{display: 'flex'}}>
         <SourcePanel source={source} />
-        <div style={{padding: '8px'}}>
-          <ShowcaseButtons />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            padding: '8px',
+          }}
+        >
+          <Buttons />
+          <EditableTokens />
+          <TokenGroups />
         </div>
       </div>
     </MalloyExplorerProvider>

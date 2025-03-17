@@ -2,10 +2,20 @@ import React from 'react';
 
 import {Button} from '../../src/components/primitives';
 
-const ShowcaseButtons = () => {
+export default function Buttons() {
   return (
     <div>
       <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+        <div
+          style={{
+            fontFamily: 'SF Pro Text',
+            fontSize: '20px',
+            fontWeight: 500,
+            marginBottom: '8px',
+          }}
+        >
+          Buttons
+        </div>
         <div style={{display: 'flex', gap: '8px'}}>
           <Button
             variant="default"
@@ -81,6 +91,4 @@ const ShowcaseButtons = () => {
       </div>
     </div>
   );
-};
-
-export default ShowcaseButtons;
+}

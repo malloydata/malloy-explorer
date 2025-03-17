@@ -6,52 +6,62 @@
  */
 
 import * as React from 'react';
-import stylex from '@stylexjs/stylex';
-import {IconType} from './icons';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {ICON_MAP} from './icons';
 import Icon from './Icon';
-import {iconVars, labelVars} from './button.stylex';
+import {iconVars, labelVars} from './token.stylex';
 import {iconColors, textColors} from './colors.stylex';
 
-const DEFAULT_COLOR = 'default';
+export const DEFAULT_TOKEN_COLOR = 'default';
 
-type Color = keyof typeof colorVariants;
+export type TokenColor = keyof typeof colorVariants;
 
-interface TokenProps {
+export interface TokenProps {
   /**
    * The label to display on the token.
    */
   label?: string;
+
   /**
    * The icon to display on the token.
    */
-  icon?: IconType;
+  icon?: keyof typeof ICON_MAP;
+
   /**
    * The color of the token.
    */
-  color?: Color;
+  color?: TokenColor;
+
   /**
    * Called when the token is clicked.
    *
    * @param event The React mouse event.
    */
-  onClick: (event: React.MouseEvent) => void;
+  onClick?: (event: React.MouseEvent) => void;
+
   /**
    * Called when the token is hovered or not hovered.
    *
    * @param isHovered Whether the token is currently hovered.
    */
   onHover?: (isHovered: boolean) => void;
+
+  /**
+   * Custom styles for the token.
+   */
+  style?: StyleXStyles;
 }
 
 export default function Token({
   label,
   icon,
-  color = DEFAULT_COLOR,
+  color = DEFAULT_TOKEN_COLOR,
   onClick,
   onHover,
+  style,
 }: TokenProps) {
   return (
-    <div {...stylex.props(styles.main, colorVariants[color])}>
+    <div {...stylex.props(styles.main, colorVariants[color], style)}>
       {icon && <Icon name={icon} style={styles.icon} />}
       <button
         {...stylex.props(styles.button)}

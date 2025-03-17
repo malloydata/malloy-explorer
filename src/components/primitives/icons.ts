@@ -6,6 +6,7 @@
  */
 
 import ChevronRight from '../../assets/chevrons/chevron_right.svg?react';
+import Clear from '../../assets/refinements/clear.svg?react';
 import Insert from '../../assets/refinements/insert.svg?react';
 import InsertNest from '../../assets/refinements/insert_nest.svg?react';
 import Filter from '../../assets/refinements/insert_filter.svg?react';
@@ -29,6 +30,7 @@ export const ICON_MAP = {
   array: TypeIconArray,
   boolean: TypeIconBoolean,
   chevronRight: ChevronRight,
+  clear: Clear,
   database: TypeIconDatabase,
   date: TypeIconDate,
   dimension: TypeIconString,
