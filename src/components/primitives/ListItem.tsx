@@ -8,27 +8,33 @@
 import stylex from '@stylexjs/stylex';
 import * as React from 'react';
 
-interface ListItemProps {
+export interface ListItemProps {
   /**
    * The unique key for the list item.
    */
   key: string;
+
   /**
    * The label for the list item.
    */
   label: string;
+
   /**
    * The icon to display at the start of the list item.
    */
   startIcon?: React.ReactElement;
+
   /**
    * The badge to display in the list item.
    */
   badge?: React.ReactElement;
+
   /**
    * The icon to display at the end of the list item.
    */
   endIcon?: React.ReactElement;
+
+  onClick: () => void;
 }
 
 export default function ListItem({
@@ -37,9 +43,10 @@ export default function ListItem({
   startIcon,
   badge,
   endIcon,
+  onClick,
 }: ListItemProps) {
   return (
-    <div key={key} {...stylex.props(styles.main)}>
+    <div key={key} {...stylex.props(styles.main)} onClick={onClick}>
       {startIcon && <>{startIcon}</>}
       <span {...stylex.props(styles.label)}>{label}</span>
       {badge && <>{badge}</>}

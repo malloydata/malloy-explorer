@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import ChevronLeft from '../../assets/chevrons/chevron_left.svg?react';
 import ChevronRight from '../../assets/chevrons/chevron_right.svg?react';
 import Clear from '../../assets/refinements/clear.svg?react';
 import Insert from '../../assets/refinements/insert.svg?react';
@@ -29,6 +30,7 @@ import TypeIconSqlNative from '../../assets/types/type-icon-sql-native.svg?react
 export const ICON_MAP = {
   array: TypeIconArray,
   boolean: TypeIconBoolean,
+  chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
   clear: Clear,
   database: TypeIconDatabase,
@@ -53,6 +55,7 @@ export const ICON_MAP = {
 export type IconType = keyof typeof ICON_MAP;
 
 export const SMALL_ICONS: IconType[] = [
+  'chevronLeft',
   'chevronRight',
   'database',
   'dimension',
