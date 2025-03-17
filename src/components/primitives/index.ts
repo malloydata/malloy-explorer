@@ -6,3 +6,4 @@ export {default as ListItem} from './ListItem';
 export {default as ScrollableArea} from './ScrollableArea';
 export {default as Button} from './Button';
 export {default as Token} from './Token';
+export {default as EditableToken} from './EditableToken';
