@@ -36,8 +36,6 @@ const queryExplorerStyles = stylex.create({
  * The Query Viewing and Editing panel. Takes a `SourceInfo` object
  * and an optional `Query` object.
  *
- * Wrap in a [QueryEditorContext] with a `setQuery` method to support editing.
- *
  * @param source The source object to be used for query building.
  * @param query A query to be edited. Omit for a new query.
  * @returns

@@ -9,21 +9,20 @@ import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {modelInfo} from './example_model';
-import {TooltipProvider} from '@radix-ui/react-tooltip';
-import {SourcePanel} from '../src';
+import {MalloyExplorerProvider, SourcePanel} from '../src';
 import ShowcaseButtons from './components/Buttons';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   return (
-    <TooltipProvider>
+    <MalloyExplorerProvider>
       <div style={{display: 'flex'}}>
         <SourcePanel source={source} />
         <div style={{padding: '8px'}}>
           <ShowcaseButtons />
         </div>
       </div>
-    </TooltipProvider>
+    </MalloyExplorerProvider>
   );
 };
 
