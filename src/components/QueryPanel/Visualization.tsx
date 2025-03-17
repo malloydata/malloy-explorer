@@ -8,9 +8,9 @@
 import * as React from 'react';
 import {ASTAnnotationList} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
-import {styles} from './styles';
+import {styles} from '../styles';
 
-import LineChartIcon from '../assets/visualizations/viz_line.svg?react';
+import LineChartIcon from '../../assets/visualizations/viz_line.svg?react';
 import {Label} from '@radix-ui/react-dropdown-menu';
 
 export interface VisualizationProps {

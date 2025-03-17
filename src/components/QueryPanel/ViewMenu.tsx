@@ -21,11 +21,11 @@ import {styles} from '../styles';
 import stylex from '@stylexjs/stylex';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
-import {TypeIcon} from '../TypeIcon';
-import {JoinIcon} from '../JoinIcon';
 import {LimitDialog} from '../dialogs/LimitDialog';
 import {FilterDialog} from '../dialogs/FilterDialog';
 import {Label} from '../Label';
+import {Icon} from '../primitives';
+import {atomicTypeToIcon, relationshipToIcon} from './utils/icon';
 
 const viewMenuStyles = stylex.create({
   p6: {
@@ -79,7 +79,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       .map(field => {
         if (field.kind === 'dimension') {
           return {
-            icon: <TypeIcon type={field.type} />,
+            icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
             label: field.name,
             detail: <div>Path: {[...path, field.name].join('.')}</div>,
             onClick: () => {
@@ -89,7 +89,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           };
         } else {
           return {
-            icon: <JoinIcon relationship={field.relationship} />,
+            icon: <Icon name={relationshipToIcon(field.relationship)} />,
             label: field.name,
             subMenu: createGroupByMenu(field.schema.fields, [
               ...path,
@@ -112,7 +112,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       .map(field => {
         if (field.kind === 'measure') {
           return {
-            icon: <TypeIcon type={field.type} />,
+            icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
             label: field.name,
             detail: <div>Path: {[...path, field.name].join('.')}</div>,
             onClick: () => {
@@ -122,7 +122,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           };
         } else {
           return {
-            icon: <JoinIcon relationship={field.relationship} />,
+            icon: <Icon name={relationshipToIcon(field.relationship)} />,
             label: field.name,
             subMenu: createAggregateMenu(field.schema.fields, [
               ...path,
@@ -151,7 +151,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       .map(field => {
         if (field.kind === 'dimension' || field.kind === 'measure') {
           return {
-            icon: <TypeIcon type={field.type} />,
+            icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
             label: field.name,
             detail: <div>Path: {[...path, field.name].join('.')}</div>,
             onClick: () => {
@@ -161,7 +161,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           };
         } else {
           return {
-            icon: <JoinIcon relationship={field.relationship} />,
+            icon: <Icon name={relationshipToIcon(field.relationship)} />,
             label: field.name,
             subMenu: createFilterMenu(field.schema.fields, [
               ...path,
@@ -184,7 +184,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
     .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
     .map(field => {
       return {
-        icon: <TypeIcon type={field.type} />,
+        icon: <Icon name={atomicTypeToIcon(field.type.kind)} />,
         label: field.name,
         subMenu: [
           {
@@ -205,27 +205,26 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       };
     });
 
-  const nestMenu: MenuItem[] = [
-    {
-      label: 'New Nest...',
-      onClick: () => {
-        segment.addEmptyNest('nest');
-        setQuery?.(rootQuery.build());
-      },
-    },
-    ...schema.fields
-      .filter(field => field.kind === 'view')
-      .map(field => {
-        return {
-          icon: <QueryIcon {...stylex.props(styles.icon)} />,
-          label: field.name,
-          onClick: () => {
+  const nestMenu: MenuItem[] = schema.fields
+    .filter(field => field.kind === 'view')
+    .map(field => {
+      return {
+        icon: <QueryIcon {...stylex.props(styles.icon)} />,
+        label: field.name,
+        onClick: () => {
+          if (view === rootQuery && rootQuery.isEmpty()) {
+            rootQuery.setView(field.name);
+          } else {
             segment.addNest(field.name);
-            setQuery?.(rootQuery.build());
-          },
-        };
-      }),
-  ];
+          }
+          setQuery?.(rootQuery.build());
+        },
+      };
+    });
+
+  const hasLimit =
+    segment.operations.items.find(operation => operation.kind === 'limit') !==
+    undefined;
 
   return (
     <>
@@ -238,35 +237,48 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
         }
         items={[
           {
-            icon: <GroupByIcon {...stylex.props(styles.icon)} />,
-            label: 'Add Group By',
-            subMenu: groupByMenu,
-          },
-          {
-            icon: <AggregateIcon {...stylex.props(styles.icon)} />,
-            label: 'Add Aggregate',
-            subMenu: aggregateMenu,
-          },
-          {
-            icon: <FilterIcon {...stylex.props(styles.icon)} />,
-            label: 'Add Filter',
-            subMenu: filterMenu,
-          },
-          {
-            icon: <OrderByIcon {...stylex.props(styles.icon)} />,
-            label: 'Add Order By',
-            subMenu: orderByMenu,
-          },
-          {
-            icon: <NestIcon {...stylex.props(styles.icon)} />,
-            label: 'Add Nest',
+            icon: <QueryIcon {...stylex.props(styles.icon)} />,
+            label: 'Views',
             subMenu: nestMenu,
           },
           {
+            icon: <FilterIcon {...stylex.props(styles.icon)} />,
+            label: 'Filter',
+            subMenu: filterMenu,
+          },
+          {
+            icon: <AggregateIcon {...stylex.props(styles.icon)} />,
+            label: 'Aggregate',
+            subMenu: aggregateMenu,
+          },
+          {
+            icon: <GroupByIcon {...stylex.props(styles.icon)} />,
+            label: 'Group By',
+            subMenu: groupByMenu,
+          },
+          {
+            label: '-',
+          },
+          {
             icon: <LimitIcon {...stylex.props(styles.icon)} />,
-            label: 'Set Limit...',
+            label: 'Limit',
             onClick: () => {
               setLimitDialogOpen(true);
+            },
+            disable: () => hasLimit,
+          },
+          {
+            icon: <OrderByIcon {...stylex.props(styles.icon)} />,
+            label: 'Order By',
+            subMenu: orderByMenu,
+            disable: () => outputSchemaFields.length === 0,
+          },
+          {
+            icon: <NestIcon {...stylex.props(styles.icon)} />,
+            label: 'Add blank nested query',
+            onClick: () => {
+              segment.addEmptyNest('nest');
+              setQuery?.(rootQuery.build());
             },
           },
         ]}

@@ -8,40 +8,41 @@
 import * as React from 'react';
 import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
-import {Field} from '../Field';
+import {styles} from '../../styles';
+import {Field} from './Field';
 import {
-  ASTGroupByViewOperation,
+  ASTAggregateViewOperation,
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 
-export interface GroupByOperationsProps {
+export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
   segment: ASTSegmentViewDefinition;
-  groupBys: ASTGroupByViewOperation[];
+  aggregates: ASTAggregateViewOperation[];
 }
 
-export function GroupByOperations({
+export function AggregateOperations({
   rootQuery,
-  groupBys,
-}: GroupByOperationsProps) {
+  aggregates,
+}: AggregateOperationsProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  if (groupBys.length === 0) {
+  if (aggregates.length === 0) {
     return null;
   }
   return (
     <div>
-      <div {...stylex.props(styles.title)}>group by</div>
+      <div {...stylex.props(styles.title)}>aggregate</div>
       <div {...stylex.props(styles.tokenContainer)}>
-        {groupBys.map((groupBy, key) => (
+        {aggregates.map((aggregate, key) => (
           <Field
             key={key}
+            type="measure"
             rootQuery={rootQuery}
-            field={groupBy.field}
+            field={aggregate.field}
             onDelete={() => {
-              groupBy.delete();
+              aggregate.delete();
               setQuery?.(rootQuery.build());
             }}
           />

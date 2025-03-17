@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {styles} from './styles';
+import {styles} from '../styles';
 import {Operations} from './Operations';
 import {
   ASTArrowViewDefinition,
@@ -16,8 +16,8 @@ import {
   ASTSegmentViewDefinition,
   ASTViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {Label} from './Label';
-import QueryIcon from '../assets/refinements/insert_saved_query.svg?react';
+import {Label} from '../Label';
+import {Icon} from '../primitives';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
@@ -40,7 +40,7 @@ export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
         <Operations rootQuery={rootQuery} viewDef={viewDef} />
       ) : (
         <div {...stylex.props(styles.labelWithIcon, styles.token)}>
-          <QueryIcon {...stylex.props(styles.icon)} />
+          <Icon name="query" />
           <Label>{viewDef.name}</Label>
         </div>
       )}

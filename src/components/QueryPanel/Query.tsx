@@ -12,9 +12,9 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
-import {Visualization} from '../Visualization';
+import {Visualization} from './Visualization';
 import {ViewMenu} from './ViewMenu';
-import {ViewDefinition} from '../ViewDefinition';
+import {ViewDefinition} from './ViewDefinition';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -39,9 +39,24 @@ export function Query({rootQuery, query}: QueryProps) {
           />
         </div>
       ) : null}
-      <div {...stylex.props(styles.queryFooter)}>
-        <ViewMenu rootQuery={rootQuery} view={query} />
-      </div>
+      {query.isEmpty() ? (
+        <div {...stylex.props(queryStyles.emptyQuery)}>
+          <ViewMenu rootQuery={rootQuery} view={query} />
+        </div>
+      ) : (
+        <div {...stylex.props(styles.queryFooter)}>
+          <ViewMenu rootQuery={rootQuery} view={query} />
+        </div>
+      )}
     </div>
   );
 }
+
+const queryStyles = stylex.create({
+  emptyQuery: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    height: 60,
+  },
+});

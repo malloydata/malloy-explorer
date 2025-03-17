@@ -13,10 +13,11 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
-import {LiteralValueEditor} from '../LiteralValueEditor';
+import {LiteralValueEditor} from './LiteralValueEditor';
 import {Label} from '../Label';
-import {TypeIcon} from '../TypeIcon';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {Icon} from '../primitives';
+import {atomicTypeToIcon} from './utils/icon';
 
 /**
  * Source
@@ -44,7 +45,7 @@ export function Parameters({rootQuery}: ParametersProps) {
         <div {...stylex.props(styles.title)}>Source parameters</div>
         {sourceParameters.map((parameter, key) => (
           <div key={key} {...stylex.props(styles.labelWithIcon)}>
-            <TypeIcon type={parameter.type} />
+            <Icon name={atomicTypeToIcon(parameter.type.kind)} />
             <Label>
               {parameter.name}{' '}
               <LiteralValueEditor

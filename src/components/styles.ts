@@ -41,7 +41,7 @@ export const styles = stylex.create({
     width: '100%',
   },
   queryFooter: {
-    justifyContent: 'center',
+    justifyContent: 'left',
     display: 'flex',
     flexDirection: 'row',
     width: 'calc(100% - 40)',

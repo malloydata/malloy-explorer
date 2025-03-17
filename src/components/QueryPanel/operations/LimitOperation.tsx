@@ -12,12 +12,12 @@ import {
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import LimitIcon from '../../assets/refinements/insert_limit.svg?react';
+import LimitIcon from '../../../assets/refinements/insert_limit.svg?react';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
-import {Label} from '../Label';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import ClearIcon from '../../assets/refinements/clear.svg?react';
+import {styles} from '../../styles';
+import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
+import {Token} from '../../primitives';
+import {ClearButton} from './ClearButton';
 
 export interface LimitOperationProps {
   rootQuery: ASTQuery;
@@ -37,10 +37,9 @@ export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
         <div {...stylex.props(styles.title)}>limit:</div>
       </div>
       <div {...stylex.props(styles.tokenContainer)}>
-        <div {...stylex.props(styles.token)}>
-          <Label>{limit.limit}</Label>
-          <ClearIcon
-            {...stylex.props(styles.icon)}
+        <div {...stylex.props(styles.labelWithIcon)}>
+          <Token label={`${limit.limit}`} onClick={() => {}} />
+          <ClearButton
             onClick={() => {
               limit.delete();
               setQuery?.(rootQuery.build());

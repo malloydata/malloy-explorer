@@ -21,6 +21,7 @@ import {
 import {dialogStyles} from './styles';
 import {useContext, useState} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {Button} from '../primitives';
 export interface LimitDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -54,16 +55,16 @@ export function LimitDialog({
               />
             </div>
             <div {...stylex.props(dialogStyles.footer)}>
-              <button onClick={() => setOpen(false)}>Cancel</button>
-              <button
+              <Button onClick={() => setOpen(false)} label="Cancel" />
+              <Button
                 onClick={() => {
                   segment.setLimit(value);
                   setQuery?.(rootQuery.build());
                   setOpen(false);
                 }}
-              >
-                OK
-              </button>
+                variant="primary"
+                label="OK"
+              />
             </div>
           </DialogContent>
         </DialogOverlay>
