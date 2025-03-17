@@ -9,10 +9,15 @@ import * as React from 'react';
 import * as QB from '@malloydata/malloy-query-builder';
 import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {MalloyPreview, QueryActionBar, QueryEditor, RawPreview} from '../src';
+import {
+  MalloyExplorerProvider,
+  MalloyPreview,
+  QueryActionBar,
+  QueryEditor,
+  RawPreview,
+} from '../src';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {modelInfo, queries as exampleQueries} from './example_model';
-import {TooltipProvider} from '@radix-ui/react-tooltip';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const queries = [undefined, ...exampleQueries];
@@ -31,7 +36,7 @@ const App = () => {
   }, [queryIdx]);
 
   return (
-    <TooltipProvider>
+    <MalloyExplorerProvider>
       <div style={{width: 500}}>
         Query: {queryIdx}{' '}
         <button onClick={() => setQueryIdx((queryIdx + 1) % queries.length)}>
@@ -60,7 +65,7 @@ const App = () => {
           <div>No query</div>
         )}
       </div>
-    </TooltipProvider>
+    </MalloyExplorerProvider>
   );
 };
 

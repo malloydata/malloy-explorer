@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export {MalloyExplorerProvider} from './components/MalloyExplorerProvider';
 export {MalloyPreview} from './components/MalloyPreview';
 export {QueryActionBar, QueryEditor} from './components/QueryPanel';
 export {RawPreview} from './components/RawPreview';
