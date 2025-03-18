@@ -11,9 +11,13 @@ const files = [
   'components/QueryPanel/QueryEditor.d.ts',
   'components/QueryPanel/QueryActionBar.d.ts',
   'components/RawPreview.d.ts',
-  'components/SourcePanel.d.ts',
+  'components/SourcePanel/SourcePanel.d.ts',
 ];
-const directories = ['components', 'components/QueryPanel'];
+const directories = [
+  'components',
+  'components/QueryPanel',
+  'components/SourcePanel',
+];
 
 async function go() {
   if (fs.existsSync(outDir)) {

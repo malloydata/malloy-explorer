@@ -22,13 +22,13 @@ import {
 import {textColors} from '../primitives/colors.stylex';
 import FieldToken from './FieldToken';
 
-interface SourcePanelProps {
+export interface SourcePanelProps {
   source: SourceInfo;
 }
 
 type PanelType = 'view' | 'dimension' | 'measure' | null;
 
-export default function SourcePanel({source}: SourcePanelProps) {
+export function SourcePanel({source}: SourcePanelProps) {
   const schema = source.schema;
   const fields = schema.fields;
 

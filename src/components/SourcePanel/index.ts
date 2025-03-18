@@ -1,1 +1,1 @@
-export {default as SourcePanel} from './SourcePanel';
+export {SourcePanel} from './SourcePanel';
