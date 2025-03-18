@@ -7,12 +7,13 @@
 
 import stylex from '@stylexjs/stylex';
 import * as React from 'react';
+import ListItem, {ListItemProps} from './ListItem';
 
 interface ListProps {
   /**
    * The list items to render.
    */
-  children: React.ReactElement[];
+  children: React.ReactElement<ListItemProps, typeof ListItem>[];
 }
 
 export default function List({children}: ListProps) {
