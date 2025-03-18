@@ -18,7 +18,7 @@ export default function EditableTokens() {
       <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
         <div
           style={{
-            fontFamily: 'SF Pro Text',
+            fontFamily: 'sans-serif',
             fontSize: '20px',
             fontWeight: 500,
             marginBottom: '8px',

@@ -9,6 +9,7 @@ import * as React from 'react';
 import stylex from '@stylexjs/stylex';
 import {mainVars, labelVars} from './badge.stylex';
 import {backgroundColors, textColors} from './colors.stylex';
+import {fontStyles} from './styles';
 
 const DEFAULT_COLOR = 'gray';
 
@@ -28,7 +29,7 @@ interface BadgeProps {
 export default function Badge({label, color = DEFAULT_COLOR}: BadgeProps) {
   return (
     <div {...stylex.props(styles.main, colorVariants[color])}>
-      <div {...stylex.props(styles.label)}>{label}</div>
+      <div {...stylex.props(fontStyles.badge, styles.label)}>{label}</div>
     </div>
   );
 }
@@ -52,12 +53,6 @@ const styles = stylex.create({
     leadingTrim: 'both',
     textEdge: 'cap',
     textOverflow: 'ellipsis',
-    fontFamily: 'SF Pro Text',
-    fontSize: '12px',
-    fontStyle: 'normal',
-    fontWeight: 600,
-    lineHeight: '16px',
-    letterSpacing: '-0.24px',
     color: labelVars.color,
   },
 });

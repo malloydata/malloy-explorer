@@ -5,6 +5,7 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {iconVars, labelVars} from './token.stylex';
 import {iconColors, textColors} from './colors.stylex';
 import Icon from './Icon';
+import {fontStyles} from './styles';
 
 interface EditableTokenProps {
   /**
@@ -81,13 +82,13 @@ export default function EditableToken({
       {icon && <Icon name={icon} style={styles.icon} />}
       <span {...stylex.props(styles.inputWrapper)}>
         <span
-          {...stylex.props(styles.placeholder, styles.label)}
+          {...stylex.props(fontStyles.body, styles.placeholder)}
           style={{whiteSpaceCollapse: 'preserve'}}
         >
           {value}
         </span>
         <input
-          {...stylex.props(styles.input, styles.label)}
+          {...stylex.props(styles.input, fontStyles.body)}
           ref={inputRef}
           value={value}
           onChange={handleChange}
@@ -153,12 +154,6 @@ const styles = stylex.create({
     borderStyle: 'none',
     outline: 'none',
     whiteSpace: 'nowrap',
-  },
-  label: {
-    fontFamily: 'SF Pro Text',
-    fontWeight: 400,
-    fontSize: '14px',
-    lineHeight: '20px',
   },
   actionButton: {
     display: 'inline-flex',

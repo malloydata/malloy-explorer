@@ -21,6 +21,7 @@ import {
 } from '../primitives';
 import {textColors} from '../primitives/colors.stylex';
 import FieldToken from './FieldToken';
+import {fontStyles} from '../primitives/styles';
 
 export interface SourcePanelProps {
   source: SourceInfo;
@@ -40,7 +41,7 @@ export function SourcePanel({source}: SourcePanelProps) {
 
   return (
     <div {...stylex.props(styles.main)}>
-      <div {...stylex.props(styles.header)}>
+      <div {...stylex.props(fontStyles.body, styles.header)}>
         {panelType == null ? (
           <div {...stylex.props(theme.styles.labelWithIcon)}>
             <Icon name="database" color="gray" />
@@ -153,12 +154,8 @@ const styles = stylex.create({
     justifyContent: 'start',
     padding: '8px',
     minHeight: '28px',
-    fontFamily: 'SF Pro Text',
-    fontSize: '14px',
-    fontStyle: 'normal',
-    fontWeight: 700,
-    lineHeight: '20px',
     color: textColors.primary,
+    fontWeight: 700,
   },
   content: {
     display: 'flex',
