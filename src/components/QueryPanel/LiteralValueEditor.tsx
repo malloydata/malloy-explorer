@@ -8,6 +8,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {RawLiteralValue} from '@malloydata/malloy-query-builder';
+import {EditableToken} from '../primitives';
 
 export interface LiteralValueEditorProps {
   value: Malloy.LiteralValue | undefined;
@@ -53,9 +54,9 @@ export function LiteralValueEditor({value, setValue}: LiteralValueEditorProps) {
       );
     case 'string_literal':
       return (
-        <input
+        <EditableToken
           value={value.string_value}
-          onChange={event => setValue(event.target.value)}
+          onChange={value => setValue(value)}
         />
       );
     case 'timestamp_literal':

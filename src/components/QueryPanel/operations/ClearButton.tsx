@@ -6,15 +6,14 @@
  */
 
 import * as React from 'react';
-
-import ClearIcon from '../../../assets/refinements/clear.svg?react';
-import stylex from '@stylexjs/stylex';
-import {styles} from '../../styles';
+import {Button} from '../../primitives';
 
 export interface ClearButtonProps {
   onClick: () => void;
 }
 
 export function ClearButton({onClick}: ClearButtonProps) {
-  return <ClearIcon {...stylex.props(styles.icon)} onClick={onClick} />;
+  return (
+    <Button icon="clear" variant="flat" size="compact" onClick={onClick} />
+  );
 }

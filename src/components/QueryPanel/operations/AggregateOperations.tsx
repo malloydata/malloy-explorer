@@ -9,13 +9,15 @@ import * as React from 'react';
 import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
-import {Field} from './Field';
 import {
   ASTAggregateViewOperation,
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
+import {hoverStyles} from './hover.stylex';
+import {Field} from './Field';
+import {ClearButton} from './ClearButton';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
@@ -36,16 +38,17 @@ export function AggregateOperations({
       <div {...stylex.props(styles.title)}>aggregate</div>
       <div {...stylex.props(styles.tokenContainer)}>
         {aggregates.map((aggregate, key) => (
-          <Field
-            key={key}
-            type="measure"
-            rootQuery={rootQuery}
-            field={aggregate.field}
-            onDelete={() => {
-              aggregate.delete();
-              setQuery?.(rootQuery.build());
-            }}
-          />
+          <div key={key} {...stylex.props(hoverStyles.main)}>
+            <Field type="measure" key={key} field={aggregate.field} />
+            <div {...stylex.props(hoverStyles.hoverActions)}>
+              <ClearButton
+                onClick={() => {
+                  aggregate.delete();
+                  setQuery?.(rootQuery.build());
+                }}
+              />
+            </div>
+          </div>
         ))}
       </div>
     </div>

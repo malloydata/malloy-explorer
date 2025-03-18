@@ -15,9 +15,10 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {Token} from '../../primitives';
+import {Token, TokenGroup} from '../../primitives';
 import {IconType} from '../../primitives/icons';
 import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
+import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 
 export interface WhereOperationsProps {
@@ -46,19 +47,19 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
           const color = fieldKindToColor(fieldInfo.kind);
 
           return (
-            <div key={key} {...stylex.props(styles.labelWithIcon)}>
-              <Token
-                color={color}
-                icon={icon}
-                label={`${fieldInfo.name} ${filterString}`}
-                onClick={() => {}}
-              />
-              <ClearButton
-                onClick={() => {
-                  where.delete();
-                  setQuery?.(rootQuery.build());
-                }}
-              />
+            <div key={key} {...stylex.props(hoverStyles.main)}>
+              <TokenGroup>
+                <Token color={color} icon={icon} label={fieldInfo.name} />
+                <Token color={color} label={filterString} />
+              </TokenGroup>
+              <div {...stylex.props(hoverStyles.hoverActions)}>
+                <ClearButton
+                  onClick={() => {
+                    where.delete();
+                    setQuery?.(rootQuery.build());
+                  }}
+                />
+              </div>
             </div>
           );
         })}

@@ -15,7 +15,6 @@ import FilterIcon from '../../assets/refinements/insert_filter.svg?react';
 import LimitIcon from '../../assets/refinements/insert_limit.svg?react';
 import OrderByIcon from '../../assets/refinements/insert_order_by.svg?react';
 import NestIcon from '../../assets/refinements/insert_nest.svg?react';
-import InsertIcon from '../../assets/refinements/insert.svg?react';
 import QueryIcon from '../../assets/types/type-icon-query.svg?react';
 import {styles} from '../styles';
 import stylex from '@stylexjs/stylex';
@@ -23,15 +22,8 @@ import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {LimitDialog} from '../dialogs/LimitDialog';
 import {FilterDialog} from '../dialogs/FilterDialog';
-import {Label} from '../Label';
-import {Icon} from '../primitives';
+import {Button, Icon} from '../primitives';
 import {atomicTypeToIcon, relationshipToIcon} from './utils/icon';
-
-const viewMenuStyles = stylex.create({
-  p6: {
-    padding: 6,
-  },
-});
 
 export interface ViewMenuProps {
   rootQuery: ASTQuery;
@@ -229,30 +221,27 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
   return (
     <>
       <Menu
-        icon={
-          <div {...stylex.props(styles.labelWithIcon, viewMenuStyles.p6)}>
-            <InsertIcon {...stylex.props(styles.icon)} />
-            <Label>Add</Label>
-          </div>
+        trigger={
+          <Button variant="flat" icon="insert" label="Add" onClick={() => {}} />
         }
         items={[
           {
-            icon: <QueryIcon {...stylex.props(styles.icon)} />,
+            trigger: <QueryIcon {...stylex.props(styles.icon)} />,
             label: 'Views',
             subMenu: nestMenu,
           },
           {
-            icon: <FilterIcon {...stylex.props(styles.icon)} />,
+            trigger: <FilterIcon {...stylex.props(styles.icon)} />,
             label: 'Filter',
             subMenu: filterMenu,
           },
           {
-            icon: <AggregateIcon {...stylex.props(styles.icon)} />,
+            trigger: <AggregateIcon {...stylex.props(styles.icon)} />,
             label: 'Aggregate',
             subMenu: aggregateMenu,
           },
           {
-            icon: <GroupByIcon {...stylex.props(styles.icon)} />,
+            trigger: <GroupByIcon {...stylex.props(styles.icon)} />,
             label: 'Group By',
             subMenu: groupByMenu,
           },
@@ -260,7 +249,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
             label: '-',
           },
           {
-            icon: <LimitIcon {...stylex.props(styles.icon)} />,
+            trigger: <LimitIcon {...stylex.props(styles.icon)} />,
             label: 'Limit',
             onClick: () => {
               setLimitDialogOpen(true);
@@ -268,13 +257,13 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
             disable: () => hasLimit,
           },
           {
-            icon: <OrderByIcon {...stylex.props(styles.icon)} />,
+            trigger: <OrderByIcon {...stylex.props(styles.icon)} />,
             label: 'Order By',
             subMenu: orderByMenu,
             disable: () => outputSchemaFields.length === 0,
           },
           {
-            icon: <NestIcon {...stylex.props(styles.icon)} />,
+            trigger: <NestIcon {...stylex.props(styles.icon)} />,
             label: 'Add blank nested query',
             onClick: () => {
               segment.addEmptyNest('nest');

@@ -31,7 +31,7 @@ export type Modifiers = Pick<
 >;
 
 export interface MenuItem {
-  icon?: ReactElement;
+  trigger?: ReactElement;
   label: string;
   detail?: ReactElement;
   onClick?: (modifiers: Modifiers) => void;
@@ -41,15 +41,15 @@ export interface MenuItem {
 }
 
 export interface MenuProps {
-  icon: ReactElement;
+  trigger: ReactElement;
   items: MenuItem[];
 }
 
-export function Menu({icon, items}: MenuProps) {
+export function Menu({trigger, items}: MenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger {...stylex.props(menuStyles.trigger)}>
-        {icon}
+        {trigger}
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent {...stylex.props(menuStyles.content)}>
@@ -71,7 +71,7 @@ export function Menu({icon, items}: MenuProps) {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div {...stylex.props(menuStyles.label)}>
-                            {item.icon}
+                            {item.trigger}
                             <Label>{item.label}</Label>
                           </div>
                         </TooltipTrigger>
@@ -124,7 +124,7 @@ function SubMenu({item}: SubMenuProps) {
         {...stylex.props(menuStyles.item)}
       >
         <div {...stylex.props(menuStyles.label)}>
-          {item.icon}
+          {item.trigger}
           <Label>{item.label}</Label>
         </div>
         <div {...stylex.props(menuStyles.arrow)}>
@@ -149,7 +149,7 @@ function SubMenu({item}: SubMenuProps) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div {...stylex.props(menuStyles.label)}>
-                        {item.icon}
+                        {item.trigger}
                         <Label>{item.label}</Label>
                       </div>
                     </TooltipTrigger>
