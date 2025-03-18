@@ -7,6 +7,7 @@
 
 import stylex from '@stylexjs/stylex';
 import * as React from 'react';
+import {fontStyles} from './styles';
 
 export interface ListItemProps {
   /**
@@ -48,7 +49,7 @@ export default function ListItem({
   return (
     <div key={key} {...stylex.props(styles.main)} onClick={onClick}>
       {startIcon && <>{startIcon}</>}
-      <span {...stylex.props(styles.label)}>{label}</span>
+      <span {...stylex.props(fontStyles.body, styles.label)}>{label}</span>
       {badge && <>{badge}</>}
       {endIcon && <>{endIcon}</>}
     </div>
@@ -71,10 +72,5 @@ const styles = stylex.create({
   },
   label: {
     flexGrow: 1,
-    fontFamily: 'SF Pro Text',
-    fontWeight: 400,
-    fontSize: '14px',
-    lineHeight: '20px',
-    letterSpacing: '0px',
   },
 });

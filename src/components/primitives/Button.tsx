@@ -11,6 +11,7 @@ import {ICON_MAP} from './icons';
 import Icon from './Icon';
 import {iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars} from './button.stylex';
+import {fontStyles} from './styles';
 
 const DEFAULT_VARIANT = 'default';
 const DEFAULT_SIZE = 'default';
@@ -73,7 +74,16 @@ export default function Button({
     >
       <div {...stylex.props(styles.content)}>
         {icon && <Icon name={icon} style={styles.icon} />}
-        {label && <div {...stylex.props(styles.label)}>{label}</div>}
+        {label && (
+          <div
+            {...stylex.props(
+              variant === 'primary' ? fontStyles.emphasized : fontStyles.body,
+              styles.label
+            )}
+          >
+            {label}
+          </div>
+        )}
       </div>
       {isDisabled && <div {...stylex.props(styles.disabledOverlay)}></div>}
     </button>
@@ -108,11 +118,6 @@ const styles = stylex.create({
   },
   label: {
     color: labelVars.color,
-    fontFamily: 'SF Pro Text',
-    fontSize: '14px',
-    fontStyle: 'normal',
-    fontWeight: 400,
-    lineHeight: '20px',
   },
   disabledOverlay: {
     position: 'absolute',

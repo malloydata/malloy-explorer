@@ -11,6 +11,7 @@ import {ICON_MAP} from './icons';
 import Icon from './Icon';
 import {iconVars, labelVars} from './token.stylex';
 import {iconColors, textColors} from './colors.stylex';
+import {fontStyles} from './styles';
 
 export const DEFAULT_TOKEN_COLOR = 'default';
 
@@ -71,7 +72,9 @@ export default function Token({
           onMouseLeave: () => onHover(false),
         })}
       />
-      {label && <div {...stylex.props(styles.label)}>{label}</div>}
+      {label && (
+        <div {...stylex.props(fontStyles.body, styles.label)}>{label}</div>
+      )}
     </div>
   );
 }
@@ -99,10 +102,6 @@ const styles = stylex.create({
   },
   label: {
     color: labelVars.color,
-    fontFamily: 'SF Pro Text',
-    fontWeight: 400,
-    fontSize: '14px',
-    lineHeight: '20px',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
   },
