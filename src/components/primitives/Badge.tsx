@@ -6,12 +6,12 @@
  */
 
 import * as React from 'react';
-import stylex, { StyleXStyles } from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {mainVars, labelVars} from './badge.stylex';
 import {backgroundColors, textColors} from './colors.stylex';
 import {fontStyles} from './styles';
 import Icon from './Icon';
-import { ICON_MAP } from './icons';
+import {ICON_MAP} from './icons';
 
 const DEFAULT_COLOR = 'gray';
 
@@ -29,7 +29,7 @@ interface BadgeProps {
 
   /**
    * Optional icon; displayed to left of badge text
-   */  
+   */
   icon?: keyof typeof ICON_MAP;
 
   /**
@@ -38,10 +38,15 @@ interface BadgeProps {
   style?: StyleXStyles;
 }
 
-export default function Badge({label, color = DEFAULT_COLOR, icon, style}: BadgeProps) {
+export default function Badge({
+  label,
+  color = DEFAULT_COLOR,
+  icon,
+  style,
+}: BadgeProps) {
   return (
     <div {...stylex.props(styles.main, colorVariants[color], style)}>
-        {icon && <Icon color={color} name={icon}/>}
+      {icon && <Icon color={color} name={icon} />}
       <div {...stylex.props(fontStyles.badge, styles.label)}>{label}</div>
     </div>
   );

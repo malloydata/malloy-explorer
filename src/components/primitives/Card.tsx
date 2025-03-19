@@ -38,8 +38,6 @@ const styles = stylex.create({
     borderRadius: '12px',
     borderStyle: 'solid',
     borderWidth: '1px',
-    minWidth: '300px',
-    height: '200px',
     borderColor: '#CCD3DB',
     padding: '12px',
     flexShrink: 0,
