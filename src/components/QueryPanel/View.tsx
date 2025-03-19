@@ -11,6 +11,7 @@ import {styles} from '../styles';
 import {ViewDefinition} from './ViewDefinition';
 import {ViewMenu} from './ViewMenu';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+
 export interface ViewProps {
   rootQuery: ASTQuery;
   view: ASTView;
