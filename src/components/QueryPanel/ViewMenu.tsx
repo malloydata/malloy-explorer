@@ -22,8 +22,9 @@ import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {LimitDialog} from '../dialogs/LimitDialog';
 import {FilterDialog} from '../dialogs/FilterDialog';
-import {Button, Icon} from '../primitives';
+import {Icon} from '../primitives';
 import {atomicTypeToIcon, relationshipToIcon} from './utils/icon';
+import {Label} from '../Label';
 
 export interface ViewMenuProps {
   rootQuery: ASTQuery;
@@ -222,7 +223,10 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
     <>
       <Menu
         trigger={
-          <Button variant="flat" icon="insert" label="Add" onClick={() => {}} />
+          <div {...stylex.props(styles.labelWithIcon, viewMenuStyles.p6)}>
+            <Icon name="insert" />
+            <Label>Add</Label>
+          </div>
         }
         items={[
           {
@@ -288,3 +292,9 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
     </>
   );
 }
+
+const viewMenuStyles = stylex.create({
+  p6: {
+    padding: 6,
+  },
+});
