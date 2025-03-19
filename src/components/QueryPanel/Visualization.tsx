@@ -37,13 +37,13 @@ export function Visualization({annotations}: VisualizationProps) {
         renderer = tags[0] as RendererName;
       }
     }
-    return (
-      <div {...stylex.props(styles.labelWithIcon, styles.token)}>
-        <Icon name={`viz_${renderer}`} />
-        <Label>{snakeToTitle(renderer)}</Label>
-      </div>
-    );
   }
+  return (
+    <div {...stylex.props(styles.labelWithIcon, styles.token)}>
+      <Icon name={`viz_${renderer}`} />
+      <Label>{snakeToTitle(renderer)}</Label>
+    </div>
+  );
 }
 
 export function snakeToTitle(snake: string): string {
