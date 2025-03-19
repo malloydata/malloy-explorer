@@ -9,13 +9,15 @@ import * as React from 'react';
 import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
-import {Field} from './Field';
 import {
   ASTGroupByViewOperation,
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
+import {hoverStyles} from './hover.stylex';
+import {Field} from './Field';
+import {ClearButton} from './ClearButton';
 
 export interface GroupByOperationsProps {
   rootQuery: ASTQuery;
@@ -36,16 +38,17 @@ export function GroupByOperations({
       <div {...stylex.props(styles.title)}>group by</div>
       <div {...stylex.props(styles.tokenContainer)}>
         {groupBys.map((groupBy, key) => (
-          <Field
-            type="dimension"
-            key={key}
-            rootQuery={rootQuery}
-            field={groupBy.field}
-            onDelete={() => {
-              groupBy.delete();
-              setQuery?.(rootQuery.build());
-            }}
-          />
+          <div key={key} {...stylex.props(hoverStyles.main)}>
+            <Field type="dimension" key={key} field={groupBy.field} />
+            <div {...stylex.props(hoverStyles.hoverActions)}>
+              <ClearButton
+                onClick={() => {
+                  groupBy.delete();
+                  setQuery?.(rootQuery.build());
+                }}
+              />
+            </div>
+          </div>
         ))}
       </div>
     </div>

@@ -17,7 +17,8 @@ import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {IconType} from '../../primitives/icons';
 import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
-import {Token} from '../../primitives';
+import {Token, TokenGroup} from '../../primitives';
+import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 
 export interface OrderByOperationsProps {
@@ -41,31 +42,30 @@ export function OrderByOperations({
       <div {...stylex.props(styles.tokenContainer)}>
         {orderBys.map((orderBy, key) => {
           const fieldInfo = orderBy.fieldReference.getFieldInfo();
-          let label = fieldInfo.name;
-          if (orderBy.direction === 'asc') {
-            label += ' ascending';
-          } else {
-            label += ' descending';
-          }
           let icon: IconType = 'order_by';
           if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
             icon = atomicTypeToIcon(fieldInfo.type.kind);
           }
           const color = fieldKindToColor(fieldInfo.kind);
           return (
-            <div key={key} {...stylex.props(styles.labelWithIcon)}>
-              <Token
-                icon={icon}
-                color={color}
-                label={label}
-                onClick={() => {}}
-              />
-              <ClearButton
-                onClick={() => {
-                  orderBy.delete();
-                  setQuery?.(rootQuery.build());
-                }}
-              />
+            <div key={key} {...stylex.props(hoverStyles.main)}>
+              <TokenGroup>
+                <Token color={color} icon={icon} label={fieldInfo.name} />
+                <Token
+                  color={color}
+                  label={
+                    orderBy.direction === 'asc' ? 'ascending' : 'descending'
+                  }
+                />
+              </TokenGroup>
+              <div {...stylex.props(hoverStyles.hoverActions)}>
+                <ClearButton
+                  onClick={() => {
+                    orderBy.delete();
+                    setQuery?.(rootQuery.build());
+                  }}
+                />
+              </div>
             </div>
           );
         })}

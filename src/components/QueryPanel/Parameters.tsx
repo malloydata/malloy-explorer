@@ -14,9 +14,8 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {LiteralValueEditor} from './LiteralValueEditor';
-import {Label} from '../Label';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import {Icon} from '../primitives';
+import {Token, TokenGroup} from '../primitives';
 import {atomicTypeToIcon} from './utils/icon';
 
 /**
@@ -44,22 +43,22 @@ export function Parameters({rootQuery}: ParametersProps) {
       <div {...stylex.props(styles.queryCard)}>
         <div {...stylex.props(styles.title)}>Source parameters</div>
         {sourceParameters.map((parameter, key) => (
-          <div key={key} {...stylex.props(styles.labelWithIcon)}>
-            <Icon name={atomicTypeToIcon(parameter.type.kind)} />
-            <Label>
-              {parameter.name}{' '}
-              <LiteralValueEditor
-                value={
-                  source.tryGetParameter(parameter.name)?.parameter.value ??
-                  parameter.default_value
-                }
-                setValue={value => {
-                  source.setParameter(parameter.name, value);
-                  setQuery?.(rootQuery.build());
-                }}
-              />
-            </Label>
-          </div>
+          <TokenGroup key={key}>
+            <Token
+              icon={atomicTypeToIcon(parameter.type.kind)}
+              label={parameter.name}
+            />
+            <LiteralValueEditor
+              value={
+                source.tryGetParameter(parameter.name)?.parameter.value ??
+                parameter.default_value
+              }
+              setValue={value => {
+                source.setParameter(parameter.name, value);
+                setQuery?.(rootQuery.build());
+              }}
+            />
+          </TokenGroup>
         ))}
       </div>
     );

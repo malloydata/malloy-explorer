@@ -6,24 +6,18 @@
  */
 
 import * as React from 'react';
-import stylex from '@stylexjs/stylex';
 import {
   ASTExpression,
   ASTField,
   ASTFilteredFieldExpression,
-  ASTQuery,
   ASTReferenceExpression,
 } from '@malloydata/malloy-query-builder';
 import {Token} from '../../primitives';
-import {styles} from '../../styles';
 import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
-import {ClearButton} from './ClearButton';
 
 export interface FieldProps {
-  rootQuery: ASTQuery;
   field: ASTField;
   type: 'dimension' | 'measure' | 'view';
-  onDelete: (field: ASTField) => void;
 }
 
 function expressionTypeAndLabel(expression: ASTExpression) {
@@ -45,14 +39,9 @@ function expressionTypeAndLabel(expression: ASTExpression) {
   }
 }
 
-export function Field({field, onDelete, type}: FieldProps) {
+export function Field({field, type}: FieldProps) {
   const {fieldType, label} = expressionTypeAndLabel(field.expression);
   const color = fieldKindToColor(type);
   const icon = atomicTypeToIcon(fieldType.kind);
-  return (
-    <div {...stylex.props(styles.labelWithIcon)}>
-      <Token label={label} icon={icon} onClick={() => {}} color={color} />
-      <ClearButton onClick={() => onDelete(field)} />
-    </div>
-  );
+  return <Token label={label} icon={icon} onClick={() => {}} color={color} />;
 }
