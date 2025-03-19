@@ -9,6 +9,7 @@ import * as React from 'react';
 import {Badge, Button, Card, Icon} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
+import { textColors } from '../primitives/colors.stylex';
 
 interface BookmarkedViewProps {
   view: string;
@@ -21,10 +22,11 @@ export function BookmarkedView({view: _}: BookmarkedViewProps) {
         header={
           <div>
             <div {...stylex.props(styles.viewHeader)}>
-              <div>
-                <Icon name="view" color="purple" />
-                <Badge label="View" color="purple" />
-              </div>
+                <Badge label="view" icon="view_filled" color="purple" style={styles.viewBadge}/>
+              {/* <div>
+                <Icon name="view_filled" color="purple" />
+                <span {...stylex.props(fontStyles.body, styles.viewBadgeText)}>view</span>
+              </div> */}
               <Button
                 variant="default"
                 size="compact"
@@ -66,6 +68,9 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  viewBadge: {
+    backgroundColor: 'transparent'
   },
   attributeTable: {
     display: 'flex',

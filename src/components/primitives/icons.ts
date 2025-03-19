@@ -25,6 +25,7 @@ import TypeIconDate from '../../assets/types/type-icon-date.svg?react';
 import TypeIconJson from '../../assets/types/type-icon-json.svg?react';
 import TypeIconNumber from '../../assets/types/type-icon-number.svg?react';
 import TypeIconQuery from '../../assets/types/type-icon-query.svg?react';
+import TypeIconQueryFilled from '../../assets/types/type-icon-query-filled.svg?react';
 import TypeIconSqlNative from '../../assets/types/type-icon-sql-native.svg?react';
 
 import VizBarChar from '../../assets/visualizations/viz_bar_chart.svg?react';
@@ -71,6 +72,7 @@ export const ICON_MAP = {
   sql_native: TypeIconSqlNative,
   string: TypeIconString,
   view: TypeIconProjection,
+  view_filled: TypeIconQueryFilled,
 
   // Joins
   many_to_one: ManyToOneIcon,
