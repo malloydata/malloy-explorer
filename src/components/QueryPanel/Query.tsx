@@ -12,7 +12,6 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
-import {Visualization} from './Visualization';
 import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
 
@@ -22,15 +21,11 @@ export interface QueryProps {
 }
 
 export function Query({rootQuery, query}: QueryProps) {
-  // eslint-disable-next-line no-console
-  console.log({query, annotations: query.annotations});
-
   return (
     <div {...stylex.props(styles.queryCard)}>
       <div {...stylex.props(styles.queryHeader)}>
         <div {...stylex.props(styles.title)}>Main query</div>
       </div>
-      <Visualization annotations={query.annotations} />
       {query.definition instanceof ASTArrowQueryDefinition ? (
         <div>
           <ViewDefinition

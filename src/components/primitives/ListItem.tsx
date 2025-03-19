@@ -11,11 +11,6 @@ import {fontStyles} from './styles';
 
 export interface ListItemProps {
   /**
-   * The unique key for the list item.
-   */
-  key: string;
-
-  /**
    * The label for the list item.
    */
   label: string;
@@ -39,7 +34,6 @@ export interface ListItemProps {
 }
 
 export default function ListItem({
-  key,
   label,
   startIcon,
   badge,
@@ -47,7 +41,7 @@ export default function ListItem({
   onClick,
 }: ListItemProps) {
   return (
-    <div key={key} {...stylex.props(styles.main)} onClick={onClick}>
+    <div {...stylex.props(styles.main)} onClick={onClick}>
       {startIcon && <>{startIcon}</>}
       <span {...stylex.props(fontStyles.body, styles.label)}>{label}</span>
       {badge && <>{badge}</>}

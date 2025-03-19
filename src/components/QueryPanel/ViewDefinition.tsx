@@ -18,6 +18,7 @@ import {
 } from '@malloydata/malloy-query-builder';
 import {Label} from '../Label';
 import {Icon} from '../primitives';
+import {Visualization} from './Visualization';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
@@ -25,25 +26,27 @@ export interface ViewProps {
 }
 
 export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
-  return (
-    <div>
-      {viewDef instanceof ASTArrowViewDefinition ? (
-        <div>
-          <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.view} />
-        </div>
-      ) : viewDef instanceof ASTRefinementViewDefinition ? (
-        <div>
-          <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.base} />
-          <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.refinement} />
-        </div>
-      ) : viewDef instanceof ASTSegmentViewDefinition ? (
-        <Operations rootQuery={rootQuery} viewDef={viewDef} />
-      ) : (
+  if (viewDef instanceof ASTArrowViewDefinition) {
+    return <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.view} />;
+  } else if (viewDef instanceof ASTRefinementViewDefinition) {
+    return (
+      <div>
+        <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.base} />
+        <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.refinement} />
+      </div>
+    );
+  } else if (viewDef instanceof ASTSegmentViewDefinition) {
+    return <Operations rootQuery={rootQuery} viewDef={viewDef} />;
+  } else {
+    const viewInfo = viewDef.getViewInfo();
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+        <Visualization annotations={viewInfo.annotations} />
         <div {...stylex.props(styles.labelWithIcon, styles.token)}>
-          <Icon name="query" />
+          <Icon name="query" color="purple" />
           <Label>{viewDef.name}</Label>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
 }

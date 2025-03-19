@@ -13,11 +13,6 @@ import {hoverActionsVars} from './field-token.stylex';
 
 interface FieldTokenProps {
   /**
-   * A unique key for the token.
-   */
-  key: string;
-
-  /**
    * The field information associated with the token.
    */
   field: FieldInfo;
@@ -39,7 +34,6 @@ interface FieldTokenProps {
 }
 
 export default function FieldToken({
-  key,
   field,
   onClick,
   onHover,
@@ -50,7 +44,7 @@ export default function FieldToken({
   }
 
   return (
-    <div key={key} {...stylex.props(styles.main)}>
+    <div {...stylex.props(styles.main)}>
       <div style={{display: 'inline-grid'}}>
         <Token
           label={field.name}
