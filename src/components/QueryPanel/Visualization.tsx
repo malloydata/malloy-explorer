@@ -40,7 +40,7 @@ export function Visualization({view}: VisualizationProps) {
         icon={`viz_${currentRenderer}`}
         label={snakeToTitle(currentRenderer)}
       />
-      <Menu trigger={<Token icon="chevronRight" />} items={vizes} />
+      <Menu trigger={<Token icon="meatballs" />} items={vizes} />
     </TokenGroup>
   );
 }

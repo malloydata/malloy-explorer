@@ -13,9 +13,11 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
-import {Label} from '../../Label';
 import {View} from '../View';
-import NestIcon from '../../../assets/refinements/insert_nest.svg?react';
+import {Icon, Token, TokenGroup} from '../../primitives';
+import {Menu} from '../../Menu';
+import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
+import {useContext} from 'react';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -33,6 +35,7 @@ const viewStyles = stylex.create({
 });
 
 export function NestOperations({rootQuery, nests}: NestOperationsProps) {
+  const {setQuery} = useContext(QueryEditorContext);
   if (nests.length === 0) {
     return null;
   }
@@ -40,20 +43,46 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
   return (
     <div>
       <div {...stylex.props(styles.tokenContainer)}>
-        {nests.map((nest, key) => (
-          <div key={key} {...stylex.props(viewStyles.indent)}>
-            <div {...stylex.props(styles.queryCard)}>
-              <div {...stylex.props(styles.queryHeader)}>
-                <div {...stylex.props(styles.labelWithIcon)}>
-                  <NestIcon {...stylex.props(styles.icon)} />
-                  <Label>{nest.name ?? 'nest'}</Label>
-                </div>
+        {nests.map((nest, key) => {
+          const actions = [
+            {
+              icon: <Icon name="clear" />,
+              label: 'Delete Query',
+              onClick: () => {
+                nest.delete();
+                setQuery?.(rootQuery.build());
+              },
+            },
+          ];
+
+          return (
+            <div key={key} {...stylex.props(viewStyles.indent)}>
+              <div {...stylex.props(styles.queryCard)}>
+                <TokenGroup style={localStyles.header}>
+                  <Token
+                    icon="nest"
+                    label={nest.name}
+                    style={localStyles.left}
+                  />
+                  <Menu trigger={<Token icon="meatballs" />} items={actions} />
+                </TokenGroup>
+                <View rootQuery={rootQuery} view={nest.view} />
               </div>
-              <View rootQuery={rootQuery} view={nest.view} />
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 }
+
+const localStyles = stylex.create({
+  header: {
+    width: '100%',
+    paddingBottom: 8,
+  },
+  left: {
+    flexGrow: 1,
+    justifyContent: 'start',
+  },
+});
