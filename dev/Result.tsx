@@ -16,7 +16,11 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 const App = () => {
   return (
     <TooltipProvider>
-      <div style={{display: 'flex'}}>
+      <div
+        style={{
+          height: '100vh',
+        }}
+      >
         <ResultPanel source={source} />
       </div>
     </TooltipProvider>

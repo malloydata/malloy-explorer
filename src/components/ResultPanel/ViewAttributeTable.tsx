@@ -9,7 +9,7 @@ import {ScrollableArea} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {Visualization} from '../QueryPanel/Visualization';
+import {Visualization} from './Visualization';
 import FieldToken from '../SourcePanel/FieldToken';
 
 interface ViewAttributeTableProps {
@@ -27,7 +27,7 @@ export default function ViewAttributeTable({
         <table {...stylex.props(styles.attributeTable)}>
           <ViewAttributeTableRow attribute="chart type">
             <div {...stylex.props(styles.chartTypeViz)}>
-              <Visualization annotations={viewInfo.annotations} />
+              <Visualization annotations={viewInfo.annotations || []} />
             </div>
           </ViewAttributeTableRow>
 

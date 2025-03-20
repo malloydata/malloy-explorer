@@ -6,8 +6,9 @@
  */
 
 import * as React from 'react';
-import {BookmarkedView} from './BookmarkedView';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import EmptyQueryDisplay from './EmptyQueryDisplay';
+import stylex from '@stylexjs/stylex';
 
 export interface ResultPanelProps {
   source: Malloy.SourceInfo;
@@ -20,13 +21,7 @@ export default function ResultPanel({
   query: _q,
   setQuery: _sq,
 }: ResultPanelProps) {
-  const view = source.schema.fields
-    .filter(f => f.kind === 'view')
-    .at(0) as Malloy.FieldInfoWithView;
+  const views = source.schema.fields.filter(f => f.kind === 'view');
 
-  return (
-    <div>
-      <BookmarkedView viewInfo={view} />
-    </div>
-  );
+  return <EmptyQueryDisplay views={views} />;
 }
