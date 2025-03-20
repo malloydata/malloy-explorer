@@ -50,5 +50,6 @@ const styles = stylex.create({
   token: {
     flexGrow: 1,
     justifyContent: 'start',
+    width: 'calc(100% - 16px)',
   },
 });

@@ -11,13 +11,16 @@ import {Icon, Token, TokenGroup} from '../primitives';
 import {Menu, MenuItem} from '../Menu';
 import {Tag} from '@malloydata/malloy-tag';
 import stylex from '@stylexjs/stylex';
+import {useContext} from 'react';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface VisualizationProps {
   rootQuery: ASTQuery;
   view: ASTQuery | ASTView;
 }
 
-export function Visualization({view}: VisualizationProps) {
+export function Visualization({rootQuery, view}: VisualizationProps) {
+  const {setQuery} = useContext(QueryEditorContext);
   const currentTag = view.getTag();
 
   const currentRenderer: RendererName = tagToRenderer(currentTag) ?? 'table';
@@ -25,6 +28,7 @@ export function Visualization({view}: VisualizationProps) {
   const setRenderer = (renderer: RendererName): void => {
     view.removeTagProperty([currentRenderer]);
     view.setTagProperty([renderer]);
+    setQuery?.(rootQuery.build());
   };
 
   const vizes: MenuItem[] = QUERY_RENDERERS.map(viz => ({
@@ -40,7 +44,7 @@ export function Visualization({view}: VisualizationProps) {
         icon={`viz_${currentRenderer}`}
         label={snakeToTitle(currentRenderer)}
       />
-      <Menu trigger={<Token icon="chevronRight" />} items={vizes} />
+      <Menu trigger={<Token icon="meatballs" />} items={vizes} />
     </TokenGroup>
   );
 }
@@ -60,9 +64,9 @@ export function tagToRenderer(tag: Tag | undefined) {
     const tagProps = tag.getProperties();
     const tags = Object.keys(tagProps);
 
-    if (tags.length) {
-      if (RENDERERS.includes(tags[0] as RendererName)) {
-        return tags[0] as RendererName;
+    for (const tag of tags) {
+      if (RENDERERS.includes(tag as RendererName)) {
+        return tag as RendererName;
       }
     }
   }

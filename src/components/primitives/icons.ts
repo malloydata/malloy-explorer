@@ -26,6 +26,8 @@ import TypeIconJson from '../../assets/types/type-icon-json.svg?react';
 import TypeIconNumber from '../../assets/types/type-icon-number.svg?react';
 import TypeIconQuery from '../../assets/types/type-icon-query.svg?react';
 import TypeIconSqlNative from '../../assets/types/type-icon-sql-native.svg?react';
+import Meatballs from '../../assets/ui/meatballs.svg?react';
+import PlayIcon from '../../assets/ui/play.svg?react';
 
 import VizBarChar from '../../assets/visualizations/viz_bar_chart.svg?react';
 import VizBoolean from '../../assets/visualizations/viz_boolean.svg?react';
@@ -53,6 +55,10 @@ export const ICON_MAP = {
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
   clear: Clear,
+  meatballs: Meatballs,
+  play: PlayIcon,
+
+  // Operations
   dimension: TypeIconString,
   filter: Filter,
   insert: Insert,

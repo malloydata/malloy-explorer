@@ -40,7 +40,7 @@ export function QueryActionBar({
           variant="flat"
         />
         <Button
-          icon="chevronRight"
+          icon="play"
           onClick={() => query && runQuery(source, query)}
           isDisabled={!rootQuery?.isRunnable()}
           label="Run"
