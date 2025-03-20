@@ -8,7 +8,6 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import EmptyQueryDisplay from './EmptyQueryDisplay';
-import stylex from '@stylexjs/stylex';
 
 export interface ResultPanelProps {
   source: Malloy.SourceInfo;

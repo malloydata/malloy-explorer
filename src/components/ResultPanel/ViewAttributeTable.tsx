@@ -4,11 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import * as React from 'react';
-import {ScrollableArea} from '../primitives';
-import stylex from '@stylexjs/stylex';
-import {fontStyles} from '../primitives/styles';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import stylex from '@stylexjs/stylex';
+import {ScrollableArea} from '../primitives';
+import {fontStyles} from '../primitives/styles';
 import {Visualization} from './Visualization';
 import FieldToken from '../SourcePanel/FieldToken';
 

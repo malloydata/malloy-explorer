@@ -4,12 +4,13 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {Badge, Button, Card} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
 import ViewAttributeTable from './ViewAttributeTable';
-import * as Malloy from '@malloydata/malloy-interfaces';
 
 interface BookmarkedViewProps {
   viewInfo: Malloy.ViewInfo;
