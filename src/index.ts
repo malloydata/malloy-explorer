@@ -10,3 +10,4 @@ export {MalloyPreview} from './components/MalloyPreview';
 export {QueryActionBar, QueryEditor} from './components/QueryPanel';
 export {RawPreview} from './components/RawPreview';
 export {SourcePanel} from './components/SourcePanel';
+export {ResultPanel} from './components/ResultPanel';
