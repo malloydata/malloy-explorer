@@ -230,22 +230,22 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
         }
         items={[
           {
-            trigger: <QueryIcon {...stylex.props(styles.icon)} />,
+            icon: <QueryIcon {...stylex.props(styles.icon)} />,
             label: 'Views',
             subMenu: nestMenu,
           },
           {
-            trigger: <FilterIcon {...stylex.props(styles.icon)} />,
+            icon: <FilterIcon {...stylex.props(styles.icon)} />,
             label: 'Filter',
             subMenu: filterMenu,
           },
           {
-            trigger: <AggregateIcon {...stylex.props(styles.icon)} />,
+            icon: <AggregateIcon {...stylex.props(styles.icon)} />,
             label: 'Aggregate',
             subMenu: aggregateMenu,
           },
           {
-            trigger: <GroupByIcon {...stylex.props(styles.icon)} />,
+            icon: <GroupByIcon {...stylex.props(styles.icon)} />,
             label: 'Group By',
             subMenu: groupByMenu,
           },
@@ -253,7 +253,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
             label: '-',
           },
           {
-            trigger: <LimitIcon {...stylex.props(styles.icon)} />,
+            icon: <LimitIcon {...stylex.props(styles.icon)} />,
             label: 'Limit',
             onClick: () => {
               setLimitDialogOpen(true);
@@ -261,13 +261,13 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
             disable: () => hasLimit,
           },
           {
-            trigger: <OrderByIcon {...stylex.props(styles.icon)} />,
+            icon: <OrderByIcon {...stylex.props(styles.icon)} />,
             label: 'Order By',
             subMenu: orderByMenu,
             disable: () => outputSchemaFields.length === 0,
           },
           {
-            trigger: <NestIcon {...stylex.props(styles.icon)} />,
+            icon: <NestIcon {...stylex.props(styles.icon)} />,
             label: 'Add blank nested query',
             onClick: () => {
               segment.addEmptyNest('nest');

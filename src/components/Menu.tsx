@@ -31,7 +31,7 @@ export type Modifiers = Pick<
 >;
 
 export interface MenuItem {
-  trigger?: ReactElement;
+  icon?: ReactElement;
   label: string;
   detail?: ReactElement;
   onClick?: (modifiers: Modifiers) => void;
@@ -71,7 +71,7 @@ export function Menu({trigger, items}: MenuProps) {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div {...stylex.props(menuStyles.label)}>
-                            {item.trigger}
+                            {item.icon}
                             <Label>{item.label}</Label>
                           </div>
                         </TooltipTrigger>
@@ -124,7 +124,7 @@ function SubMenu({item}: SubMenuProps) {
         {...stylex.props(menuStyles.item)}
       >
         <div {...stylex.props(menuStyles.label)}>
-          {item.trigger}
+          {item.icon}
           <Label>{item.label}</Label>
         </div>
         <div {...stylex.props(menuStyles.arrow)}>
@@ -149,7 +149,7 @@ function SubMenu({item}: SubMenuProps) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div {...stylex.props(menuStyles.label)}>
-                        {item.trigger}
+                        {item.icon}
                         <Label>{item.label}</Label>
                       </div>
                     </TooltipTrigger>

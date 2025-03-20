@@ -11,6 +11,7 @@ import {styles} from '../styles';
 import {ViewDefinition} from './ViewDefinition';
 import {ViewMenu} from './ViewMenu';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+import {Visualization} from './Visualization';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
@@ -19,7 +20,8 @@ export interface ViewProps {
 
 export function View({rootQuery, view}: ViewProps) {
   return (
-    <div>
+    <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+      <Visualization rootQuery={rootQuery} view={view} />
       <ViewDefinition rootQuery={rootQuery} viewDef={view.definition} />
       <div {...stylex.props(styles.queryFooter)}>
         <ViewMenu rootQuery={rootQuery} view={view} />

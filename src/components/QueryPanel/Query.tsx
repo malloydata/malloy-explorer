@@ -14,6 +14,7 @@ import stylex from '@stylexjs/stylex';
 import {styles} from '../styles';
 import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
+import {Visualization} from './Visualization';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -27,7 +28,10 @@ export function Query({rootQuery, query}: QueryProps) {
         <div {...stylex.props(styles.title)}>Main query</div>
       </div>
       {query.definition instanceof ASTArrowQueryDefinition ? (
-        <div>
+        <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+          {!query.isEmpty() && (
+            <Visualization rootQuery={rootQuery} view={query} />
+          )}
           <ViewDefinition
             rootQuery={rootQuery}
             viewDef={query.definition.view}
