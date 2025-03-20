@@ -13,6 +13,7 @@ import {MalloyExplorerProvider, SourcePanel} from '../src';
 import Buttons from './components/Buttons';
 import TokenGroups from './components/TokensGroups';
 import EditableTokens from './components/EditableTokens';
+import TextInputs from './components/TextInputs';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
           <Buttons />
           <EditableTokens />
           <TokenGroups />
+          <TextInputs />
         </div>
       </div>
     </MalloyExplorerProvider>
