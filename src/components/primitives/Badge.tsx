@@ -11,7 +11,7 @@ import {mainVars, labelVars} from './badge.stylex';
 import {backgroundColors, textColors} from './colors.stylex';
 import {fontStyles} from './styles';
 import Icon from './Icon';
-import {ICON_MAP} from './icons';
+import {ICON_MAP} from './utils/icon';
 
 const DEFAULT_COLOR = 'gray';
 
