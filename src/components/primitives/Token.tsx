@@ -64,14 +64,16 @@ export default function Token({
   return (
     <div {...stylex.props(styles.main, colorVariants[color], style)}>
       {icon && <Icon name={icon} style={styles.icon} />}
-      <button
-        {...stylex.props(styles.button)}
-        onClick={onClick}
-        {...(onHover && {
-          onMouseEnter: () => onHover(true),
-          onMouseLeave: () => onHover(false),
-        })}
-      />
+      {onClick && (
+        <button
+          {...stylex.props(styles.button)}
+          onClick={onClick}
+          {...(onHover && {
+            onMouseEnter: () => onHover(true),
+            onMouseLeave: () => onHover(false),
+          })}
+        />
+      )}
       {label && (
         <div {...stylex.props(fontStyles.body, styles.label)}>{label}</div>
       )}

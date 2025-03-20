@@ -6,44 +6,68 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
-import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
-
-import {Label} from '@radix-ui/react-dropdown-menu';
+import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+import {Icon, Token, TokenGroup} from '../primitives';
+import {Menu, MenuItem} from '../Menu';
 import {Tag} from '@malloydata/malloy-tag';
-import {Icon} from '../primitives';
+import stylex from '@stylexjs/stylex';
 
 export interface VisualizationProps {
-  annotations?: Malloy.Annotation[];
+  rootQuery: ASTQuery;
+  view: ASTQuery | ASTView;
 }
 
-export function Visualization({annotations}: VisualizationProps) {
-  if (!annotations) {
-    return null;
-  }
+export function Visualization({view}: VisualizationProps) {
+  const currentTag = view.getTag();
 
-  const {tag} = Tag.fromTagLines(
-    annotations.map(annotation => annotation.value)
+  const currentRenderer: RendererName = tagToRenderer(currentTag) ?? 'table';
+
+  const setRenderer = (renderer: RendererName): void => {
+    view.removeTagProperty([currentRenderer]);
+    view.setTagProperty([renderer]);
+  };
+
+  const vizes: MenuItem[] = QUERY_RENDERERS.map(viz => ({
+    icon: <Icon name={`viz_${viz}`} />,
+    label: snakeToTitle(viz),
+    onClick: () => setRenderer(viz),
+  }));
+
+  return (
+    <TokenGroup style={styles.group}>
+      <Token
+        style={styles.first}
+        icon={`viz_${currentRenderer}`}
+        label={snakeToTitle(currentRenderer)}
+      />
+      <Menu trigger={<Token icon="chevronRight" />} items={vizes} />
+    </TokenGroup>
   );
+}
 
-  let renderer: RendererName = 'table';
+const styles = stylex.create({
+  group: {
+    width: '100%',
+  },
+  first: {
+    flexGrow: 1,
+    justifyContent: 'start',
+  },
+});
+
+export function tagToRenderer(tag: Tag | undefined) {
   if (tag) {
     const tagProps = tag.getProperties();
     const tags = Object.keys(tagProps);
 
     if (tags.length) {
       if (RENDERERS.includes(tags[0] as RendererName)) {
-        renderer = tags[0] as RendererName;
+        return tags[0] as RendererName;
       }
     }
   }
-  return (
-    <div {...stylex.props(styles.labelWithIcon, styles.token)}>
-      <Icon name={`viz_${renderer}`} />
-      <Label>{snakeToTitle(renderer)}</Label>
-    </div>
-  );
+
+  return null;
 }
 
 export function snakeToTitle(snake: string): string {

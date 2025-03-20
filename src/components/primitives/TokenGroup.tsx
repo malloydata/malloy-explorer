@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Token, {DEFAULT_TOKEN_COLOR, TokenColor, TokenProps} from './Token';
-import stylex from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 
 interface TokenGroupProps {
   /**
@@ -13,18 +13,24 @@ interface TokenGroupProps {
    * the color will be determined by each token's individual color prop.
    */
   color?: TokenColor;
+
+  /**
+   * Custom styles
+   */
+  style?: StyleXStyles;
 }
 
 export default function TokenGroup({
   children,
   color = DEFAULT_TOKEN_COLOR,
+  style,
 }: TokenGroupProps) {
   const count = React.Children.count(children);
   return (
-    <div {...stylex.props(styles.main)}>
+    <div {...stylex.props(styles.main, style)}>
       {React.Children.map(children, (child, index) =>
         React.cloneElement(child, {
-          style: getChildStyle(index, count),
+          style: {...child.props.style, ...getChildStyle(index, count)},
           color: getTokenColor(child, color),
         })
       )}

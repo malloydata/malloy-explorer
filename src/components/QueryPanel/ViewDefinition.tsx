@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
 import {Operations} from './Operations';
 import {
   ASTArrowViewDefinition,
@@ -16,9 +15,7 @@ import {
   ASTSegmentViewDefinition,
   ASTViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {Label} from '../Label';
-import {Icon} from '../primitives';
-import {Visualization} from './Visualization';
+import {Token} from '../primitives';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
@@ -38,15 +35,20 @@ export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
   } else if (viewDef instanceof ASTSegmentViewDefinition) {
     return <Operations rootQuery={rootQuery} viewDef={viewDef} />;
   } else {
-    const viewInfo = viewDef.getViewInfo();
     return (
-      <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-        <Visualization annotations={viewInfo.annotations} />
-        <div {...stylex.props(styles.labelWithIcon, styles.token)}>
-          <Icon name="query" color="purple" />
-          <Label>{viewDef.name}</Label>
-        </div>
-      </div>
+      <Token
+        icon="query"
+        color="purple"
+        label={viewDef.name}
+        style={styles.token}
+      />
     );
   }
 }
+
+const styles = stylex.create({
+  token: {
+    flexGrow: 1,
+    justifyContent: 'start',
+  },
+});
