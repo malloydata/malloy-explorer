@@ -5,26 +5,43 @@
  * LICENSE file in the root directory of this source tree.
  */
 import * as React from 'react';
-import {ScrollableArea, Token} from '../primitives';
+import {ScrollableArea} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
+import * as Malloy from '@malloydata/malloy-interfaces';
+import {Visualization} from '../QueryPanel/Visualization';
+import FieldToken from '../SourcePanel/FieldToken';
 
 interface ViewAttributeTableProps {
-  view: string;
+  viewInfo: Malloy.ViewInfo;
 }
 
-export default function ViewAttributeTable({view: _}: ViewAttributeTableProps) {
+export default function ViewAttributeTable({
+  viewInfo,
+}: ViewAttributeTableProps) {
+  const dimensions = viewInfo.schema.fields.filter(f => f.kind === 'dimension');
+
   return (
     <div {...stylex.props(styles.attributeTableContainer)}>
       <ScrollableArea>
         <table {...stylex.props(styles.attributeTable)}>
-          <ViewAttributeTableRow attribute="chart type" value="test" />
-          <ViewAttributeTableRow attribute="aggregate" />
-          <ViewAttributeTableRow attribute="group by" />
-          {/* use group by existence as proxy for display decision */}
-          <ViewAttributeTableRow attribute="dimension" />
-          <ViewAttributeTableRow attribute="order by" />
-          <ViewAttributeTableRow attribute="limit" />
+          <ViewAttributeTableRow attribute="chart type">
+            <div {...stylex.props(styles.chartTypeViz)}>
+              <Visualization annotations={viewInfo.annotations} />
+            </div>
+          </ViewAttributeTableRow>
+
+          {/* <ViewAttributeTableRow attribute="aggregate" />
+          <ViewAttributeTableRow attribute="group by" /> */}
+          <ViewAttributeTableRow attribute="dimension">
+            {dimensions.map(f => (
+              <span key={`${f.kind}::${f.name}`}>
+                <FieldToken field={f} />
+              </span>
+            ))}
+          </ViewAttributeTableRow>
+          {/* <ViewAttributeTableRow attribute="order by" />
+          <ViewAttributeTableRow attribute="limit" /> */}
         </table>
       </ScrollableArea>
     </div>
@@ -33,10 +50,13 @@ export default function ViewAttributeTable({view: _}: ViewAttributeTableProps) {
 
 interface ViewAttributeTableRowProps {
   attribute: string;
-  value?: string;
+  children?: React.ReactNode;
 }
 
-function ViewAttributeTableRow({attribute, value}: ViewAttributeTableRowProps) {
+function ViewAttributeTableRow({
+  attribute,
+  children,
+}: ViewAttributeTableRowProps) {
   return (
     <tr {...stylex.props(styles.attributeTableRow)}>
       <td
@@ -51,15 +71,7 @@ function ViewAttributeTableRow({attribute, value}: ViewAttributeTableRowProps) {
           {attribute}
         </div>
       </td>
-      <td>
-        <Token label={value} />
-        <Token label={value} />
-        <Token label={value} />
-        <Token label={value} />
-        <Token label={value} />
-        <Token label={value} />
-        <Token label={value} />
-      </td>
+      <td {...stylex.props(styles.attributeTableValueCell)}>{children}</td>
     </tr>
   );
 }
@@ -73,6 +85,9 @@ const styles = stylex.create({
     boxSizing: 'border-box',
     width: '100%',
     height: '200px',
+  },
+  chartTypeViz: {
+    display: 'inline-block',
   },
   attributeTable: {
     borderCollapse: 'collapse',
@@ -93,7 +108,9 @@ const styles = stylex.create({
     display: 'flex',
     alignItems: 'center',
   },
-  attributeTableValueCellContent: {
-    width: '1px',
+  attributeTableValueCell: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '2px',
   },
 });

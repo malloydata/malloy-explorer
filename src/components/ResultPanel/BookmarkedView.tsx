@@ -9,12 +9,13 @@ import {Badge, Button, Card} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
 import ViewAttributeTable from './ViewAttributeTable';
+import * as Malloy from '@malloydata/malloy-interfaces';
 
 interface BookmarkedViewProps {
-  view: string;
+  viewInfo: Malloy.ViewInfo;
 }
 
-export function BookmarkedView({view: _}: BookmarkedViewProps) {
+export function BookmarkedView({viewInfo}: BookmarkedViewProps) {
   return (
     <div>
       <Card
@@ -35,16 +36,21 @@ export function BookmarkedView({view: _}: BookmarkedViewProps) {
               />
             </div>
             <div>
-              <div {...stylex.props(fontStyles.emphasized)}>by_carrier</div>
+              <div {...stylex.props(fontStyles.emphasized)}>
+                {viewInfo.name}
+              </div>
               <div {...stylex.props(fontStyles.supporting)}>
-                flight count by top five carriers
+                {/*
+                 * no good way of parsing/categorizing annotations rn
+                 * eventually use: {viewInfo.annotations}
+                 */}
               </div>
             </div>
           </div>
         }
         style={styles.card}
       >
-        <ViewAttributeTable view="" />
+        <ViewAttributeTable viewInfo={viewInfo} />
       </Card>
     </div>
   );

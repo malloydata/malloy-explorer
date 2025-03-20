@@ -7,11 +7,26 @@
 
 import * as React from 'react';
 import {BookmarkedView} from './BookmarkedView';
+import * as Malloy from '@malloydata/malloy-interfaces';
 
-export default function ResultPanel() {
+export interface ResultPanelProps {
+  source: Malloy.SourceInfo;
+  query?: Malloy.Query;
+  setQuery?: (query: Malloy.Query) => void;
+}
+
+export default function ResultPanel({
+  source,
+  query: _q,
+  setQuery: _sq,
+}: ResultPanelProps) {
+  const view = source.schema.fields
+    .filter(f => f.kind === 'view')
+    .at(0) as Malloy.FieldInfoWithView;
+
   return (
     <div>
-      <BookmarkedView view="placeholder"/>
+      <BookmarkedView viewInfo={view} />
     </div>
   );
 }

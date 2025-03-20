@@ -9,12 +9,15 @@ import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import {ResultPanel} from '../src';
+import * as Malloy from '@malloydata/malloy-interfaces';
+import {modelInfo} from './example_model';
+const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   return (
     <TooltipProvider>
       <div style={{display: 'flex'}}>
-        <ResultPanel />
+        <ResultPanel source={source} />
       </div>
     </TooltipProvider>
   );
