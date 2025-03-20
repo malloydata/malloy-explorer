@@ -10,6 +10,7 @@ import {FieldInfo} from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {Token} from '../primitives';
 import {hoverActionsVars} from './field-token.stylex';
+import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
 
 interface FieldTokenProps {
   /**
@@ -48,15 +49,13 @@ export default function FieldToken({
       <div style={{display: 'inline-grid'}}>
         <Token
           label={field.name}
-          color={
-            field.kind === 'view'
-              ? 'purple'
-              : field.kind === 'measure'
-                ? 'green'
-                : 'cyan'
+          color={fieldKindToColor(field.kind)}
+          icon={
+            field.kind === 'dimension' || field.kind === 'measure'
+              ? atomicTypeToIcon(field.type.kind)
+              : 'view'
           }
           onClick={onClick}
-          icon={field.kind}
           onHover={onHover}
         />
       </div>

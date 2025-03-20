@@ -16,7 +16,7 @@ import {styles} from '../styles';
 import {LiteralValueEditor} from './LiteralValueEditor';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {Token, TokenGroup} from '../primitives';
-import {atomicTypeToIcon} from './utils/icon';
+import {atomicTypeToIcon} from '../utils/icon';
 
 /**
  * Source

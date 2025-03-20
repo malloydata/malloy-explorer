@@ -15,9 +15,8 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {IconType} from '../../primitives/icons';
-import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
-import {Token, TokenGroup} from '../../primitives';
+import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
+import {Token, TokenGroup, IconType} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 

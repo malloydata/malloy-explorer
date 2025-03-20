@@ -9,3 +9,5 @@ export {default as Token} from './Token';
 export {default as TokenGroup} from './TokenGroup';
 export {default as EditableToken} from './EditableToken';
 export {default as Card} from './Card';
+
+export {type IconType} from './utils/icon';

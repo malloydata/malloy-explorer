@@ -23,7 +23,7 @@ import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {LimitDialog} from '../dialogs/LimitDialog';
 import {FilterDialog} from '../dialogs/FilterDialog';
 import {Icon} from '../primitives';
-import {atomicTypeToIcon, relationshipToIcon} from './utils/icon';
+import {atomicTypeToIcon, relationshipToIcon} from '../utils/icon';
 import {Label} from '../Label';
 
 export interface ViewMenuProps {

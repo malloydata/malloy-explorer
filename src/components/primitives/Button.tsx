@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {ICON_MAP} from './icons';
+import {IconType} from './utils/icon';
 import Icon from './Icon';
 import {iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars} from './button.stylex';
@@ -39,7 +39,7 @@ interface ButtonProps {
   /**
    * The icon to be shown either to the left of the label or centered (if label is not provided.
    */
-  icon?: keyof typeof ICON_MAP;
+  icon?: IconType;
 
   /**
    * The click event handler for the button.
