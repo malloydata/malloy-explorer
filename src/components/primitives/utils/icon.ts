@@ -30,7 +30,7 @@ import TypeIconQueryFilled from '../../../assets/types/type-icon-query-filled.sv
 import TypeIconSqlNative from '../../../assets/types/type-icon-sql-native.svg?react';
 import Meatballs from '../../../assets/ui/meatballs.svg?react';
 import PlayIcon from '../../../assets/ui/play.svg?react';
-import Copy from '../../assets/ui/copy.svg?react';
+import Copy from '../../../assets/ui/copy.svg?react';
 
 import VizBarChar from '../../../assets/visualizations/viz_bar_chart.svg?react';
 import VizBoolean from '../../../assets/visualizations/viz_boolean.svg?react';
