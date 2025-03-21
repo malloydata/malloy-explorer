@@ -154,7 +154,8 @@ const parsedToLabels = (
         }
       }
       break;
-    case 'temporal': {
+    case 'date':
+    case 'timestamp': {
       const temporalClause = parsed.parsed;
       const {operator} = temporalClause;
       switch (operator) {
