@@ -8,7 +8,7 @@
 import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {modelInfo} from './example_model';
+import {modelInfo} from './sample_models/example_model';
 import {MalloyExplorerProvider, SourcePanel} from '../src';
 import Buttons from './components/Buttons';
 import TokenGroups from './components/TokensGroups';

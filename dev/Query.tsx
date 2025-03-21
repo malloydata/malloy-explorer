@@ -17,7 +17,10 @@ import {
   RawPreview,
 } from '../src';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {modelInfo, queries as exampleQueries} from './example_model';
+import {
+  modelInfo,
+  queries as exampleQueries,
+} from './sample_models/example_model';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const queries = [undefined, ...exampleQueries];

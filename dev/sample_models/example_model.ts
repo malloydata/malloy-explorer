@@ -1380,6 +1380,9 @@ export const modelInfo: Malloy.ModelInfo = {
             name: 'top_carriers',
             annotations: [
               {
+                value: '#" Carriers by flight count and percentage of total.\n',
+              },
+              {
                 value: '#(malloy) ordered_by = [{ flight_count = desc }]\n',
               },
             ],
@@ -1436,6 +1439,7 @@ export const modelInfo: Malloy.ModelInfo = {
             kind: 'view',
             name: 'carriers_over_time',
             annotations: [
+              {value: '#" Flight counts by carrier as a function of time. \n'},
               {value: '# line_chart\n'},
               {
                 value:

@@ -26,7 +26,7 @@ export default function ResultPanel({
   setQuery: _sq,
 }: ResultPanelProps) {
   const views = source.schema.fields.filter(f => f.kind === 'view');
-  const nonEmptyQuery = true;
+  const nonEmptyQuery = false;
   const queryDidRun = true;
 
   return (
