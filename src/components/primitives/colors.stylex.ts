@@ -12,12 +12,15 @@ export const backgroundColors = stylex.defineVars({
   purple: 'rgba(121, 82, 255, 0.2)',
   green: 'rgba(36, 187, 94, 0.2)',
   cyan: 'rgba(3, 167, 215, 0.2)',
+  washOnWeb: 'rgba(241, 244, 247, 1)',
+  accentDeemphasized: 'rgba(0, 130, 251, 0.2)',
 });
 
 export const textColors = stylex.defineVars({
   primary: 'rgba(10, 19, 23, 1)',
   secondary: 'rgba(78, 96, 111, 1)',
   disabled: 'rgba(164, 176, 188, 1)',
+  link: 'rgba(0, 100, 224, 1)',
   primaryOnDarkMedia: 'rgba(255, 255, 255, 1)',
   gray: 'rgba(10, 19, 23, 1)',
   purple: 'rgba(62, 6, 151, 1)',

@@ -12,6 +12,7 @@ import {ScrollableArea} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {Visualization} from './Visualization';
 import FieldToken from '../SourcePanel/FieldToken';
+import {backgroundColors} from '../primitives/colors.stylex';
 
 interface ViewAttributeTableProps {
   viewInfo: Malloy.ViewInfo;
@@ -82,7 +83,7 @@ const styles = stylex.create({
     padding: '8px',
     gap: '8px',
     borderRadius: '10px',
-    backgroundColor: '#F1F4F7',
+    backgroundColor: backgroundColors.washOnWeb,
     boxSizing: 'border-box',
     width: '100%',
     height: '200px',
