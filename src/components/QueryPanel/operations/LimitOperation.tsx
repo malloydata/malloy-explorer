@@ -15,7 +15,7 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {Token} from '../../primitives';
+import {EditableToken} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 
@@ -34,7 +34,14 @@ export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
     <div>
       <div {...stylex.props(styles.title)}>limit</div>
       <div {...stylex.props(hoverStyles.main)}>
-        <Token label={`${limit.limit}`} onClick={() => {}} />
+        <EditableToken
+          type="number"
+          value={limit.limit}
+          onChange={value => {
+            limit.limit = value;
+            setQuery?.(rootQuery.build());
+          }}
+        />
         <div {...stylex.props(hoverStyles.hoverActions)}>
           <ClearButton
             onClick={() => {

@@ -16,10 +16,12 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {Token, TokenGroup, IconType} from '../../primitives';
+import {Token, TokenGroup} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
 import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
 import {ClearButton} from './ClearButton';
+import {StringFilterToken} from '../../filters/StringFilterToken';
+import {BooleanFilterToken} from '../../filters/BooleanFilterToken';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
@@ -39,14 +41,46 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
       <div {...stylex.props(styles.tokenContainer)}>
         {wheres.map((where, key) => {
           const {fieldReference, filterString} = where.filter;
-          let icon: IconType = 'filter';
           const fieldInfo = fieldReference.getFieldInfo();
-          if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
-            icon = atomicTypeToIcon(fieldInfo.type.kind);
-          }
-          const color = fieldKindToColor(fieldInfo.kind);
 
+          if (fieldInfo.kind !== 'dimension' && fieldInfo.kind !== 'measure') {
+            return null;
+          }
+
+          const icon = atomicTypeToIcon(fieldInfo.type.kind);
+          const color = fieldKindToColor(fieldInfo.kind);
           const filter = where.filter.getFilter();
+
+          console.info('xxx', {filter});
+
+          if (filter.kind === 'string') {
+            return (
+              <StringFilterToken
+                key={key}
+                fieldInfo={fieldInfo}
+                filter={filter.parsed}
+                setFilter={filter => {
+                  where.filter.setFilter({kind: 'string', parsed: filter});
+                  setQuery?.(rootQuery.build());
+                }}
+              />
+            );
+          }
+
+          if (filter.kind === 'boolean' && filter.parsed) {
+            return (
+              <BooleanFilterToken
+                key={key}
+                fieldInfo={fieldInfo}
+                filter={filter.parsed}
+                setFilter={filter => {
+                  where.filter.setFilter({kind: 'boolean', parsed: filter});
+                  setQuery?.(rootQuery.build());
+                }}
+              />
+            );
+          }
+
           const {op, value} = parsedToLabels(filter, filterString);
 
           return (

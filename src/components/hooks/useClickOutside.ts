@@ -7,8 +7,8 @@
 
 import {useEffect} from 'react';
 
-export function useClickOutside<E extends Element>(
-  refOrRefs: React.RefObject<E | null> | React.RefObject<E>[],
+export function useClickOutside<E extends Element | null>(
+  refOrRefs: React.RefObject<E> | React.RefObject<E>[],
   handler: (event: Event) => void
 ): void {
   useEffect(() => {
