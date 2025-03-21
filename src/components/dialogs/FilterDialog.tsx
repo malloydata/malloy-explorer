@@ -118,17 +118,24 @@ export function FilterDialog({
                         };
                       }
                       break;
-                    case 'timestamp_type':
                     case 'date_type':
                       {
                         const result = TemporalFilterExpression.parse(value);
                         logs = result.log;
                         filter = {
-                          kind: 'temporal',
+                          kind: 'date',
                           parsed: result.parsed,
                         };
                       }
                       break;
+                    case 'timestamp_type': {
+                      const result = TemporalFilterExpression.parse(value);
+                      logs = result.log;
+                      filter = {
+                        kind: 'timestamp',
+                        parsed: result.parsed,
+                      };
+                    }
                   }
                   setErrors(logs);
                   if (logs.length === 0 && filter) {
