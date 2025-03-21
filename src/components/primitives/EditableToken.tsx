@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from './Token';
-import {ICON_MAP} from './icons';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {iconVars, labelVars} from './token.stylex';
 import {iconColors, textColors} from './colors.stylex';
 import Icon from './Icon';
 import {fontStyles} from './styles';
+import {IconType} from './utils/icon';
 
 interface EditableTokenProps {
   /**
@@ -27,7 +27,7 @@ interface EditableTokenProps {
    *
    * Must be a key from the ICON_MAP object.
    */
-  icon?: keyof typeof ICON_MAP;
+  icon?: IconType;
   /**
    * Optional color of the token.
    */

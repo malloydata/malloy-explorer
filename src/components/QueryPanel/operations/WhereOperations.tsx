@@ -15,10 +15,9 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {Token, TokenGroup} from '../../primitives';
-import {IconType} from '../../primitives/icons';
-import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
+import {Token, TokenGroup, IconType} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
+import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
 import {ClearButton} from './ClearButton';
 
 export interface WhereOperationsProps {

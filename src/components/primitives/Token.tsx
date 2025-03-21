@@ -7,11 +7,11 @@
 
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
-import {ICON_MAP} from './icons';
 import Icon from './Icon';
 import {iconVars, labelVars} from './token.stylex';
 import {iconColors, textColors} from './colors.stylex';
 import {fontStyles} from './styles';
+import {IconType} from './utils/icon';
 
 export const DEFAULT_TOKEN_COLOR = 'default';
 
@@ -26,7 +26,7 @@ export interface TokenProps {
   /**
    * The icon to display on the token.
    */
-  icon?: keyof typeof ICON_MAP;
+  icon?: IconType;
 
   /**
    * The color of the token.

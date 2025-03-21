@@ -13,7 +13,7 @@ import {
   ASTReferenceExpression,
 } from '@malloydata/malloy-query-builder';
 import {Token} from '../../primitives';
-import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
+import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
 
 export interface FieldProps {
   field: ASTField;

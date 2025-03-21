@@ -7,10 +7,8 @@
 
 import React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
-import {ICON_MAP, SMALL_ICONS} from './icons';
+import {ICON_MAP, IconType, SMALL_ICONS} from './utils/icon';
 import {iconColors} from './colors.stylex';
-
-type IconName = keyof typeof ICON_MAP;
 
 type Color = keyof typeof colorVariants;
 
@@ -18,7 +16,7 @@ interface IconProps {
   /**
    * The name of the icon to render.
    */
-  name: IconName;
+  name: IconType;
   /**
    * The color of the icon.
    */
@@ -56,7 +54,7 @@ const styles = stylex.create({
     overflow: 'visible',
   },
   scaleUp: {
-    transform: 'scale(1.5)',
+    transform: 'scale(1.33)',
   },
 });
 

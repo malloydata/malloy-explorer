@@ -9,7 +9,6 @@ import * as React from 'react';
 import stylex from '@stylexjs/stylex';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
 
-import * as theme from '../styles';
 import {
   Badge,
   Icon,
@@ -18,10 +17,19 @@ import {
   Divider,
   ScrollableArea,
   Button,
+  TextInput,
+  CollapsibleListItem,
 } from '../primitives';
 import {textColors} from '../primitives/colors.stylex';
 import FieldToken from './FieldToken';
 import {fontStyles} from '../primitives/styles';
+import {
+  FIELD_KIND_TO_TITLE,
+  groupFieldItemsByKind,
+  groupFieldItemsByPath,
+  sourceToFieldItems,
+} from './utils';
+import SearchResultList from './SearchResultList';
 
 export interface SourcePanelProps {
   source: SourceInfo;
@@ -30,37 +38,71 @@ export interface SourcePanelProps {
 type PanelType = 'view' | 'dimension' | 'measure' | null;
 
 export function SourcePanel({source}: SourcePanelProps) {
-  const schema = source.schema;
-  const fields = schema.fields;
-
-  const dimensions = fields.filter(field => field.kind === 'dimension');
-  const measures = fields.filter(field => field.kind === 'measure');
-  const views = fields.filter(field => field.kind === 'view');
-
   const [panelType, setPanelType] = React.useState<PanelType>(null);
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
+  const fieldItems = React.useMemo(() => {
+    return sourceToFieldItems(source);
+  }, [source]);
+
+  const fieldGroupsByKindByPath = React.useMemo(() => {
+    return groupFieldItemsByKind(fieldItems).map(group => ({
+      ...group,
+      items: groupFieldItemsByPath(group.items),
+    }));
+  }, [fieldItems]);
+
+  const views =
+    fieldGroupsByKindByPath.find(({group}) => group === 'view')?.items ?? [];
+  const measures =
+    fieldGroupsByKindByPath.find(({group}) => group === 'measure')?.items ?? [];
+  const dimensions =
+    fieldGroupsByKindByPath.find(({group}) => group === 'dimension')?.items ??
+    [];
+
+  const filteredFieldItems = React.useMemo(() => {
+    if (searchQuery) {
+      return fieldItems.filter(item => item.field.name.includes(searchQuery));
+    }
+    return [];
+  }, [fieldItems, searchQuery]);
+
+  const isSearchActive = !!searchQuery;
 
   return (
     <div {...stylex.props(styles.main)}>
       <div {...stylex.props(fontStyles.body, styles.header)}>
-        {panelType == null ? (
-          <div {...stylex.props(theme.styles.labelWithIcon)}>
-            <Icon name="database" color="gray" />
-            {source.name}
-          </div>
-        ) : (
-          <Button
-            icon="chevronLeft"
-            label="Back"
-            variant="flat"
-            size="compact"
-            onClick={() => setPanelType(null)}
-          />
-        )}
+        <div>
+          {panelType == null ? (
+            <div {...stylex.props(styles.heading)}>
+              <Icon name="database" color="gray" />
+              {source.name}
+            </div>
+          ) : (
+            <Button
+              icon="chevronLeft"
+              label="Back"
+              variant="flat"
+              size="compact"
+              onClick={() => setPanelType(null)}
+            />
+          )}
+        </div>
+        <TextInput
+          value={searchQuery}
+          onChange={v => setSearchQuery(v)}
+          placeholder={'Search'}
+          size="compact"
+          icon="search"
+          hasClear={true}
+        />
       </div>
       <Divider />
       <ScrollableArea>
         <div {...stylex.props(styles.content)}>
-          {panelType == null ? (
+          {isSearchActive ? (
+            <SearchResultList items={filteredFieldItems} />
+          ) : panelType == null ? (
             <List>
               <ListItem
                 key="views"
@@ -92,45 +134,53 @@ export function SourcePanel({source}: SourcePanelProps) {
               />
             </List>
           ) : (
-            <div {...stylex.props(styles.tokens)}>
-              {fields
-                .filter(field => field.kind === panelType)
-                .map(field => (
-                  <div key={`${field.kind}::${field.name}`}>
-                    <FieldToken
-                      key={`${field.kind}::${field.name}`}
-                      field={field}
-                      hoverActions={
-                        <>
-                          <Button
-                            variant="flat"
-                            size="compact"
-                            icon="insert"
-                            onClick={() => {}}
-                          />
-                          <Button
-                            variant="flat"
-                            size="compact"
-                            icon="nest"
-                            onClick={() => {}}
-                          />
-                          <Button
-                            variant="flat"
-                            size="compact"
-                            label="pin"
-                            onClick={() => {}}
-                          />
-                          <Button
-                            variant="flat"
-                            size="compact"
-                            label="remove"
-                            onClick={() => {}}
-                          />
-                        </>
-                      }
-                    />
-                  </div>
-                ))}
+            <div {...stylex.props(styles.fieldListContainer)}>
+              <div {...stylex.props(fontStyles.body, styles.contentHeading)}>
+                {FIELD_KIND_TO_TITLE[panelType]}
+              </div>
+              <List>
+                {(
+                  fieldGroupsByKindByPath.find(({group}) => group === panelType)
+                    ?.items ?? []
+                ).map(item => {
+                  const {path} = item;
+                  const title = path.at(-1) ?? '';
+                  const subtitle =
+                    path.length > 1
+                      ? `joined to ${path.slice(0, -1).join(' > ')}`
+                      : undefined;
+                  return (
+                    <CollapsibleListItem
+                      label={title}
+                      sublabel={subtitle}
+                      key={`${item.pathKey}`}
+                    >
+                      {item.items.map(({field}) => (
+                        <FieldToken
+                          key={`${field.kind}::${field.name}`}
+                          field={field}
+                          hoverActions={
+                            <>
+                              <Button
+                                variant="flat"
+                                size="compact"
+                                icon="insert"
+                                onClick={() => {}}
+                              />
+                              <Button
+                                variant="flat"
+                                size="compact"
+                                icon="nest"
+                                onClick={() => {}}
+                              />
+                            </>
+                          }
+                        />
+                      ))}
+                    </CollapsibleListItem>
+                  );
+                })}
+              </List>
             </div>
           )}
         </div>
@@ -151,25 +201,30 @@ const styles = stylex.create({
   },
   header: {
     display: 'flex',
-    justifyContent: 'start',
+    flexDirection: 'column',
     padding: '8px',
-    minHeight: '28px',
     color: textColors.primary,
     fontWeight: 700,
+    gap: '8px',
+  },
+  heading: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '4px 8px',
   },
   content: {
     display: 'flex',
     flexDirection: 'column',
     padding: '8px',
   },
-  divider: {
-    margin: '16px 0',
-  },
-  tokens: {
+  fieldListContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '4px',
-    padding: '0px 4px',
+    gap: '8px',
+  },
+  contentHeading: {
+    padding: '8px',
+    fontWeight: 700,
   },
 });

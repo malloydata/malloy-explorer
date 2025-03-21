@@ -55,7 +55,6 @@ const styles = stylex.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '20px',
     padding: '8px',
     gap: '8px',
     borderRadius: '8px',

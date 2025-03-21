@@ -9,3 +9,7 @@ export {default as Token} from './Token';
 export {default as TokenGroup} from './TokenGroup';
 export {default as EditableToken} from './EditableToken';
 export {default as Card} from './Card';
+export {default as TextInput} from './TextInput';
+export {default as CollapsibleListItem} from './CollapsibleListItem';
+
+export {type IconType} from './utils/icon';

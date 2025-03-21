@@ -1,6 +1,6 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {AtomicTypeType} from '@malloydata/malloy-interfaces';
-import {IconType} from '../../primitives/icons';
+import {IconType} from '../primitives';
 
 export function atomicTypeToIcon(type: AtomicTypeType): IconType {
   return atomicTypeMap[type];
