@@ -10,7 +10,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {createRoot} from 'react-dom/client';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import {ResultPanel} from '../src';
-import {modelInfo} from './example_model';
+import {modelInfo} from './sample_models/example_model';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
