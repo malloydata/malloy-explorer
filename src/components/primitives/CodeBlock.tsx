@@ -47,15 +47,23 @@ export default function CodeBlock({
   const [codeEl, setCodeEl] = useState<HTMLElement>();
 
   useEffect(() => {
+    let canceled = false;
+
     const updateCode = async () => {
       const html = await highlightPre(code, language, theme ?? 'light-plus', {
-        showLineNumbers: lineNumbers,
-        lineSpacing: spacing,
+        showLineNumbers: lineNumbers ?? true,
+        lineSpacing: spacing ?? 'double',
       });
+
+      if (canceled) return;
       setCodeEl(html);
     };
 
     updateCode();
+
+    return () => {
+      canceled = true;
+    };
   }, [code, language, lineNumbers, spacing, theme]);
 
   return <div>{codeEl && <DOMElement element={codeEl} />}</div>;

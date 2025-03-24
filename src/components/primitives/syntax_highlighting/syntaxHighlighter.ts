@@ -1,7 +1,6 @@
 import {MALLOY_GRAMMAR} from './malloyGrammar';
 import {createHighlighter, HighlighterCore, LanguageRegistration} from 'shiki';
-import {LineSpacing} from './transformers/lineSpacingTransformer';
-import getTransformers from './transformers/transformers';
+import getTransformers, {TransformerOptions} from './transformers/transformers';
 
 const STANDARD_LANGS = ['json', 'sql', 'md'] as const;
 const SUPPORTED_THEMES = ['light-plus', 'dark-plus'] as const;
@@ -9,10 +8,7 @@ const SUPPORTED_THEMES = ['light-plus', 'dark-plus'] as const;
 export type SupportedLang = (typeof STANDARD_LANGS)[number] | 'malloy';
 export type SupportedTheme = (typeof SUPPORTED_THEMES)[number];
 
-type HighlighterOptions = {
-  lineSpacing?: LineSpacing;
-  showLineNumbers?: boolean;
-};
+type HighlighterOptions = {} & TransformerOptions;
 
 let highlighter: Promise<HighlighterCore>;
 function getHighlighter() {
@@ -48,8 +44,8 @@ export async function highlightPre(
     lang: lang,
     theme: theme,
     transformers: getTransformers({
-      showLineNumbers: showLineNumbers ?? true,
-      lineSpacing: lineSpacing ?? 'double',
+      showLineNumbers: showLineNumbers,
+      lineSpacing: lineSpacing,
     }),
   });
   const elem = document.createElement('div');
