@@ -12,5 +12,6 @@ export {default as Card} from './Card';
 export {default as TextInput} from './TextInput';
 export {default as CollapsibleListItem} from './CollapsibleListItem';
 export {default as CodeBlock} from './CodeBlock';
+export {default as Spinner} from './Spinner';
 
 export {type IconType} from './utils/icon';
