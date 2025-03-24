@@ -46,7 +46,8 @@
     "@stylexjs/stylex": "^0.10.1",
     "assert": "^2.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "shiki": "^3.2.1"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",

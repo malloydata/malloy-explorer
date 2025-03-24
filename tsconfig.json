@@ -2,8 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "noEmit": false,
     "outDir": "dist/types",
     "resolveJsonModule": true,
