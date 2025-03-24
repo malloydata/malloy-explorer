@@ -17,6 +17,8 @@ interface BookmarkedViewProps {
 }
 
 export function BookmarkedView({viewInfo}: BookmarkedViewProps) {
+  const description = getDescriptionAnnotation(viewInfo.annotations ?? []);
+
   return (
     <div>
       <Card
@@ -40,12 +42,11 @@ export function BookmarkedView({viewInfo}: BookmarkedViewProps) {
               <div {...stylex.props(fontStyles.emphasized)}>
                 {viewInfo.name}
               </div>
-              <div {...stylex.props(fontStyles.supporting)}>
-                {/*
-                 * no good way of parsing/categorizing annotations rn
-                 * eventually use: {viewInfo.annotations}
-                 */}
-              </div>
+              {description && (
+                <div {...stylex.props(fontStyles.supporting)}>
+                  {description}
+                </div>
+              )}
             </div>
           </div>
         }
@@ -56,6 +57,19 @@ export function BookmarkedView({viewInfo}: BookmarkedViewProps) {
     </div>
   );
 }
+
+const DESCRIPTION_ANNOTATION_PREFIX: string = '#" ';
+
+const getDescriptionAnnotation = (
+  annotations: Array<Malloy.Annotation>
+): string | undefined => {
+  const firstDesc = annotations
+    ?.map(a => a.value)
+    ?.filter(val => val.startsWith(DESCRIPTION_ANNOTATION_PREFIX))
+    .at(0);
+
+  return firstDesc?.slice(DESCRIPTION_ANNOTATION_PREFIX.length);
+};
 
 const styles = stylex.create({
   viewHeader: {
