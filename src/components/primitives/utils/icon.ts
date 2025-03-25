@@ -8,7 +8,9 @@
 import ChevronDown from '../../../assets/chevrons/chevron_down.svg?react';
 import ChevronLeft from '../../../assets/chevrons/chevron_left.svg?react';
 import ChevronRight from '../../../assets/chevrons/chevron_right.svg?react';
+import Checkmark from '../../../assets/ui/checkmark.svg?react';
 import Clear from '../../../assets/refinements/clear.svg?react';
+import Copy from '../../../assets/ui/copy.svg?react';
 import Insert from '../../../assets/refinements/insert.svg?react';
 import InsertNest from '../../../assets/refinements/insert_nest.svg?react';
 import Filter from '../../../assets/refinements/insert_filter.svg?react';
@@ -30,7 +32,6 @@ import TypeIconQueryFilled from '../../../assets/types/type-icon-query-filled.sv
 import TypeIconSqlNative from '../../../assets/types/type-icon-sql-native.svg?react';
 import Meatballs from '../../../assets/ui/meatballs.svg?react';
 import PlayIcon from '../../../assets/ui/play.svg?react';
-import Copy from '../../../assets/ui/copy.svg?react';
 
 import VizBarChar from '../../../assets/visualizations/viz_bar_chart.svg?react';
 import VizBoolean from '../../../assets/visualizations/viz_boolean.svg?react';
@@ -64,6 +65,7 @@ export const ICON_MAP = {
   meatballs: Meatballs,
   play: PlayIcon,
   copy: Copy,
+  checkmark: Checkmark,
 
   // Operations
   dimension: TypeIconString,
