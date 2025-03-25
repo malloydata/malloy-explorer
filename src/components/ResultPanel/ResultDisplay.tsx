@@ -1,0 +1,112 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import * as React from 'react';
+import stylex from '@stylexjs/stylex';
+import {Button, Spinner} from '../primitives';
+import {fontStyles} from '../primitives/styles';
+import {
+  EXECUTION_STATES,
+  QueryExecutionState,
+  SubmittedQuery,
+} from './SubmittedQuery';
+
+export interface ResultDisplayProps {
+  query: SubmittedQuery;
+}
+
+export default function ResultDisplay({query}: ResultDisplayProps) {
+  let displayComponent;
+
+  switch (query.executionState) {
+    case 'compiling':
+    case 'running':
+      displayComponent = (
+        <LoadingDisplay
+          onCancel={query.onCancel}
+          executionState={query.executionState}
+          queryResolutionStartMillis={query.queryResolutionStartMillis}
+        />
+      );
+      break;
+    case 'canceled':
+      displayComponent = <div>query was canceled</div>;
+      break;
+    case 'finished':
+      displayComponent = <div>display results</div>;
+      break;
+  }
+
+  return displayComponent;
+}
+
+interface LoadingDisplayProps {
+  onCancel: () => void;
+  executionState: Exclude<QueryExecutionState, 'finished'>;
+  queryResolutionStartMillis: number;
+}
+
+function LoadingDisplay({
+  onCancel,
+  executionState,
+  queryResolutionStartMillis,
+}: LoadingDisplayProps) {
+  const elapsedMillis = useTimeElapsedMillis(queryResolutionStartMillis);
+
+  return (
+    <div {...stylex.props(loadingDisplayStyles.container)}>
+      <div {...stylex.props(loadingDisplayStyles.header)}>
+        <Spinner size="large" style={loadingDisplayStyles.spinner} />
+        <div
+          {...stylex.props(fontStyles.emphasized)}
+        >{`${EXECUTION_STATES[executionState]} query...`}</div>
+        <div
+          {...stylex.props(fontStyles.body)}
+        >{`Total time elapsed: ${(elapsedMillis / 1000).toFixed(0)}s`}</div>
+      </div>
+      <Button onClick={onCancel} label="Cancel Query" />
+    </div>
+  );
+}
+
+function useTimeElapsedMillis(queryResolutionStartMillis: number) {
+  const [time, setTime] = React.useState(
+    Date.now() - queryResolutionStartMillis
+  );
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTime(Date.now() - queryResolutionStartMillis);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [queryResolutionStartMillis]);
+
+  return time;
+}
+
+const loadingDisplayStyles = stylex.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '24px',
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+  },
+  spinner: {
+    marginBottom: '8px',
+  },
+});

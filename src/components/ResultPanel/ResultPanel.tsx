@@ -13,77 +13,84 @@ import stylex from '@stylexjs/stylex';
 import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
 import {Button} from '../primitives';
+import ResultDisplay from './ResultDisplay';
+import {SubmittedQuery} from './SubmittedQuery';
 
 export interface ResultPanelProps {
   source: Malloy.SourceInfo;
-  query?: Malloy.Query;
-  setQuery?: (query: Malloy.Query) => void;
+  draftQuery?: Malloy.Query;
+  setDraftQuery?: (query: Malloy.Query) => void;
+  submittedQuery?: SubmittedQuery;
 }
 
 export default function ResultPanel({
   source,
-  query: _q,
-  setQuery: _sq,
+  draftQuery,
+  setDraftQuery: _sdq,
+  submittedQuery,
 }: ResultPanelProps) {
+  const [tab, setTab] = React.useState<Tab>(Tab.MALLOY);
   const views = source.schema.fields.filter(f => f.kind === 'view');
-  const nonEmptyQuery = false;
-  const queryDidRun = true;
+  const submittedQueryExists = submittedQuery !== undefined;
 
-  return (
-    <div>
-      {nonEmptyQuery ? (
-        <Root
-          {...stylex.props(styles.tabRoot, fontStyles.body)}
-          defaultValue={Tab.MALLOY}
-        >
-          <div {...stylex.props(styles.tabsContainer)}>
-            <List {...stylex.props(styles.tabs)}>
-              <Trigger
-                value={Tab.RESULTS}
-                disabled={!queryDidRun}
-                {...stylex.props(fontStyles.body, styles.tab)}
-              >
-                {Tab.RESULTS}
-              </Trigger>
-              <Trigger
-                value={Tab.MALLOY}
-                {...stylex.props(fontStyles.body, styles.tab)}
-              >
-                {Tab.MALLOY}
-              </Trigger>
-              <Trigger
-                value={Tab.SQL}
-                disabled={!queryDidRun}
-                {...stylex.props(fontStyles.body, styles.tab)}
-              >
-                {Tab.SQL}
-              </Trigger>
-            </List>
-            <Button
-              variant="flat"
-              label="Copy Code"
-              icon="copy"
-              onClick={() => {
-                navigator.clipboard
-                  .writeText('you copied some text')
-                  .then(() => {
-                    // todo: visually indicate copy to user
-                    console.info('Text copied to clipboard!');
-                  })
-                  .catch(err => {
-                    console.error('Error copying text: ', err);
-                  });
-              }}
-            />
-          </div>
-          <Content value={Tab.RESULTS}>result content</Content>
-          <Content value={Tab.MALLOY}>malloy content</Content>
-          <Content value={Tab.SQL}>sql content</Content>
-        </Root>
-      ) : (
-        <EmptyQueryDisplay views={views} />
-      )}
-    </div>
+  if (!submittedQueryExists && tab !== Tab.MALLOY) {
+    setTab(Tab.MALLOY);
+  }
+
+  return draftQuery ? (
+    <Root
+      {...stylex.props(styles.tabRoot, fontStyles.body)}
+      value={tab}
+      onValueChange={val => setTab(val as Tab)}
+    >
+      <div {...stylex.props(styles.tabsContainer)}>
+        <List {...stylex.props(styles.tabs)}>
+          <Trigger
+            value={Tab.RESULTS}
+            disabled={!submittedQueryExists}
+            {...stylex.props(fontStyles.body, styles.tab)}
+          >
+            {Tab.RESULTS}
+          </Trigger>
+          <Trigger
+            value={Tab.MALLOY}
+            {...stylex.props(fontStyles.body, styles.tab)}
+          >
+            {Tab.MALLOY}
+          </Trigger>
+          <Trigger
+            value={Tab.SQL}
+            disabled={!submittedQueryExists}
+            {...stylex.props(fontStyles.body, styles.tab)}
+          >
+            {Tab.SQL}
+          </Trigger>
+        </List>
+        <Button
+          variant="flat"
+          label="Copy Code"
+          icon="copy"
+          onClick={() => {
+            navigator.clipboard
+              .writeText('you copied some text')
+              .then(() => {
+                // todo: visually indicate copy to user
+                console.info('Text copied to clipboard!');
+              })
+              .catch(err => {
+                console.error('Error copying text: ', err);
+              });
+          }}
+        />
+      </div>
+      <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
+        {submittedQuery && <ResultDisplay query={submittedQuery} />}
+      </Content>
+      <Content value={Tab.MALLOY}>malloy content</Content>
+      <Content value={Tab.SQL}>sql content</Content>
+    </Root>
+  ) : (
+    <EmptyQueryDisplay views={views} />
   );
 }
 
@@ -96,6 +103,7 @@ enum Tab {
 const styles = stylex.create({
   tabRoot: {
     margin: '10px',
+    height: '100%',
   },
   tabsContainer: {
     display: 'flex',
@@ -120,5 +128,8 @@ const styles = stylex.create({
       backgroundColor: backgroundColors.accentDeemphasized,
     },
   },
-  content: {},
+  content: {
+    width: '100%',
+    height: '100%',
+  },
 });
