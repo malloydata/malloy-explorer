@@ -22,9 +22,7 @@ const App = () => {
     query: q,
     executionState: 'finished',
     queryResolutionStartMillis: Date.now(),
-    onCancel: () => {
-      console.log('canceling query...');
-    },
+    onCancel: () => {},
     response: {
       result: result,
     },
