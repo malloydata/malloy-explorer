@@ -37,7 +37,7 @@ export default function ResultPanel({
     setTab(Tab.MALLOY);
   }
 
-  return draftQuery ? (
+  return draftQuery || submittedQuery ? (
     <Root
       {...stylex.props(styles.tabRoot, fontStyles.body)}
       value={tab}
