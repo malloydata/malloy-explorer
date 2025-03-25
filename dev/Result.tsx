@@ -15,7 +15,7 @@ import CodeBlocks from './components/CodeBlocks';
 import {SubmittedQuery} from '../src/components/ResultPanel/SubmittedQuery';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
-const q = queries.at(0) as Malloy.Query;
+const q = queries.at(1) as Malloy.Query;
 
 const App = () => {
   const submitted: SubmittedQuery = {
