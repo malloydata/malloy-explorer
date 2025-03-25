@@ -12,9 +12,10 @@ import {Content, List, Root, Trigger} from '@radix-ui/react-tabs';
 import stylex from '@stylexjs/stylex';
 import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
-import {Button} from '../primitives';
+import {Button, CodeBlock} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
+import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 
 export interface ResultPanelProps {
   source: Malloy.SourceInfo;
@@ -30,6 +31,7 @@ export default function ResultPanel({
   submittedQuery,
 }: ResultPanelProps) {
   const [tab, setTab] = React.useState<Tab>(Tab.MALLOY);
+  const malloyText = useQueryBuilder(source, draftQuery)?.toMalloy();
   const views = source.schema.fields.filter(f => f.kind === 'view');
   const submittedQueryExists = submittedQuery !== undefined;
 
@@ -73,15 +75,9 @@ export default function ResultPanel({
             label="Copy Code"
             icon="copy"
             onClick={() => {
-              navigator.clipboard
-                .writeText('you copied some text')
-                .then(() => {
-                  // todo: visually indicate copy to user
-                  console.info('Text copied to clipboard!');
-                })
-                .catch(err => {
-                  console.error('Error copying text: ', err);
-                });
+              if (tab === Tab.MALLOY && malloyText) {
+                navigator.clipboard.writeText(malloyText);
+              }
             }}
           />
         )}
@@ -89,8 +85,18 @@ export default function ResultPanel({
       <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
         {submittedQuery && <ResultDisplay query={submittedQuery} />}
       </Content>
-      <Content value={Tab.MALLOY}>malloy content</Content>
-      <Content value={Tab.SQL}>sql content</Content>
+      <Content
+        value={Tab.MALLOY}
+        {...stylex.props(styles.content, styles.codeContent)}
+      >
+        <CodeBlock code={malloyText ?? ''} language="malloy" />
+      </Content>
+      <Content
+        value={Tab.SQL}
+        {...stylex.props(styles.content, styles.codeContent)}
+      >
+        sql content
+      </Content>
     </Root>
   ) : (
     <EmptyQueryDisplay views={views} />
@@ -105,7 +111,6 @@ enum Tab {
 
 const styles = stylex.create({
   tabRoot: {
-    margin: '10px',
     height: '100%',
   },
   tabsContainer: {
@@ -113,7 +118,7 @@ const styles = stylex.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '10px',
+    padding: '8px 12px',
   },
   tabs: {
     display: 'flex',
@@ -132,6 +137,13 @@ const styles = stylex.create({
     },
   },
   content: {
+    margin: '0px 12px 12px 12px',
+    padding: '12px',
+    width: '100%',
+    height: '100%',
+  },
+  codeContent: {
+    padding: '0px 12px 12px 12px',
     width: '100%',
     height: '100%',
   },
