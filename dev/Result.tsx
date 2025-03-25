@@ -19,7 +19,7 @@ const q = queries.at(0) as Malloy.Query;
 const App = () => {
   const submitted: SubmittedQuery = {
     query: q,
-    executionState: 'compiling',
+    executionState: 'canceled',
     queryResolutionStartMillis: Date.now(),
     onCancel: () => {
       console.log('canceling query...');

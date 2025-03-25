@@ -34,7 +34,16 @@ export default function ResultDisplay({query}: ResultDisplayProps) {
       );
       break;
     case 'canceled':
-      displayComponent = <div>query was canceled</div>;
+      displayComponent = (
+        <div {...stylex.props(styles.statusContainer)}>
+          <div {...stylex.props(styles.statusHeader)}>
+            <div {...stylex.props(fontStyles.emphasized)}>Query Canceled</div>
+            <div {...stylex.props(fontStyles.body)}>
+              Your query was canceled; nothing to display.
+            </div>
+          </div>
+        </div>
+      );
       break;
     case 'finished':
       displayComponent = <div>display results</div>;
@@ -58,9 +67,9 @@ function LoadingDisplay({
   const elapsedMillis = useTimeElapsedMillis(queryResolutionStartMillis);
 
   return (
-    <div {...stylex.props(loadingDisplayStyles.container)}>
-      <div {...stylex.props(loadingDisplayStyles.header)}>
-        <Spinner size="large" style={loadingDisplayStyles.spinner} />
+    <div {...stylex.props(styles.statusContainer)}>
+      <div {...stylex.props(styles.statusHeader)}>
+        <Spinner size="large" style={styles.spinner} />
         <div
           {...stylex.props(fontStyles.emphasized)}
         >{`${EXECUTION_STATES[executionState]} query...`}</div>
@@ -89,8 +98,8 @@ function useTimeElapsedMillis(queryResolutionStartMillis: number) {
   return time;
 }
 
-const loadingDisplayStyles = stylex.create({
-  container: {
+const styles = stylex.create({
+  statusContainer: {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
@@ -99,7 +108,7 @@ const loadingDisplayStyles = stylex.create({
     alignItems: 'center',
     gap: '24px',
   },
-  header: {
+  statusHeader: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
