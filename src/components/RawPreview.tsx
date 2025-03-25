@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import {CodeBlock} from './primitives';
 
 export interface RawPreviewProps {
   source: Malloy.SourceInfo;
@@ -14,5 +15,5 @@ export interface RawPreviewProps {
 }
 
 export function RawPreview({query}: RawPreviewProps) {
-  return <pre>{JSON.stringify(query, null, 2)}</pre>;
+  return <CodeBlock code={JSON.stringify(query, null, 2)} language="json" />;
 }
