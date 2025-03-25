@@ -8,6 +8,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
+import {CodeBlock} from './primitives';
 
 export interface MalloyPreviewProps {
   source: Malloy.SourceInfo;
@@ -19,5 +20,5 @@ export function MalloyPreview({source, query}: MalloyPreviewProps) {
   if (!rootQuery) {
     return null;
   }
-  return <pre>{rootQuery.toMalloy()}</pre>;
+  return <CodeBlock code={rootQuery.toMalloy()} language="malloy" />;
 }
