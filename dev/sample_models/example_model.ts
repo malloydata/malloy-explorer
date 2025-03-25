@@ -2318,8 +2318,8 @@ export const queries: Malloy.Query[] = [query0, query1, query2, query3, query4];
 export const result: Malloy.Result = {
   connection_name: 'connection',
   sql: `SELECT \n\
-base."carrier" as "carrier"
-FROM flights as base
+  base."carrier" as "carrier"
+  FROM flights as base
 GROUP BY 1
 ORDER BY 1 asc NULLS LAST
 `,
