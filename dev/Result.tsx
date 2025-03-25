@@ -10,19 +10,23 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {createRoot} from 'react-dom/client';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import {ResultPanel} from '../src';
-import {modelInfo, queries} from './sample_models/example_model';
+import {modelInfo, queries, result} from './sample_models/example_model';
 import CodeBlocks from './components/CodeBlocks';
 import {SubmittedQuery} from '../src/components/ResultPanel/SubmittedQuery';
+
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 const q = queries.at(0) as Malloy.Query;
 
 const App = () => {
   const submitted: SubmittedQuery = {
     query: q,
-    executionState: 'canceled',
+    executionState: 'finished',
     queryResolutionStartMillis: Date.now(),
     onCancel: () => {
       console.log('canceling query...');
+    },
+    response: {
+      result: result,
     },
   };
 

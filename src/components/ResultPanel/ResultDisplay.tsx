@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {Button, Spinner} from '../primitives';
 import {fontStyles} from '../primitives/styles';
@@ -14,6 +15,10 @@ import {
   QueryExecutionState,
   SubmittedQuery,
 } from './SubmittedQuery';
+import * as render from '@malloydata/render';
+import DOMElement from '../primitives/DOMElement';
+
+import '@malloydata/render/webcomponent';
 
 export interface ResultDisplayProps {
   query: SubmittedQuery;
@@ -46,11 +51,60 @@ export default function ResultDisplay({query}: ResultDisplayProps) {
       );
       break;
     case 'finished':
-      displayComponent = <div>display results</div>;
+      displayComponent = (
+        <FinishedResultDisplay
+          result={query.response?.result as Malloy.Result}
+        />
+      );
       break;
   }
 
   return displayComponent;
+}
+
+interface FinishedResultDisplay {
+  result: Malloy.Result;
+}
+
+function FinishedResultDisplay({result}: FinishedResultDisplay) {
+  const [html, setHTML] = React.useState<HTMLElement>();
+  const [rendering, setRendering] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    let canceled = false;
+    setRendering(true);
+
+    const updateResults = async () => {
+      const renderer = new render.HTMLView(document);
+
+      const html = await renderer.render(result, {
+        dataStyles: {},
+        isDrillingEnabled: true,
+      });
+      if (canceled) {
+        return;
+      }
+
+      setRendering(false);
+      setHTML(html);
+    };
+
+    updateResults();
+
+    return () => {
+      canceled = true;
+    };
+  }, [result]);
+
+  return (
+    <div>
+      {rendering ? (
+        <Spinner size="large" />
+      ) : (
+        <div>{html && <DOMElement element={html} />}</div>
+      )}
+    </div>
+  );
 }
 
 interface LoadingDisplayProps {

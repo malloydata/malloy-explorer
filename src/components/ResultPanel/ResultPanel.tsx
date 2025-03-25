@@ -66,22 +66,25 @@ export default function ResultPanel({
             {Tab.SQL}
           </Trigger>
         </List>
-        <Button
-          variant="flat"
-          label="Copy Code"
-          icon="copy"
-          onClick={() => {
-            navigator.clipboard
-              .writeText('you copied some text')
-              .then(() => {
-                // todo: visually indicate copy to user
-                console.info('Text copied to clipboard!');
-              })
-              .catch(err => {
-                console.error('Error copying text: ', err);
-              });
-          }}
-        />
+        {tab !== Tab.RESULTS && (
+          <Button
+            variant="flat"
+            size="compact"
+            label="Copy Code"
+            icon="copy"
+            onClick={() => {
+              navigator.clipboard
+                .writeText('you copied some text')
+                .then(() => {
+                  // todo: visually indicate copy to user
+                  console.info('Text copied to clipboard!');
+                })
+                .catch(err => {
+                  console.error('Error copying text: ', err);
+                });
+            }}
+          />
+        )}
       </div>
       <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
         {submittedQuery && <ResultDisplay query={submittedQuery} />}

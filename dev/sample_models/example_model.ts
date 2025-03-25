@@ -2314,3 +2314,35 @@ const query4: Malloy.Query = {
 };
 
 export const queries: Malloy.Query[] = [query0, query1, query2, query3, query4];
+
+export const result: Malloy.Result = {
+  connection_name: 'connection',
+  sql: `SELECT \n\
+base."carrier" as "carrier"
+FROM flights as base
+GROUP BY 1
+ORDER BY 1 asc NULLS LAST
+`,
+  schema: {
+    fields: [
+      {
+        kind: 'dimension',
+        name: 'carrier',
+        type: {kind: 'string_type'},
+      },
+    ],
+  },
+  data: {
+    kind: 'array_cell',
+    array_value: [
+      {
+        kind: 'record_cell',
+        record_value: [{kind: 'string_cell', string_value: 'WN'}],
+      },
+      {
+        kind: 'record_cell',
+        record_value: [{kind: 'string_cell', string_value: 'AA'}],
+      },
+    ],
+  },
+};

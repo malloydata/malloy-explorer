@@ -2,8 +2,9 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "bundler",
+    "resolvePackageJsonExports": false, // for @malloydata/render
     "noEmit": false,
     "outDir": "dist/types",
     "resolveJsonModule": true,
