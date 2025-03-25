@@ -6,10 +6,9 @@
  */
 
 import * as React from 'react';
-import {useState, useRef, JSX} from 'react';
+import {useState, JSX} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {Popover} from './Popover';
-import {useClickOutside} from '../hooks/useClickOutside';
 import Icon from './Icon';
 
 interface SelectDropdownProps<T> {
@@ -118,7 +117,6 @@ export const SelectDropdown = <T,>({
   const [open, setOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const wrapperElement = useRef<HTMLDivElement>(null);
   const label =
     (value !== undefined &&
       options.find(option => valueEqual(option.value, value))?.label) ||
@@ -129,12 +127,8 @@ export const SelectDropdown = <T,>({
     setOpen(false);
   };
 
-  useClickOutside(wrapperElement, () => {
-    setOpen(false);
-  });
-
   return (
-    <div {...stylex.props(styles.wrapper, style)} ref={wrapperElement}>
+    <div {...stylex.props(styles.wrapper, style)}>
       <button
         type="button"
         autoFocus={autoFocus}
@@ -224,54 +218,11 @@ export function SelectList<T>({
             />
             <Icon
               name="checkmark"
-              {...stylex.props(
-                styles.checkIcon,
-                isSelected ? styles.checkIconSelected : null
-              )}
+              style={{
+                ...styles.checkIcon,
+                ...(isSelected ? styles.checkIconSelected : undefined),
+              }}
             />
-            <span {...stylex.props(styles.optionSpan)}>{option.label}</span>
-          </label>
-        );
-        return result;
-      }, [])}
-    </div>
-  );
-}
-
-interface DropdownMenuProps {
-  options: {
-    label: string | JSX.Element;
-    onSelect: (event: React.MouseEvent) => void;
-    divider?: boolean;
-  }[];
-  style?: StyleXStyles;
-}
-
-export function DropdownMenu({options, style}: DropdownMenuProps): JSX.Element {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
-  return (
-    <div {...stylex.props(styles.selectListDiv, style)}>
-      {options.reduce<JSX.Element[]>((result, option, index) => {
-        if (option.divider) {
-          result.push(
-            <div
-              {...stylex.props(styles.optionDivider)}
-              key={'divider' + index}
-            />
-          );
-        }
-        result.push(
-          <label
-            key={index}
-            {...stylex.props(
-              styles.optionDiv,
-              hoveredIndex === index ? styles.optionDivHover : null
-            )}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            onClick={event => option.onSelect(event)}
-          >
             <span {...stylex.props(styles.optionSpan)}>{option.label}</span>
           </label>
         );
