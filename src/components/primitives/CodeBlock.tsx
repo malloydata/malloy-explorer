@@ -13,6 +13,7 @@ import {
   SupportedTheme,
 } from './syntax_highlighting/syntaxHighlighter';
 import {LineSpacing} from './syntax_highlighting/transformers/lineSpacingTransformer';
+import DOMElement from './DOMElement';
 
 interface CodeBlockProps {
   /**
@@ -67,21 +68,4 @@ export default function CodeBlock({
   }, [code, language, lineNumbers, spacing, theme]);
 
   return <div>{codeEl && <DOMElement element={codeEl} />}</div>;
-}
-
-interface DOMElementProps {
-  element: HTMLElement;
-}
-
-function DOMElement({element}: DOMElementProps) {
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const w = ref.current;
-    if (w) {
-      w.replaceChildren(element);
-    }
-  }, [element]);
-
-  return <div ref={ref}></div>;
 }
