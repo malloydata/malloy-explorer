@@ -14,6 +14,7 @@ import Buttons from './components/Buttons';
 import TokenGroups from './components/TokensGroups';
 import EditableTokens from './components/EditableTokens';
 import TextInputs from './components/TextInputs';
+import DatePickers from './components/DatePickers';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
           <EditableTokens />
           <TokenGroups />
           <TextInputs />
+          <DatePickers />
         </div>
       </div>
     </MalloyExplorerProvider>

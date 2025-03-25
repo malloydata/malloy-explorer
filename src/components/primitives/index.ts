@@ -13,5 +13,7 @@ export {default as TextInput} from './TextInput';
 export {default as CollapsibleListItem} from './CollapsibleListItem';
 export {default as CodeBlock} from './CodeBlock';
 export {default as Spinner} from './Spinner';
+export {default as NumberInput} from './NumberInput';
+export {default as DatePicker} from './DatePicker';
 
 export {type IconType} from './utils/icon';

@@ -26,6 +26,7 @@ export const textColors = stylex.defineVars({
   purple: 'rgba(62, 6, 151, 1)',
   green: 'rgba(9, 68, 31, 1)',
   cyan: 'rgba(1, 73, 117, 1)',
+  dimension: 'rgba(66, 133, 244, 1)', // Copied from dimension.fillStrong
 });
 
 export const iconColors = stylex.defineVars({
