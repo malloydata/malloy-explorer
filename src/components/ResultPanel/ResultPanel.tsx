@@ -77,6 +77,13 @@ export default function ResultPanel({
             onClick={() => {
               if (tab === Tab.MALLOY && malloyText) {
                 navigator.clipboard.writeText(malloyText);
+              } else if (
+                tab === Tab.SQL &&
+                submittedQuery?.response?.result?.sql
+              ) {
+                navigator.clipboard.writeText(
+                  submittedQuery.response.result.sql
+                );
               }
             }}
           />
@@ -95,7 +102,12 @@ export default function ResultPanel({
         value={Tab.SQL}
         {...stylex.props(styles.content, styles.codeContent)}
       >
-        sql content
+        {submittedQuery?.response?.result?.sql && (
+          <CodeBlock
+            code={submittedQuery.response.result.sql}
+            language="malloy"
+          />
+        )}
       </Content>
     </Root>
   ) : (
