@@ -16,6 +16,7 @@ import {Button, CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
+import {ScrollArea} from '@radix-ui/react-scroll-area';
 
 enum Tab {
   RESULTS = 'Results',
@@ -95,49 +96,51 @@ export default function ResultPanel({
           />
         )}
       </div>
-      <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
-        {submittedQuery && (
-          <>
-            {draftQuery &&
-              submittedQuery &&
-              !queriesAreEqual(draftQuery, submittedQuery.query) && (
-                <div {...stylex.props(styles.warning, fontStyles.body)}>
-                  <Icon name="warning" color="warning" />
-                  <span>
-                    Query was updated. Run query to see new result or{' '}
-                  </span>
-                  <button
-                    {...stylex.props(styles.warningAction, fontStyles.link)}
-                    onClick={() => {
-                      setDraftQuery(submittedQuery.query);
-                    }}
-                  >
-                    revert
-                  </button>
-                  <span> to the last run query.</span>
-                </div>
-              )}
-            <ResultDisplay query={submittedQuery} />
-          </>
-        )}
-      </Content>
-      <Content
-        value={Tab.MALLOY}
-        {...stylex.props(styles.content, styles.codeContent)}
-      >
-        <CodeBlock code={malloyText ?? ''} language="malloy" />
-      </Content>
-      <Content
-        value={Tab.SQL}
-        {...stylex.props(styles.content, styles.codeContent)}
-      >
-        {submittedQuery?.response?.result?.sql && (
-          <CodeBlock
-            code={submittedQuery.response.result.sql}
-            language="malloy"
-          />
-        )}
-      </Content>
+      <ScrollArea>
+        <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
+          {submittedQuery && (
+            <>
+              {draftQuery &&
+                submittedQuery &&
+                !queriesAreEqual(draftQuery, submittedQuery.query) && (
+                  <div {...stylex.props(styles.warning, fontStyles.body)}>
+                    <Icon name="warning" color="warning" />
+                    <span>
+                      Query was updated. Run query to see new result or{' '}
+                    </span>
+                    <button
+                      {...stylex.props(styles.warningAction, fontStyles.link)}
+                      onClick={() => {
+                        setDraftQuery(submittedQuery.query);
+                      }}
+                    >
+                      revert
+                    </button>
+                    <span> to the last run query.</span>
+                  </div>
+                )}
+              <ResultDisplay query={submittedQuery} />
+            </>
+          )}
+        </Content>
+        <Content
+          value={Tab.MALLOY}
+          {...stylex.props(styles.content, styles.codeContent)}
+        >
+          <CodeBlock code={malloyText ?? ''} language="malloy" />
+        </Content>
+        <Content
+          value={Tab.SQL}
+          {...stylex.props(styles.content, styles.codeContent)}
+        >
+          {submittedQuery?.response?.result?.sql && (
+            <CodeBlock
+              code={submittedQuery.response.result.sql}
+              language="malloy"
+            />
+          )}
+        </Content>
+      </ScrollArea>
     </Root>
   ) : (
     <EmptyQueryDisplay

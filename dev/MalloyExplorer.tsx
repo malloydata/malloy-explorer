@@ -9,57 +9,40 @@ import * as React from 'react';
 import * as QueryBuilder from '@malloydata/malloy-query-builder';
 import {useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {
-  MalloyExplorerProvider,
-  QueryActionBar,
-  QueryEditor,
-  ResultPanel,
-  SourcePanel,
-} from '../src';
+import {MalloyExplorerProvider, ResultPanel, SourcePanel} from '../src';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {
-  modelInfo,
-  queries as exampleQueries,
-} from './sample_models/example_model';
+import {modelInfo} from './sample_models/example_model';
 import stylex from '@stylexjs/stylex';
+import {QueryPanel} from '../src/components/QueryPanel';
+import {fontStyles} from '../src/components/primitives/styles';
+
+const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
-  const [source, _setSource] = useState<Malloy.SourceInfo>(
-    modelInfo.entries.at(-1) as Malloy.SourceInfo
-  );
-  const [query, setQuery] = useState<Malloy.Query | undefined>(
-    exampleQueries[0]
-  );
+  const [query, setQuery] = useState<Malloy.Query | undefined>();
 
   return (
     <MalloyExplorerProvider>
-      <div {...stylex.props(styles.banner)}>
-        WARNING: This page shows all the components beside each other, but they
-        do not actually work correctly yet.
-      </div>
       <div {...stylex.props(styles.page)}>
-        <div {...stylex.props(styles.sourceColumn)}>
-          <SourcePanel source={source} />
+        <div {...stylex.props(fontStyles.body, styles.banner)}>
+          WARNING: This page shows all the components beside each other, but
+          they do not actually work correctly yet.
         </div>
-        <div {...stylex.props(styles.queryColumn)}>
-          <QueryActionBar
+        <div {...stylex.props(styles.content)}>
+          <SourcePanel source={source} />
+          <QueryPanel
             source={source}
             query={query}
-            clearQuery={() => setQuery(undefined)}
+            setQuery={setQuery}
             runQuery={(source, query) => {
               const qb = new QueryBuilder.ASTQuery({source, query});
-              const malloyText = qb.toMalloy();
-              console.info(malloyText);
+              window.alert(qb.toMalloy());
             }}
           />
-          <QueryEditor source={source} query={query} setQuery={setQuery} />
-        </div>
-        <div {...stylex.props(styles.resultsColumn)}>
           <ResultPanel
             source={source}
             draftQuery={query}
-            setDraftQuery={q => setQuery(q)}
-            submittedQuery={undefined}
+            setDraftQuery={setQuery}
           />
         </div>
       </div>
@@ -73,14 +56,8 @@ root.render(<App />);
 const styles = stylex.create({
   page: {
     display: 'flex',
-    flexDirection: 'row',
-  },
-  sourceColumn: {},
-  queryColumn: {
-    flex: '0 0 360px',
-  },
-  resultsColumn: {
-    flex: '1 1 auto',
+    flexDirection: 'column',
+    height: '100%',
   },
   banner: {
     height: '30px',
@@ -88,5 +65,10 @@ const styles = stylex.create({
     display: 'flex',
     padding: '2px 10px',
     alignItems: 'center',
+  },
+  content: {
+    display: 'flex',
+    height: '100%',
+    overflowY: 'auto',
   },
 });

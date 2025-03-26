@@ -8,7 +8,6 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {Button} from '../primitives';
 
@@ -30,7 +29,7 @@ export function QueryActionBar({
 }: QueryActionBarProps) {
   const rootQuery = useQueryBuilder(source, query);
   return (
-    <div {...stylex.props(styles.queryCard, actionBarStyles.root)}>
+    <div {...stylex.props(actionBarStyles.root)}>
       <div {...stylex.props(actionBarStyles.title)}>Query</div>
       <div {...stylex.props(actionBarStyles.buttons)}>
         <Button
@@ -38,6 +37,7 @@ export function QueryActionBar({
           isDisabled={!rootQuery || rootQuery?.isEmpty()}
           label="Clear"
           variant="flat"
+          size="compact"
         />
         <Button
           icon="play"
@@ -45,6 +45,7 @@ export function QueryActionBar({
           isDisabled={!rootQuery?.isRunnable()}
           label="Run"
           variant="primary"
+          size="compact"
         />
       </div>
     </div>

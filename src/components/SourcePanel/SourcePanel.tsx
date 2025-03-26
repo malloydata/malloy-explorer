@@ -153,7 +153,6 @@ const styles = stylex.create({
     flexDirection: 'column',
     flexShrink: 0,
     width: '280px',
-    height: '100vh',
     backgroundColor: '#F1F4F7',
     boxShadow: '-1px 0px 0px 0px #C8CCD2 inset',
   },

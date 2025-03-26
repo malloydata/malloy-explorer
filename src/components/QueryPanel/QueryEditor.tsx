@@ -28,7 +28,7 @@ const queryExplorerStyles = stylex.create({
     lineHeight: 1.8,
     display: 'flex',
     flexDirection: 'column',
-    gap: 5,
+    gap: 8,
   },
 });
 
