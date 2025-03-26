@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import * as QB from '@malloydata/malloy-query-builder';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {QueryActionBar} from './QueryActionBar';
 import {QueryEditor} from './QueryEditor';

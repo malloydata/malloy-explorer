@@ -8,7 +8,6 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {Button} from '../primitives';
 
