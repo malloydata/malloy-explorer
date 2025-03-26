@@ -37,7 +37,7 @@ interface ButtonProps {
   label?: string;
 
   /**
-   * The icon to be shown either to the left of the label or centered (if label is not provided.
+   * The icon to be shown either to the left of the label or centered (if label is not provided).
    */
   icon?: IconType;
 

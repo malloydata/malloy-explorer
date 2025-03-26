@@ -18,6 +18,7 @@ import {Icon, Token, TokenGroup} from '../../primitives';
 import {Menu} from '../../Menu';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {useContext} from 'react';
+import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -57,7 +58,7 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
 
           return (
             <div key={key} {...stylex.props(viewStyles.indent)}>
-              <div {...stylex.props(styles.queryCard)}>
+              <CollapsiblePanel title={'Nested query'} icon="nest">
                 <TokenGroup style={localStyles.header}>
                   <Token
                     icon="nest"
@@ -67,7 +68,7 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
                   <Menu trigger={<Token icon="meatballs" />} items={actions} />
                 </TokenGroup>
                 <View rootQuery={rootQuery} view={nest.view} />
-              </div>
+              </CollapsiblePanel>
             </div>
           );
         })}
