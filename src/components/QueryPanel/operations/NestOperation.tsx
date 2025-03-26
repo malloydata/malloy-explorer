@@ -14,8 +14,7 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
-import {Icon, Token, TokenGroup} from '../../primitives';
-import {Menu} from '../../Menu';
+import {Icon} from '../../primitives';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {useContext} from 'react';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
