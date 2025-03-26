@@ -7,6 +7,16 @@
 
 import stylex from '@stylexjs/stylex';
 
+export const tooltipStyles = stylex.create({
+  default: {
+    padding: '4px 8px',
+    borderRadius: '6px',
+    color: 'rgba(221, 226, 232, 1)',
+    backgroundColor: 'rgba(50, 52, 54, 1)',
+    maxWidth: '360px',
+  },
+});
+
 export const fontStyles = stylex.create({
   largeEmphasized: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',

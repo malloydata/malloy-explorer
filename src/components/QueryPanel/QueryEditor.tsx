@@ -18,7 +18,7 @@ import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 export interface QueryEditorProps {
   source: Malloy.SourceInfo;
   query?: Malloy.Query;
-  setQuery?: (query: Malloy.Query) => void;
+  setQuery?: (query: Malloy.Query | undefined) => void;
 }
 
 const queryExplorerStyles = stylex.create({
@@ -52,7 +52,7 @@ export function QueryEditor({source, query, setQuery}: QueryEditorProps) {
       <div {...stylex.props(queryExplorerStyles.main)}>
         <Source rootQuery={rootQuery} />
         <Parameters rootQuery={rootQuery} />
-        <Query rootQuery={rootQuery} query={rootQuery} />
+        <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
       </div>
     </QueryEditorContext.Provider>
   );

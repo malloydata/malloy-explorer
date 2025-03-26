@@ -6,27 +6,40 @@
  */
 
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
+
 import {styles} from '../styles';
 import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
+import CollapsiblePanel from '../primitives/CollapsiblePanel';
+import Icon from '../primitives/Icon';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
   query: ASTQuery;
+  setQuery?: (query: Malloy.Query | undefined) => void;
 }
 
-export function Query({rootQuery, query}: QueryProps) {
+export function Query({rootQuery, query, setQuery}: QueryProps) {
+  const menuItems = [];
+  if (setQuery) {
+    menuItems.push({
+      icon: <Icon name="clear" />,
+      label: 'Clear query',
+      onClick: () => {
+        setQuery?.(undefined);
+      },
+    });
+  }
+
   return (
-    <div {...stylex.props(styles.queryCard)}>
-      <div {...stylex.props(styles.queryHeader)}>
-        <div {...stylex.props(styles.title)}>Main query</div>
-      </div>
+    <CollapsiblePanel title="Main query" menuItems={menuItems}>
       {query.definition instanceof ASTArrowQueryDefinition ? (
         <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
           {!query.isEmpty() && (
@@ -47,7 +60,7 @@ export function Query({rootQuery, query}: QueryProps) {
           <ViewMenu rootQuery={rootQuery} view={query} />
         </div>
       )}
-    </div>
+    </CollapsiblePanel>
   );
 }
 

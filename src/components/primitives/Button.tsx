@@ -11,7 +11,8 @@ import {IconType} from './utils/icon';
 import Icon from './Icon';
 import {iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars} from './button.stylex';
-import {fontStyles} from './styles';
+import {fontStyles, tooltipStyles} from './styles';
+import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
 
 const DEFAULT_VARIANT = 'default';
 const DEFAULT_SIZE = 'default';
@@ -37,7 +38,12 @@ interface ButtonProps {
   label?: string;
 
   /**
-   * The icon to be shown either to the left of the label or centered (if label is not provided.
+   * The tooltip to show when hovering over the button. All buttons without a label need a tooltip.
+   */
+  tooltip?: string;
+
+  /**
+   * The icon to be shown either to the left of the label or centered (if label is not provided).
    */
   icon?: IconType;
 
@@ -59,34 +65,48 @@ export default function Button({
   size = DEFAULT_SIZE,
   icon,
   label,
+  tooltip,
   onClick,
   isDisabled = false,
 }: ButtonProps) {
   return (
-    <button
-      {...stylex.props(styles.main, colorVariants[variant], sizeVariants[size])}
-      onClick={e => {
-        e.preventDefault();
-        onClick(e);
-      }}
-      type="button"
-      disabled={isDisabled}
-    >
-      <div {...stylex.props(styles.content)}>
-        {icon && <Icon name={icon} style={styles.icon} />}
-        {label && (
-          <div
-            {...stylex.props(
-              variant === 'primary' ? fontStyles.emphasized : fontStyles.body,
-              styles.label
+    <Tooltip delayDuration={300}>
+      <TooltipTrigger asChild>
+        <button
+          {...stylex.props(
+            styles.main,
+            colorVariants[variant],
+            sizeVariants[size]
+          )}
+          onClick={e => {
+            e.preventDefault();
+            onClick(e);
+          }}
+          type="button"
+          disabled={isDisabled}
+        >
+          <div {...stylex.props(styles.content)}>
+            {icon && <Icon name={icon} style={styles.icon} />}
+            {label && (
+              <div
+                {...stylex.props(
+                  variant === 'primary'
+                    ? fontStyles.emphasized
+                    : fontStyles.body,
+                  styles.label
+                )}
+              >
+                {label}
+              </div>
             )}
-          >
-            {label}
           </div>
-        )}
-      </div>
-      {isDisabled && <div {...stylex.props(styles.disabledOverlay)}></div>}
-    </button>
+          {isDisabled && <div {...stylex.props(styles.disabledOverlay)}></div>}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <div {...stylex.props(tooltipStyles.default)}>{tooltip}</div>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
