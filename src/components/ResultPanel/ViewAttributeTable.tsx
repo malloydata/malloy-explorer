@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import stylex from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {ScrollableArea} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {Visualization} from './Visualization';
@@ -16,34 +16,38 @@ import {backgroundColors} from '../primitives/colors.stylex';
 
 interface ViewAttributeTableProps {
   viewInfo: Malloy.ViewInfo;
+  style?: StyleXStyles;
 }
 
 export default function ViewAttributeTable({
   viewInfo,
+  style,
 }: ViewAttributeTableProps) {
   const dimensions = viewInfo.schema.fields.filter(f => f.kind === 'dimension');
 
   return (
-    <div {...stylex.props(styles.attributeTableContainer)}>
+    <div {...stylex.props(styles.attributeTableContainer, style)}>
       <ScrollableArea>
         <table {...stylex.props(styles.attributeTable)}>
-          <ViewAttributeTableRow attribute="chart type">
-            <div {...stylex.props(styles.chartTypeViz)}>
-              <Visualization annotations={viewInfo.annotations || []} />
-            </div>
-          </ViewAttributeTableRow>
+          <tbody>
+            <ViewAttributeTableRow attribute="chart type">
+              <div {...stylex.props(styles.chartTypeViz)}>
+                <Visualization annotations={viewInfo.annotations || []} />
+              </div>
+            </ViewAttributeTableRow>
 
-          {/* <ViewAttributeTableRow attribute="aggregate" />
+            {/* <ViewAttributeTableRow attribute="aggregate" />
           <ViewAttributeTableRow attribute="group by" /> */}
-          <ViewAttributeTableRow attribute="dimension">
-            {dimensions.map(f => (
-              <span key={`${f.kind}::${f.name}`}>
-                <FieldToken field={f} />
-              </span>
-            ))}
-          </ViewAttributeTableRow>
-          {/* <ViewAttributeTableRow attribute="order by" />
+            <ViewAttributeTableRow attribute="dimension">
+              {dimensions.map(f => (
+                <span key={`${f.kind}::${f.name}`}>
+                  <FieldToken field={f} />
+                </span>
+              ))}
+            </ViewAttributeTableRow>
+            {/* <ViewAttributeTableRow attribute="order by" />
           <ViewAttributeTableRow attribute="limit" /> */}
+          </tbody>
         </table>
       </ScrollableArea>
     </div>

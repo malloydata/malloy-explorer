@@ -208,7 +208,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           if (view === rootQuery && rootQuery.isEmpty()) {
             rootQuery.setView(field.name);
           } else {
-            segment.addNest(field.name);
+            segment.addNest(field.name, 'Nest');
           }
           setQuery?.(rootQuery.build());
         },

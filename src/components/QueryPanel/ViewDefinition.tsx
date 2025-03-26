@@ -11,11 +11,15 @@ import {Operations} from './Operations';
 import {
   ASTArrowViewDefinition,
   ASTQuery,
+  ASTReferenceViewDefinition,
   ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
   ASTViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {Token} from '../primitives';
+import {Button, Icon, IconType} from '../primitives';
+import ViewAttributeTable from '../ResultPanel/ViewAttributeTable';
+import {JSX, useState} from 'react';
+import {textColors} from '../primitives/colors.stylex';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
@@ -35,21 +39,102 @@ export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
   } else if (viewDef instanceof ASTSegmentViewDefinition) {
     return <Operations rootQuery={rootQuery} viewDef={viewDef} />;
   } else {
-    return (
-      <Token
-        icon="query"
-        color="purple"
-        label={viewDef.name}
-        style={styles.token}
-      />
-    );
+    return <CollapsingView rootQuery={rootQuery} viewDef={viewDef} />;
   }
 }
 
+interface CollapsingViewProps {
+  rootQuery: ASTQuery;
+  viewDef: ASTReferenceViewDefinition;
+}
+
+function CollapsingView({viewDef}: CollapsingViewProps) {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <div
+      {...stylex.props(styles.view, collapsed ? styles.viewCollapsed : null)}
+    >
+      <Header
+        icon="query"
+        title={viewDef.name}
+        rightControls={
+          <Button
+            icon={collapsed ? 'chevronRight' : 'chevronDown'}
+            onClick={() => setCollapsed(!collapsed)}
+            size="compact"
+          />
+        }
+      />
+      {!collapsed && (
+        <ViewAttributeTable
+          viewInfo={viewDef.getViewInfo()}
+          style={styles.preview}
+        />
+      )}
+    </div>
+  );
+}
+
+interface HeaderProps {
+  icon: IconType;
+  title: string;
+  hoverControls?: JSX.Element;
+  rightControls?: JSX.Element;
+}
+
+function Header({icon, title, hoverControls, rightControls}: HeaderProps) {
+  return (
+    <div {...stylex.props(styles.header)}>
+      <Icon name={icon} color="purple" />
+      <div>{title}</div>
+      <div {...stylex.props(styles.spacer)} />
+      <div>{hoverControls}</div>
+      <div>{rightControls}</div>
+    </div>
+  );
+}
+
 const styles = stylex.create({
-  token: {
+  view: {
+    display: 'flex',
+    borderRadius: '4px',
+    background: 'rgba(230, 235, 239, 1)',
+    height: 'auto',
+    flexDirection: 'column',
+    paddingBottom: 8,
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
+  viewCollapsed: {
+    paddingBottom: 0,
+  },
+  chevron: {
+    padding: 4,
+  },
+  header: {
+    display: 'inline-flex',
+    color: textColors.purple,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '20px',
+    paddingTop: 4,
+    paddingBottom: 4,
+    gap: 8,
+    borderRadius: '4px',
+    borderWidth: 0,
+    cursor: 'pointer',
+    position: 'relative',
+    overflow: 'hidden',
+    background: 'rgba(230, 235, 239, 1)',
+    width: '100%',
+  },
+  spacer: {
     flexGrow: 1,
-    justifyContent: 'start',
-    width: 'calc(100% - 16px)',
+  },
+  preview: {
+    height: 'auto',
+    maxHeight: 200,
+    background: '#fff',
+    borderRadius: 4,
   },
 });
