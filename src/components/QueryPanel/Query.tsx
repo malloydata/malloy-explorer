@@ -6,11 +6,13 @@
  */
 
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
+
 import {styles} from '../styles';
 import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
@@ -21,19 +23,20 @@ import Icon from '../primitives/Icon';
 export interface QueryProps {
   rootQuery: ASTQuery;
   query: ASTQuery;
-  setQuery?: (query: Malloy.Query) => void;
+  setQuery?: (query: Malloy.Query | undefined) => void;
 }
 
 export function Query({rootQuery, query, setQuery}: QueryProps) {
-  const menuItems = [
-    {
+  const menuItems = [];
+  if (setQuery) {
+    menuItems.push({
       icon: <Icon name="clear" />,
       label: 'Clear query',
       onClick: () => {
-        setQuery(undefined);
+        setQuery?.(undefined);
       },
-    },
-  ];
+    });
+  }
 
   return (
     <CollapsiblePanel title="Main query" menuItems={menuItems}>

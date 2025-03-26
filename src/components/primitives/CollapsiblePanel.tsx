@@ -44,7 +44,12 @@ export default function CollapsiblePanel({
           {menuItems && (
             <Menu
               trigger={
-                <Button variant="flat" size="compact" icon="meatballs" />
+                <Button
+                  variant="flat"
+                  size="compact"
+                  icon="meatballs"
+                  onClick={() => {}}
+                />
               }
               items={menuItems}
             />
