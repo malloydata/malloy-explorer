@@ -34,6 +34,7 @@ import Meatballs from '../../../assets/ui/meatballs.svg?react';
 import PlayIcon from '../../../assets/ui/play.svg?react';
 import RadioChecked from '../assets/radio_checked.svg?react';
 import RadioUnchecked from '../assets/radio_unchecked.svg?react';
+import Warning from '../../../assets/ui/warning.svg?react';
 
 import VizBarChar from '../../../assets/visualizations/viz_bar_chart.svg?react';
 import VizBoolean from '../../../assets/visualizations/viz_boolean.svg?react';
@@ -70,6 +71,7 @@ export const ICON_MAP = {
   checkmark: Checkmark,
   radioChecked: RadioChecked,
   radioUnchecked: RadioUnchecked,
+  warning: Warning,
 
   // Operations
   dimension: TypeIconString,

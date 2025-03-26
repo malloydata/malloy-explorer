@@ -10,40 +10,43 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {createRoot} from 'react-dom/client';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import {ResultPanel} from '../src';
-import {modelInfo, queries, result} from './sample_models/example_model';
-import CodeBlocks from './components/CodeBlocks';
+import {modelInfo, result} from './sample_models/example_model';
 import {SubmittedQuery} from '../src/components/ResultPanel/SubmittedQuery';
+import {Button} from '../src/components/primitives';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
-const q = queries.at(1) as Malloy.Query;
 
 const App = () => {
-  const submitted: SubmittedQuery = {
-    query: q,
-    executionState: 'finished',
-    queryResolutionStartMillis: Date.now(),
-    onCancel: () => {},
-    response: {
-      result: result,
-    },
-  };
+  const [draftQuery, setDraftQuery] = React.useState<Malloy.Query>();
+  const [isRun, setIsRun] = React.useState<boolean>(false);
+
+  const submitted: SubmittedQuery | undefined = draftQuery
+    ? {
+        query: draftQuery,
+        executionState: 'finished',
+        queryResolutionStartMillis: Date.now(),
+        onCancel: () => {},
+        response: {
+          result: result,
+        },
+      }
+    : undefined;
 
   return (
     <TooltipProvider>
-      <h3>Result Panel:</h3>
       <div
         style={{
-          height: '80vh',
+          height: '100vh',
         }}
       >
         <ResultPanel
           source={source}
-          draftQuery={q}
-          submittedQuery={submitted}
+          draftQuery={draftQuery}
+          setDraftQuery={q => setDraftQuery(q)}
+          submittedQuery={isRun ? submitted : undefined}
         />
       </div>
-      <h3>Components:</h3>
-      <CodeBlocks />
+      <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
     </TooltipProvider>
   );
 };

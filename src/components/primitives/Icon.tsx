@@ -83,4 +83,7 @@ const colorVariants = stylex.create({
   cyan: {
     color: iconColors.cyan,
   },
+  warning: {
+    color: iconColors.warning,
+  },
 });

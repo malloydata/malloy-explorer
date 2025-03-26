@@ -38,4 +38,5 @@ export const iconColors = stylex.defineVars({
   purple: 'rgba(121, 82, 255, 1)',
   green: 'rgba(7, 109, 41, 1)',
   cyan: 'rgba(2, 141, 193, 1)',
+  warning: 'rgba(233, 175, 8, 1)',
 });
