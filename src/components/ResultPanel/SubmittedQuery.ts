@@ -26,7 +26,7 @@ type RunStats = {
 };
 
 export type QueryResponse = {
-  error?: undefined;
+  error?: string;
   result?: Malloy.Result;
   runStats?: RunStats;
 };
