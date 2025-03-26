@@ -13,9 +13,13 @@ import {fontStyles} from '../primitives/styles';
 
 export interface EmptyQueryDisplay {
   views: Array<Malloy.ViewInfo>;
+  onSelectView: (view: Malloy.ViewInfo) => void;
 }
 
-export default function EmptyQueryDisplay({views}: EmptyQueryDisplay) {
+export default function EmptyQueryDisplay({
+  views,
+  onSelectView,
+}: EmptyQueryDisplay) {
   return (
     <div {...stylex.props(styles.page)}>
       <div {...stylex.props(styles.pageChild)}>
@@ -24,7 +28,13 @@ export default function EmptyQueryDisplay({views}: EmptyQueryDisplay) {
         </h1>
         <div {...stylex.props(styles.viewContainer)}>
           {views.slice(0, 3).map(v => (
-            <BookmarkedView key={v.name} viewInfo={v} />
+            <BookmarkedView
+              key={v.name}
+              viewInfo={v}
+              onClick={() => {
+                onSelectView(v);
+              }}
+            />
           ))}
         </div>
       </div>

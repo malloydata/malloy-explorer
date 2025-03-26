@@ -17,17 +17,23 @@ import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 
+enum Tab {
+  RESULTS = 'Results',
+  MALLOY = 'Malloy',
+  SQL = 'SQL',
+}
+
 export interface ResultPanelProps {
   source: Malloy.SourceInfo;
   draftQuery?: Malloy.Query;
-  setDraftQuery?: (query: Malloy.Query) => void;
+  setDraftQuery: (query: Malloy.Query) => void;
   submittedQuery?: SubmittedQuery;
 }
 
 export default function ResultPanel({
   source,
   draftQuery,
-  setDraftQuery: _sdq,
+  setDraftQuery,
   submittedQuery,
 }: ResultPanelProps) {
   const [tab, setTab] = React.useState<Tab>(Tab.MALLOY);
@@ -111,14 +117,26 @@ export default function ResultPanel({
       </Content>
     </Root>
   ) : (
-    <EmptyQueryDisplay views={views} />
+    <EmptyQueryDisplay
+      views={views}
+      onSelectView={v => setDraftQuery(viewToQuery(v.name, source.name))}
+    />
   );
 }
-
-enum Tab {
-  RESULTS = 'Results',
-  MALLOY = 'Malloy',
-  SQL = 'SQL',
+function viewToQuery(viewName: string, sourceName: string): Malloy.Query {
+  return {
+    definition: {
+      kind: 'arrow',
+      source: {
+        kind: 'source_reference',
+        name: sourceName,
+      },
+      view: {
+        kind: 'view_reference',
+        name: viewName,
+      },
+    },
+  };
 }
 
 const styles = stylex.create({

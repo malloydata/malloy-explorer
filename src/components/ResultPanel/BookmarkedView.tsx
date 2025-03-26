@@ -14,9 +14,10 @@ import ViewAttributeTable from './ViewAttributeTable';
 
 interface BookmarkedViewProps {
   viewInfo: Malloy.ViewInfo;
+  onClick: () => void;
 }
 
-export function BookmarkedView({viewInfo}: BookmarkedViewProps) {
+export function BookmarkedView({viewInfo, onClick}: BookmarkedViewProps) {
   const description = getDescriptionAnnotation(viewInfo.annotations ?? []);
 
   return (
@@ -35,7 +36,7 @@ export function BookmarkedView({viewInfo}: BookmarkedViewProps) {
                 variant="default"
                 size="compact"
                 label="Add"
-                onClick={() => {}}
+                onClick={onClick}
               />
             </div>
             <div>
