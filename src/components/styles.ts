@@ -21,9 +21,7 @@ export const styles = stylex.create({
     whiteSpace: 'nowrap',
     gap: 8,
   },
-
   label: {},
-
   heading: {
     display: 'flex',
     flexDirection: 'column',
@@ -46,10 +44,6 @@ export const styles = stylex.create({
     flexDirection: 'row',
     width: 'calc(100% - 40)',
     padding: 12,
-  },
-  title: {
-    whiteSpace: 'nowrap',
-    padding: '5px 0',
   },
   tokenContainer: {
     display: 'flex',
