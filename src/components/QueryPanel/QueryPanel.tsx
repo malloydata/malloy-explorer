@@ -10,7 +10,6 @@ import stylex from '@stylexjs/stylex';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {QueryActionBar} from './QueryActionBar';
 import {QueryEditor} from './QueryEditor';
-import {RawPreview} from '../RawPreview';
 import {ScrollableArea} from '../primitives';
 
 interface QueryPanelProps {
@@ -39,11 +38,6 @@ export default function QueryPanel({
       <ScrollableArea>
         <div {...stylex.props(styles.content)}>
           <QueryEditor source={source} query={query} setQuery={setQuery} />
-          {query ? (
-            <RawPreview source={source} query={query} />
-          ) : (
-            <div>No query</div>
-          )}
         </div>
       </ScrollableArea>
     </div>
