@@ -148,8 +148,16 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
             label: field.name,
             detail: <div>Path: {[...path, field.name].join('.')}</div>,
             onClick: () => {
-              setFilterDialogOpen(true);
-              setFilterField(field);
+              if (field.type.kind === 'string_type') {
+                segment.addWhere(field.name, '-null');
+                setQuery?.(rootQuery.build());
+              } else if (field.type.kind === 'boolean_type') {
+                segment.addWhere(field.name, 'true');
+                setQuery?.(rootQuery.build());
+              } else {
+                setFilterDialogOpen(true);
+                setFilterField(field);
+              }
             },
           };
         } else {

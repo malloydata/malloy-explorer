@@ -7,17 +7,17 @@ import {IconType} from '../utils/icon';
 import {tokenColorVariants, tokenStyles} from './styles';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
 
-interface EditableTokenProps {
+interface EditableTokenBaseProps<T> {
   /**
    * The current value of the token.
    */
-  value: string;
+  value: T;
   /**
    * Callback function called when the token's value changes.
    *
    * @param value The new value of the token.
    */
-  onChange: (value: string) => void;
+  onChange: (value: T) => void;
   /**
    * Optional callback function called when the token is removed.
    */
@@ -38,6 +38,13 @@ interface EditableTokenProps {
   style?: StyleXStyles;
 }
 
+interface EditableTokenStringProps extends EditableTokenBaseProps<string> {
+  type?: 'string';
+}
+interface EditableTokenNumberProps extends EditableTokenBaseProps<number> {
+  type: 'number';
+}
+
 export default function EditableToken({
   value,
   onChange,
@@ -45,14 +52,19 @@ export default function EditableToken({
   icon,
   color = DEFAULT_TOKEN_COLOR,
   style,
-}: EditableTokenProps) {
+  type,
+}: EditableTokenStringProps | EditableTokenNumberProps) {
   const [isFocused, setIsFocused] = React.useState<boolean>(false);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
+  const handleChange = ({target}: React.ChangeEvent<HTMLInputElement>) => {
+    if (type === 'number') {
+      onChange(parseFloat(target.value || '0'));
+    } else {
+      onChange(target.value);
+    }
   };
 
   const handleFocus = () => {
@@ -90,6 +102,7 @@ export default function EditableToken({
         <input
           {...stylex.props(styles.input, fontStyles.body)}
           ref={inputRef}
+          pattern={type === 'number' ? '^-?[0-9.]*$' : undefined}
           value={value}
           onChange={handleChange}
           onFocus={handleFocus}
