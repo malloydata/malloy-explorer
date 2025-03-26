@@ -30,7 +30,7 @@ export function QueryActionBar({
 }: QueryActionBarProps) {
   const rootQuery = useQueryBuilder(source, query);
   return (
-    <div {...stylex.props(styles.queryCard, actionBarStyles.root)}>
+    <div {...stylex.props(actionBarStyles.root)}>
       <div {...stylex.props(actionBarStyles.title)}>Query</div>
       <div {...stylex.props(actionBarStyles.buttons)}>
         <Button
@@ -38,6 +38,7 @@ export function QueryActionBar({
           isDisabled={!rootQuery || rootQuery?.isEmpty()}
           label="Clear"
           variant="flat"
+          size="compact"
         />
         <Button
           icon="play"
@@ -45,6 +46,7 @@ export function QueryActionBar({
           isDisabled={!rootQuery?.isRunnable()}
           label="Run"
           variant="primary"
+          size="compact"
         />
       </div>
     </div>

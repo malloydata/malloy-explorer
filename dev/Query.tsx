@@ -41,7 +41,7 @@ const App = () => {
 
   return (
     <MalloyExplorerProvider>
-      <div style={{width: 500}}>
+      <div style={{width: 500, padding: '8px'}}>
         Query: {queryIdx}{' '}
         <button onClick={() => setQueryIdx((queryIdx + 1) % queries.length)}>
           Change Query
