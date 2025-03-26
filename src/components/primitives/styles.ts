@@ -50,6 +50,14 @@ export const fontStyles = stylex.create({
     lineHeight: '20px',
     letterSpacing: '0px',
   },
+  link: {
+    fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
+    color: 'rgba(0, 100, 224, 1)',
+    fontWeight: 400,
+    fontSize: '14px',
+    lineHeight: '20px',
+    letterSpacing: '0px',
+  },
   supporting: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
     color: 'rgba(5, 5, 5, 1)',

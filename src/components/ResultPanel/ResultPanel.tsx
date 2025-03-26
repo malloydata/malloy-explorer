@@ -12,7 +12,7 @@ import {Content, List, Root, Trigger} from '@radix-ui/react-tabs';
 import stylex from '@stylexjs/stylex';
 import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
-import {Button, CodeBlock} from '../primitives';
+import {Button, CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
@@ -96,7 +96,30 @@ export default function ResultPanel({
         )}
       </div>
       <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
-        {submittedQuery && <ResultDisplay query={submittedQuery} />}
+        {submittedQuery && (
+          <>
+            {draftQuery &&
+              submittedQuery &&
+              !queriesAreEqual(draftQuery, submittedQuery.query) && (
+                <div {...stylex.props(styles.warning, fontStyles.body)}>
+                  <Icon name="warning" color="warning" />
+                  <span>
+                    Query was updated. Run query to see new result or{' '}
+                  </span>
+                  <button
+                    {...stylex.props(styles.warningAction, fontStyles.link)}
+                    onClick={() => {
+                      setDraftQuery(submittedQuery.query);
+                    }}
+                  >
+                    revert
+                  </button>
+                  <span> to the last run query.</span>
+                </div>
+              )}
+            <ResultDisplay query={submittedQuery} />
+          </>
+        )}
       </Content>
       <Content
         value={Tab.MALLOY}
@@ -123,6 +146,11 @@ export default function ResultPanel({
     />
   );
 }
+
+function queriesAreEqual(one: Malloy.Query, two: Malloy.Query) {
+  return JSON.stringify(one) === JSON.stringify(two);
+}
+
 function viewToQuery(viewName: string, sourceName: string): Malloy.Query {
   return {
     definition: {
@@ -176,5 +204,13 @@ const styles = stylex.create({
     padding: '0px 12px 12px 12px',
     width: '100%',
     height: '100%',
+  },
+  warning: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  warningAction: {
+    backgroundColor: 'transparent',
+    border: 'none',
   },
 });
