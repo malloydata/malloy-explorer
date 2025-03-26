@@ -5,8 +5,17 @@ import {
   Token,
   TokenGroup,
 } from '../../src/components/primitives';
+import SelectorToken from '../../src/components/primitives/tokens/SelectorToken';
 
 export default function TokenGroups() {
+  const [values, setValues] = React.useState({
+    token1: 'descending',
+  });
+
+  const handleChange = (tokenName: string, newValue: string) => {
+    setValues(prevValues => ({...prevValues, [tokenName]: newValue}));
+  };
+
   return (
     <div>
       <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
@@ -29,7 +38,15 @@ export default function TokenGroups() {
           <TokenGroup color="green">
             <Token icon="measure" label="flight_count" />
             <Token label="is" />
-            <Token label="ascending" color="default" />
+            <SelectorToken
+              value={values.token1}
+              onChange={v => handleChange('token1', v)}
+              items={[
+                {label: 'ascending', value: 'ascending'},
+                {label: 'descending', value: 'descending'},
+              ]}
+              color="default"
+            />
           </TokenGroup>
           <TokenGroup>
             <Token label="ds_start" />

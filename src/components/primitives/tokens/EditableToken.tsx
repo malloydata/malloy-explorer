@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {DEFAULT_TOKEN_COLOR, TokenColor} from './Token';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {iconVars, labelVars} from './token.stylex';
-import {iconColors, textColors} from './colors.stylex';
-import Icon from './Icon';
-import {fontStyles} from './styles';
-import {IconType} from './utils/icon';
+import Icon from '../Icon';
+import {fontStyles} from '../styles';
+import {IconType} from '../utils/icon';
+import {tokenColorVariants, tokenStyles} from './styles';
+import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
 
 interface EditableTokenProps {
   /**
@@ -73,8 +73,8 @@ export default function EditableToken({
   return (
     <div
       {...stylex.props(
-        styles.main,
-        colorVariants[color],
+        tokenStyles.main,
+        tokenColorVariants[color],
         isFocused && styles.focused,
         style
       )}
@@ -111,21 +111,6 @@ export default function EditableToken({
 }
 
 const styles = stylex.create({
-  main: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '20px',
-    padding: '4px 8px',
-    borderRadius: '4px',
-    borderWidth: 0,
-    position: 'relative',
-    overflow: 'hidden',
-    background: {
-      default: 'rgba(230, 235, 239, 1)',
-      ':hover': 'rgba(221, 226, 232, 1)',
-    },
-  },
   focused: {
     background: 'rgba(255, 255, 255, 1)',
     boxShadow:
@@ -133,7 +118,6 @@ const styles = stylex.create({
   },
   icon: {
     color: iconVars.color,
-    marginRight: '8px',
   },
   inputWrapper: {
     display: 'inline-grid',
@@ -160,26 +144,6 @@ const styles = stylex.create({
     borderWidth: 0,
     background: 'transparent',
     padding: '0px',
-    marginLeft: '4px',
     cursor: 'pointer',
-  },
-});
-
-const colorVariants = stylex.create({
-  default: {
-    [iconVars.color]: iconColors.primary,
-    [labelVars.color]: textColors.primary,
-  },
-  purple: {
-    [iconVars.color]: iconColors.purple,
-    [labelVars.color]: textColors.purple,
-  },
-  green: {
-    [iconVars.color]: iconColors.green,
-    [labelVars.color]: textColors.green,
-  },
-  cyan: {
-    [iconVars.color]: iconColors.cyan,
-    [labelVars.color]: textColors.cyan,
   },
 });

@@ -26,7 +26,7 @@ export default function TextInputs() {
         >
           Text Inputs
         </div>
-        <div style={{display: 'flex', gap: '8px'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
           <TextInput
             value={values.input1}
             placeholder={'Search'}

@@ -10,7 +10,7 @@ import stylex from '@stylexjs/stylex';
 import {Button, CollapsibleListItem, List} from '../primitives';
 import FieldToken from './FieldToken';
 import {fontStyles} from '../primitives/styles';
-import {type FieldGroupByPath} from './utils';
+import {FieldGroupByPath} from './utils';
 
 const getLabelFromPath = (path: string[]) => {
   return path.at(-1) ?? '';

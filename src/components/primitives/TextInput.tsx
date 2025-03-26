@@ -1,5 +1,5 @@
 import * as React from 'react';
-import stylex from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {fontStyles} from './styles';
 import {IconType} from './utils/icon';
 import Icon from './Icon';
@@ -35,6 +35,18 @@ interface TextInputProps {
    * Whether to display a clear button in the text input.
    */
   hasClear?: boolean;
+  /**
+   * Called when a key is pressed while the input element has focus.
+   *
+   * @param event The keyboard event that triggered this callback.
+   */
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  /**
+   * Custom styles to apply to the component.
+   *
+   * Use this prop to override or extend the default styles of the component.
+   */
+  customStyle?: StyleXStyles;
 }
 
 export default function TextInput({
@@ -43,11 +55,12 @@ export default function TextInput({
   size = DEFAULT_SIZE,
   icon,
   onChange,
+  onKeyDown,
   hasClear = false,
+  customStyle,
 }: TextInputProps) {
   const [isFocused, setIsFocused] = React.useState<boolean>(false);
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,44 +78,43 @@ export default function TextInput({
     ) {
       setIsFocused(false);
     } else {
-      inputRef.current?.focus();
+      event.target.focus();
     }
   };
 
   return (
-    <div {...stylex.props(styles.content)}>
-      <div
-        {...stylex.props(
-          styles.main,
-          isFocused && styles.focused,
-          sizeVariants[size]
-        )}
-      >
-        {icon && <Icon name={icon} color="secondary" />}
-        <input
-          {...stylex.props(fontStyles.body, styles.input)}
-          ref={inputRef}
-          value={value}
-          placeholder={placeholder}
-          onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-        {hasClear && (
-          <button
-            {...stylex.props(
-              fontStyles.supporting,
-              styles.actionButton,
-              value === '' && styles.hidden
-            )}
-            ref={buttonRef}
-            onClick={() => onChange('')}
-            tabIndex={0}
-          >
-            Clear
-          </button>
-        )}
-      </div>
+    <div
+      {...stylex.props(
+        styles.main,
+        isFocused && styles.focused,
+        sizeVariants[size],
+        customStyle
+      )}
+    >
+      {icon && <Icon name={icon} color="secondary" />}
+      <input
+        {...stylex.props(fontStyles.body, styles.input)}
+        value={value}
+        placeholder={placeholder}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={onKeyDown}
+      />
+      {hasClear && (
+        <button
+          {...stylex.props(
+            fontStyles.supporting,
+            styles.actionButton,
+            value === '' && styles.hidden
+          )}
+          ref={buttonRef}
+          onClick={() => onChange('')}
+          tabIndex={0}
+        >
+          Clear
+        </button>
+      )}
     </div>
   );
 }
@@ -120,10 +132,6 @@ const styles = stylex.create({
       ':hover': 'rgba(204, 211, 219, 0.3) 0px 0px 0px 3px inset',
     },
     gap: '8px',
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
   },
   focused: {
     borderColor: 'rgb(0, 100, 224)',

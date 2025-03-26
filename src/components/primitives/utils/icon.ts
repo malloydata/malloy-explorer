@@ -32,6 +32,8 @@ import TypeIconQueryFilled from '../../../assets/types/type-icon-query-filled.sv
 import TypeIconSqlNative from '../../../assets/types/type-icon-sql-native.svg?react';
 import Meatballs from '../../../assets/ui/meatballs.svg?react';
 import PlayIcon from '../../../assets/ui/play.svg?react';
+import RadioChecked from '../assets/radio_checked.svg?react';
+import RadioUnchecked from '../assets/radio_unchecked.svg?react';
 
 import VizBarChar from '../../../assets/visualizations/viz_bar_chart.svg?react';
 import VizBoolean from '../../../assets/visualizations/viz_boolean.svg?react';
@@ -66,6 +68,8 @@ export const ICON_MAP = {
   play: PlayIcon,
   copy: Copy,
   checkmark: Checkmark,
+  radioChecked: RadioChecked,
+  radioUnchecked: RadioUnchecked,
 
   // Operations
   dimension: TypeIconString,

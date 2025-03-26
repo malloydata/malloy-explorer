@@ -1,0 +1,13 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+<svg height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Draw the outer circle -->
+  <circle cx="8" cy="8" r="8" fill="currentColor"/> 
+  <!-- Draw the inner circle -->
+  <circle cx="8" cy="8" r="7" fill="#FFFFFF"/> 
+</svg>
