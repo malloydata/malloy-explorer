@@ -15,6 +15,7 @@ import {styles} from '../styles';
 import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
+import CollapsiblePanel from '../primitives/CollapsiblePanel';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -23,10 +24,7 @@ export interface QueryProps {
 
 export function Query({rootQuery, query}: QueryProps) {
   return (
-    <div {...stylex.props(styles.queryCard)}>
-      <div {...stylex.props(styles.queryHeader)}>
-        <div {...stylex.props(styles.title)}>Main query</div>
-      </div>
+    <CollapsiblePanel title="Main query">
       {query.definition instanceof ASTArrowQueryDefinition ? (
         <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
           {!query.isEmpty() && (
@@ -47,7 +45,7 @@ export function Query({rootQuery, query}: QueryProps) {
           <ViewMenu rootQuery={rootQuery} view={query} />
         </div>
       )}
-    </div>
+    </CollapsiblePanel>
   );
 }
 
