@@ -69,45 +69,45 @@ export default function Button({
   onClick,
   isDisabled = false,
 }: ButtonProps) {
-  return (
-    <Tooltip delayDuration={300}>
-      <TooltipTrigger asChild>
-        <button
-          {...stylex.props(
-            styles.main,
-            colorVariants[variant],
-            sizeVariants[size]
-          )}
-          onClick={e => {
-            e.preventDefault();
-            onClick(e);
-          }}
-          type="button"
-          disabled={isDisabled}
-        >
-          <div {...stylex.props(styles.content)}>
-            {icon && <Icon name={icon} style={styles.icon} />}
-            {label && (
-              <div
-                {...stylex.props(
-                  variant === 'primary'
-                    ? fontStyles.emphasized
-                    : fontStyles.body,
-                  styles.label
-                )}
-              >
-                {label}
-              </div>
+  const button = (
+    <button
+      {...stylex.props(styles.main, colorVariants[variant], sizeVariants[size])}
+      onClick={e => {
+        e.preventDefault();
+        onClick(e);
+      }}
+      type="button"
+      disabled={isDisabled}
+    >
+      <div {...stylex.props(styles.content)}>
+        {icon && <Icon name={icon} style={styles.icon} />}
+        {label && (
+          <div
+            {...stylex.props(
+              variant === 'primary' ? fontStyles.emphasized : fontStyles.body,
+              styles.label
             )}
+          >
+            {label}
           </div>
-          {isDisabled && <div {...stylex.props(styles.disabledOverlay)}></div>}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent>
-        <div {...stylex.props(tooltipStyles.default)}>{tooltip}</div>
-      </TooltipContent>
-    </Tooltip>
+        )}
+      </div>
+      {isDisabled && <div {...stylex.props(styles.disabledOverlay)}></div>}
+    </button>
   );
+
+  if (tooltip) {
+    return (
+      <Tooltip delayDuration={300}>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent>
+          <div {...stylex.props(tooltipStyles.default)}>{tooltip}</div>
+        </TooltipContent>
+      </Tooltip>
+    );
+  } else {
+    return button;
+  }
 }
 
 const styles = stylex.create({
