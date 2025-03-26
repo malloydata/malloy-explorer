@@ -48,6 +48,7 @@ export default function CollapsiblePanel({
                   variant="flat"
                   size="compact"
                   icon="meatballs"
+                  tooltip="More actions..."
                   onClick={() => {}}
                 />
               }
@@ -59,6 +60,7 @@ export default function CollapsiblePanel({
             size="compact"
             onClick={() => setIsExpanded(!isExpanded)}
             icon={isExpanded ? 'chevronDown' : 'chevronRight'}
+            tooltip={isExpanded ? 'Collapse' : 'Expand'}
           />
         </div>
       </div>
