@@ -18,6 +18,7 @@ export const tokenStyles = stylex.create({
       default: 'rgba(230, 235, 239, 1)',
       ':hover': 'rgba(221, 226, 232, 1)',
     },
+    position: 'relative',
   },
   icon: {
     color: iconVars.color,
