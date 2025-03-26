@@ -18,10 +18,8 @@ import {
   ScrollableArea,
   Button,
   TextInput,
-  CollapsibleListItem,
 } from '../primitives';
 import {textColors} from '../primitives/colors.stylex';
-import FieldToken from './FieldToken';
 import {fontStyles} from '../primitives/styles';
 import {
   FIELD_KIND_TO_TITLE,
@@ -30,20 +28,32 @@ import {
   sourceToFieldItems,
 } from './utils';
 import SearchResultList from './SearchResultList';
+import FieldGroupList from './FieldGroupList';
 
 export interface SourcePanelProps {
   source: SourceInfo;
 }
 
-type PanelType = 'view' | 'dimension' | 'measure' | null;
+type SubpanelType = 'view' | 'dimension' | 'measure' | null;
 
 export function SourcePanel({source}: SourcePanelProps) {
-  const [panelType, setPanelType] = React.useState<PanelType>(null);
+  const [subpanelType, setSubpanelType] = React.useState<SubpanelType>(null);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const fieldItems = React.useMemo(() => {
     return sourceToFieldItems(source);
   }, [source]);
+
+  const views = fieldItems.filter(item => item.field.kind === 'view');
+  const measures = fieldItems.filter(item => item.field.kind === 'measure');
+  const dimensions = fieldItems.filter(item => item.field.kind === 'dimension');
+
+  const searchResultItems = React.useMemo(() => {
+    if (searchQuery) {
+      return fieldItems.filter(item => item.field.name.includes(searchQuery));
+    }
+    return [];
+  }, [fieldItems, searchQuery]);
 
   const fieldGroupsByKindByPath = React.useMemo(() => {
     return groupFieldItemsByKind(fieldItems).map(group => ({
@@ -52,20 +62,12 @@ export function SourcePanel({source}: SourcePanelProps) {
     }));
   }, [fieldItems]);
 
-  const views =
-    fieldGroupsByKindByPath.find(({group}) => group === 'view')?.items ?? [];
-  const measures =
-    fieldGroupsByKindByPath.find(({group}) => group === 'measure')?.items ?? [];
-  const dimensions =
-    fieldGroupsByKindByPath.find(({group}) => group === 'dimension')?.items ??
-    [];
-
-  const filteredFieldItems = React.useMemo(() => {
-    if (searchQuery) {
-      return fieldItems.filter(item => item.field.name.includes(searchQuery));
-    }
-    return [];
-  }, [fieldItems, searchQuery]);
+  const fieldGroupList = React.useMemo(() => {
+    return (
+      fieldGroupsByKindByPath.find(({group}) => group === subpanelType)
+        ?.items ?? []
+    );
+  }, [fieldGroupsByKindByPath, subpanelType]);
 
   const isSearchActive = !!searchQuery;
 
@@ -73,7 +75,7 @@ export function SourcePanel({source}: SourcePanelProps) {
     <div {...stylex.props(styles.main)}>
       <div {...stylex.props(fontStyles.body, styles.header)}>
         <div>
-          {panelType == null ? (
+          {subpanelType == null ? (
             <div {...stylex.props(styles.heading)}>
               <Icon name="database" color="gray" />
               {source.name}
@@ -84,7 +86,7 @@ export function SourcePanel({source}: SourcePanelProps) {
               label="Back"
               variant="flat"
               size="compact"
-              onClick={() => setPanelType(null)}
+              onClick={() => setSubpanelType(null)}
             />
           )}
         </div>
@@ -101,8 +103,8 @@ export function SourcePanel({source}: SourcePanelProps) {
       <ScrollableArea>
         <div {...stylex.props(styles.content)}>
           {isSearchActive ? (
-            <SearchResultList items={filteredFieldItems} />
-          ) : panelType == null ? (
+            <SearchResultList items={searchResultItems} />
+          ) : subpanelType == null ? (
             <List>
               <ListItem
                 key="views"
@@ -110,7 +112,7 @@ export function SourcePanel({source}: SourcePanelProps) {
                 startIcon={<Icon name="view" color="purple" />}
                 badge={<Badge label={views.length.toString()} color="purple" />}
                 endIcon={<Icon name="chevronRight" color="secondary" />}
-                onClick={() => setPanelType('view')}
+                onClick={() => setSubpanelType('view')}
               />
               <ListItem
                 key="measures"
@@ -120,7 +122,7 @@ export function SourcePanel({source}: SourcePanelProps) {
                   <Badge label={measures.length.toString()} color="green" />
                 }
                 endIcon={<Icon name="chevronRight" color="secondary" />}
-                onClick={() => setPanelType('measure')}
+                onClick={() => setSubpanelType('measure')}
               />
               <ListItem
                 key="dimensions"
@@ -130,58 +132,14 @@ export function SourcePanel({source}: SourcePanelProps) {
                   <Badge label={dimensions.length.toString()} color="cyan" />
                 }
                 endIcon={<Icon name="chevronRight" color="secondary" />}
-                onClick={() => setPanelType('dimension')}
+                onClick={() => setSubpanelType('dimension')}
               />
             </List>
           ) : (
-            <div {...stylex.props(styles.fieldListContainer)}>
-              <div {...stylex.props(fontStyles.body, styles.contentHeading)}>
-                {FIELD_KIND_TO_TITLE[panelType]}
-              </div>
-              <List>
-                {(
-                  fieldGroupsByKindByPath.find(({group}) => group === panelType)
-                    ?.items ?? []
-                ).map(item => {
-                  const {path} = item;
-                  const title = path.at(-1) ?? '';
-                  const subtitle =
-                    path.length > 1
-                      ? `joined to ${path.slice(0, -1).join(' > ')}`
-                      : undefined;
-                  return (
-                    <CollapsibleListItem
-                      label={title}
-                      sublabel={subtitle}
-                      key={`${item.pathKey}`}
-                    >
-                      {item.items.map(({field}) => (
-                        <FieldToken
-                          key={`${field.kind}::${field.name}`}
-                          field={field}
-                          hoverActions={
-                            <>
-                              <Button
-                                variant="flat"
-                                size="compact"
-                                icon="insert"
-                                onClick={() => {}}
-                              />
-                              <Button
-                                variant="flat"
-                                size="compact"
-                                icon="nest"
-                                onClick={() => {}}
-                              />
-                            </>
-                          }
-                        />
-                      ))}
-                    </CollapsibleListItem>
-                  );
-                })}
-              </List>
-            </div>
+            <FieldGroupList
+              title={FIELD_KIND_TO_TITLE[subpanelType]}
+              items={fieldGroupList}
+            />
           )}
         </div>
       </ScrollableArea>
@@ -217,14 +175,5 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     padding: '8px',
-  },
-  fieldListContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
-  contentHeading: {
-    padding: '8px',
-    fontWeight: 700,
   },
 });

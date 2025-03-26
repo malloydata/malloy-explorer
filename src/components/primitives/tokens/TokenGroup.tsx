@@ -1,6 +1,7 @@
 import * as React from 'react';
-import Token, {DEFAULT_TOKEN_COLOR, TokenColor, TokenProps} from './Token';
+import Token, {TokenProps} from './Token';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
 
 interface TokenGroupProps {
   /**

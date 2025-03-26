@@ -7,15 +7,11 @@
 
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
-import Icon from './Icon';
-import {iconVars, labelVars} from './token.stylex';
-import {iconColors, textColors} from './colors.stylex';
-import {fontStyles} from './styles';
-import {IconType} from './utils/icon';
-
-export const DEFAULT_TOKEN_COLOR = 'default';
-
-export type TokenColor = keyof typeof colorVariants;
+import Icon from '../Icon';
+import {fontStyles} from '../styles';
+import {IconType} from '../utils/icon';
+import {tokenColorVariants, tokenStyles} from './styles';
+import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
 
 export interface TokenProps {
   /**
@@ -62,8 +58,8 @@ export default function Token({
   style,
 }: TokenProps) {
   return (
-    <div {...stylex.props(styles.main, colorVariants[color], style)}>
-      {icon && <Icon name={icon} style={styles.icon} />}
+    <div {...stylex.props(tokenStyles.main, tokenColorVariants[color], style)}>
+      {icon && <Icon name={icon} style={tokenStyles.icon} />}
       {onClick && (
         <button
           {...stylex.props(styles.button)}
@@ -75,38 +71,13 @@ export default function Token({
         />
       )}
       {label && (
-        <div {...stylex.props(fontStyles.body, styles.label)}>{label}</div>
+        <div {...stylex.props(fontStyles.body, tokenStyles.label)}>{label}</div>
       )}
     </div>
   );
 }
 
 const styles = stylex.create({
-  main: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '20px',
-    padding: '4px 8px',
-    gap: '8px',
-    borderRadius: '4px',
-    borderWidth: 0,
-    cursor: 'pointer',
-    position: 'relative',
-    overflow: 'hidden',
-    background: {
-      default: 'rgba(230, 235, 239, 1)',
-      ':hover': 'rgba(221, 226, 232, 1)',
-    },
-  },
-  icon: {
-    color: iconVars.color,
-  },
-  label: {
-    color: labelVars.color,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
   button: {
     width: '100%',
     height: '100%',
@@ -116,24 +87,5 @@ const styles = stylex.create({
     background: 'transparent',
     borderStyle: 'none',
     cursor: 'pointer',
-  },
-});
-
-const colorVariants = stylex.create({
-  default: {
-    [iconVars.color]: iconColors.primary,
-    [labelVars.color]: textColors.primary,
-  },
-  purple: {
-    [iconVars.color]: iconColors.purple,
-    [labelVars.color]: textColors.purple,
-  },
-  green: {
-    [iconVars.color]: iconColors.green,
-    [labelVars.color]: textColors.green,
-  },
-  cyan: {
-    [iconVars.color]: iconColors.cyan,
-    [labelVars.color]: textColors.cyan,
   },
 });
