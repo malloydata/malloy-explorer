@@ -16,15 +16,27 @@ import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
 import CollapsiblePanel from '../primitives/CollapsiblePanel';
+import Icon from '../primitives/Icon';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
   query: ASTQuery;
+  setQuery?: (query: Malloy.Query) => void;
 }
 
-export function Query({rootQuery, query}: QueryProps) {
+export function Query({rootQuery, query, setQuery}: QueryProps) {
+  const menuItems = [
+    {
+      icon: <Icon name="clear" />,
+      label: 'Clear query',
+      onClick: () => {
+        setQuery(undefined);
+      },
+    },
+  ];
+
   return (
-    <CollapsiblePanel title="Main query">
+    <CollapsiblePanel title="Main query" menuItems={menuItems}>
       {query.definition instanceof ASTArrowQueryDefinition ? (
         <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
           {!query.isEmpty() && (
