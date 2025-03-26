@@ -58,15 +58,11 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
 
           return (
             <div key={key} {...stylex.props(viewStyles.indent)}>
-              <CollapsiblePanel title={'Nested query'} icon="nest">
-                <TokenGroup style={localStyles.header}>
-                  <Token
-                    icon="nest"
-                    label={nest.name}
-                    style={localStyles.left}
-                  />
-                  <Menu trigger={<Token icon="meatballs" />} items={actions} />
-                </TokenGroup>
+              <CollapsiblePanel
+                title={'Nested query'}
+                icon="nest"
+                menuItems={actions}
+              >
                 <View rootQuery={rootQuery} view={nest.view} />
               </CollapsiblePanel>
             </div>
@@ -76,14 +72,3 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
     </div>
   );
 }
-
-const localStyles = stylex.create({
-  header: {
-    width: '100%',
-    paddingBottom: 8,
-  },
-  left: {
-    flexGrow: 1,
-    justifyContent: 'start',
-  },
-});
