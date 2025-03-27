@@ -53,6 +53,7 @@
     "@shikijs/engine-javascript": "^3.2.1",
     "@shikijs/langs": "^3.2.1",
     "@shikijs/themes": "^3.2.1",
+    "@shikijs/types": "^3.2.1",
     "@stylexjs/stylex": "^0.10.1",
     "assert": "^2.1.0",
     "moment": "^2.30.1",

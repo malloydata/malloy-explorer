@@ -9,6 +9,8 @@ import {
 import lightPlus from '@shikijs/themes/light-plus';
 import darkPlus from '@shikijs/themes/dark-plus';
 import sql from '@shikijs/langs/sql';
+import json from '@shikijs/langs/json';
+
 /**
  * JS engine is smaller and recommended for browser.
  * Textmate grammar regexp are written for the Oniguruma engine written in C
@@ -18,7 +20,7 @@ import sql from '@shikijs/langs/sql';
  */
 import {createJavaScriptRegexEngine} from '@shikijs/engine-javascript';
 
-export type SupportedLang = 'sql' | 'malloy';
+export type SupportedLang = 'json' | 'sql' | 'malloy';
 export type SupportedTheme = 'light-plus' | 'dark-plus';
 
 type HighlighterOptions = {} & TransformerOptions;
@@ -33,6 +35,7 @@ function getHighlighter() {
     themes: [lightPlus, darkPlus],
     langs: [
       sql,
+      json,
       {
         name: 'malloy',
         embeddedLangs: ['sql'],
