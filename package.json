@@ -12,6 +12,9 @@
     "lint": "tsc --noEmit && eslint .",
     "malloy-update-next": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.ts next)",
     "malloy-update": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.ts latest)",
+    "malloy-link": "npm --no-fund --no-audit link $(./scripts/malloy-packages.ts)",
+    "malloy-unlink": "npm --no-fund --no-save --no-audit unlink $(./scripts/malloy-packages.ts) && npm --no-fund --no-audit install --force",
+    "malloy-build-and-link": "cd ../malloy && npm run -ws build --workspace=@malloydata/malloy-query-builder --workspace=@malloydata/malloy-filter --workspace=@malloydata/malloy-interfaces --workspace=@malloydata/malloy-tag &&  && npm link -ws",
     "test": "jest src"
   },
   "bin": {
