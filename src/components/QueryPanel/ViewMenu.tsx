@@ -157,7 +157,10 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
               } else if (field.type.kind === 'number_type') {
                 segment.addWhere(field.name, '0');
                 setQuery?.(rootQuery.build());
-              } else if (field.type.kind === 'date_type') {
+              } else if (
+                field.type.kind === 'date_type' ||
+                field.type.kind === 'timestamp_type'
+              ) {
                 // TODO: Choose today's date?
                 segment.addWhere(field.name, '2025-01-01');
                 setQuery?.(rootQuery.build());

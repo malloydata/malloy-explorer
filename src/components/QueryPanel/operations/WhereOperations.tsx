@@ -23,6 +23,7 @@ import {ClearButton} from './ClearButton';
 import {StringFilterToken} from '../../filters/StringFilterToken';
 import {BooleanFilterToken} from '../../filters/BooleanFilterToken';
 import {NumberFilterToken} from '../../filters/NumberFilterToken';
+import {DateTimeFilterToken} from '../../filters/DateTimeFilterToken';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
@@ -89,6 +90,32 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
                 filter={filter.parsed}
                 setFilter={filter => {
                   where.filter.setFilter({kind: 'number', parsed: filter});
+                  setQuery?.(rootQuery.build());
+                }}
+              />
+            );
+          }
+          if (filter.kind === 'date' && filter.parsed) {
+            return (
+              <DateTimeFilterToken
+                key={key}
+                fieldInfo={fieldInfo}
+                filter={filter.parsed}
+                setFilter={filter => {
+                  where.filter.setFilter({kind: 'date', parsed: filter});
+                  setQuery?.(rootQuery.build());
+                }}
+              />
+            );
+          }
+          if (filter.kind === 'timestamp' && filter.parsed) {
+            return (
+              <DateTimeFilterToken
+                key={key}
+                fieldInfo={fieldInfo}
+                filter={filter.parsed}
+                setFilter={filter => {
+                  where.filter.setFilter({kind: 'timestamp', parsed: filter});
                   setQuery?.(rootQuery.build());
                 }}
               />
