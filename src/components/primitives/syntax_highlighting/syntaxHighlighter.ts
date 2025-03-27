@@ -1,12 +1,25 @@
 import {MALLOY_GRAMMAR} from './malloyGrammar';
-import {createHighlighter, HighlighterCore, LanguageRegistration} from 'shiki';
 import getTransformers, {TransformerOptions} from './transformers/transformers';
 
-const STANDARD_LANGS = ['json', 'sql', 'md'] as const;
-const SUPPORTED_THEMES = ['light-plus', 'dark-plus'] as const;
+import {
+  createHighlighterCore,
+  HighlighterCore,
+  LanguageRegistration,
+} from '@shikijs/core';
+import lightPlus from '@shikijs/themes/light-plus';
+import darkPlus from '@shikijs/themes/dark-plus';
+import sql from '@shikijs/langs/sql';
+/**
+ * JS engine is smaller and recommended for browser.
+ * Textmate grammar regexp are written for the Oniguruma engine written in C
+ * Oniguruma regexp is transpiled to js's RegExp here, but may not have full compatibility
+ * if encounter issues, switch to the Oniguruma engine and import the wasm binary
+ * from shiki
+ */
+import {createJavaScriptRegexEngine} from '@shikijs/engine-javascript';
 
-export type SupportedLang = (typeof STANDARD_LANGS)[number] | 'malloy';
-export type SupportedTheme = (typeof SUPPORTED_THEMES)[number];
+export type SupportedLang = 'sql' | 'malloy';
+export type SupportedTheme = 'light-plus' | 'dark-plus';
 
 type HighlighterOptions = {} & TransformerOptions;
 
@@ -16,16 +29,17 @@ function getHighlighter() {
     return highlighter;
   }
 
-  highlighter = createHighlighter({
-    themes: [...SUPPORTED_THEMES],
+  highlighter = createHighlighterCore({
+    themes: [lightPlus, darkPlus],
     langs: [
-      ...STANDARD_LANGS,
+      sql,
       {
         name: 'malloy',
         embeddedLangs: ['sql'],
         ...MALLOY_GRAMMAR,
-      } as LanguageRegistration,
+      } as unknown as LanguageRegistration,
     ],
+    engine: createJavaScriptRegexEngine(),
   });
 
   return highlighter;
