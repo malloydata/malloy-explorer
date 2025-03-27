@@ -58,7 +58,7 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
           return (
             <div key={key} {...stylex.props(viewStyles.indent)}>
               <CollapsiblePanel
-                title={'Nested query'}
+                title={nest.name}
                 icon="nest"
                 menuItems={actions}
               >

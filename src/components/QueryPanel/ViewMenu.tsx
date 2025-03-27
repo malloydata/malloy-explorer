@@ -216,6 +216,10 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
       };
     });
 
+  const nestNo = segment.operations.items.reduce((acc, operation) => {
+    return operation.kind === 'nest' ? acc + 1 : acc;
+  }, 1);
+
   const nestMenu: MenuItem[] = schema.fields
     .filter(field => field.kind === 'view')
     .map(field => {
@@ -226,7 +230,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
           if (view === rootQuery && rootQuery.isEmpty()) {
             rootQuery.setView(field.name);
           } else {
-            segment.addNest(field.name, 'Nest');
+            segment.addNest(field.name, `Nest ${nestNo}`);
           }
           setQuery?.(rootQuery.build());
         },
@@ -288,7 +292,7 @@ export function ViewMenu({rootQuery, view}: ViewMenuProps) {
             icon: <NestIcon {...stylex.props(styles.icon)} />,
             label: 'Add blank nested query',
             onClick: () => {
-              segment.addEmptyNest('nest');
+              segment.addEmptyNest(`Nest ${nestNo}`);
               setQuery?.(rootQuery.build());
             },
           },
