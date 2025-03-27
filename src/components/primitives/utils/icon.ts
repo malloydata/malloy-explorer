@@ -12,12 +12,15 @@ import Checkmark from '../../../assets/ui/checkmark.svg?react';
 import Clear from '../../../assets/refinements/clear.svg?react';
 import Copy from '../../../assets/ui/copy.svg?react';
 import Insert from '../../../assets/refinements/insert.svg?react';
-import InsertNest from '../../../assets/refinements/insert_nest.svg?react';
+import AggregateIcon from '../../../assets/refinements/insert_measure.svg?react';
 import Filter from '../../../assets/refinements/insert_filter.svg?react';
+import GroupByIcon from '../../../assets/refinements/insert_group_by.svg?react';
+import LimitIcon from '../../../assets/refinements/insert_limit.svg?react';
+import InsertNest from '../../../assets/refinements/insert_nest.svg?react';
+import OrderByIcon from '../../../assets/refinements/insert_order_by.svg?react';
 import ManyToOneIcon from '../../../assets/types/type-icon-many-to-one.svg?react';
 import OneToManyIcon from '../../../assets/types/type-icon-one-to-many.svg?react';
 import OneToOneIcon from '../../../assets/types/type-icon-one-to-one.svg?react';
-import OrderBy from '../../../assets/refinements/insert_order_by.svg';
 import TypeIconDatabase from '../../../assets/types/type-icon-database.svg?react';
 import TypeIconNumberMeasure from '../../../assets/types/type-icon-number-measure.svg?react';
 import TypeIconProjection from '../../../assets/types/type-icon-projection.svg?react';
@@ -74,12 +77,15 @@ export const ICON_MAP = {
   warning: Warning,
 
   // Operations
+  aggregate: AggregateIcon,
   dimension: TypeIconString,
   filter: Filter,
+  groupBy: GroupByIcon,
   insert: Insert,
+  limit: LimitIcon,
+  orderBy: OrderByIcon,
   measure: TypeIconNumberMeasure,
   nest: InsertNest,
-  order_by: OrderBy,
 
   // Types
   array: TypeIconArray,

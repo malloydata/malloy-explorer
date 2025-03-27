@@ -9,22 +9,22 @@ import {tokenColorVariants, tokenStyles} from './styles';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
 import TextInput from '../TextInput';
 
-export interface SelectorTokenItem {
+export interface SelectorTokenItem<T extends string> {
   label: string;
-  value: string;
+  value: T;
 }
 
-export interface SelectorTokenProps {
-  value: string;
-  onChange: (value: string) => void;
+export interface SelectorTokenProps<T extends string> {
+  value: T | undefined;
+  onChange: (value: T) => void;
   icon?: IconType;
   color?: TokenColor;
-  items: SelectorTokenItem[];
+  items: SelectorTokenItem<T>[];
   isSearchable?: boolean;
   style?: StyleXStyles;
 }
 
-export default function SelectorToken({
+export default function SelectorToken<T extends string>({
   value,
   onChange,
   icon,
@@ -32,7 +32,7 @@ export default function SelectorToken({
   items,
   isSearchable = false,
   style,
-}: SelectorTokenProps) {
+}: SelectorTokenProps<T>) {
   const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const filteredItems = React.useMemo(() => {
@@ -44,7 +44,7 @@ export default function SelectorToken({
     return items;
   }, [items, searchQuery]);
 
-  const handleValueChange = (value: string) => {
+  const handleValueChange = (value: T) => {
     onChange(value);
   };
 
@@ -110,17 +110,17 @@ export default function SelectorToken({
   );
 }
 
-interface SelectItemProps extends React.ComponentProps<typeof Select.Item> {
+interface SelectItemProps<T> extends React.ComponentProps<typeof Select.Item> {
   value: string;
-  selectedValue: string;
+  selectedValue: T | undefined;
 }
 
-function SelectItem({
+function SelectItem<T>({
   children,
   value,
   selectedValue,
   ...props
-}: SelectItemProps) {
+}: SelectItemProps<T>) {
   return (
     <Select.Item
       {...stylex.props(fontStyles.body, styles.selectItem)}

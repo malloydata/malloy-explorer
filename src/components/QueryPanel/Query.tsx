@@ -14,11 +14,11 @@ import {
 import stylex from '@stylexjs/stylex';
 
 import {styles} from '../styles';
-import {ViewMenu} from './ViewMenu';
 import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
 import CollapsiblePanel from '../primitives/CollapsiblePanel';
 import Icon from '../primitives/Icon';
+import {AddMenu} from './AddMenu/AddMenu';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -53,11 +53,11 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
       ) : null}
       {query.isEmpty() ? (
         <div {...stylex.props(queryStyles.emptyQuery)}>
-          <ViewMenu rootQuery={rootQuery} view={query} />
+          <AddMenu rootQuery={rootQuery} view={query} />
         </div>
       ) : (
         <div {...stylex.props(styles.queryFooter)}>
-          <ViewMenu rootQuery={rootQuery} view={query} />
+          <AddMenu rootQuery={rootQuery} view={query} />
         </div>
       )}
     </CollapsiblePanel>
