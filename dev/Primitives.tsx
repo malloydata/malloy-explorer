@@ -14,6 +14,7 @@ import EditableTokens from './components/EditableTokens';
 import TextInputs from './components/TextInputs';
 import DatePickers from './components/DatePickers';
 import SelectorTokens from './components/SelectorTokens';
+import PillInputs from './components/PillInput';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         <TokenGroups />
         <TextInputs />
         <DatePickers />
+        <PillInputs />
       </div>
     </MalloyExplorerProvider>
   );

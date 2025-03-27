@@ -107,6 +107,7 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
 
   const typeDropdown = (
     <SelectorToken
+      key="field"
       value={type}
       onChange={changeType}
       items={[
@@ -131,15 +132,19 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
   const icon = atomicTypeToIcon(fieldInfo.type.kind);
   const color = fieldKindToColor(fieldInfo.kind);
 
-  let editor = <span></span>;
+  const tokens = [
+    <Token key="type" icon={icon} label={fieldInfo.name} />,
+    typeDropdown,
+  ];
 
   switch (currentFilter.operator) {
     case '=':
     case 'starts':
     case 'ends':
     case 'contains':
-      editor = (
+      tokens.push(
         <StringEditor
+          key="editor"
           color={color}
           values={currentFilter.values}
           setValues={values => updateFilter({...currentFilter, values})}
@@ -147,8 +152,9 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
       );
       break;
     case '~':
-      editor = (
+      tokens.push(
         <StringEditor
+          key="editor"
           color={color}
           values={currentFilter.escaped_values}
           setValues={escaped_values =>
@@ -159,13 +165,7 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
       );
   }
 
-  return (
-    <TokenGroup color={color}>
-      <Token icon={icon} label={fieldInfo.name} />
-      {typeDropdown}
-      {editor}
-    </TokenGroup>
-  );
+  return <TokenGroup color={color}>{tokens}</TokenGroup>;
 };
 
 interface StringEditorProps {
