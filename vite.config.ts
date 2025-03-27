@@ -28,7 +28,17 @@ export default defineConfig({
       name: 'index',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        '@malloydata/malloy',
+        '@malloydata/render',
+        '@malloydata/malloy-tag',
+        '@malloydata/malloy-filter',
+        '@malloydata/malloy-interfaces',
+        '@malloydata/render/webcomponent',
+      ],
       output: {
         manualChunks: _id => {
           return 'index';

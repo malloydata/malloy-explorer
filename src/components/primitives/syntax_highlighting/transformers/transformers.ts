@@ -1,4 +1,4 @@
-import {ShikiTransformer} from 'shiki';
+import {ShikiTransformer} from '@shikijs/types';
 import lineSpacingTransformer, {LineSpacing} from './lineSpacingTransformer';
 import lineNumberTransformer from './lineNumberTransformer';
 

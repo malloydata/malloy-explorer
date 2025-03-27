@@ -4,7 +4,6 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "resolvePackageJsonExports": false, // for @malloydata/render
     "noEmit": false,
     "outDir": "dist/types",
     "resolveJsonModule": true,
