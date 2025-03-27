@@ -55,6 +55,8 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
 
           let rhsToken: React.ReactElement | null = null;
 
+          let rhsToken: React.ReactElement = null;
+
           if (filter.kind === 'string') {
             rhsToken = (
               <StringFilterToken
