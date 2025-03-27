@@ -55,7 +55,7 @@ function typeFromFilter(filter: TemporalFilter): DateTimeFilterType {
 function createTemporalLiteral(date: Date): TemporalLiteral {
   return {
     moment: 'literal',
-    literal: moment(date).format('YYYY-MM-DD HH:mm'),
+    literal: moment(date).format('YYYY-MM-DD HH:mm:ss.0'),
   };
 }
 
