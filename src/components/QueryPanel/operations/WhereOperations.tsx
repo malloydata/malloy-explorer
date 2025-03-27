@@ -55,8 +55,10 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
 
           console.info('xxx', {filter});
 
+          let rhsToken: React.ReactElement | null = null;
+
           if (filter.kind === 'string') {
-            return (
+            rhsToken = (
               <StringFilterToken
                 key={key}
                 fieldInfo={fieldInfo}
@@ -70,7 +72,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
           }
 
           if (filter.kind === 'boolean' && filter.parsed) {
-            return (
+            rhsToken = (
               <BooleanFilterToken
                 key={key}
                 fieldInfo={fieldInfo}
@@ -83,7 +85,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
             );
           }
           if (filter.kind === 'number' && filter.parsed) {
-            return (
+            rhsToken = (
               <NumberFilterToken
                 key={key}
                 fieldInfo={fieldInfo}
@@ -96,7 +98,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
             );
           }
           if (filter.kind === 'date' && filter.parsed) {
-            return (
+            rhsToken = (
               <DateTimeFilterToken
                 key={key}
                 fieldInfo={fieldInfo}
@@ -109,7 +111,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
             );
           }
           if (filter.kind === 'timestamp' && filter.parsed) {
-            return (
+            rhsToken = (
               <DateTimeFilterToken
                 key={key}
                 fieldInfo={fieldInfo}
@@ -124,13 +126,19 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
 
           const {op, value} = parsedToLabels(filter, filterString);
 
-          return (
-            <div key={key} {...stylex.props(hoverStyles.main)}>
+          if (!rhsToken) {
+            rhsToken = (
               <TokenGroup color={color}>
                 <Token icon={icon} label={fieldInfo.name} />
                 <Token label={op} />
                 <Token label={value} />
               </TokenGroup>
+            );
+          }
+
+          return (
+            <div key={key} {...stylex.props(hoverStyles.main)}>
+              {rhsToken}
               <div {...stylex.props(hoverStyles.hoverActions)}>
                 <ClearButton
                   onClick={() => {

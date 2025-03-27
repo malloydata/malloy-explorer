@@ -14,6 +14,12 @@ export interface ClearButtonProps {
 
 export function ClearButton({onClick}: ClearButtonProps) {
   return (
-    <Button icon="clear" variant="flat" size="compact" onClick={onClick} />
+    <Button
+      icon="clear"
+      variant="flat"
+      size="compact"
+      tooltip="Remove"
+      onClick={onClick}
+    />
   );
 }
