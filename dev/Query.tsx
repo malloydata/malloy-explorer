@@ -21,7 +21,6 @@ import {
   modelInfo,
   queries as exampleQueries,
 } from './sample_models/example_model';
-import PillInputs from './components/PillInput';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const queries = [undefined, ...exampleQueries];
@@ -69,7 +68,6 @@ const App = () => {
           <div>No query</div>
         )}
       </div>
-      <PillInputs />
     </MalloyExplorerProvider>
   );
 };
