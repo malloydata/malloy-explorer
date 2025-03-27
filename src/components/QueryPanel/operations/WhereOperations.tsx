@@ -22,6 +22,7 @@ import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
 import {ClearButton} from './ClearButton';
 import {StringFilterToken} from '../../filters/StringFilterToken';
 import {BooleanFilterToken} from '../../filters/BooleanFilterToken';
+import {NumberFilterToken} from '../../filters/NumberFilterToken';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
@@ -75,6 +76,19 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
                 filter={filter.parsed}
                 setFilter={filter => {
                   where.filter.setFilter({kind: 'boolean', parsed: filter});
+                  setQuery?.(rootQuery.build());
+                }}
+              />
+            );
+          }
+          if (filter.kind === 'number' && filter.parsed) {
+            return (
+              <NumberFilterToken
+                key={key}
+                fieldInfo={fieldInfo}
+                filter={filter.parsed}
+                setFilter={filter => {
+                  where.filter.setFilter({kind: 'number', parsed: filter});
                   setQuery?.(rootQuery.build());
                 }}
               />
