@@ -55,7 +55,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
 
           console.info('xxx', {filter});
 
-          let rhsToken: React.ReactElement = null;
+          let rhsToken: React.ReactElement | null = null;
 
           if (filter.kind === 'string') {
             rhsToken = (
