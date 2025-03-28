@@ -12,11 +12,7 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import Icon from '../../primitives/Icon';
-import {addMenuStyles} from './styles';
-import stylex from '@stylexjs/stylex';
-import * as Popover from '@radix-ui/react-popover';
-import {FieldMenu} from './FieldMenu';
+import {AddFieldItem} from './AddFieldItem';
 
 export interface AddAggregateProps {
   rootQuery: ASTQuery;
@@ -31,33 +27,16 @@ export function AddAggregate({rootQuery, segment}: AddAggregateProps) {
     field => !segment.hasField(field.name /* TODO , path */)
   );
 
-  const disabled = fields.length === 0;
   return (
-    <Popover.Root>
-      <Popover.Trigger asChild disabled={disabled}>
-        <div
-          role="menuitem"
-          tabIndex={-1}
-          {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled ? 'true' : undefined}
-        >
-          <div {...stylex.props(addMenuStyles.label)}>
-            <Icon name="aggregate" />
-            <div>Add aggregate</div>
-          </div>
-          <Icon name="chevronRight" color="gray" />
-        </div>
-      </Popover.Trigger>
-      <Popover.Content side="right" align="start" alignOffset={-16}>
-        <FieldMenu
-          types={['measure']}
-          fields={fields}
-          onClick={(field, path) => {
-            segment.addAggregate(field.name, path);
-            setQuery?.(rootQuery.build());
-          }}
-        />
-      </Popover.Content>
-    </Popover.Root>
+    <AddFieldItem
+      label="Add aggregate"
+      icon="aggregate"
+      fields={fields}
+      types={['measure']}
+      onClick={(field, path) => {
+        segment.addAggregate(field.name, path);
+        setQuery?.(rootQuery.build());
+      }}
+    />
   );
 }

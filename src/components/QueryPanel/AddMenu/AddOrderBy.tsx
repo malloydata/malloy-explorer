@@ -13,12 +13,8 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import Icon from '../../primitives/Icon';
-import {addMenuStyles} from './styles';
-import stylex from '@stylexjs/stylex';
-import * as Popover from '@radix-ui/react-popover';
-import {FieldMenu} from './FieldMenu';
 import {segmentHasOrderBy} from '../../utils/segment';
+import {AddFieldItem} from './AddFieldItem';
 
 export interface AddEmptyNestProps {
   rootQuery: ASTQuery;
@@ -34,34 +30,17 @@ export function AddOrderBy({rootQuery, segment}: AddEmptyNestProps) {
     .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
     .filter(field => !segmentHasOrderBy(segment, field.name));
 
-  const disabled = fields.length === 0;
   return (
-    <Popover.Root>
-      <Popover.Trigger asChild disabled={disabled}>
-        <div
-          role="menuitem"
-          tabIndex={-1}
-          {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled ? 'true' : undefined}
-        >
-          <div {...stylex.props(addMenuStyles.label)}>
-            <Icon name="orderBy" />
-            <div>Add order by</div>
-          </div>
-          <Icon name="chevronRight" color="gray" />
-        </div>
-      </Popover.Trigger>
-      <Popover.Content side="right" align="start" alignOffset={-16}>
-        <FieldMenu
-          types={['dimension']}
-          fields={fields}
-          onClick={field => {
-            segment.addOrderBy(field.name, 'asc');
-            setQuery?.(rootQuery.build());
-          }}
-        />
-      </Popover.Content>
-    </Popover.Root>
+    <AddFieldItem
+      label="Add order by"
+      icon="orderBy"
+      fields={fields}
+      types={['dimension']}
+      onClick={field => {
+        segment.addOrderBy(field.name, 'asc');
+        setQuery?.(rootQuery.build());
+      }}
+    />
   );
 }
 
