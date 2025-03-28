@@ -40,6 +40,7 @@ export default function TokenGroup({
 }
 
 const getChildStyle = (index: number, count: number) => {
+  if (count === 1) return styles.onlyChild;
   if (index === 0) return styles.firstChild;
   if (index === count - 1) return styles.lastChild;
   return styles.innerChild;
@@ -67,5 +68,8 @@ const styles = stylex.create({
   },
   lastChild: {
     borderRadius: '0 4px 4px 0',
+  },
+  onlyChild: {
+    borderRadius: '4px',
   },
 });

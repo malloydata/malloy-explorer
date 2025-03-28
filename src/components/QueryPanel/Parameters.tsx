@@ -16,7 +16,6 @@ import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {Token, TokenGroup} from '../primitives';
 import {atomicTypeToIcon} from '../utils/icon';
 import CollapsiblePanel from '../primitives/CollapsiblePanel';
-import stylex from '@stylexjs/stylex';
 
 /**
  * Source
@@ -41,7 +40,7 @@ export function Parameters({rootQuery}: ParametersProps) {
 
     return (
       <CollapsiblePanel title="Source parameters">
-        <div {...stylex.props(styles.parameters)}>
+        <div>
           {sourceParameters.map((parameter, key) => (
             <TokenGroup key={key}>
               <Token
@@ -66,9 +65,3 @@ export function Parameters({rootQuery}: ParametersProps) {
   }
   return null;
 }
-
-const styles = stylex.create({
-  parameters: {
-    marginLeft: '16px',
-  },
-});
