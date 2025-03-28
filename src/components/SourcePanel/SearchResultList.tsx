@@ -7,16 +7,21 @@ import {
   groupFieldItemsByPath,
 } from './utils';
 import {fontStyles} from '../primitives/styles';
-import FieldToken from './FieldToken';
-import {Button} from '../primitives';
+
+import {FieldTokenWithActions} from './FieldTokenWithActions';
+import {SourceInfo} from '@malloydata/malloy-interfaces';
 
 interface SearchResultListProps {
+  source: SourceInfo;
   items: FieldItem[];
 }
 
 const FIELD_KIND_ORDER = ['view', 'measure', 'dimension'] as const;
 
-export default function SearchResultList({items}: SearchResultListProps) {
+export default function SearchResultList({
+  source,
+  items,
+}: SearchResultListProps) {
   const fieldGroupsByKindByPath = React.useMemo(() => {
     return groupFieldItemsByKind(items)
       .sort(
@@ -25,7 +30,7 @@ export default function SearchResultList({items}: SearchResultListProps) {
       )
       .map(group => ({
         ...group,
-        items: groupFieldItemsByPath(group.items),
+        items: groupFieldItemsByPath(source, group.items),
       }));
   }, [items]);
 
@@ -40,36 +45,25 @@ export default function SearchResultList({items}: SearchResultListProps) {
             {FIELD_KIND_TO_TITLE[group]}
           </div>
           <div {...stylex.props(styles.groupContent)}>
-            {groupItems.map(({pathKey: subgroup, items: subgroupItems}) => (
-              <div
-                {...stylex.props(styles.subgroupContent)}
-                key={`${group}-${subgroup}`}
-              >
-                <div {...stylex.props(fontStyles.supporting)}>{subgroup}</div>
-                {subgroupItems.map(({field}) => (
-                  <FieldToken
-                    key={`${field.kind}::${field.name}`}
-                    field={field}
-                    hoverActions={
-                      <>
-                        <Button
-                          variant="flat"
-                          size="compact"
-                          icon="insert"
-                          onClick={() => {}}
-                        />
-                        <Button
-                          variant="flat"
-                          size="compact"
-                          icon="nest"
-                          onClick={() => {}}
-                        />
-                      </>
-                    }
-                  />
-                ))}
-              </div>
-            ))}
+            {groupItems.map(
+              ({groupPath: subgroupPath, items: subgroupItems}) => (
+                <div
+                  {...stylex.props(styles.subgroupContent)}
+                  key={subgroupPath.join('.')}
+                >
+                  <div {...stylex.props(fontStyles.supporting)}>
+                    {subgroupPath.join(' > ')}
+                  </div>
+                  {subgroupItems.map(({field, path}) => (
+                    <FieldTokenWithActions
+                      key={`${field.kind}::${field.name}`}
+                      field={field}
+                      path={path}
+                    />
+                  ))}
+                </div>
+              )
+            )}
           </div>
         </div>
       ))}

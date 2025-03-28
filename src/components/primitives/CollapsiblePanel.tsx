@@ -42,7 +42,12 @@ export default function CollapsiblePanel({
         <div {...stylex.props(styles.title)}>{title}</div>
         <div {...stylex.props(styles.topBarRightSection)}>
           {menuItems && (
-            <Menu trigger={<Icon name="meatballs" />} items={menuItems} />
+            <Menu
+              trigger={
+                <Button variant="flat" icon="meatballs" size="compact" />
+              }
+              items={menuItems}
+            />
           )}
           <Button
             variant="flat"

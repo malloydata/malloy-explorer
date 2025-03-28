@@ -39,7 +39,7 @@ const App = () => {
   }, [queryIdx]);
 
   return (
-    <MalloyExplorerProvider>
+    <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
       <div style={{gap: 8, display: 'flex'}}>
         <div style={{padding: 8, width: 500}}>
           Query: {queryIdx}{' '}

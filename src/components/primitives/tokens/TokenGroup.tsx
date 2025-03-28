@@ -31,7 +31,10 @@ export default function TokenGroup({
     <div {...stylex.props(styles.main, style)}>
       {React.Children.map(children, (child, index) =>
         React.cloneElement(child, {
-          style: {...child.props.style, ...getChildStyle(index, count)},
+          customStyle: {
+            ...child.props.customStyle,
+            ...getChildStyle(index, count),
+          },
           color: getTokenColor(child, color),
         })
       )}

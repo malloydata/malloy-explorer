@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {SourceInfo} from '@malloydata/malloy-interfaces';
+import * as Malloy from '@malloydata/malloy-interfaces';
 
 import {
   Badge,
@@ -31,7 +31,9 @@ import SearchResultList from './SearchResultList';
 import FieldGroupList from './FieldGroupList';
 
 export interface SourcePanelProps {
-  source: SourceInfo;
+  source: Malloy.SourceInfo;
+  query?: Malloy.Query;
+  setQuery: (query: Malloy.Query | undefined) => void;
 }
 
 type SubpanelType = 'view' | 'dimension' | 'measure' | null;
@@ -58,7 +60,7 @@ export function SourcePanel({source}: SourcePanelProps) {
   const fieldGroupsByKindByPath = React.useMemo(() => {
     return groupFieldItemsByKind(fieldItems).map(group => ({
       ...group,
-      items: groupFieldItemsByPath(group.items),
+      items: groupFieldItemsByPath(source, group.items),
     }));
   }, [fieldItems]);
 
@@ -100,10 +102,11 @@ export function SourcePanel({source}: SourcePanelProps) {
         />
       </div>
       <Divider />
+
       <ScrollableArea>
         <div {...stylex.props(styles.content)}>
           {isSearchActive ? (
-            <SearchResultList items={searchResultItems} />
+            <SearchResultList source={source} items={searchResultItems} />
           ) : subpanelType == null ? (
             <List>
               <ListItem
@@ -137,6 +140,7 @@ export function SourcePanel({source}: SourcePanelProps) {
             </List>
           ) : (
             <FieldGroupList
+              source={source}
               title={FIELD_KIND_TO_TITLE[subpanelType]}
               items={fieldGroupList}
             />

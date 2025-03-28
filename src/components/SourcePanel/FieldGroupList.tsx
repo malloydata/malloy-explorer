@@ -7,27 +7,30 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {Button, CollapsibleListItem, List} from '../primitives';
-import FieldToken from './FieldToken';
+import {CollapsibleListItem, List} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {FieldGroupByPath} from './utils';
+import {FieldTokenWithActions} from './FieldTokenWithActions';
+import {SourceInfo} from '@malloydata/malloy-interfaces';
 
-const getLabelFromPath = (path: string[]) => {
-  return path.at(-1) ?? '';
+const getLabelFromPath = (source: SourceInfo, path: string[]) => {
+  return path.at(-1) ?? source.name;
 };
 
-const getSublabelFromPath = (path: string[]) => {
-  return path.length > 1
-    ? `joined to ${path.slice(0, -1).join(' > ')}`
+const getSublabelFromPath = (source: SourceInfo, path: string[]) => {
+  return path.length > 0
+    ? `joined to ${[...path.slice(0, -1), source.name].join(' > ')}`
     : undefined;
 };
 
 interface FieldGroupListProps {
+  source: SourceInfo;
   title: string;
   items: FieldGroupByPath[];
 }
 
 export default function FieldGroupList({
+  source,
   title,
   items,
 }: FieldGroupListProps): React.ReactNode {
@@ -37,30 +40,15 @@ export default function FieldGroupList({
       <List>
         {items.map(item => (
           <CollapsibleListItem
-            key={item.path.join('.')}
-            label={getLabelFromPath(item.path)}
-            sublabel={getSublabelFromPath(item.path)}
+            key={item.groupPath.join('.')}
+            label={getLabelFromPath(source, item.groupPath)}
+            sublabel={getSublabelFromPath(source, item.groupPath)}
           >
             {item.items.map(({field, path}) => (
-              <FieldToken
+              <FieldTokenWithActions
                 key={path.join('.')}
                 field={field}
-                hoverActions={
-                  <>
-                    <Button
-                      variant="flat"
-                      size="compact"
-                      icon="insert"
-                      onClick={() => {}}
-                    />
-                    <Button
-                      variant="flat"
-                      size="compact"
-                      icon="nest"
-                      onClick={() => {}}
-                    />
-                  </>
-                }
+                path={path}
               />
             ))}
           </CollapsibleListItem>

@@ -43,16 +43,21 @@ export interface MenuItem {
 export interface MenuProps {
   trigger: ReactElement;
   items: MenuItem[];
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function Menu({trigger, items}: MenuProps) {
+export function Menu({trigger, items, onOpenChange}: MenuProps) {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger {...stylex.props(menuStyles.trigger)}>
-        {trigger}
-      </DropdownMenuTrigger>
+    <DropdownMenu onOpenChange={onOpenChange}>
+      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuContent {...stylex.props(menuStyles.content)}>
+        <DropdownMenuContent
+          {...stylex.props(menuStyles.content)}
+          side="bottom"
+          align="start"
+          sideOffset={4}
+          onCloseAutoFocus={e => e.preventDefault()}
+        >
           {items.map((item, key) => {
             if (item.when?.() ?? true) {
               if (item.subMenu) {
@@ -173,27 +178,19 @@ function SubMenu({item}: SubMenuProps) {
 
 const colors = {
   background: 'white',
-  shadowElevation: 'rgba(0, 0, 0, 0.10)',
+  shadowElevation: 'rgba(39, 33, 33, 0.1)',
   hover: 'lightgrey',
   text: '#050505',
   disabledText: '#A4B0BC',
 };
 
 const menuStyles = stylex.create({
-  trigger: {
-    border: 'none',
-    background: 'transparent',
-    padding: 0,
-    margin: 0,
-    cursor: 'pointer',
-  },
   content: {
     background: colors.background,
     borderRadius: 10,
     borderWidth: 1,
     boxShadow: `0px 2px 12px 0px ${colors.shadowElevation}`,
     fontFamily: 'sans-serif',
-    margin: 8,
   },
   item: {
     color: {

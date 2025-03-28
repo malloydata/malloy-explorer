@@ -6,8 +6,7 @@ export type FieldItem = {
 };
 
 export type FieldGroupByPath = {
-  pathKey: string;
-  path: string[];
+  groupPath: string[];
   items: FieldItem[];
 };
 
@@ -18,14 +17,14 @@ export type FieldGroupByKind = {
 
 export function flattenFieldsTree(
   fields: FieldInfo[],
-  path: string[]
+  path: string[] = []
 ): FieldItem[] {
   return fields.flatMap<FieldItem>(field => {
     switch (field.kind) {
       case 'view':
       case 'measure':
       case 'dimension':
-        return [{path: [...path, field.name], field}];
+        return [{path, field}];
       case 'join':
         return flattenFieldsTree(field.schema.fields, [...path, field.name]);
       default:
@@ -35,18 +34,23 @@ export function flattenFieldsTree(
 }
 
 export function sourceToFieldItems(source: SourceInfo): FieldItem[] {
-  return flattenFieldsTree(source.schema.fields, [source.name]);
+  return flattenFieldsTree(source.schema.fields);
 }
 
-export function groupFieldItemsByPath(items: FieldItem[]): FieldGroupByPath[] {
+export function groupFieldItemsByPath(
+  source: SourceInfo,
+  items: FieldItem[]
+): FieldGroupByPath[] {
   return Object.values(
     items.reduce((acc: Record<string, FieldGroupByPath>, current) => {
-      const path = current.path.slice(0, -1);
-      const pathKey = path.join(' > ');
-      if (!acc[pathKey]) {
-        acc[pathKey] = {pathKey, path, items: []};
+      const groupKey = [source.name, ...current.path].join('.');
+      if (!acc[groupKey]) {
+        acc[groupKey] = {
+          groupPath: current.path,
+          items: [],
+        };
       }
-      acc[pathKey].items.push(current);
+      acc[groupKey].items.push(current);
       return acc;
     }, {})
   );

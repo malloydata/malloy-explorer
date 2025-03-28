@@ -13,7 +13,6 @@ import {Query} from './Query';
 import {Source} from './Source';
 import {Parameters} from './Parameters';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface QueryEditorProps {
   source: Malloy.SourceInfo;
@@ -48,12 +47,10 @@ export function QueryEditor({source, query, setQuery}: QueryEditorProps) {
   }
 
   return (
-    <QueryEditorContext.Provider value={{setQuery}}>
-      <div {...stylex.props(queryExplorerStyles.main)}>
-        <Source rootQuery={rootQuery} />
-        <Parameters rootQuery={rootQuery} />
-        <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
-      </div>
-    </QueryEditorContext.Provider>
+    <div {...stylex.props(queryExplorerStyles.main)}>
+      <Source rootQuery={rootQuery} />
+      <Parameters rootQuery={rootQuery} />
+      <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
+    </div>
   );
 }

@@ -8,13 +8,29 @@
 import * as React from 'react';
 import {ReactNode} from 'react';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
+import * as Malloy from '@malloydata/malloy-interfaces';
+import {QueryEditorContext} from '../contexts/QueryEditorContext';
+import {useQueryBuilder} from '../hooks/useQueryBuilder';
 
 export interface MalloyExplorerProviderProps {
+  source: Malloy.SourceInfo;
+  query?: Malloy.Query;
+  setQuery?: (query: Malloy.Query | undefined) => void;
   children: ReactNode | ReactNode[];
 }
 
 export function MalloyExplorerProvider({
+  source,
+  query,
+  setQuery,
   children,
 }: MalloyExplorerProviderProps) {
-  return <TooltipProvider>{children}</TooltipProvider>;
+  const rootQuery = useQueryBuilder(source, query);
+  return (
+    <TooltipProvider>
+      <QueryEditorContext.Provider value={{rootQuery, setQuery}}>
+        {children}
+      </QueryEditorContext.Provider>
+    </TooltipProvider>
+  );
 }
