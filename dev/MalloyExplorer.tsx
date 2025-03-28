@@ -20,16 +20,15 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
-
   return (
-    <MalloyExplorerProvider>
+    <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
       <div {...stylex.props(styles.page)}>
         <div {...stylex.props(fontStyles.body, styles.banner)}>
           WARNING: This page shows all the components beside each other, but
           they do not actually work correctly yet.
         </div>
         <div {...stylex.props(styles.content)}>
-          <SourcePanel source={source} />
+          <SourcePanel source={source} query={query} setQuery={setQuery} />
           <QueryPanel
             source={source}
             query={query}

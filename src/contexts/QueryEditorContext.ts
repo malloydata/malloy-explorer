@@ -7,10 +7,13 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 
 export interface QueryEditorContextProps {
+  /** Query object to represent current state at the root level  */
+  rootQuery?: ASTQuery;
   /** Provide to allow editing of the query */
-  setQuery?: (rootQuery: Malloy.Query) => void;
+  setQuery?: (rootQuery: Malloy.Query | undefined) => void;
 }
 
 /**
