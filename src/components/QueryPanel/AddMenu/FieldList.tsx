@@ -82,7 +82,7 @@ export function FieldList({fields, onClick, search, types}: FieldListProps) {
               <div
                 role="menuitem"
                 tabIndex={-1}
-                key={field.name}
+                key={group.name + ':' + field.name}
                 {...stylex.props(addMenuStyles.item, styles.fieldItem)}
                 onClick={() => onClick(field, group.path)}
               >
