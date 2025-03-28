@@ -12,12 +12,8 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import Icon from '../../primitives/Icon';
-import {addMenuStyles} from './styles';
-import stylex from '@stylexjs/stylex';
-import * as Popover from '@radix-ui/react-popover';
-import {FieldMenu} from './FieldMenu';
 import {segmentNestNo} from '../../utils/segment';
+import {AddFieldItem} from './AddFieldItem';
 
 export interface AddViewProps {
   rootQuery: ASTQuery;
@@ -28,34 +24,18 @@ export function AddView({rootQuery, segment}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const fields = segment.getInputSchema().fields;
 
-  const disabled = fields.length === 0;
-
   const nestNo = segmentNestNo(segment);
 
   return (
-    <Popover.Root>
-      <Popover.Trigger asChild disabled={disabled}>
-        <div
-          {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled ? 'true' : undefined}
-        >
-          <div {...stylex.props(addMenuStyles.label)}>
-            <Icon name="view" />
-            <div>Add view</div>
-          </div>
-          <Icon name="chevronRight" color="gray" />
-        </div>
-      </Popover.Trigger>
-      <Popover.Content side="right" align="start" alignOffset={-16}>
-        <FieldMenu
-          types={['view']}
-          fields={fields}
-          onClick={field => {
-            segment.addNest(field.name, `Nest ${nestNo}`);
-            setQuery?.(rootQuery.build());
-          }}
-        />
-      </Popover.Content>
-    </Popover.Root>
+    <AddFieldItem
+      label="Add view"
+      icon="view"
+      fields={fields}
+      types={['view']}
+      onClick={field => {
+        segment.addNest(field.name, `Nest ${nestNo}`);
+        setQuery?.(rootQuery.build());
+      }}
+    />
   );
 }
