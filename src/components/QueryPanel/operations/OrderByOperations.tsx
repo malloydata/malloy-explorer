@@ -16,7 +16,7 @@ import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
-import {Token, TokenGroup, IconType} from '../../primitives';
+import {Token, TokenGroup, IconType, SelectorToken} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 
@@ -41,7 +41,7 @@ export function OrderByOperations({
       <div {...stylex.props(styles.tokenContainer)}>
         {orderBys.map((orderBy, key) => {
           const fieldInfo = orderBy.fieldReference.getFieldInfo();
-          let icon: IconType = 'order_by';
+          let icon: IconType = 'orderBy';
           if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
             icon = atomicTypeToIcon(fieldInfo.type.kind);
           }
@@ -50,11 +50,17 @@ export function OrderByOperations({
             <div key={key} {...stylex.props(hoverStyles.main)}>
               <TokenGroup>
                 <Token color={color} icon={icon} label={fieldInfo.name} />
-                <Token
+                <SelectorToken
                   color={color}
-                  label={
-                    orderBy.direction === 'asc' ? 'ascending' : 'descending'
-                  }
+                  items={[
+                    {label: 'ascending', value: 'asc'},
+                    {label: 'descending', value: 'desc'},
+                  ]}
+                  value={orderBy.direction}
+                  onChange={direction => {
+                    orderBy.direction = direction;
+                    setQuery?.(rootQuery.build());
+                  }}
                 />
               </TokenGroup>
               <div {...stylex.props(hoverStyles.hoverActions)}>

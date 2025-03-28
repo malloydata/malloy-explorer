@@ -53,8 +53,6 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
           const color = fieldKindToColor(fieldInfo.kind);
           const filter = where.filter.getFilter();
 
-          console.info('xxx', {filter});
-
           let rhsToken: React.ReactElement | null = null;
 
           if (filter.kind === 'string') {
@@ -164,8 +162,6 @@ const parsedToLabels = (
   }
   let op: string = '';
   let value: string = filterString;
-
-  console.info({parsed});
 
   switch (parsed.kind) {
     case 'boolean':

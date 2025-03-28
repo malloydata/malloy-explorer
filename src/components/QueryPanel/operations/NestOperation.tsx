@@ -27,10 +27,10 @@ export interface NestOperationsProps {
 
 const viewStyles = stylex.create({
   indent: {
-    marginLeft: 12,
-    marginRight: 6,
+    marginLeft: 0,
+    marginRight: 0,
     marginTop: 8,
-    width: 'calc(100% - 18px)',
+    width: '100%',
   },
 });
 
@@ -41,33 +41,27 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
   }
 
   return (
-    <div>
-      <div {...stylex.props(styles.tokenContainer)}>
-        {nests.map((nest, key) => {
-          const actions = [
-            {
-              icon: <Icon name="clear" />,
-              label: 'Delete Query',
-              onClick: () => {
-                nest.delete();
-                setQuery?.(rootQuery.build());
-              },
+    <div {...stylex.props(styles.tokenContainer)}>
+      {nests.map((nest, key) => {
+        const actions = [
+          {
+            icon: <Icon name="clear" />,
+            label: 'Delete Query',
+            onClick: () => {
+              nest.delete();
+              setQuery?.(rootQuery.build());
             },
-          ];
+          },
+        ];
 
-          return (
-            <div key={key} {...stylex.props(viewStyles.indent)}>
-              <CollapsiblePanel
-                title={nest.name}
-                icon="nest"
-                menuItems={actions}
-              >
-                <View rootQuery={rootQuery} view={nest.view} />
-              </CollapsiblePanel>
-            </div>
-          );
-        })}
-      </div>
+        return (
+          <div key={key} {...stylex.props(viewStyles.indent)}>
+            <CollapsiblePanel title={nest.name} icon="nest" menuItems={actions}>
+              <View rootQuery={rootQuery} view={nest.view} />
+            </CollapsiblePanel>
+          </div>
+        );
+      })}
     </div>
   );
 }
