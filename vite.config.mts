@@ -50,4 +50,14 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
+  optimizeDeps: {
+    include: [
+      '@malloydata/render',
+      '@malloydata/malloy-tag',
+      '@malloydata/malloy-filter',
+      '@malloydata/malloy-interfaces',
+      '@malloydata/malloy-query-builder',
+      '@malloydata/render/webcomponent',
+    ],
+  },
 });
