@@ -17,6 +17,7 @@ import {addMenuStyles} from './styles';
 import stylex from '@stylexjs/stylex';
 import * as Popover from '@radix-ui/react-popover';
 import {FieldMenu} from './FieldMenu';
+import {segmentHasLimit} from '../../utils/segment';
 
 export interface AddGroupByProps {
   rootQuery: ASTQuery;
@@ -31,15 +32,15 @@ export function AddGroupBy({rootQuery, segment}: AddGroupByProps) {
     field => !segment.hasField(field.name /* TODO , field.path */)
   );
 
-  const disabled = fields.length === 0 ? 'true' : undefined;
+  const disabled = fields.length === 0;
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
+      <Popover.Trigger asChild disabled={disabled}>
         <div
           role="menuitem"
           tabIndex={-1}
           {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled}
+          data-disabled={disabled ? 'true' : undefined}
         >
           <div {...stylex.props(addMenuStyles.label)}>
             <Icon name="groupBy" />
@@ -54,6 +55,10 @@ export function AddGroupBy({rootQuery, segment}: AddGroupByProps) {
           fields={fields}
           onClick={(field, path) => {
             segment.addGroupBy(field.name, path);
+            if (!segmentHasLimit(segment)) {
+              segment.setLimit(10);
+            }
+            segment.addOrderBy(field.name);
             setQuery?.(rootQuery.build());
           }}
         />

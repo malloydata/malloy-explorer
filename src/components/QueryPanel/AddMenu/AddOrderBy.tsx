@@ -18,6 +18,7 @@ import {addMenuStyles} from './styles';
 import stylex from '@stylexjs/stylex';
 import * as Popover from '@radix-ui/react-popover';
 import {FieldMenu} from './FieldMenu';
+import {segmentHasOrderBy} from '../../utils/segment';
 
 export interface AddEmptyNestProps {
   rootQuery: ASTQuery;
@@ -30,17 +31,18 @@ export function AddOrderBy({rootQuery, segment}: AddEmptyNestProps) {
 
   const fields = outputSchemaFields
     .filter(field => field.kind === 'dimension')
-    .filter(field => ORDERABLE_TYPES.includes(field.type.kind));
+    .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
+    .filter(field => !segmentHasOrderBy(segment, field.name));
 
-  const disabled = fields.length === 0 ? 'true' : undefined;
+  const disabled = fields.length === 0;
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
+      <Popover.Trigger asChild disabled={disabled}>
         <div
           role="menuitem"
           tabIndex={-1}
           {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled}
+          data-disabled={disabled ? 'true' : undefined}
         >
           <div {...stylex.props(addMenuStyles.label)}>
             <Icon name="orderBy" />

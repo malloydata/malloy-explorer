@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
+import {useContext, useMemo} from 'react';
 import {
   ASTQuery,
   ASTSegmentViewDefinition,
@@ -14,6 +14,7 @@ import {
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import Icon from '../../primitives/Icon';
 import {AddItem} from './AddItem';
+import {segmentHasLimit} from '../../utils/segment';
 
 export interface AddLimitProps {
   rootQuery: ASTQuery;
@@ -23,9 +24,7 @@ export interface AddLimitProps {
 export function AddLimit({rootQuery, segment}: AddLimitProps) {
   const {setQuery} = useContext(QueryEditorContext);
 
-  const hasLimit =
-    segment.operations.items.find(operation => operation.kind === 'limit') !==
-    undefined;
+  const hasLimit = useMemo(() => segmentHasLimit(segment), [segment]);
 
   return (
     <AddItem
