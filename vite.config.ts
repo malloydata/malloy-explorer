@@ -38,6 +38,16 @@ export default defineConfig({
     minify: false,
     sourcemap: true,
   },
+  optimizeDeps: {
+    include: [
+      '@malloydata/malloy-query-builder',
+      '@malloydata/malloy-filter',
+      '@malloydata/malloy-interfaces',
+      '@malloydata/malloy-tag',
+      '@malloydata/render',
+    ],
+    force: true,
+  },
   define: {
     'process.env': {},
   },
