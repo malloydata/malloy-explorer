@@ -11,7 +11,7 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {ScrollableArea} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {Visualization} from './Visualization';
-import FieldToken from '../SourcePanel/FieldToken';
+import FieldToken from '../FieldToken';
 import {backgroundColors} from '../primitives/colors.stylex';
 
 interface ViewAttributeTableProps {

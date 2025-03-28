@@ -8,9 +8,10 @@
 import * as React from 'react';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {Token} from '../primitives';
-import {hoverActionsVars} from './field-token.stylex';
-import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
+import {Token} from './primitives';
+import {hoverActionsVars} from './SourcePanel/field-token.stylex';
+import {atomicTypeToIcon, fieldKindToColor} from './utils/icon';
+import {Menu, MenuItem} from './Menu';
 
 interface FieldTokenProps {
   /**
@@ -32,6 +33,13 @@ interface FieldTokenProps {
    * Optional hover actions to render when the token is hovered.
    */
   hoverActions?: React.ReactNode;
+
+  /**
+   * The controlled visible state of the hover actions.
+   */
+  hoverActionsVisible?: boolean;
+  hasMenu?: boolean;
+  menuItems?: MenuItem[];
 }
 
 export default function FieldToken({
@@ -39,25 +47,41 @@ export default function FieldToken({
   onClick,
   onHover,
   hoverActions,
+  hoverActionsVisible,
+  hasMenu,
+  menuItems,
 }: FieldTokenProps) {
   if (field.kind === 'join') {
     return null;
   }
 
+  const token = (
+    <Token
+      label={field.name}
+      color={fieldKindToColor(field.kind)}
+      icon={
+        field.kind === 'dimension' || field.kind === 'measure'
+          ? atomicTypeToIcon(field.type.kind)
+          : 'view'
+      }
+      {...(onClick && {onClick})}
+      {...(onHover && {onHover})}
+    />
+  );
+
   return (
-    <div {...stylex.props(styles.main)}>
+    <div
+      {...stylex.props(
+        styles.main,
+        hoverActionsVisible && styles.showHoverActions
+      )}
+    >
       <div style={{display: 'inline-grid'}}>
-        <Token
-          label={field.name}
-          color={fieldKindToColor(field.kind)}
-          icon={
-            field.kind === 'dimension' || field.kind === 'measure'
-              ? atomicTypeToIcon(field.type.kind)
-              : 'view'
-          }
-          onClick={onClick}
-          onHover={onHover}
-        />
+        {hasMenu && menuItems ? (
+          <Menu trigger={token} items={menuItems} />
+        ) : (
+          token
+        )}
       </div>
       {hoverActions && (
         <div {...stylex.props(styles.hoverActions)}>{hoverActions}</div>
@@ -74,13 +98,16 @@ const styles = stylex.create({
     width: '100%',
     gap: '4px',
     cursor: 'pointer',
-    [hoverActionsVars.display]: {
-      default: 'none',
-      ':hover': 'inline-flex',
+    [hoverActionsVars.visibility]: {
+      default: 'hidden',
+      ':hover': 'visible',
     },
   },
   hoverActions: {
-    display: hoverActionsVars.display,
+    visibility: hoverActionsVars.visibility,
     flexShrink: 0,
+  },
+  showHoverActions: {
+    [hoverActionsVars.visibility]: 'visible',
   },
 });
