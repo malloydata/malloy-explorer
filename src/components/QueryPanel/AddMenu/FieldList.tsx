@@ -12,6 +12,7 @@ import stylex from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
 import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
 import {Token} from '../../primitives';
+import {sortFieldInfos} from '../../utils/fields';
 
 interface Group {
   name: string;
@@ -39,7 +40,7 @@ export function FieldList({fields, onClick, search, types}: FieldListProps) {
       name: string,
       fields: Malloy.FieldInfo[]
     ) => {
-      const filteredFields = fields
+      const filteredFields = sortFieldInfos(fields)
         .filter(field => field.kind !== 'join')
         .filter(
           field => field.name.includes(search) && types.includes(field.kind)
