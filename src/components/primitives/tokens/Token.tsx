@@ -13,7 +13,7 @@ import {IconType} from '../utils/icon';
 import {tokenColorVariants, tokenStyles} from './styles';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
 
-export interface TokenProps {
+export interface TokenProps extends React.ComponentProps<'button'> {
   /**
    * The label to display on the token.
    */
@@ -46,7 +46,7 @@ export interface TokenProps {
   /**
    * Custom styles for the token.
    */
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 export default function Token({
@@ -55,10 +55,17 @@ export default function Token({
   color = DEFAULT_TOKEN_COLOR,
   onClick,
   onHover,
-  style,
+  customStyle,
+  ...props
 }: TokenProps) {
   return (
-    <div {...stylex.props(tokenStyles.main, tokenColorVariants[color], style)}>
+    <div
+      {...stylex.props(
+        tokenStyles.main,
+        tokenColorVariants[color],
+        customStyle
+      )}
+    >
       {icon && <Icon name={icon} style={tokenStyles.icon} />}
       {onClick && (
         <button
@@ -68,6 +75,7 @@ export default function Token({
             onMouseEnter: () => onHover(true),
             onMouseLeave: () => onHover(false),
           })}
+          {...props}
         />
       )}
       {label && (

@@ -21,7 +21,7 @@ type Variant = keyof typeof colorVariants;
 
 type Size = keyof typeof sizeVariants;
 
-interface ButtonProps {
+interface ButtonProps extends React.ComponentProps<'button'> {
   /**
    * The variant of the button.
    */
@@ -52,7 +52,7 @@ interface ButtonProps {
    *
    * @param event - The React mouse event.
    */
-  onClick: (event: React.MouseEvent) => void;
+  onClick?: (event: React.MouseEvent) => void;
 
   /**
    * Whether the button is disabled.
@@ -68,16 +68,20 @@ export default function Button({
   tooltip,
   onClick,
   isDisabled = false,
+  ...props
 }: ButtonProps) {
   const button = (
     <button
       {...stylex.props(styles.main, colorVariants[variant], sizeVariants[size])}
-      onClick={e => {
-        e.preventDefault();
-        onClick(e);
-      }}
+      {...(onClick && {
+        onClick: e => {
+          e.preventDefault();
+          onClick(e);
+        },
+      })}
       type="button"
       disabled={isDisabled}
+      {...props}
     >
       <div {...stylex.props(styles.content)}>
         {icon && <Icon name={icon} style={styles.icon} />}
