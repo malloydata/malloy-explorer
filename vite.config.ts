@@ -51,6 +51,7 @@ export default defineConfig({
     'process.env': {},
   },
   optimizeDeps: {
+    force: true,
     include: [
       '@malloydata/render',
       '@malloydata/malloy-tag',
