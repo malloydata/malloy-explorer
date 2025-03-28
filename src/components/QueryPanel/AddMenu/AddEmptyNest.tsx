@@ -14,6 +14,7 @@ import {
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import Icon from '../../primitives/Icon';
 import {AddItem} from './AddItem';
+import {segmentNestNo} from '../../utils/segment';
 
 export interface AddEmptyNestProps {
   rootQuery: ASTQuery;
@@ -23,9 +24,7 @@ export interface AddEmptyNestProps {
 export function AddEmptyNest({rootQuery, segment}: AddEmptyNestProps) {
   const {setQuery} = useContext(QueryEditorContext);
 
-  const nestNo = segment.operations.items.reduce((acc, operation) => {
-    return operation.kind === 'nest' ? acc + 1 : acc;
-  }, 1);
+  const nestNo = segmentNestNo(segment);
 
   return (
     <AddItem

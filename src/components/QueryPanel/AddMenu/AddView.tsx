@@ -17,6 +17,7 @@ import {addMenuStyles} from './styles';
 import stylex from '@stylexjs/stylex';
 import * as Popover from '@radix-ui/react-popover';
 import {FieldMenu} from './FieldMenu';
+import {segmentNestNo} from '../../utils/segment';
 
 export interface AddViewProps {
   rootQuery: ASTQuery;
@@ -27,18 +28,16 @@ export function AddView({rootQuery, segment}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const fields = segment.getInputSchema().fields;
 
-  const disabled = fields.length === 0 ? 'true' : undefined;
+  const disabled = fields.length === 0;
 
-  const nestNo = segment.operations.items.reduce((acc, operation) => {
-    return operation.kind === 'nest' ? acc + 1 : acc;
-  }, 1);
+  const nestNo = segmentNestNo(segment);
 
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
+      <Popover.Trigger asChild disabled={disabled}>
         <div
           {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled}
+          data-disabled={disabled ? 'true' : undefined}
         >
           <div {...stylex.props(addMenuStyles.label)}>
             <Icon name="view" />

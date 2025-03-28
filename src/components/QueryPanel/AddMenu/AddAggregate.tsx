@@ -31,15 +31,15 @@ export function AddAggregate({rootQuery, segment}: AddAggregateProps) {
     field => !segment.hasField(field.name /* TODO , path */)
   );
 
-  const disabled = fields.length === 0 ? 'true' : undefined;
+  const disabled = fields.length === 0;
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
+      <Popover.Trigger asChild disabled={disabled}>
         <div
           role="menuitem"
           tabIndex={-1}
           {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled}
+          data-disabled={disabled ? 'true' : undefined}
         >
           <div {...stylex.props(addMenuStyles.label)}>
             <Icon name="aggregate" />

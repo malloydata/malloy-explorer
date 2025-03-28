@@ -22,7 +22,7 @@ export interface AddItemProps {
 }
 
 export function AddItem({icon, label, detail, disable, onClick}: AddItemProps) {
-  const disabled = disable?.() ? 'true' : undefined;
+  const disabled = disable?.();
   const doOnClick = () => {
     if (!disable?.()) onClick?.();
   };
@@ -33,7 +33,7 @@ export function AddItem({icon, label, detail, disable, onClick}: AddItemProps) {
       tabIndex={-1}
       {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
       onClick={doOnClick}
-      data-disabled={disabled}
+      data-disabled={disabled ? 'true' : undefined}
     >
       <Tooltip.Root>
         <Tooltip.Trigger asChild>

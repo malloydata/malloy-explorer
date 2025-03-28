@@ -56,7 +56,7 @@ export function OrderByOperations({
                     {label: 'ascending', value: 'asc'},
                     {label: 'descending', value: 'desc'},
                   ]}
-                  value={orderBy.direction}
+                  value={orderBy.direction ?? 'asc'}
                   onChange={direction => {
                     orderBy.direction = direction;
                     setQuery?.(rootQuery.build());
