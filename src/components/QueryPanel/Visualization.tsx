@@ -7,8 +7,7 @@
 
 import * as React from 'react';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
-import {Icon, Token, TokenGroup} from '../primitives';
-import {Menu, MenuItem} from '../Menu';
+import {Icon, SelectorToken, TokenGroup} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
@@ -31,22 +30,27 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
     setQuery?.(rootQuery.build());
   };
 
-  const vizes: MenuItem[] = QUERY_RENDERERS.map(viz => ({
+  const vizes = QUERY_RENDERERS.map(viz => ({
     icon: <Icon name={`viz_${viz}`} />,
     label: snakeToTitle(viz),
+    value: viz,
     onClick: () => setRenderer(viz),
   }));
 
-  return (
-    <TokenGroup style={styles.group}>
-      <Token
-        style={styles.first}
-        icon={`viz_${currentRenderer}`}
-        label={snakeToTitle(currentRenderer)}
-      />
-      <Menu trigger={<Token icon="meatballs" />} items={vizes} />
-    </TokenGroup>
-  );
+  const tokens = [
+    <SelectorToken
+      key="first"
+      style={styles.first}
+      icon={`viz_${currentRenderer}`}
+      value={currentRenderer}
+      items={vizes}
+      onChange={viz => setRenderer(viz)}
+    />,
+  ];
+
+  // TODO - add viz gear menu
+
+  return <TokenGroup>{tokens}</TokenGroup>;
 }
 
 const styles = stylex.create({
