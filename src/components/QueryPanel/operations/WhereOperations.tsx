@@ -163,8 +163,6 @@ const parsedToLabels = (
   let op: string = '';
   let value: string = filterString;
 
-  console.info({parsed});
-
   switch (parsed.kind) {
     case 'boolean':
       {
