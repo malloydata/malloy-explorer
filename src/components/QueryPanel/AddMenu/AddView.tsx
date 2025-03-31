@@ -10,6 +10,7 @@ import {useContext} from 'react';
 import {
   ASTQuery,
   ASTSegmentViewDefinition,
+  ASTView,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {segmentNestNo} from '../../utils/segment';
@@ -17,10 +18,11 @@ import {AddFieldItem} from './AddFieldItem';
 
 export interface AddViewProps {
   rootQuery: ASTQuery;
+  view: ASTQuery | ASTView;
   segment: ASTSegmentViewDefinition;
 }
 
-export function AddView({rootQuery, segment}: AddViewProps) {
+export function AddView({rootQuery, view, segment}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const fields = segment.getInputSchema().fields;
 
@@ -33,7 +35,11 @@ export function AddView({rootQuery, segment}: AddViewProps) {
       fields={fields}
       types={['view']}
       onClick={field => {
-        segment.addNest(field.name, `Nest ${nestNo}`);
+        if (view === rootQuery && rootQuery.isEmpty()) {
+          rootQuery.setView(field.name);
+        } else {
+          segment.addNest(field.name, `Nest ${nestNo}`);
+        }
         setQuery?.(rootQuery.build());
       }}
     />
