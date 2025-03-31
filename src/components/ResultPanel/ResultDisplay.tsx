@@ -15,7 +15,6 @@ import {
   QueryExecutionState,
   SubmittedQuery,
 } from './SubmittedQuery';
-// @ts-expect-error @malloydata/render has improperly typed exports
 import * as render from '@malloydata/render';
 import DOMElement from '../primitives/DOMElement';
 
