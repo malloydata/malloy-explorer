@@ -13,11 +13,6 @@ import {textColors} from './colors.stylex';
 
 export interface CollapsibleListItemProps {
   /**
-   * The unique key for the list item.
-   */
-  key: string;
-
-  /**
    * The label for the list item.
    */
   label: string;
@@ -34,7 +29,6 @@ export interface CollapsibleListItemProps {
 }
 
 export default function CollapsibleListItem({
-  key,
   label,
   sublabel,
   children,
@@ -47,7 +41,7 @@ export default function CollapsibleListItem({
 
   return (
     <div>
-      <div key={key} {...stylex.props(styles.main)} onClick={handleToggle}>
+      <div {...stylex.props(styles.main)} onClick={handleToggle}>
         {isExpanded ? (
           <Icon name="chevronDown" color="secondary" />
         ) : (

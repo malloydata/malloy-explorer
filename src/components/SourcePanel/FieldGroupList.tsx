@@ -46,7 +46,7 @@ export default function FieldGroupList({
           >
             {item.items.map(({field, path}) => (
               <FieldTokenWithActions
-                key={path.join('.')}
+                key={[...path, field.name].join('.')}
                 field={field}
                 path={path}
               />

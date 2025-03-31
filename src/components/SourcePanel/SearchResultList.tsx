@@ -56,7 +56,7 @@ export default function SearchResultList({
                   </div>
                   {subgroupItems.map(({field, path}) => (
                     <FieldTokenWithActions
-                      key={`${field.kind}::${field.name}`}
+                      key={[...path, field.name].join('.')}
                       field={field}
                       path={path}
                     />
