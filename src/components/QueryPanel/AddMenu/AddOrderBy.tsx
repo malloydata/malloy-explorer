@@ -40,6 +40,7 @@ export function AddOrderBy({rootQuery, segment}: AddEmptyNestProps) {
         segment.addOrderBy(field.name, 'asc');
         setQuery?.(rootQuery.build());
       }}
+      disabledMessage="There must be at least one field in the output to order by."
     />
   );
 }

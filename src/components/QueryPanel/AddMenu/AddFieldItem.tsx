@@ -13,6 +13,8 @@ import * as Popover from '@radix-ui/react-popover';
 import {FieldMenu} from './FieldMenu';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {IconType} from '../../primitives';
+import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
+import {tooltipStyles} from '../../primitives/styles';
 
 export interface AddGroupByProps {
   label: string;
@@ -20,6 +22,7 @@ export interface AddGroupByProps {
   fields: FieldInfo[];
   onClick(field: FieldInfo, path: string[]): void;
   types: Array<'dimension' | 'measure' | 'view'>;
+  disabledMessage?: string;
 }
 
 export function AddFieldItem({
@@ -28,23 +31,40 @@ export function AddFieldItem({
   label,
   onClick,
   types,
+  disabledMessage,
 }: AddGroupByProps) {
   const disabled = fields.length === 0;
+
+  const trigger = (
+    <div
+      role="menuitem"
+      tabIndex={-1}
+      {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
+      data-disabled={disabled ? 'true' : undefined}
+    >
+      <div {...stylex.props(addMenuStyles.label)}>
+        <Icon name={icon} />
+        <div>{label}</div>
+      </div>
+      <Icon name="chevronRight" color="gray" />
+    </div>
+  );
+
+  if (disabled && disabledMessage) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+        <TooltipContent>
+          <div {...stylex.props(tooltipStyles.default)}>{disabledMessage}</div>
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
   return (
     <Popover.Root>
       <Popover.Trigger asChild disabled={disabled}>
-        <div
-          role="menuitem"
-          tabIndex={-1}
-          {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-          data-disabled={disabled ? 'true' : undefined}
-        >
-          <div {...stylex.props(addMenuStyles.label)}>
-            <Icon name={icon} />
-            <div>{label}</div>
-          </div>
-          <Icon name="chevronRight" color="gray" />
-        </div>
+        {trigger}
       </Popover.Trigger>
       <Popover.Content side="right" align="start" alignOffset={-16}>
         <FieldMenu types={types} fields={fields} onClick={onClick} />
