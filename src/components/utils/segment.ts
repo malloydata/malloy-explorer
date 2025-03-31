@@ -1,5 +1,6 @@
 import {
   ASTLimitViewOperation,
+  ASTNestViewOperation,
   ASTOrderByViewOperation,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
@@ -24,8 +25,22 @@ export function segmentHasOrderBy(
   );
 }
 
-export function segmentNestNo(segment: ASTSegmentViewDefinition) {
+export function segmentNestNo(
+  segment: ASTSegmentViewDefinition,
+  name?: string
+) {
   return segment.operations.items.reduce((acc, operation) => {
-    return operation.kind === 'nest' ? acc + 1 : acc;
+    if (operation instanceof ASTNestViewOperation) {
+      if (name) {
+        if (operation.name === name) {
+          do {
+            acc += 1;
+          } while (segment.hasFieldNamed(`${name} ${acc}`));
+        }
+      } else {
+        return acc + 1;
+      }
+    }
+    return acc;
   }, 1);
 }

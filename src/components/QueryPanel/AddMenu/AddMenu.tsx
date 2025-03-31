@@ -79,8 +79,11 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
               } else if (field.kind === 'measure') {
                 segment.addAggregate(field.name, path);
               } else {
-                const nestNo = segmentNestNo(segment);
-                segment.addNest(field.name, `Nest ${nestNo}`);
+                const nestNo = segmentNestNo(segment, field.name);
+                segment.addNest(
+                  field.name,
+                  nestNo > 1 ? `${field.name} ${nestNo}` : undefined
+                );
               }
               setQuery?.(rootQuery.build());
             }}

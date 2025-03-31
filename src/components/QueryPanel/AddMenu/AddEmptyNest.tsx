@@ -24,14 +24,14 @@ export interface AddEmptyNestProps {
 export function AddEmptyNest({rootQuery, segment}: AddEmptyNestProps) {
   const {setQuery} = useContext(QueryEditorContext);
 
-  const nestNo = segmentNestNo(segment);
+  const nestNo = segmentNestNo(segment, `Nest`);
 
   return (
     <AddItem
       icon={<Icon name="nest" />}
       label="Add blank nested query"
       onClick={() => {
-        segment.addEmptyNest(`Nest ${nestNo}`);
+        segment.addEmptyNest(nestNo > 1 ? `Nest ${nestNo}` : `Nest`);
         setQuery?.(rootQuery.build());
       }}
     />

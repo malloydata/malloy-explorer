@@ -36,6 +36,7 @@ export function FieldList({fields, onClick, search, types}: FieldListProps) {
     const groups: Group[] = [];
 
     const buildGroups = (
+      types: Array<'dimension' | 'measure' | 'view'>,
       path: string[],
       name: string,
       fields: Malloy.FieldInfo[]
@@ -57,11 +58,16 @@ export function FieldList({fields, onClick, search, types}: FieldListProps) {
       }
 
       for (const join of joins) {
-        buildGroups([...path, join.name], join.name, join.schema.fields);
+        buildGroups(
+          types.filter(type => type !== 'view'), // Don't include views from joins
+          [...path, join.name],
+          join.name,
+          join.schema.fields
+        );
       }
     };
 
-    buildGroups([], 'Source', fields);
+    buildGroups(types, [], 'Source', fields);
 
     return groups;
   }, [fields, search, types]);
