@@ -247,6 +247,15 @@ interface ClickableDateTokenProps {
   label?: string;
 }
 
+// Format the date based on the maxLevel
+const formatDate = (date: Date, maxLevel: 'day' | 'second'): string => {
+  if (maxLevel === 'day') {
+    return moment(date).format('YYYY-MM-DD');
+  } else {
+    return moment(date).format('YYYY-MM-DD hh:mm:ss');
+  }
+};
+
 function ClickableDateToken({
   color = DEFAULT_TOKEN_COLOR,
   value,
@@ -254,51 +263,77 @@ function ClickableDateToken({
   maxLevel,
   label,
 }: ClickableDateTokenProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  // Inner value used to allow editing of date even when intermediate values
+  // may not parse into a correct Date.
+  const [innerValue, setInnerValue] = useState(formatDate(value, maxLevel));
 
-  // Format the date based on the maxLevel
-  const formatDate = (date: Date): string => {
-    if (maxLevel === 'day') {
-      return moment(date).format('YYYY-MM-DD');
-    } else {
-      return moment(date).format('YYYY-MM-DD hh:mm:ss');
+  // Whenever the input value changes, we will update the text to match.
+  React.useEffect(() => {
+    setInnerValue(formatDate(value, maxLevel));
+  }, [maxLevel, value]);
+
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  // Commit changes to the parent component based on the text content
+  // of the input box.
+  const commitChanges = () => {
+    try {
+      const date = new Date(innerValue);
+      if (date) {
+        setValue(date);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_ex) {
+      // TODO: flag to the user that the date is invalid
+      console.warn('Failed to parse date');
     }
   };
 
-  const ref = React.useRef(null);
-
   useClickOutside(ref, () => {
-    setIsOpen(false);
-    // commitValue();
+    setIsPickerOpen(false);
+    commitChanges();
   });
+
+  // Returns the date parsed from the text box only if it is a valid date.
+  const getDateForDatePicker = () => {
+    try {
+      const parsedDate = new Date(innerValue);
+      console.log(parsedDate);
+      if (!isNaN(parsedDate.getTime())) {
+        return parsedDate;
+      }
+    } catch (ex) {
+      // ignored.
+    }
+    return value;
+  };
 
   return (
     <div
       ref={ref}
       style={{position: 'relative'}}
-      onFocus={() => setIsOpen(true)}
+      onFocus={() => setIsPickerOpen(true)}
       onBlur={e => {
-        if (e.relatedTarget && !ref.current.contains(e.relatedTarget)) {
-          setIsOpen(false);
+        if (
+          e.relatedTarget &&
+          ref.current &&
+          !ref.current.contains(e.relatedTarget)
+        ) {
+          setIsPickerOpen(false);
+          commitChanges();
         }
       }}
     >
       <EditableToken
-        value={label ? `${label}: ${formatDate(value)}` : formatDate(value)}
+        value={label ? `${label}: ${innerValue}` : innerValue}
         color={color}
         onChange={text => {
-          try {
-            const date = new Date(text);
-            if (date) {
-              setValue(date);
-            }
-          } catch (_ex) {
-            // TODO: flag to the user that the date is invalid
-            console.warn('Failed to parse date');
-          }
+          setInnerValue(text);
         }}
       />
-      {isOpen && (
+      {isPickerOpen && (
         <div
           style={{
             position: 'absolute',
@@ -314,10 +349,9 @@ function ClickableDateToken({
           }}
         >
           <DatePicker
-            value={value}
+            value={getDateForDatePicker()}
             setValue={newValue => {
               setValue(newValue);
-              // setIsOpen(false);
             }}
             maxLevel={maxLevel}
           />
