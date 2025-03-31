@@ -12,7 +12,9 @@ import {SelectorToken, Token, TokenGroup} from '../primitives';
 import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
 import {PillInput} from './PillInput';
 import {TokenColor} from '../primitives/tokens/types';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import ErrorIcon from '../primitives/ErrorIcon';
+import stylex from '@stylexjs/stylex';
 
 type NumberFilterType =
   | 'is_equal_to'
@@ -70,21 +72,41 @@ export const NumberFilterToken: React.FC<NumberFilterBuilderProps> = ({
   setFilter,
 }) => {
   filter ??= {operator: '=', values: []};
-  // Keep a copy of the filter locally so when we enter an invalid state and
-  // lose context we can still maintain the UI.
-  const [currentFilter, setCurrentFilter] = useState(filter);
-  const changeType = (type: string) => {
-    updateFilter(
-      numberFilterChangeType(currentFilter, type as NumberFilterType)
-    );
-  };
+  // Maintain the text content of the input inside this component, and only
+  // update the parent when the content passes validation.
+  const [innerValues, setInnerValues] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const updateFilter = (newFilter: NumberFilter) => {
-    setCurrentFilter(newFilter);
+  const changeType = (type: string) => {
+    const maybeNumberCondition = filter as NumberCondition;
+
+    const newFilter = makeFilterWithNewType(filter, type as NumberFilterType);
+    const needsValue = newFilter.operator !== 'null';
+    if (
+      needsValue &&
+      (!maybeNumberCondition.values || maybeNumberCondition.values.length === 0)
+    ) {
+      (newFilter as NumberCondition).values = ['0'];
+    }
+
     setFilter(newFilter);
   };
 
-  const type = typeFromFilter(currentFilter);
+  const type = typeFromFilter(filter);
+  useEffect(() => {
+    // If a new value comes in from the parent, reset our own error message.
+    setErrorMessage('');
+    const maybeNumberCondition = filter as NumberCondition;
+    if (maybeNumberCondition.values) {
+      let values = maybeNumberCondition.values;
+      if (!values || values.length === 0) {
+        values = ['0'];
+      }
+      setInnerValues(values);
+    } else {
+      setInnerValues([]);
+    }
+  }, [filter]);
 
   const typeDropdown = (
     <SelectorToken
@@ -109,21 +131,36 @@ export const NumberFilterToken: React.FC<NumberFilterBuilderProps> = ({
   const icon = atomicTypeToIcon(fieldInfo.type.kind);
   const color = fieldKindToColor(fieldInfo.kind);
 
+  const validateAndUpdateValues = (values: string[]) => {
+    const numberCondition = filter as NumberCondition;
+
+    setInnerValues(values);
+    const hasInvalidValues = values.some(v => {
+      return isNaN(parseFloat(v));
+    });
+    if (hasInvalidValues) {
+      setErrorMessage('Every value must be numeric.');
+    } else if (values.length === 0) {
+      setErrorMessage('Requires at least one numeric value.');
+    } else {
+      setErrorMessage('');
+      setFilter({
+        ...numberCondition,
+        values,
+      });
+    }
+  };
+
   let editor = <span></span>;
 
-  switch (currentFilter.operator) {
+  switch (filter.operator) {
     case '!=':
     case '=':
       editor = (
         <NumberEditor
           color={color}
-          values={currentFilter.values.map(String)}
-          setValues={values =>
-            updateFilter({
-              ...currentFilter,
-              values,
-            })
-          }
+          values={innerValues.map(String)}
+          setValues={values => validateAndUpdateValues(values)}
           type="number"
         />
       );
@@ -135,13 +172,8 @@ export const NumberFilterToken: React.FC<NumberFilterBuilderProps> = ({
       editor = (
         <SingleNumberEditor
           color={color}
-          value={currentFilter.values[0]}
-          setValue={value =>
-            updateFilter({
-              ...currentFilter,
-              values: [value],
-            })
-          }
+          value={innerValues[0]}
+          setValue={value => validateAndUpdateValues([value])}
           type="number"
         />
       );
@@ -152,11 +184,14 @@ export const NumberFilterToken: React.FC<NumberFilterBuilderProps> = ({
   }
 
   return (
-    <TokenGroup color={color}>
-      <Token icon={icon} label={fieldInfo.name} />
-      {typeDropdown}
-      {editor}
-    </TokenGroup>
+    <div {...stylex.props(styles.flex)}>
+      <TokenGroup color={color}>
+        <Token icon={icon} label={fieldInfo.name} />
+        {typeDropdown}
+        {editor}
+      </TokenGroup>
+      {errorMessage ? <ErrorIcon errorMessage={errorMessage} /> : null}
+    </div>
   );
 };
 
@@ -200,7 +235,7 @@ function NumberEditor({color, values, setValues}: NumberEditorProps) {
 }
 
 // eslint-disable-next-line consistent-return
-export function numberFilterChangeType(
+export function makeFilterWithNewType(
   filter: NumberFilter,
   type: NumberFilterType
 ): BasicNumberFilter {
@@ -219,3 +254,9 @@ export function numberFilterChangeType(
       return {...NumberFilterFragments[type]} as BasicNumberFilter;
   }
 }
+
+const styles = stylex.create({
+  flex: {
+    display: 'flex',
+  },
+});
