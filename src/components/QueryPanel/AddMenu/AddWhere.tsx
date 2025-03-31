@@ -39,6 +39,8 @@ export function AddWhere({rootQuery, segment}: AddWhereProps) {
             segment.addWhere(field.name, path, '0');
           } else if (field.type.kind === 'date_type') {
             segment.addWhere(field.name, path, 'today');
+          } else if (field.type.kind === 'timestamp_type') {
+            segment.addWhere(field.name, path, 'now');
           }
           setQuery?.(rootQuery.build());
         }
