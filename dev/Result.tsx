@@ -33,7 +33,7 @@ const App = () => {
 
   return (
     <>
-      <div style={{padding: '8px'}}>
+      <div style={{padding: '8px', height: '100vh'}}>
         <ResultPanel
           source={source}
           draftQuery={draftQuery}

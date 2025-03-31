@@ -16,6 +16,7 @@ import {Button, CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
+import {useEffect} from 'react';
 
 enum Tab {
   RESULTS = 'Results',
@@ -44,6 +45,14 @@ export default function ResultPanel({
   if (!submittedQueryExists && tab !== Tab.MALLOY) {
     setTab(Tab.MALLOY);
   }
+
+  useEffect(() => {
+    setTab(Tab.MALLOY);
+  }, [draftQuery]);
+
+  useEffect(() => {
+    setTab(Tab.RESULTS);
+  }, [submittedQuery]);
 
   return draftQuery || submittedQuery ? (
     <Root
