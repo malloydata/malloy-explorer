@@ -180,6 +180,7 @@ function viewToQuery(viewName: string, sourceName: string): Malloy.Query {
 
 const styles = stylex.create({
   tabRoot: {
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -210,15 +211,16 @@ const styles = stylex.create({
     flexGrow: '1',
   },
   content: {
-    margin: '0px 12px 12px 12px',
     padding: '12px',
     width: '100%',
     height: '100%',
+    boxSizing: 'border-box',
   },
   codeContent: {
-    padding: '0px 12px 12px 12px',
+    padding: '0px 24px 24px 24px',
     width: '100%',
     height: '100%',
+    boxSizing: 'border-box',
   },
   warning: {
     display: 'flex',
