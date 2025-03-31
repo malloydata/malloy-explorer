@@ -36,6 +36,9 @@ interface EditableTokenBaseProps<T> {
    * Optional custom styles for the token.
    */
   style?: StyleXStyles;
+
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 interface EditableTokenStringProps extends EditableTokenBaseProps<string> {
@@ -53,6 +56,8 @@ export default function EditableToken({
   color = DEFAULT_TOKEN_COLOR,
   style,
   type,
+  onFocus,
+  onBlur,
 }: EditableTokenStringProps | EditableTokenNumberProps) {
   const [isFocused, setIsFocused] = React.useState<boolean>(false);
 
@@ -69,6 +74,7 @@ export default function EditableToken({
 
   const handleFocus = () => {
     setIsFocused(true);
+    onFocus?.();
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -80,6 +86,7 @@ export default function EditableToken({
     } else {
       inputRef.current?.focus();
     }
+    onBlur?.();
   };
 
   return (

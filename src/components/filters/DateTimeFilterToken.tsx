@@ -18,12 +18,13 @@ import {
   NowMoment,
   TemporalLiteral,
 } from '@malloydata/malloy-filter';
-import {SelectorToken, Token, TokenGroup} from '../primitives';
+import {EditableToken, SelectorToken, Token, TokenGroup} from '../primitives';
 import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
 import DatePicker from '../primitives/DatePicker';
 import moment from 'moment';
+import {useClickOutside} from '../hooks/useClickOutside';
 
 type DateTimeFilterType =
   | 'is_equal_to'
@@ -258,18 +259,44 @@ function ClickableDateToken({
   // Format the date based on the maxLevel
   const formatDate = (date: Date): string => {
     if (maxLevel === 'day') {
-      return moment(date).format('MMM D, YYYY');
+      return moment(date).format('YYYY-MM-DD');
     } else {
-      return moment(date).format('MMM D, YYYY h:mm A');
+      return moment(date).format('YYYY-MM-DD hh:mm:ss');
     }
   };
 
+  const ref = React.useRef(null);
+
+  useClickOutside(ref, () => {
+    setIsOpen(false);
+    // commitValue();
+  });
+
   return (
-    <div style={{position: 'relative'}}>
-      <Token
-        label={label ? `${label}: ${formatDate(value)}` : formatDate(value)}
+    <div
+      ref={ref}
+      style={{position: 'relative'}}
+      onFocus={() => setIsOpen(true)}
+      onBlur={e => {
+        if (e.relatedTarget && !ref.current.contains(e.relatedTarget)) {
+          setIsOpen(false);
+        }
+      }}
+    >
+      <EditableToken
+        value={label ? `${label}: ${formatDate(value)}` : formatDate(value)}
         color={color}
-        onClick={() => setIsOpen(!isOpen)}
+        onChange={text => {
+          try {
+            const date = new Date(text);
+            if (date) {
+              setValue(date);
+            }
+          } catch (_ex) {
+            // TODO: flag to the user that the date is invalid
+            console.warn('Failed to parse date');
+          }
+        }}
       />
       {isOpen && (
         <div
@@ -290,7 +317,7 @@ function ClickableDateToken({
             value={value}
             setValue={newValue => {
               setValue(newValue);
-              setIsOpen(false);
+              // setIsOpen(false);
             }}
             maxLevel={maxLevel}
           />
@@ -347,14 +374,12 @@ function DateTimeRangeEditor({
         value={fromValue}
         setValue={setFromValue}
         maxLevel={maxLevel}
-        label="From"
       />
       <ClickableDateToken
         color={_color}
         value={toValue}
         setValue={setToValue}
         maxLevel={maxLevel}
-        label="To"
       />
     </div>
   );
