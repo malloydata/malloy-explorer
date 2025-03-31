@@ -91,7 +91,7 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
             <AddGroupBy rootQuery={rootQuery} segment={segment} />
             <AddAggregate rootQuery={rootQuery} segment={segment} />
             <AddWhere rootQuery={rootQuery} segment={segment} />
-            <AddView rootQuery={rootQuery} segment={segment} />
+            <AddView rootQuery={rootQuery} view={view} segment={segment} />
             <Divider />
             <AddLimit rootQuery={rootQuery} segment={segment} />
             <AddOrderBy rootQuery={rootQuery} segment={segment} />
