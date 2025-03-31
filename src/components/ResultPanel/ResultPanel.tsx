@@ -16,7 +16,6 @@ import {Button, CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
-import {ScrollArea} from '@radix-ui/react-scroll-area';
 
 enum Tab {
   RESULTS = 'Results',
@@ -96,7 +95,7 @@ export default function ResultPanel({
           />
         )}
       </div>
-      <ScrollArea>
+      <div {...stylex.props(styles.contentContainer)}>
         <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
           {submittedQuery && (
             <>
@@ -140,7 +139,7 @@ export default function ResultPanel({
             />
           )}
         </Content>
-      </ScrollArea>
+      </div>
     </Root>
   ) : (
     <EmptyQueryDisplay
@@ -172,7 +171,8 @@ function viewToQuery(viewName: string, sourceName: string): Malloy.Query {
 
 const styles = stylex.create({
   tabRoot: {
-    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   tabsContainer: {
     display: 'flex',
@@ -196,6 +196,9 @@ const styles = stylex.create({
       fontWeight: '700',
       backgroundColor: backgroundColors.accentDeemphasized,
     },
+  },
+  contentContainer: {
+    flexGrow: '1',
   },
   content: {
     margin: '0px 12px 12px 12px',

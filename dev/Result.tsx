@@ -8,7 +8,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {createRoot} from 'react-dom/client';
-import {MalloyExplorerProvider, ResultPanel} from '../src';
+import {ResultPanel} from '../src';
 import {modelInfo, result} from './sample_models/example_model';
 import {SubmittedQuery} from '../src/components/ResultPanel/SubmittedQuery';
 import {Button} from '../src/components/primitives';
@@ -32,7 +32,7 @@ const App = () => {
     : undefined;
 
   return (
-    <MalloyExplorerProvider>
+    <>
       <div style={{padding: '8px'}}>
         <ResultPanel
           source={source}
@@ -42,7 +42,7 @@ const App = () => {
         />
       </div>
       <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
-    </MalloyExplorerProvider>
+    </>
   );
 };
 
