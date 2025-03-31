@@ -23,7 +23,7 @@ export default function EmptyQueryDisplay({
   return (
     <div {...stylex.props(styles.page)}>
       <div {...stylex.props(styles.pageChild)}>
-        <h1 {...stylex.props(fontStyles.emphasized)}>
+        <h1 {...stylex.props(styles.header, fontStyles.emphasized)}>
           Start with a Bookmarked View
         </h1>
         <div {...stylex.props(styles.viewContainer)}>
@@ -55,6 +55,9 @@ const styles = stylex.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  header: {
+    paddingBottom: '20px',
   },
   viewContainer: {
     display: 'flex',

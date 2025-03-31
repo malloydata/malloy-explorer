@@ -16,7 +16,7 @@ import {Button, CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
-import {ScrollArea} from '@radix-ui/react-scroll-area';
+import {useEffect} from 'react';
 
 enum Tab {
   RESULTS = 'Results',
@@ -45,6 +45,14 @@ export default function ResultPanel({
   if (!submittedQueryExists && tab !== Tab.MALLOY) {
     setTab(Tab.MALLOY);
   }
+
+  useEffect(() => {
+    setTab(Tab.MALLOY);
+  }, [draftQuery]);
+
+  useEffect(() => {
+    setTab(Tab.RESULTS);
+  }, [submittedQuery]);
 
   return draftQuery || submittedQuery ? (
     <Root
@@ -96,7 +104,7 @@ export default function ResultPanel({
           />
         )}
       </div>
-      <ScrollArea>
+      <div {...stylex.props(styles.contentContainer)}>
         <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
           {submittedQuery && (
             <>
@@ -136,11 +144,11 @@ export default function ResultPanel({
           {submittedQuery?.response?.result?.sql && (
             <CodeBlock
               code={submittedQuery.response.result.sql}
-              language="malloy"
+              language="sql"
             />
           )}
         </Content>
-      </ScrollArea>
+      </div>
     </Root>
   ) : (
     <EmptyQueryDisplay
@@ -173,6 +181,8 @@ function viewToQuery(viewName: string, sourceName: string): Malloy.Query {
 const styles = stylex.create({
   tabRoot: {
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   tabsContainer: {
     display: 'flex',
@@ -197,16 +207,20 @@ const styles = stylex.create({
       backgroundColor: backgroundColors.accentDeemphasized,
     },
   },
+  contentContainer: {
+    flexGrow: '1',
+  },
   content: {
-    margin: '0px 12px 12px 12px',
     padding: '12px',
     width: '100%',
     height: '100%',
+    boxSizing: 'border-box',
   },
   codeContent: {
-    padding: '0px 12px 12px 12px',
+    padding: '0px 24px 24px 24px',
     width: '100%',
     height: '100%',
+    boxSizing: 'border-box',
   },
   warning: {
     display: 'flex',
