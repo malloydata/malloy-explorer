@@ -18,12 +18,13 @@ import {
   NowMoment,
   TemporalLiteral,
 } from '@malloydata/malloy-filter';
-import {SelectorToken, Token, TokenGroup} from '../primitives';
+import {EditableToken, SelectorToken, Token, TokenGroup} from '../primitives';
 import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
 import DatePicker from '../primitives/DatePicker';
 import moment from 'moment';
+import {useClickOutside} from '../hooks/useClickOutside';
 
 type DateTimeFilterType =
   | 'is_equal_to'
@@ -246,6 +247,15 @@ interface ClickableDateTokenProps {
   label?: string;
 }
 
+// Format the date based on the maxLevel
+const formatDate = (date: Date, maxLevel: 'day' | 'second'): string => {
+  if (maxLevel === 'day') {
+    return moment(date).format('YYYY-MM-DD');
+  } else {
+    return moment(date).format('YYYY-MM-DD hh:mm:ss');
+  }
+};
+
 function ClickableDateToken({
   color = DEFAULT_TOKEN_COLOR,
   value,
@@ -253,25 +263,76 @@ function ClickableDateToken({
   maxLevel,
   label,
 }: ClickableDateTokenProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  // Inner value used to allow editing of date even when intermediate values
+  // may not parse into a correct Date.
+  const [innerValue, setInnerValue] = useState(formatDate(value, maxLevel));
 
-  // Format the date based on the maxLevel
-  const formatDate = (date: Date): string => {
-    if (maxLevel === 'day') {
-      return moment(date).format('MMM D, YYYY');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Whenever the input value changes, we will update the text to match.
+  React.useEffect(() => {
+    setInnerValue(formatDate(value, maxLevel));
+  }, [maxLevel, value]);
+
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  const checkForErrorsOrCommit = (date: Date) => {
+    if (date && !isNaN(date.getTime()) && date.getFullYear() < 10000) {
+      setErrorMessage('');
+      setValue(date);
     } else {
-      return moment(date).format('MMM D, YYYY h:mm A');
+      setErrorMessage(
+        `Date must be in YYYY-MM-DD${maxLevel !== 'day' && ' hh:mm:ss'} format.`
+      );
     }
   };
 
+  useClickOutside(ref, () => {
+    setIsPickerOpen(false);
+    checkForErrorsOrCommit(new Date(innerValue));
+  });
+
+  // Returns the date parsed from the text box only if it is a valid date.
+  const getDateForDatePicker = () => {
+    try {
+      const parsedDate = new Date(innerValue);
+      if (!isNaN(parsedDate.getTime())) {
+        return parsedDate;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (ex) {
+      // ignored.
+    }
+    return value;
+  };
+
   return (
-    <div style={{position: 'relative'}}>
-      <Token
-        label={label ? `${label}: ${formatDate(value)}` : formatDate(value)}
+    <div
+      ref={ref}
+      style={{position: 'relative'}}
+      onFocus={() => setIsPickerOpen(true)}
+      onBlur={e => {
+        if (
+          e.relatedTarget &&
+          ref.current &&
+          !ref.current.contains(e.relatedTarget)
+        ) {
+          setIsPickerOpen(false);
+          checkForErrorsOrCommit(new Date(innerValue));
+        }
+      }}
+    >
+      <EditableToken
+        value={label ? `${label}: ${innerValue}` : innerValue}
         color={color}
-        onClick={() => setIsOpen(!isOpen)}
+        onChange={text => {
+          setInnerValue(text);
+        }}
+        errorMessage={errorMessage}
       />
-      {isOpen && (
+      {isPickerOpen && (
         <div
           style={{
             position: 'absolute',
@@ -287,10 +348,9 @@ function ClickableDateToken({
           }}
         >
           <DatePicker
-            value={value}
+            value={getDateForDatePicker()}
             setValue={newValue => {
-              setValue(newValue);
-              setIsOpen(false);
+              checkForErrorsOrCommit(newValue);
             }}
             maxLevel={maxLevel}
           />
@@ -347,14 +407,12 @@ function DateTimeRangeEditor({
         value={fromValue}
         setValue={setFromValue}
         maxLevel={maxLevel}
-        label="From"
       />
       <ClickableDateToken
         color={_color}
         value={toValue}
         setValue={setToValue}
         maxLevel={maxLevel}
-        label="To"
       />
     </div>
   );

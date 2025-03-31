@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {iconVars, labelVars} from './token.stylex';
@@ -6,6 +13,7 @@ import {fontStyles} from '../styles';
 import {IconType} from '../utils/icon';
 import {tokenColorVariants, tokenStyles} from './styles';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
+import ErrorIcon from '../ErrorIcon';
 
 interface EditableTokenBaseProps<T> {
   /**
@@ -36,6 +44,11 @@ interface EditableTokenBaseProps<T> {
    * Optional custom styles for the token.
    */
   style?: StyleXStyles;
+  /**
+   * Optional error message to show. If an error message exists, the token will
+   * include error styles.
+   */
+  errorMessage?: string;
 }
 
 interface EditableTokenStringProps extends EditableTokenBaseProps<string> {
@@ -53,6 +66,7 @@ export default function EditableToken({
   color = DEFAULT_TOKEN_COLOR,
   style,
   type,
+  errorMessage,
 }: EditableTokenStringProps | EditableTokenNumberProps) {
   const [isFocused, setIsFocused] = React.useState<boolean>(false);
 
@@ -83,51 +97,62 @@ export default function EditableToken({
   };
 
   return (
-    <div
-      {...stylex.props(
-        tokenStyles.main,
-        tokenColorVariants[color],
-        isFocused && styles.focused,
-        style
-      )}
-    >
-      {icon && <Icon name={icon} style={styles.icon} />}
-      <span {...stylex.props(styles.inputWrapper)}>
-        <span
-          {...stylex.props(fontStyles.body, styles.placeholder)}
-          style={{whiteSpaceCollapse: 'preserve'}}
-        >
-          {value}
+    <div {...stylex.props(styles.wrapper)}>
+      <div
+        {...stylex.props(
+          tokenStyles.main,
+          tokenColorVariants[color],
+          isFocused && styles.focused,
+          !!errorMessage && styles.hasError,
+          style
+        )}
+      >
+        {icon && <Icon name={icon} style={styles.icon} />}
+        <span {...stylex.props(styles.inputWrapper)}>
+          <span
+            {...stylex.props(fontStyles.body, styles.placeholder)}
+            style={{whiteSpaceCollapse: 'preserve'}}
+          >
+            {value}
+          </span>
+          <input
+            {...stylex.props(styles.input, fontStyles.body)}
+            ref={inputRef}
+            pattern={type === 'number' ? '^-?[0-9.]*$' : undefined}
+            value={value}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
         </span>
-        <input
-          {...stylex.props(styles.input, fontStyles.body)}
-          ref={inputRef}
-          pattern={type === 'number' ? '^-?[0-9.]*$' : undefined}
-          value={value}
-          onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-      </span>
-      {onRemove && isFocused && (
-        <button
-          {...stylex.props(styles.actionButton)}
-          ref={buttonRef}
-          onClick={onRemove}
-          tabIndex={0}
-        >
-          <Icon name="clear" />
-        </button>
-      )}
+        {onRemove && isFocused && (
+          <button
+            {...stylex.props(styles.actionButton)}
+            ref={buttonRef}
+            onClick={onRemove}
+            tabIndex={0}
+          >
+            <Icon name="clear" />
+          </button>
+        )}
+      </div>
+      {errorMessage && <ErrorIcon errorMessage={errorMessage} />}
     </div>
   );
 }
 
 const styles = stylex.create({
+  wrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
   focused: {
     background: 'rgba(255, 255, 255, 1)',
     boxShadow:
       '0px 0px 0px 1px rgb(0, 100, 224) inset, 0px 0px 0px 3px rgba(1, 113, 227, 0.3) inset',
+  },
+  hasError: {
+    border: '1px solid red',
   },
   icon: {
     color: iconVars.color,

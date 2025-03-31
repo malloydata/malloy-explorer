@@ -14,6 +14,7 @@ interface NumberInputProps {
   placeholder?: string;
   label?: string;
   autoFocus?: boolean;
+  width?: string;
 }
 
 export default function NumberInput({
@@ -22,6 +23,7 @@ export default function NumberInput({
   placeholder,
   label,
   autoFocus,
+  width,
 }: NumberInputProps) {
   const [tempValue, setTempValue] = useState(value.toString());
 
@@ -36,7 +38,7 @@ export default function NumberInput({
         type="number"
         placeholder={placeholder}
         value={tempValue}
-        size={1}
+        style={{width: width ? width : 'auto'}}
         onChange={event => {
           const raw = event.target.value;
           setTempValue(raw);
