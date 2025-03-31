@@ -267,6 +267,8 @@ function ClickableDateToken({
   // may not parse into a correct Date.
   const [innerValue, setInnerValue] = useState(formatDate(value, maxLevel));
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   // Whenever the input value changes, we will update the text to match.
   React.useEffect(() => {
     setInnerValue(formatDate(value, maxLevel));
@@ -276,34 +278,30 @@ function ClickableDateToken({
 
   const ref = React.useRef<HTMLDivElement>(null);
 
-  // Commit changes to the parent component based on the text content
-  // of the input box.
-  const commitChanges = () => {
-    try {
-      const date = new Date(innerValue);
-      if (date) {
-        setValue(date);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_ex) {
-      // TODO: flag to the user that the date is invalid
-      console.warn('Failed to parse date');
+  const checkForErrorsOrCommit = (date: Date) => {
+    if (date && !isNaN(date.getTime()) && date.getFullYear() < 10000) {
+      setErrorMessage('');
+      setValue(date);
+    } else {
+      setErrorMessage(
+        `Date must be in YYYY-MM-DD${maxLevel !== 'day' && ' hh:mm:ss'} format.`
+      );
     }
   };
 
   useClickOutside(ref, () => {
     setIsPickerOpen(false);
-    commitChanges();
+    checkForErrorsOrCommit(new Date(innerValue));
   });
 
   // Returns the date parsed from the text box only if it is a valid date.
   const getDateForDatePicker = () => {
     try {
       const parsedDate = new Date(innerValue);
-      console.log(parsedDate);
       if (!isNaN(parsedDate.getTime())) {
         return parsedDate;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (ex) {
       // ignored.
     }
@@ -322,7 +320,7 @@ function ClickableDateToken({
           !ref.current.contains(e.relatedTarget)
         ) {
           setIsPickerOpen(false);
-          commitChanges();
+          checkForErrorsOrCommit(new Date(innerValue));
         }
       }}
     >
@@ -332,6 +330,7 @@ function ClickableDateToken({
         onChange={text => {
           setInnerValue(text);
         }}
+        errorMessage={errorMessage}
       />
       {isPickerOpen && (
         <div
@@ -351,7 +350,7 @@ function ClickableDateToken({
           <DatePicker
             value={getDateForDatePicker()}
             setValue={newValue => {
-              setValue(newValue);
+              checkForErrorsOrCommit(newValue);
             }}
             maxLevel={maxLevel}
           />
