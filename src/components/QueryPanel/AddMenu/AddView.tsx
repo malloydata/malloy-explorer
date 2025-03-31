@@ -26,8 +26,6 @@ export function AddView({rootQuery, view, segment}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const fields = segment.getInputSchema().fields;
 
-  const nestNo = segmentNestNo(segment);
-
   return (
     <AddFieldItem
       label="Add view"
@@ -38,7 +36,12 @@ export function AddView({rootQuery, view, segment}: AddViewProps) {
         if (view === rootQuery && rootQuery.isEmpty()) {
           rootQuery.setView(field.name);
         } else {
-          segment.addNest(field.name, `Nest ${nestNo}`);
+          const nestNo = segmentNestNo(segment, field.name);
+
+          segment.addNest(
+            field.name,
+            nestNo > 1 ? `${field.name} ${nestNo}` : undefined
+          );
         }
         setQuery?.(rootQuery.build());
       }}
