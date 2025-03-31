@@ -41,6 +41,7 @@ export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
             limit.limit = value;
             setQuery?.(rootQuery.build());
           }}
+          errorMessage={limit.limit < 0 ? 'Limit must be positive' : undefined}
         />
         <div {...stylex.props(hoverStyles.hoverActions)}>
           <ClearButton
