@@ -136,7 +136,7 @@ export default function ResultPanel({
           {submittedQuery?.response?.result?.sql && (
             <CodeBlock
               code={submittedQuery.response.result.sql}
-              language="malloy"
+              language="sql"
             />
           )}
         </Content>
