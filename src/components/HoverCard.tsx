@@ -57,7 +57,7 @@ export default function HoverCard({
 }
 
 function HoverCardContent({field, pathParts}: HoverCardContentProps) {
-  const pathString = [...pathParts, field.name].join(' > ');
+  const pathString = pathParts.join(' > ');
   const descriptionAnnotation = field.annotations?.find(a =>
     a.value.startsWith('#"')
   );

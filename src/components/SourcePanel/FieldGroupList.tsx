@@ -18,8 +18,8 @@ const getLabelFromPath = (source: SourceInfo, path: string[]) => {
 };
 
 const getSublabelFromPath = (source: SourceInfo, path: string[]) => {
-  return path.length > 0
-    ? `joined to ${[...path.slice(0, -1), source.name].join(' > ')}`
+  return path.length > 1
+    ? `joined to ${[...path.slice(1, -1), source.name].join(' > ')}`
     : undefined;
 };
 
