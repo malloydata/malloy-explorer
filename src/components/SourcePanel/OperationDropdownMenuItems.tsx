@@ -49,11 +49,13 @@ export function OperationDropdownMenuItems({
       {field.kind === 'measure' ? (
         <>
           <DropdownMenuItem
+            icon="aggregate"
             label="Aggregate"
             disabled={!isAggregateAllowed}
             onClick={() => handleMenuItemClick('aggregate')}
           />
           <DropdownMenuItem
+            icon="orderBy"
             label="Order by"
             disabled={!isOrderByAllowed}
             onClick={() => handleMenuItemClick('orderBy')}
@@ -62,11 +64,13 @@ export function OperationDropdownMenuItems({
       ) : field.kind === 'dimension' ? (
         <>
           <DropdownMenuItem
+            icon="groupBy"
             label="Group by"
             disabled={!isGroupByAllowed}
             onClick={() => handleMenuItemClick('groupBy')}
           />
           <DropdownMenuItem
+            icon="orderBy"
             label="Order by"
             disabled={!isOrderByAllowed}
             onClick={() => handleMenuItemClick('orderBy')}
