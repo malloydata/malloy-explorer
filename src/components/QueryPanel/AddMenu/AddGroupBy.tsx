@@ -12,7 +12,7 @@ import {
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {segmentHasLimit} from '../../utils/segment';
+import {addGroupBy} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
 
 export interface AddGroupByProps {
@@ -35,12 +35,7 @@ export function AddGroupBy({rootQuery, segment}: AddGroupByProps) {
       fields={fields}
       types={['dimension']}
       onClick={(field, path) => {
-        segment.addGroupBy(field.name, path);
-        if (!segmentHasLimit(segment)) {
-          segment.setLimit(10);
-        }
-        segment.addOrderBy(field.name);
-        setQuery?.(rootQuery.build());
+        addGroupBy(rootQuery, segment, field, path, setQuery);
       }}
     />
   );

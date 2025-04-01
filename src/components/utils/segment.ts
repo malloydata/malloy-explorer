@@ -1,7 +1,9 @@
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTLimitViewOperation,
   ASTNestViewOperation,
   ASTOrderByViewOperation,
+  ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 
@@ -43,4 +45,19 @@ export function segmentNestNo(
     }
     return acc;
   }, 1);
+}
+
+export function addGroupBy(
+  rootQuery: ASTQuery,
+  segment: ASTSegmentViewDefinition,
+  field: Malloy.FieldInfo,
+  path: string[],
+  setQuery?: (query: Malloy.Query) => void
+): void {
+  segment.addGroupBy(field.name, path);
+  if (!segmentHasLimit(segment)) {
+    segment.setLimit(10);
+  }
+  segment.addOrderBy(field.name);
+  setQuery?.(rootQuery.build());
 }
