@@ -1,8 +1,8 @@
 import React from 'react';
-import {DropdownMenu} from '../DropdownMenu';
 import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {OperationDropdownMenuItems} from './OperationDropdownMenuItems';
+import {DropdownMenu} from '../primitives';
 
 interface AddFieldDropdownMenuProps {
   segment: ASTSegmentViewDefinition;

@@ -16,5 +16,10 @@ export {default as CodeBlock} from './CodeBlock';
 export {default as Spinner} from './Spinner';
 export {default as NumberInput} from './NumberInput';
 export {default as DatePicker} from './DatePicker';
+export {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownSubMenuItem,
+} from './DropdownMenu';
 
 export {type IconType} from './utils/icon';
