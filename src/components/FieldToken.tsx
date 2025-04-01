@@ -40,6 +40,7 @@ interface FieldTokenProps {
   hoverActionsVisible?: boolean;
   hasMenu?: boolean;
   menuItems?: MenuItem[];
+  isCompact?: boolean;
 }
 
 export default function FieldToken({
@@ -50,6 +51,7 @@ export default function FieldToken({
   hoverActionsVisible,
   hasMenu,
   menuItems,
+  isCompact,
 }: FieldTokenProps) {
   if (field.kind === 'join') {
     return null;
@@ -66,6 +68,9 @@ export default function FieldToken({
       }
       {...(onClick && {onClick})}
       {...(onHover && {onHover})}
+      {...(isCompact && {
+        customStyle: styles.compactToken,
+      })}
     />
   );
 
@@ -109,5 +114,8 @@ const styles = stylex.create({
   },
   showHoverActions: {
     [hoverActionsVars.visibility]: 'visible',
+  },
+  compactToken: {
+    padding: '2px 4px',
   },
 });

@@ -16,11 +16,13 @@ import {backgroundColors} from '../primitives/colors.stylex';
 
 interface ViewAttributeTableProps {
   viewInfo: Malloy.ViewInfo;
+  isCompact?: boolean;
   style?: StyleXStyles;
 }
 
 export default function ViewAttributeTable({
   viewInfo,
+  isCompact,
   style,
 }: ViewAttributeTableProps) {
   const dimensions = viewInfo.schema.fields.filter(f => f.kind === 'dimension');
@@ -41,7 +43,7 @@ export default function ViewAttributeTable({
             <ViewAttributeTableRow attribute="dimension">
               {dimensions.map(f => (
                 <span key={`${f.kind}::${f.name}`}>
-                  <FieldToken field={f} />
+                  <FieldToken field={f} isCompact={isCompact} />
                 </span>
               ))}
             </ViewAttributeTableRow>
