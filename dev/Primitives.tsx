@@ -15,6 +15,7 @@ import TextInputs from './components/TextInputs';
 import DatePickers from './components/DatePickers';
 import SelectorTokens from './components/SelectorTokens';
 import PillInputs from './components/PillInput';
+import CodeBlocks from './components/CodeBlocks';
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <TextInputs />
         <DatePickers />
         <PillInputs />
+        <CodeBlocks />
       </div>
     </MalloyExplorerProvider>
   );

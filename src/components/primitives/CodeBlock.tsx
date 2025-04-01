@@ -14,6 +14,7 @@ import {
 } from './syntax_highlighting/syntaxHighlighter';
 import {LineSpacing} from './syntax_highlighting/transformers/lineSpacingTransformer';
 import DOMElement from './DOMElement';
+import ScrollableArea from './ScrollableArea';
 
 interface CodeBlockProps {
   /**
@@ -67,5 +68,7 @@ export default function CodeBlock({
     };
   }, [code, language, lineNumbers, spacing, theme]);
 
-  return <div>{codeEl && <DOMElement element={codeEl} />}</div>;
+  return (
+    <ScrollableArea>{codeEl && <DOMElement element={codeEl} />}</ScrollableArea>
+  );
 }

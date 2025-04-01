@@ -25,22 +25,32 @@ GROUP BY 1`;
 export default function CodeBlocks() {
   return (
     <>
-      <h4>Code Blocks</h4>
-      <div style={{margin: '40px'}}>
-        <div>
-          <div>Default:</div>
-          <CodeBlock code={MALLOY_TEXT} language="malloy" />
-        </div>
-        <div>
-          <div>Single Spaced:</div>
-          <CodeBlock code={MALLOY_TEXT} language="malloy" spacing="single" />
-        </div>
-        <div>
-          <div>No Line Numbers:</div>
-          <CodeBlock code={MALLOY_TEXT} language="malloy" lineNumbers={false} />
-        </div>
-        <div>
-          <div>SQL:</div>
+      <div
+        style={{
+          fontFamily: 'sans-serif',
+          fontSize: '20px',
+          fontWeight: 500,
+          marginBottom: '8px',
+        }}
+      >
+        Code Blocks
+      </div>
+      <div>
+        <div>Default:</div>
+        <CodeBlock code={MALLOY_TEXT} language="malloy" />
+      </div>
+      <div>
+        <div>Single Spaced + No Line Numbers:</div>
+        <CodeBlock
+          code={MALLOY_TEXT}
+          language="malloy"
+          lineNumbers={false}
+          spacing="single"
+        />
+      </div>
+      <div>
+        <div>SQL (space constrained):</div>
+        <div style={{width: '100px', height: '100px'}}>
           <CodeBlock code={SQL_TEXT} language="sql" />
         </div>
       </div>
