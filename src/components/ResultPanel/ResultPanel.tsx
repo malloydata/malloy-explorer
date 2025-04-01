@@ -22,13 +22,19 @@ enum Tab {
   RESULTS = 'Results',
   MALLOY = 'Malloy',
   SQL = 'SQL',
+  RAW_QUERY = 'Raw Query',
 }
+
+type ResultPanelOptions = {
+  showRawQuery: boolean;
+};
 
 export interface ResultPanelProps {
   source: Malloy.SourceInfo;
   draftQuery?: Malloy.Query;
   setDraftQuery: (query: Malloy.Query) => void;
   submittedQuery?: SubmittedQuery;
+  options?: ResultPanelOptions;
 }
 
 export default function ResultPanel({
@@ -36,13 +42,14 @@ export default function ResultPanel({
   draftQuery,
   setDraftQuery,
   submittedQuery,
+  options,
 }: ResultPanelProps) {
   const [tab, setTab] = React.useState<Tab>(Tab.MALLOY);
   const malloyText = useQueryBuilder(source, draftQuery)?.toMalloy();
   const views = source.schema.fields.filter(f => f.kind === 'view');
   const submittedQueryExists = submittedQuery !== undefined;
 
-  if (!submittedQueryExists && tab !== Tab.MALLOY) {
+  if (!submittedQueryExists && (tab === Tab.RESULTS || tab === Tab.SQL)) {
     setTab(Tab.MALLOY);
   }
 
@@ -82,6 +89,14 @@ export default function ResultPanel({
           >
             {Tab.SQL}
           </Trigger>
+          {options?.showRawQuery && (
+            <Trigger
+              value={Tab.RAW_QUERY}
+              {...stylex.props(fontStyles.body, styles.tab)}
+            >
+              {Tab.RAW_QUERY}
+            </Trigger>
+          )}
         </List>
         {tab !== Tab.RESULTS && (
           <Button
@@ -99,6 +114,8 @@ export default function ResultPanel({
                 navigator.clipboard.writeText(
                   submittedQuery.response.result.sql
                 );
+              } else if (tab === Tab.RAW_QUERY) {
+                navigator.clipboard.writeText(JSON.stringify(draftQuery));
               }
             }}
           />
@@ -148,6 +165,17 @@ export default function ResultPanel({
             />
           )}
         </Content>
+        {options?.showRawQuery && (
+          <Content
+            value={Tab.RAW_QUERY}
+            {...stylex.props(styles.content, styles.codeContent)}
+          >
+            <CodeBlock
+              code={JSON.stringify(draftQuery, null, 2)}
+              language="json"
+            />
+          </Content>
+        )}
       </div>
     </Root>
   ) : (
