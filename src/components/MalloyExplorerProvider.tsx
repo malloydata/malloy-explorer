@@ -9,7 +9,10 @@ import * as React from 'react';
 import {ReactNode} from 'react';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {QueryEditorContext} from '../contexts/QueryEditorContext';
+import {
+  QueryEditorContext,
+  SearchValueMapResult,
+} from '../contexts/QueryEditorContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
 
 export interface MalloyExplorerProviderProps {
@@ -17,6 +20,7 @@ export interface MalloyExplorerProviderProps {
   query?: Malloy.Query;
   setQuery?: (query: Malloy.Query | undefined) => void;
   children: ReactNode | ReactNode[];
+  topValues?: SearchValueMapResult[];
 }
 
 export function MalloyExplorerProvider({
@@ -24,16 +28,13 @@ export function MalloyExplorerProvider({
   query,
   setQuery,
   children,
+  topValues,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
   return (
     <TooltipProvider>
       <QueryEditorContext.Provider
-        value={{
-          source,
-          rootQuery,
-          setQuery,
-        }}
+        value={{source, rootQuery, setQuery, topValues}}
       >
         {children}
       </QueryEditorContext.Provider>

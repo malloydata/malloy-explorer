@@ -9,7 +9,7 @@ export const hoverStyles = stylex.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: '100%',
+    //    width: '100%',
     gap: '4px',
     cursor: 'pointer',
     [hoverActionsVars.display]: {

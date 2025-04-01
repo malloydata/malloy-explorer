@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {FieldInfo, ViewInfo} from '@malloydata/malloy-interfaces';
+import {FieldInfo} from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import * as React from 'react';
 import BadgeForField from './primitives/BadgeForField';
@@ -13,6 +13,7 @@ import {textColors} from './primitives/colors.stylex';
 import {fontStyles} from './primitives/styles';
 import ViewAttributeTable from './ResultPanel/ViewAttributeTable';
 import {QueryEditorContext} from '../contexts/QueryEditorContext';
+import {TopValuesTable} from './TopValuesTable';
 
 interface FieldHoverCardProps {
   /**
@@ -41,11 +42,13 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
   if (field.kind === 'view') {
     details = (
       <ViewAttributeTable
-        viewInfo={field as ViewInfo}
+        viewInfo={field}
         isCompact={true}
         style={styles.viewAttributeTable}
       />
     );
+  } else if (field.kind === 'dimension') {
+    details = <TopValuesTable field={field} path={path} />;
   }
 
   return (

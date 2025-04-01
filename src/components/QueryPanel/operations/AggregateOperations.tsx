@@ -17,9 +17,10 @@ import {
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {hoverStyles} from './hover.stylex';
-import {Field} from './Field';
+import {Field} from '../Field';
 import {ClearButton} from './ClearButton';
 import {OperationActionTitle} from './OperationActionTitle';
+import {FieldHover} from '../FieldHover';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
@@ -58,17 +59,29 @@ export function AggregateOperations({
       />{' '}
       <div {...stylex.props(styles.tokenContainer)}>
         {aggregates.map((aggregate, key) => (
-          <div key={key} {...stylex.props(hoverStyles.main)}>
-            <Field type="measure" key={key} field={aggregate.field} />
-            <div {...stylex.props(hoverStyles.hoverActions)}>
-              <ClearButton
-                onClick={() => {
-                  aggregate.delete();
-                  setQuery?.(rootQuery.build());
-                }}
+          <FieldHover
+            key={key}
+            field={aggregate.getFieldInfo()}
+            path={aggregate.field.getReference().path}
+            side="right"
+            align="start"
+          >
+            <div key={key} {...stylex.props(hoverStyles.main)}>
+              <Field
+                key={key}
+                field={aggregate.getFieldInfo()}
+                path={aggregate.field.getReference().path}
               />
+              <div {...stylex.props(hoverStyles.hoverActions)}>
+                <ClearButton
+                  onClick={() => {
+                    aggregate.delete();
+                    setQuery?.(rootQuery.build());
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          </FieldHover>
         ))}
       </div>
     </div>

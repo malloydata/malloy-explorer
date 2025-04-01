@@ -14,12 +14,13 @@ import {
   StringFilter,
   StringMatch,
 } from '@malloydata/malloy-filter';
-import {SelectorToken, Token, TokenGroup} from '../primitives';
-import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
+import {SelectorToken, TokenGroup} from '../primitives';
+import {fieldKindToColor} from '../utils/icon';
 import {PillInput} from './PillInput';
 import {TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
 import {StyleXStyles} from '@stylexjs/stylex';
+import {Field} from '../QueryPanel/Field';
 
 type StringFilterType =
   | 'is_equal_to'
@@ -81,12 +82,14 @@ function typeFromFilter(filter: StringFilter): StringFilterType {
 export interface StringFilterBuilderProps {
   fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure;
   filter: StringFilter | null;
+  path: string[];
   setFilter: (filter: StringFilter) => void;
 }
 
 export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
   fieldInfo,
   filter,
+  path,
   setFilter,
 }) => {
   filter ??= {operator: '=', values: []};
@@ -108,7 +111,7 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
 
   const typeDropdown = (
     <SelectorToken
-      key="field"
+      key="type"
       value={type}
       onChange={changeType}
       items={[
@@ -130,11 +133,10 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
     />
   );
 
-  const icon = atomicTypeToIcon(fieldInfo.type.kind);
   const color = fieldKindToColor(fieldInfo.kind);
 
   const tokens = [
-    <Token key="type" icon={icon} label={fieldInfo.name} />,
+    <Field key="field" field={fieldInfo} path={path} />,
     typeDropdown,
   ];
 

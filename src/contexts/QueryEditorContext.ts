@@ -9,6 +9,16 @@ import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 
+// TODO switch to stable API when available
+export interface SearchValueMapResult {
+  fieldName: string;
+  cardinality: number;
+  values: {
+    fieldValue: string | null;
+    weight: number;
+  }[];
+}
+
 export interface QueryEditorContextProps {
   /** Source object at the root level */
   source?: Malloy.SourceInfo;
@@ -16,6 +26,7 @@ export interface QueryEditorContextProps {
   rootQuery?: ASTQuery;
   /** Provide to allow editing of the query */
   setQuery?: (rootQuery: Malloy.Query | undefined) => void;
+  topValues?: SearchValueMapResult[];
 }
 
 /**

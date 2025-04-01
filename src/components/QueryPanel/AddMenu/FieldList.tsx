@@ -10,9 +10,9 @@ import {useMemo} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
-import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
-import {Token} from '../../primitives';
 import {sortFieldInfos} from '../../utils/fields';
+import {Field} from '../Field';
+import {FieldHover} from '../FieldHover';
 
 interface Group {
   name: string;
@@ -73,7 +73,7 @@ export function FieldList({fields, onClick, search, types}: FieldListProps) {
   }, [fields, search, types]);
 
   return (
-    <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
+    <div>
       {groups.length ? (
         groups.map(group => (
           <div key={group.name}>
@@ -86,40 +86,32 @@ export function FieldList({fields, onClick, search, types}: FieldListProps) {
               </div>
             </div>
             {group.fields.map(field => (
-              <div
-                role="menuitem"
-                tabIndex={-1}
+              <FieldHover
                 key={group.name + ':' + field.name}
-                {...stylex.props(addMenuStyles.item, styles.fieldItem)}
-                onClick={() => onClick(field, group.path)}
+                field={field}
+                path={group.path}
+                side="right"
+                align="start"
               >
-                <Field field={field} />
-              </div>
+                <div
+                  role="menuitem"
+                  tabIndex={-1}
+                  {...stylex.props(addMenuStyles.item, styles.fieldItem)}
+                  onClick={() => onClick(field, group.path)}
+                >
+                  <Field field={field} path={group.path} />
+                </div>
+              </FieldHover>
             ))}
           </div>
         ))
       ) : (
         <div {...stylex.props(addMenuStyles.item)} data-disabled="true">
-          No matching items
+          No matching fields
         </div>
       )}
     </div>
   );
-}
-
-export interface FieldProps {
-  field:
-    | Malloy.FieldInfoWithDimension
-    | Malloy.FieldInfoWithMeasure
-    | Malloy.FieldInfoWithView;
-}
-
-export function Field({field}: FieldProps) {
-  const color = fieldKindToColor(field.kind);
-  const icon =
-    field.kind === 'view' ? 'query' : atomicTypeToIcon(field.type.kind);
-
-  return <Token label={field.name} icon={icon} color={color} />;
 }
 
 const styles = stylex.create({

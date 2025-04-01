@@ -32,12 +32,14 @@ export function FieldMenu({fields, types, onClick}: FieldMenuProps) {
         />
       </div>
       <Divider />
-      <FieldList
-        fields={fields}
-        search={search}
-        types={types}
-        onClick={onClick}
-      />
+      <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
+        <FieldList
+          fields={fields}
+          search={search}
+          types={types}
+          onClick={onClick}
+        />
+      </div>
     </div>
   );
 }
