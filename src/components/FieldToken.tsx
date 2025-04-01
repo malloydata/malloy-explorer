@@ -11,23 +11,12 @@ import stylex from '@stylexjs/stylex';
 import {Token} from './primitives';
 import {hoverActionsVars} from './SourcePanel/field-token.stylex';
 import {atomicTypeToIcon, fieldKindToColor} from './utils/icon';
-import {Menu, MenuItem} from './Menu';
 
-interface FieldTokenProps {
+interface FieldTokenProps extends React.ComponentProps<typeof Token> {
   /**
    * The field information associated with the token.
    */
   field: FieldInfo;
-
-  /**
-   * Called when the token is clicked.
-   */
-  onClick?: (event: React.MouseEvent) => void;
-
-  /**
-   * Called when the token is hovered or not hovered.
-   */
-  onHover?: (isHovered: boolean) => void;
 
   /**
    * Optional hover actions to render when the token is hovered.
@@ -38,41 +27,19 @@ interface FieldTokenProps {
    * The controlled visible state of the hover actions.
    */
   hoverActionsVisible?: boolean;
-  hasMenu?: boolean;
-  menuItems?: MenuItem[];
   isCompact?: boolean;
 }
 
 export default function FieldToken({
   field,
-  onClick,
-  onHover,
   hoverActions,
   hoverActionsVisible,
-  hasMenu,
-  menuItems,
   isCompact,
+  ...props
 }: FieldTokenProps) {
   if (field.kind === 'join') {
     return null;
   }
-
-  const token = (
-    <Token
-      label={field.name}
-      color={fieldKindToColor(field.kind)}
-      icon={
-        field.kind === 'dimension' || field.kind === 'measure'
-          ? atomicTypeToIcon(field.type.kind)
-          : 'view'
-      }
-      {...(onClick && {onClick})}
-      {...(onHover && {onHover})}
-      {...(isCompact && {
-        customStyle: styles.compactToken,
-      })}
-    />
-  );
 
   return (
     <div
@@ -82,11 +49,19 @@ export default function FieldToken({
       )}
     >
       <div style={{display: 'inline-grid'}}>
-        {hasMenu && menuItems ? (
-          <Menu trigger={token} items={menuItems} />
-        ) : (
-          token
-        )}
+        <Token
+          label={field.name}
+          color={fieldKindToColor(field.kind)}
+          icon={
+            field.kind === 'dimension' || field.kind === 'measure'
+              ? atomicTypeToIcon(field.type.kind)
+              : 'view'
+          }
+          {...props}
+          {...(isCompact && {
+            customStyle: styles.compactToken,
+          })}
+        />
       </div>
       {hoverActions && (
         <div {...stylex.props(styles.hoverActions)}>{hoverActions}</div>

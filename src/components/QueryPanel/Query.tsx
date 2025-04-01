@@ -16,9 +16,9 @@ import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
 import CollapsiblePanel from '../primitives/CollapsiblePanel';
 import {AddMenu} from './AddMenu/AddMenu';
-import {Menu} from '../Menu';
 import {Button, Icon} from '../primitives';
 import stylex from '@stylexjs/stylex';
+import {DropdownMenu, DropdownMenuItem} from '../DropdownMenu';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -27,33 +27,33 @@ export interface QueryProps {
 }
 
 export function Query({rootQuery, query, setQuery}: QueryProps) {
-  const menuItems = [];
-  if (setQuery) {
-    menuItems.push({
-      icon: <Icon name="clear" />,
-      label: 'Clear query',
-      onClick: () => {
-        setQuery?.(undefined);
-      },
-    });
-  }
-
   return (
     <CollapsiblePanel
       title="Main query"
       controls={
         <>
-          <Menu
-            items={menuItems}
+          <DropdownMenu
             trigger={
               <Button
                 variant="flat"
                 icon="meatballs"
                 size="compact"
-                tooltip="More actions"
+                tooltip="More Actions"
               />
             }
-          />
+          >
+            {setQuery ? (
+              <DropdownMenuItem
+                icon="clear"
+                label="Clear query"
+                onClick={() => {
+                  setQuery?.(undefined);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+          </DropdownMenu>
           <AddMenu rootQuery={rootQuery} view={query} />
         </>
       }

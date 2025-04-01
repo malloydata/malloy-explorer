@@ -30,18 +30,19 @@ export interface TokenProps extends React.ComponentProps<'button'> {
   color?: TokenColor;
 
   /**
-   * Called when the token is clicked.
-   *
-   * @param event The React mouse event.
+   * Called when the token is clicked. Adding this will make the token appear interactive.
    */
   onClick?: (event: React.MouseEvent) => void;
 
   /**
    * Called when the token is hovered or not hovered.
-   *
-   * @param isHovered Whether the token is currently hovered.
    */
   onHover?: (isHovered: boolean) => void;
+
+  /**
+   * If true, the token will behave as button trigger without requiring an onClick event handler prop.
+   */
+  asButtonTrigger?: boolean;
 
   /**
    * Custom styles for the token.
@@ -55,6 +56,7 @@ export default function Token({
   color = DEFAULT_TOKEN_COLOR,
   onClick,
   onHover,
+  asButtonTrigger = false,
   customStyle,
   ...props
 }: TokenProps) {
@@ -67,10 +69,10 @@ export default function Token({
       )}
     >
       {icon && <Icon name={icon} style={tokenStyles.icon} />}
-      {onClick && (
+      {(onClick || asButtonTrigger) && (
         <button
           {...stylex.props(styles.button)}
-          onClick={onClick}
+          {...(onClick && {onClick})}
           {...(onHover && {
             onMouseEnter: () => onHover(true),
             onMouseLeave: () => onHover(false),

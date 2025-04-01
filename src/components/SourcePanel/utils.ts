@@ -1,4 +1,6 @@
 import {FieldInfo, SourceInfo} from '@malloydata/malloy-interfaces';
+import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
+import {segmentNestNo} from '../utils/segment';
 
 export type FieldItem = {
   path: string[];
@@ -68,6 +70,11 @@ export function groupFieldItemsByKind(items: FieldItem[]): FieldGroupByKind[] {
     }, {})
   );
 }
+
+export const getNestName = (segment: ASTSegmentViewDefinition) => {
+  const nestNo = segmentNestNo(segment);
+  return `Nest ${nestNo}`;
+};
 
 export const FIELD_KIND_TO_TITLE = {
   view: 'Views',

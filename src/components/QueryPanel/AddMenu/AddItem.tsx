@@ -9,7 +9,7 @@ import * as React from 'react';
 import {ReactElement} from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
-import {MenuItem} from '../../Menu';
+import {DropdownMenuItemProps} from '../../DropdownMenu';
 import {addMenuStyles} from './styles';
 
 export interface AddItemProps {
@@ -18,7 +18,7 @@ export interface AddItemProps {
   detail?: ReactElement;
   onClick?: () => void;
   disable?: () => boolean;
-  subMenu?: MenuItem[];
+  subMenu?: DropdownMenuItemProps[];
 }
 
 export function AddItem({icon, label, detail, disable, onClick}: AddItemProps) {
