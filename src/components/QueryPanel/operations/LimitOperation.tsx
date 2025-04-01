@@ -32,7 +32,7 @@ export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
   }
   return (
     <div>
-      <div {...stylex.props(styles.title)}>Limit</div>
+      <div {...stylex.props(styles.title)}>limit</div>
       <div {...stylex.props(hoverStyles.main)}>
         <EditableToken
           type="number"
