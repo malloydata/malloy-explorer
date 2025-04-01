@@ -7,7 +7,6 @@ export const tokenStyles = stylex.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '4px 8px',
     gap: '8px',
     borderRadius: '4px',
     borderWidth: '0px',
@@ -46,5 +45,14 @@ export const tokenColorVariants = stylex.create({
   cyan: {
     [iconVars.color]: iconColors.cyan,
     [labelVars.color]: textColors.cyan,
+  },
+});
+
+export const tokenSizeVariants = stylex.create({
+  default: {
+    padding: '4px 8px',
+  },
+  compact: {
+    padding: '2px 4px',
   },
 });
