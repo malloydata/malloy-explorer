@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {FieldInfo} from '@malloydata/malloy-interfaces';
+import {FieldInfo, ViewInfo} from '@malloydata/malloy-interfaces';
 import {
   Tooltip,
   TooltipContent,
@@ -17,6 +17,7 @@ import * as React from 'react';
 import BadgeForField from './primitives/BadgeForField';
 import {textColors} from './primitives/colors.stylex';
 import {fontStyles} from './primitives/styles';
+import ViewAttributeTable from './ResultPanel/ViewAttributeTable';
 
 interface HoverCardContentProps {
   /**
@@ -65,7 +66,16 @@ function HoverCardContent({field, pathParts}: HoverCardContentProps) {
     ? descriptionAnnotation.value.substring(2)
     : 'This is a ' + field.kind + '.';
 
-  const details = null;
+  let details = null;
+  if (field.kind === 'view') {
+    details = (
+      <ViewAttributeTable
+        viewInfo={field as ViewInfo}
+        isCompact={true}
+        style={styles.viewAttributeTable}
+      />
+    );
+  }
 
   return (
     <div {...stylex.props(styles.container, fontStyles.body)}>
@@ -107,4 +117,11 @@ const styles = stylex.create({
     color: textColors.secondary,
   },
   detailsSection: {},
+  viewPreview: {
+    maxHeight: '136px',
+    overflow: 'auto',
+  },
+  viewAttributeTable: {
+    height: '136px',
+  },
 });
