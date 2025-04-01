@@ -11,8 +11,13 @@ import {iconVars, labelVars} from './token.stylex';
 import Icon from '../Icon';
 import {fontStyles} from '../styles';
 import {IconType} from '../utils/icon';
-import {tokenColorVariants, tokenStyles} from './styles';
-import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
+import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
+import {
+  DEFAULT_TOKEN_COLOR,
+  DEFAULT_TOKEN_SIZE,
+  TokenColor,
+  TokenSize,
+} from './types';
 import ErrorIcon from '../ErrorIcon';
 
 interface EditableTokenBaseProps<T> {
@@ -41,6 +46,10 @@ interface EditableTokenBaseProps<T> {
    */
   color?: TokenColor;
   /**
+   * Optional size of the token.
+   */
+  size?: TokenSize;
+  /**
    * Optional custom styles for the token.
    */
   style?: StyleXStyles;
@@ -64,6 +73,7 @@ export default function EditableToken({
   onRemove,
   icon,
   color = DEFAULT_TOKEN_COLOR,
+  size = DEFAULT_TOKEN_SIZE,
   style,
   type,
   errorMessage,
@@ -102,6 +112,7 @@ export default function EditableToken({
         {...stylex.props(
           tokenStyles.main,
           tokenColorVariants[color],
+          tokenSizeVariants[size],
           isFocused && styles.focused,
           !!errorMessage && styles.hasError,
           style

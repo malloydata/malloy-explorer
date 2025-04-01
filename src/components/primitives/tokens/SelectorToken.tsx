@@ -12,8 +12,13 @@ import {IconType} from '../utils/icon';
 import Icon from '../Icon';
 import {fontStyles} from '../styles';
 import ScrollableArea from '../ScrollableArea';
-import {tokenColorVariants, tokenStyles} from './styles';
-import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
+import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
+import {
+  DEFAULT_TOKEN_COLOR,
+  DEFAULT_TOKEN_SIZE,
+  TokenColor,
+  TokenSize,
+} from './types';
 import TextInput from '../TextInput';
 
 export interface SelectorTokenItem<T extends string> {
@@ -26,6 +31,7 @@ export interface SelectorTokenProps<T extends string> {
   onChange: (value: T) => void;
   icon?: IconType;
   color?: TokenColor;
+  size?: TokenSize;
   items: SelectorTokenItem<T>[];
   isSearchable?: boolean;
   style?: StyleXStyles;
@@ -36,6 +42,7 @@ export default function SelectorToken<T extends string>({
   onChange,
   icon,
   color = DEFAULT_TOKEN_COLOR,
+  size = DEFAULT_TOKEN_SIZE,
   items,
   isSearchable = false,
   style,
@@ -67,6 +74,7 @@ export default function SelectorToken<T extends string>({
         {...stylex.props(
           tokenStyles.main,
           tokenColorVariants[color],
+          tokenSizeVariants[size],
           fontStyles.body,
           tokenStyles.label,
           style
