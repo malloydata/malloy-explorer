@@ -48,6 +48,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
                 onClick={() => {
                   setQuery?.(undefined);
                 }}
+                disabled={rootQuery.isEmpty()}
               />
             ) : (
               <></>
