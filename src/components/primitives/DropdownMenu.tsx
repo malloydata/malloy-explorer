@@ -9,10 +9,10 @@ import * as React from 'react';
 import {ReactElement} from 'react';
 import * as PrimitiveDropdownMenu from '@radix-ui/react-dropdown-menu';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
-import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
-import {Label} from '../Label';
 import {Icon, IconType} from '.';
+import {fontStyles} from './styles';
+import {iconColors, textColors} from './colors.stylex';
+import {iconVars, labelVars, sublabelVars} from './dropdown-menu.stylex';
 
 type Modifiers = Pick<
   React.MouseEvent,
@@ -41,7 +41,7 @@ export function DropdownMenu({
       </PrimitiveDropdownMenu.Trigger>
       <PrimitiveDropdownMenu.Portal>
         <PrimitiveDropdownMenu.Content
-          {...stylex.props(menuStyles.content)}
+          {...stylex.props(fontStyles.body, styles.content)}
           side="bottom"
           align="start"
           sideOffset={4}
@@ -57,7 +57,7 @@ export function DropdownMenu({
 interface DropdownMenuItemProps {
   icon?: IconType;
   label: string;
-  detail?: ReactElement;
+  sublabel?: string;
   onClick?: (modifiers: Modifiers) => void;
   disabled?: boolean;
 }
@@ -65,31 +65,27 @@ interface DropdownMenuItemProps {
 export function DropdownMenuItem({
   icon,
   label,
-  detail,
+  sublabel,
   onClick,
   disabled,
 }: DropdownMenuItemProps) {
   return (
     <PrimitiveDropdownMenu.Item
-      {...stylex.props(menuStyles.item)}
+      {...stylex.props(styles.item)}
       onClick={({altKey, ctrlKey, metaKey, shiftKey}) => {
         onClick?.({altKey, ctrlKey, metaKey, shiftKey});
       }}
       disabled={disabled}
     >
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div {...stylex.props(menuStyles.label)}>
-            {icon && <Icon name={icon} />}
-            <Label>{label}</Label>
-          </div>
-        </TooltipTrigger>
-        {detail ? (
-          <TooltipContent {...stylex.props(styles.tooltip)} side="right">
-            {detail}
-          </TooltipContent>
-        ) : null}
-      </Tooltip>
+      {icon && <Icon name={icon} style={styles.icon} />}
+      <div {...stylex.props(styles.center)}>
+        <span {...stylex.props(fontStyles.body, styles.label)}>{label}</span>
+        {sublabel && (
+          <span {...stylex.props(fontStyles.supporting, styles.sublabel)}>
+            {sublabel}
+          </span>
+        )}
+      </div>
     </PrimitiveDropdownMenu.Item>
   );
 }
@@ -99,8 +95,9 @@ type DropdownSubMenuItemChild =
   | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>;
 
 interface DropdownSubMenuItemProps {
-  icon?: ReactElement;
+  icon?: IconType;
   label: string;
+  sublabel?: string;
   disabled?: boolean;
   children: DropdownSubMenuItemChild | DropdownSubMenuItemChild[];
 }
@@ -108,69 +105,85 @@ interface DropdownSubMenuItemProps {
 export function DropdownSubMenuItem({
   icon,
   label,
+  sublabel,
   disabled,
   children,
 }: DropdownSubMenuItemProps) {
   return (
     <PrimitiveDropdownMenu.Sub>
       <PrimitiveDropdownMenu.SubTrigger
+        {...stylex.props(styles.item)}
         disabled={disabled}
-        {...stylex.props(menuStyles.item)}
       >
-        <div {...stylex.props(menuStyles.label)}>
-          {icon}
-          <Label>{label}</Label>
+        {icon && <Icon name={icon} style={styles.icon} />}
+        <div {...stylex.props(styles.center)}>
+          <span {...stylex.props(fontStyles.body, styles.label)}>{label}</span>
+          {sublabel && (
+            <span {...stylex.props(fontStyles.supporting, styles.sublabel)}>
+              {sublabel}
+            </span>
+          )}
         </div>
-        <div {...stylex.props(menuStyles.arrow)}>
-          <Icon name="chevronRight" />
-        </div>
+        <Icon name="chevronRight" style={styles.icon} />
       </PrimitiveDropdownMenu.SubTrigger>
-      <PrimitiveDropdownMenu.SubContent {...stylex.props(menuStyles.content)}>
+      <PrimitiveDropdownMenu.SubContent {...stylex.props(styles.content)}>
         {React.Children.map(children, child => child)}
       </PrimitiveDropdownMenu.SubContent>
     </PrimitiveDropdownMenu.Sub>
   );
 }
 
-const colors = {
-  background: 'white',
-  shadowElevation: 'rgba(39, 33, 33, 0.1)',
-  hover: 'lightgrey',
-  text: '#050505',
-  disabledText: '#A4B0BC',
-};
-
-const menuStyles = stylex.create({
+const styles = stylex.create({
   content: {
-    background: colors.background,
-    borderRadius: 10,
-    borderWidth: 1,
-    boxShadow: `0px 2px 12px 0px ${colors.shadowElevation}`,
-    fontFamily: 'sans-serif',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '10px',
+    background: 'rgba(255, 255, 255, 1)',
+    boxShadow:
+      '0px 2px 12px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.1)',
+    padding: '4px',
   },
   item: {
-    color: {
-      default: colors.text,
-      ':is([data-disabled])': colors.disabledText,
-    },
-    padding: 8,
-    cursor: 'default',
-    userSelect: 'none',
-    display: 'flex',
-    justifyContent: 'space-between',
-    borderRadius: 3,
-    backgroundColor: {
-      ':hover': colors.hover,
-    },
-  },
-  label: {
     display: 'flex',
     alignItems: 'center',
-    whiteSpace: 'nowrap',
-    width: '100%',
-    gap: 8,
+    padding: '8px',
+    gap: '8px',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    outline: 'none',
+    ':is([data-highlighted])': {
+      background: 'rgba(0, 0, 0, 0.05)',
+    },
+    ':is([data-disabled])': {
+      cursor: 'not-allowed',
+    },
+    [iconVars.color]: {
+      default: iconColors.primary,
+      ':is([data-disabled])': iconColors.disabled,
+    },
+    [labelVars.color]: {
+      default: textColors.primary,
+      ':is([data-disabled])': textColors.disabled,
+    },
+    [sublabelVars.color]: {
+      default: textColors.secondary,
+      ':is([data-disabled])': textColors.disabled,
+    },
   },
-  arrow: {
-    marginLeft: 16,
+  center: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+  },
+  icon: {
+    color: iconVars.color,
+  },
+  label: {
+    flexGrow: 1,
+    color: labelVars.color,
+  },
+  sublabel: {
+    flexGrow: 1,
+    color: sublabelVars.color,
   },
 });
