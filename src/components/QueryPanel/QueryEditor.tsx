@@ -18,6 +18,37 @@ export interface QueryEditorProps {
   source: Malloy.SourceInfo;
   query?: Malloy.Query;
   setQuery?: (query: Malloy.Query | undefined) => void;
+  showSource: boolean;
+}
+
+/**
+ * The Query Viewing and Editing panel. Takes a `SourceInfo` object
+ * and an optional `Query` object.
+ *
+ * @param source The source object to be used for query building.
+ * @param query A query to be edited. Omit for a new query.
+ * @param showSource (optional)
+ * @returns
+ */
+export function QueryEditor({
+  source,
+  query,
+  setQuery,
+  showSource = true,
+}: QueryEditorProps) {
+  const rootQuery = useQueryBuilder(source, query);
+
+  if (!rootQuery) {
+    return null;
+  }
+
+  return (
+    <div {...stylex.props(queryExplorerStyles.main)}>
+      {showSource && <Source rootQuery={rootQuery} />}
+      <Parameters rootQuery={rootQuery} />
+      <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
+    </div>
+  );
 }
 
 const queryExplorerStyles = stylex.create({
@@ -30,27 +61,3 @@ const queryExplorerStyles = stylex.create({
     gap: 8,
   },
 });
-
-/**
- * The Query Viewing and Editing panel. Takes a `SourceInfo` object
- * and an optional `Query` object.
- *
- * @param source The source object to be used for query building.
- * @param query A query to be edited. Omit for a new query.
- * @returns
- */
-export function QueryEditor({source, query, setQuery}: QueryEditorProps) {
-  const rootQuery = useQueryBuilder(source, query);
-
-  if (!rootQuery) {
-    return null;
-  }
-
-  return (
-    <div {...stylex.props(queryExplorerStyles.main)}>
-      <Source rootQuery={rootQuery} />
-      <Parameters rootQuery={rootQuery} />
-      <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
-    </div>
-  );
-}
