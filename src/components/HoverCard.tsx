@@ -18,6 +18,7 @@ import BadgeForField from './primitives/BadgeForField';
 import {textColors} from './primitives/colors.stylex';
 import {fontStyles} from './primitives/styles';
 import ViewAttributeTable from './ResultPanel/ViewAttributeTable';
+import {QueryEditorContext} from '../contexts/QueryEditorContext';
 
 interface HoverCardContentProps {
   /**
@@ -61,7 +62,9 @@ export default function HoverCard({
 }
 
 function HoverCardContent({field, pathParts}: HoverCardContentProps) {
-  const pathString = pathParts.join(' > ');
+  const {source} = React.useContext(QueryEditorContext);
+
+  const pathString = [source?.name ?? '', ...pathParts].join(' > ');
   const descriptionAnnotation = field.annotations?.find(a =>
     a.value.startsWith('#"')
   );
