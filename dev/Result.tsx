@@ -33,7 +33,7 @@ const App = () => {
 
   return (
     <>
-      <div style={{padding: '8px', height: '100vh'}}>
+      <div style={{boxSizing: 'border-box', padding: '8px', height: '100vh'}}>
         <ResultPanel
           source={source}
           draftQuery={draftQuery}
@@ -42,7 +42,7 @@ const App = () => {
           options={{showRawQuery: true}}
         />
       </div>
-      <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
+      {/* <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} /> */}
     </>
   );
 };

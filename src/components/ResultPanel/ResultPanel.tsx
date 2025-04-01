@@ -237,6 +237,7 @@ const styles = stylex.create({
   },
   contentContainer: {
     flexGrow: '1',
+    overflow: 'hidden',
   },
   content: {
     padding: '12px',
