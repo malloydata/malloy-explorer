@@ -124,7 +124,7 @@ export default function ResultPanel({
       <div {...stylex.props(styles.contentContainer)}>
         <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
           {submittedQuery && (
-            <ScrollableArea>
+            <>
               {draftQuery &&
                 submittedQuery &&
                 !queriesAreEqual(draftQuery, submittedQuery.query) && (
@@ -144,8 +144,10 @@ export default function ResultPanel({
                     <span> to the last run query.</span>
                   </div>
                 )}
-              <ResultDisplay query={submittedQuery} />
-            </ScrollableArea>
+              <ScrollableArea>
+                <ResultDisplay query={submittedQuery} />
+              </ScrollableArea>
+            </>
           )}
         </Content>
         <Content
