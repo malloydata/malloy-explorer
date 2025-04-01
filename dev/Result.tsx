@@ -42,7 +42,7 @@ const App = () => {
           options={{showRawQuery: true}}
         />
       </div>
-      {/* <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} /> */}
+      <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
     </>
   );
 };
