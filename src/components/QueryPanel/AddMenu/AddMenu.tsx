@@ -10,8 +10,7 @@ import {useContext, useState} from 'react';
 import {ASTView, ASTQuery} from '@malloydata/malloy-query-builder';
 import * as Popover from '@radix-ui/react-popover';
 import stylex from '@stylexjs/stylex';
-import {Divider, Icon, TextInput} from '../../primitives';
-import {colors} from './colors.stylex';
+import {Button, Divider, TextInput} from '../../primitives';
 import {AddLimit} from './AddLimit';
 import {AddEmptyNest} from './AddEmptyNest';
 import {addMenuStyles} from './styles';
@@ -31,6 +30,7 @@ export interface AddMenuProps {
 }
 
 export function AddMenu({rootQuery, view}: AddMenuProps) {
+  const [open, setOpen] = useState(false);
   const {setQuery} = useContext(QueryEditorContext);
   const [search, setSearch] = useState('');
 
@@ -38,19 +38,25 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
 
   return (
     <Popover.Root
+      open={open}
       onOpenChange={open => {
+        setOpen(open);
         if (!open) {
           setSearch('');
         }
       }}
     >
       <Popover.Trigger asChild>
-        <div {...stylex.props(styles.trigger)}>
-          <Icon name="insert" />
-          <span>Add</span>
-        </div>
+        <Button
+          icon="insert"
+          variant="flat"
+          size="compact"
+          onClick={() => setOpen(!open)}
+          tooltip="Add query elements"
+        />
       </Popover.Trigger>
       <Popover.Content
+        onPointerDownOutside={() => setOpen(false)}
         {...stylex.props(addMenuStyles.content)}
         side="bottom"
         align="start"
@@ -105,20 +111,3 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
     </Popover.Root>
   );
 }
-
-const styles = stylex.create({
-  trigger: {
-    padding: 6,
-    border: 'none',
-    background: {
-      default: 'transparent',
-      ':hover': colors.hover,
-    },
-    margin: 0,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    borderRadius: 4,
-  },
-});

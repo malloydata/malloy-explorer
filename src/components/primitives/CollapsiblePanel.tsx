@@ -7,11 +7,10 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {useState} from 'react';
+import {ReactElement, useState} from 'react';
 import Button from './Button';
 import {IconType} from './utils/icon';
 import Icon from './Icon';
-import {Menu, MenuItem} from '../Menu';
 
 interface CollapsiblePanelProps {
   title: string;
@@ -20,8 +19,8 @@ interface CollapsiblePanelProps {
   // The icon to be shown to the left of the title.
   icon?: IconType;
 
-  // If provided, a Kebab menu will be rendered with these items in the dropdown.
-  menuItems?: MenuItem[];
+  // Additional controls to display by the collapse button
+  controls?: ReactElement | ReactElement[];
 }
 
 /*
@@ -31,7 +30,7 @@ export default function CollapsiblePanel({
   title,
   children,
   icon,
-  menuItems,
+  controls,
 }: CollapsiblePanelProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -41,14 +40,7 @@ export default function CollapsiblePanel({
         {icon && <Icon name={icon} style={styles.icon} />}
         <div {...stylex.props(styles.title)}>{title}</div>
         <div {...stylex.props(styles.topBarRightSection)}>
-          {menuItems && (
-            <Menu
-              trigger={
-                <Button variant="flat" icon="meatballs" size="compact" />
-              }
-              items={menuItems}
-            />
-          )}
+          <div {...stylex.props(styles.controls)}>{controls}</div>
           <Button
             variant="flat"
             size="compact"
@@ -88,5 +80,10 @@ const styles = stylex.create({
   icon: {},
   content: {
     padding: '0 8px 8px 8px',
+  },
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
   },
 });

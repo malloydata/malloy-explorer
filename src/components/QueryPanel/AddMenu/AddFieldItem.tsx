@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useState} from 'react';
 import Icon from '../../primitives/Icon';
 import {addMenuStyles} from './styles';
 import stylex from '@stylexjs/stylex';
@@ -34,6 +35,7 @@ export function AddFieldItem({
   disabledMessage,
 }: AddGroupByProps) {
   const disabled = fields.length === 0;
+  const [open, setOpen] = useState(false);
 
   const trigger = (
     <div
@@ -62,11 +64,16 @@ export function AddFieldItem({
   }
 
   return (
-    <Popover.Root>
-      <Popover.Trigger asChild disabled={disabled}>
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger
+        asChild
+        disabled={disabled}
+        onMouseEnter={() => setOpen(true)}
+      >
         {trigger}
       </Popover.Trigger>
       <Popover.Content side="right" align="start" alignOffset={-16}>
+        <Popover.Arrow width={0} height={0} />
         <FieldMenu types={types} fields={fields} onClick={onClick} />
       </Popover.Content>
     </Popover.Root>

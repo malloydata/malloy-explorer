@@ -11,14 +11,14 @@ import {
   ASTArrowQueryDefinition,
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
-import stylex from '@stylexjs/stylex';
 
-import {styles} from '../styles';
 import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
 import CollapsiblePanel from '../primitives/CollapsiblePanel';
-import Icon from '../primitives/Icon';
 import {AddMenu} from './AddMenu/AddMenu';
+import {Menu} from '../Menu';
+import {Button, Icon} from '../primitives';
+import stylex from '@stylexjs/stylex';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -39,7 +39,25 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
   }
 
   return (
-    <CollapsiblePanel title="Main query" menuItems={menuItems}>
+    <CollapsiblePanel
+      title="Main query"
+      controls={
+        <>
+          <Menu
+            items={menuItems}
+            trigger={
+              <Button
+                variant="flat"
+                icon="meatballs"
+                size="compact"
+                tooltip="More actions"
+              />
+            }
+          />
+          <AddMenu rootQuery={rootQuery} view={query} />
+        </>
+      }
+    >
       {query.definition instanceof ASTArrowQueryDefinition ? (
         <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
           {!query.isEmpty() && (
@@ -53,13 +71,13 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
       ) : null}
       {query.isEmpty() ? (
         <div {...stylex.props(queryStyles.emptyQuery)}>
-          <AddMenu rootQuery={rootQuery} view={query} />
+          <div {...stylex.props(queryStyles.cta)}>
+            <div>Click</div>
+            <Icon name="insert" />
+            <div>to get started</div>
+          </div>
         </div>
-      ) : (
-        <div {...stylex.props(styles.queryFooter)}>
-          <AddMenu rootQuery={rootQuery} view={query} />
-        </div>
-      )}
+      ) : null}
     </CollapsiblePanel>
   );
 }
@@ -68,7 +86,11 @@ const queryStyles = stylex.create({
   emptyQuery: {
     display: 'flex',
     justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
     height: 60,
+  },
+  cta: {
+    display: 'flex',
+    alignItems: 'center',
   },
 });
