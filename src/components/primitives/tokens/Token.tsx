@@ -10,8 +10,13 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import Icon from '../Icon';
 import {fontStyles} from '../styles';
 import {IconType} from '../utils/icon';
-import {tokenColorVariants, tokenStyles} from './styles';
-import {DEFAULT_TOKEN_COLOR, TokenColor} from './types';
+import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
+import {
+  DEFAULT_TOKEN_COLOR,
+  DEFAULT_TOKEN_SIZE,
+  TokenColor,
+  TokenSize,
+} from './types';
 
 export interface TokenProps extends React.ComponentProps<'button'> {
   /**
@@ -28,6 +33,11 @@ export interface TokenProps extends React.ComponentProps<'button'> {
    * The color of the token.
    */
   color?: TokenColor;
+
+  /**
+   * The size of the token.
+   */
+  size?: TokenSize;
 
   /**
    * Called when the token is clicked. Adding this will make the token appear interactive.
@@ -54,6 +64,7 @@ export default function Token({
   label,
   icon,
   color = DEFAULT_TOKEN_COLOR,
+  size = DEFAULT_TOKEN_SIZE,
   onClick,
   onHover,
   asButtonTrigger = false,
@@ -65,6 +76,7 @@ export default function Token({
       {...stylex.props(
         tokenStyles.main,
         tokenColorVariants[color],
+        tokenSizeVariants[size],
         customStyle
       )}
     >

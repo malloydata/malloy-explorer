@@ -27,14 +27,12 @@ interface FieldTokenProps extends React.ComponentProps<typeof Token> {
    * The controlled visible state of the hover actions.
    */
   hoverActionsVisible?: boolean;
-  isCompact?: boolean;
 }
 
 export default function FieldToken({
   field,
   hoverActions,
   hoverActionsVisible,
-  isCompact,
   ...props
 }: FieldTokenProps) {
   if (field.kind === 'join') {
@@ -58,9 +56,6 @@ export default function FieldToken({
               : 'view'
           }
           {...props}
-          {...(isCompact && {
-            customStyle: styles.compactToken,
-          })}
         />
       </div>
       {hoverActions && (
@@ -89,8 +84,5 @@ const styles = stylex.create({
   },
   showHoverActions: {
     [hoverActionsVars.visibility]: 'visible',
-  },
-  compactToken: {
-    padding: '2px 4px',
   },
 });

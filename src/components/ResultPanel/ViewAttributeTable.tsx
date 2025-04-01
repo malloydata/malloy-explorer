@@ -43,7 +43,10 @@ export default function ViewAttributeTable({
             <ViewAttributeTableRow attribute="dimension">
               {dimensions.map(f => (
                 <span key={`${f.kind}::${f.name}`}>
-                  <FieldToken field={f} isCompact={isCompact} />
+                  <FieldToken
+                    field={f}
+                    size={isCompact ? 'compact' : 'default'}
+                  />
                 </span>
               ))}
             </ViewAttributeTableRow>
