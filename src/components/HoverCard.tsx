@@ -47,10 +47,13 @@ export default function HoverCard({
   return (
     <Tooltip>
       <TooltipPortal />
-      <TooltipTrigger asChild>
-        <div>{children}</div>
-      </TooltipTrigger>
-      <TooltipContent side="right">
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent
+        side="bottom"
+        align="start"
+        sideOffset={4}
+        style={{zIndex: 100}}
+      >
         <HoverCardContent field={field} pathParts={pathParts} />
       </TooltipContent>
     </Tooltip>
@@ -95,6 +98,9 @@ function HoverCardContent({field, pathParts}: HoverCardContentProps) {
 }
 
 const styles = stylex.create({
+  content: {
+    zIndex: 100,
+  },
   container: {
     width: '323px',
     maxHeight: '248px',
