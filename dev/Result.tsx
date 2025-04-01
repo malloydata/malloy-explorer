@@ -39,6 +39,7 @@ const App = () => {
           draftQuery={draftQuery}
           setDraftQuery={q => setDraftQuery(q)}
           submittedQuery={isRun ? submitted : undefined}
+          options={{showRawQuery: true}}
         />
       </div>
       <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
