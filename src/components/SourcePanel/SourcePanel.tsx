@@ -117,16 +117,6 @@ export function SourcePanel({source}: SourcePanelProps) {
                 onClick={() => setSubpanelType('view')}
               />
               <ListItem
-                key="measures"
-                label="Measures"
-                startIcon={<Icon name="measure" color="green" />}
-                badge={
-                  <Badge label={measures.length.toString()} color="green" />
-                }
-                endIcon={<Icon name="chevronRight" color="secondary" />}
-                onClick={() => setSubpanelType('measure')}
-              />
-              <ListItem
                 key="dimensions"
                 label="Dimensions"
                 startIcon={<Icon name="dimension" color="cyan" />}
@@ -135,6 +125,16 @@ export function SourcePanel({source}: SourcePanelProps) {
                 }
                 endIcon={<Icon name="chevronRight" color="secondary" />}
                 onClick={() => setSubpanelType('dimension')}
+              />
+              <ListItem
+                key="measures"
+                label="Measures"
+                startIcon={<Icon name="measure" color="green" />}
+                badge={
+                  <Badge label={measures.length.toString()} color="green" />
+                }
+                endIcon={<Icon name="chevronRight" color="secondary" />}
+                onClick={() => setSubpanelType('measure')}
               />
             </List>
           ) : (

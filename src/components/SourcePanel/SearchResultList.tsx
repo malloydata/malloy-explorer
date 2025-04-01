@@ -16,7 +16,7 @@ interface SearchResultListProps {
   items: FieldItem[];
 }
 
-const FIELD_KIND_ORDER = ['view', 'measure', 'dimension'] as const;
+const FIELD_KIND_ORDER = ['view', 'dimension', 'measure'] as const;
 
 export default function SearchResultList({
   source,
