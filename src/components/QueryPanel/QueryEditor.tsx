@@ -18,7 +18,7 @@ export interface QueryEditorProps {
   source: Malloy.SourceInfo;
   query?: Malloy.Query;
   setQuery?: (query: Malloy.Query | undefined) => void;
-  showSource: boolean;
+  showSource?: boolean;
 }
 
 /**
