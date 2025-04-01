@@ -1,10 +1,10 @@
 import React from 'react';
-import {DropdownMenu, DropdownSubMenuItem} from '../DropdownMenu';
 import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {useNestOperations} from './hooks/useNestOperations';
 import {OperationDropdownMenuItems} from './OperationDropdownMenuItems';
+import {DropdownMenu, DropdownSubMenuItem} from '../primitives';
 
 interface NestFieldDropdownMenuProps {
   segment: ASTSegmentViewDefinition;

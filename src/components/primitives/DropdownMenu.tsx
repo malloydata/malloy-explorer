@@ -9,23 +9,21 @@ import * as React from 'react';
 import {ReactElement} from 'react';
 import * as PrimitiveDropdownMenu from '@radix-ui/react-dropdown-menu';
 import stylex from '@stylexjs/stylex';
-import ChevronRight from '../assets/chevrons/chevron_right.svg?react';
-import {styles} from './styles';
+import {styles} from '../styles';
 import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
-import {Label} from './Label';
-import {Icon, IconType} from './primitives';
+import {Label} from '../Label';
+import {Icon, IconType} from '.';
 
-export type Modifiers = Pick<
+type Modifiers = Pick<
   React.MouseEvent,
   'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'
 >;
 
 type DropdownMenuChild =
   | React.ReactElement<DropdownMenuItemProps, typeof DropdownMenuItem>
-  | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>
-  | React.ReactElement<typeof DropdownMenuSeparator>;
+  | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>;
 
-export interface DropdownMenuProps {
+interface DropdownMenuProps {
   trigger: ReactElement;
   onOpenChange?: (open: boolean) => void;
   children: DropdownMenuChild | DropdownMenuChild[];
@@ -56,7 +54,7 @@ export function DropdownMenu({
   );
 }
 
-export interface DropdownMenuItemProps {
+interface DropdownMenuItemProps {
   icon?: IconType;
   label: string;
   detail?: ReactElement;
@@ -124,19 +122,13 @@ export function DropdownSubMenuItem({
           <Label>{label}</Label>
         </div>
         <div {...stylex.props(menuStyles.arrow)}>
-          <ChevronRight {...stylex.props(styles.icon)} />
+          <Icon name="chevronRight" />
         </div>
       </PrimitiveDropdownMenu.SubTrigger>
       <PrimitiveDropdownMenu.SubContent {...stylex.props(menuStyles.content)}>
         {React.Children.map(children, child => child)}
       </PrimitiveDropdownMenu.SubContent>
     </PrimitiveDropdownMenu.Sub>
-  );
-}
-
-export function DropdownMenuSeparator() {
-  return (
-    <PrimitiveDropdownMenu.Separator {...stylex.props(menuStyles.separator)} />
   );
 }
 
@@ -180,10 +172,5 @@ const menuStyles = stylex.create({
   },
   arrow: {
     marginLeft: 16,
-  },
-  separator: {
-    borderTopWidth: 1,
-    borderTopStyle: 'solid',
-    borderTopColor: colors.disabledText,
   },
 });

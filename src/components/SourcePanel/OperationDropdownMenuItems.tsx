@@ -1,10 +1,10 @@
 import React from 'react';
-import {DropdownMenuItem} from '../DropdownMenu';
 import {useOperations} from './hooks/useOperations';
 import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {getNestName} from './utils';
+import {DropdownMenuItem} from '../primitives';
 
 type Operation = 'aggregate' | 'groupBy' | 'orderBy';
 

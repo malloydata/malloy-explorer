@@ -16,9 +16,8 @@ import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
 import CollapsiblePanel from '../primitives/CollapsiblePanel';
 import {AddMenu} from './AddMenu/AddMenu';
-import {Button, Icon} from '../primitives';
+import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
 import stylex from '@stylexjs/stylex';
-import {DropdownMenu, DropdownMenuItem} from '../DropdownMenu';
 
 export interface QueryProps {
   rootQuery: ASTQuery;

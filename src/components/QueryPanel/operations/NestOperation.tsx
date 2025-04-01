@@ -14,12 +14,11 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
-import {Button} from '../../primitives';
+import {Button, DropdownMenu, DropdownMenuItem} from '../../primitives';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {useContext} from 'react';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 import {AddMenu} from '../AddMenu/AddMenu';
-import {DropdownMenu, DropdownMenuItem} from '../../DropdownMenu';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
