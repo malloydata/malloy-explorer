@@ -36,7 +36,7 @@ export function flattenFieldsTree(
 }
 
 export function sourceToFieldItems(source: SourceInfo): FieldItem[] {
-  return flattenFieldsTree(source.schema.fields, [source.name]);
+  return flattenFieldsTree(source.schema.fields);
 }
 
 export function groupFieldItemsByPath(

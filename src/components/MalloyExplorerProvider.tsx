@@ -28,7 +28,7 @@ export function MalloyExplorerProvider({
   const rootQuery = useQueryBuilder(source, query);
   return (
     <TooltipProvider>
-      <QueryEditorContext.Provider value={{rootQuery, setQuery}}>
+      <QueryEditorContext.Provider value={{source, rootQuery, setQuery}}>
         {children}
       </QueryEditorContext.Provider>
     </TooltipProvider>

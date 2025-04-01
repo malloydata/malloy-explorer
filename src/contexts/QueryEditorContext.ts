@@ -10,6 +10,8 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 
 export interface QueryEditorContextProps {
+  /** Source object at the root level */
+  source?: Malloy.SourceInfo;
   /** Query object to represent current state at the root level  */
   rootQuery?: ASTQuery;
   /** Provide to allow editing of the query */
