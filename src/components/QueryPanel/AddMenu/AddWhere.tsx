@@ -21,7 +21,11 @@ export interface AddWhereProps {
 
 export function AddWhere({rootQuery, segment}: AddWhereProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const fields = segment.getInputSchema().fields;
+  const allFields = segment.getInputSchema().fields;
+
+  const fields = allFields
+    .filter(field => field.kind === 'dimension' || field.kind === 'measure')
+    .filter(field => FILTERABLE_TYPES.has(field.type.kind));
 
   return (
     <AddFieldItem
@@ -48,3 +52,11 @@ export function AddWhere({rootQuery, segment}: AddWhereProps) {
     />
   );
 }
+
+const FILTERABLE_TYPES = new Set([
+  'string_type',
+  'boolean_type',
+  'number_type',
+  'date_type',
+  'timestamp_type',
+]);
