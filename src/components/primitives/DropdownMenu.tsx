@@ -126,7 +126,10 @@ export function DropdownSubMenuItem({
         </div>
         <Icon name="chevronRight" style={styles.icon} />
       </PrimitiveDropdownMenu.SubTrigger>
-      <PrimitiveDropdownMenu.SubContent {...stylex.props(styles.content)}>
+      <PrimitiveDropdownMenu.SubContent
+        {...stylex.props(styles.content)}
+        sideOffset={5}
+      >
         {React.Children.map(children, child => child)}
       </PrimitiveDropdownMenu.SubContent>
     </PrimitiveDropdownMenu.Sub>

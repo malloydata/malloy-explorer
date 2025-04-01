@@ -4,7 +4,6 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {Button} from '../primitives';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {getNestName} from './utils';
-import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {NestFieldDropdownMenu} from './NestFieldDropdownMenu';
 import {useNestOperations} from './hooks/useNestOperations';
 import {AddFieldDropdownMenu} from './AddFieldDropdownMenu';
@@ -60,7 +59,7 @@ export function FieldTokenWithActions({
       <>
         {hasAddFieldMenu ? (
           <AddFieldDropdownMenu
-            segment={segment as ASTSegmentViewDefinition}
+            segment={segment}
             field={field}
             path={path}
             trigger={<Button variant="flat" size="compact" icon="insert" />}
@@ -76,7 +75,7 @@ export function FieldTokenWithActions({
         )}
         {hasNestFieldMenu ? (
           <NestFieldDropdownMenu
-            segment={segment as ASTSegmentViewDefinition}
+            segment={segment}
             field={field}
             path={path}
             trigger={<Button variant="flat" size="compact" icon="nest" />}
@@ -98,7 +97,7 @@ export function FieldTokenWithActions({
     <HoverCard field={field} pathParts={path}>
       {hasAddFieldMenu ? (
         <AddFieldDropdownMenu
-          segment={segment as ASTSegmentViewDefinition}
+          segment={segment}
           field={field}
           path={path}
           trigger={

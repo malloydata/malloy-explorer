@@ -9,7 +9,7 @@ import {DropdownMenuItem} from '../primitives';
 type Operation = 'aggregate' | 'groupBy' | 'orderBy';
 
 interface OperationDropdownMenuItemsProps {
-  segment: ASTSegmentViewDefinition;
+  segment?: ASTSegmentViewDefinition;
   field: FieldInfo;
   path: string[];
   withEmptyNest?: boolean;
@@ -29,16 +29,16 @@ export function OperationDropdownMenuItems({
   const handleMenuItemClick = (operation: Operation) => {
     const currentSegment = withEmptyNest
       ? segment
-          .addEmptyNest(getNestName(segment))
+          ?.addEmptyNest(getNestName(segment))
           .view.definition.getOrAddDefaultSegment()
       : segment;
 
     if (operation === 'aggregate' && isAggregateAllowed) {
-      currentSegment.addAggregate(field.name, path);
+      currentSegment?.addAggregate(field.name, path);
     } else if (operation === 'groupBy' && isGroupByAllowed) {
-      currentSegment.addGroupBy(field.name, path);
+      currentSegment?.addGroupBy(field.name, path);
     } else if (operation === 'orderBy' && isOrderByAllowed) {
-      currentSegment.addOrderBy(field.name, 'asc');
+      currentSegment?.addOrderBy(field.name, 'asc');
     }
 
     setQuery?.(rootQuery?.build());

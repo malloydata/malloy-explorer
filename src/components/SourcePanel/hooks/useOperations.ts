@@ -9,6 +9,7 @@ import * as QueryBuilder from '@malloydata/malloy-query-builder';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 import {flattenFieldsTree} from '../utils';
+import {segmentHasOrderBy} from '../../utils/segment';
 
 export function useOperations(
   segment: QueryBuilder.ASTSegmentViewDefinition | undefined,
@@ -63,6 +64,7 @@ export function useOperations(
     return outputSchemaFields
       .filter(field => field.kind === 'dimension')
       .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
+      .filter(field => !segmentHasOrderBy(segment, field.name))
       .some(field => field.name === fieldName);
   }, [segment, field]);
 
