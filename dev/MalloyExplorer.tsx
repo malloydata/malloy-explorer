@@ -37,6 +37,7 @@ const App = () => {
               const qb = new QueryBuilder.ASTQuery({source, query});
               window.alert(qb.toMalloy());
             }}
+            showSource={false}
           />
           <ResultPanel
             source={source}
