@@ -5,6 +5,7 @@ import {Button} from '../primitives';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {Menu, MenuItem} from '../Menu';
 import {useQueryOperations} from './hooks/useQueryOperations';
+import HoverCard from '../HoverCard';
 
 interface FieldTokenWithActionsProps {
   field: Malloy.FieldInfo;
@@ -110,51 +111,53 @@ export function FieldTokenWithActions({
   };
 
   return (
-    <FieldToken
-      field={field}
-      onClick={addFieldToMainQuery}
-      hasMenu={hasAddFieldMenu}
-      menuItems={addFieldMenuItems()}
-      hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
-      hoverActions={
-        <>
-          {hasAddFieldMenu ? (
-            <Menu
-              trigger={<Button variant="flat" size="compact" icon="insert" />}
-              items={addFieldMenuItems()}
-              onOpenChange={open => setIsAddFieldMenuOpen(open)}
-            />
-          ) : (
-            <Button
-              variant="flat"
-              size="compact"
-              icon="insert"
-              onClick={addFieldToMainQuery}
-            />
-          )}
-          {hadNestFieldMenu ? (
-            <Menu
-              trigger={
-                <Button
-                  variant="flat"
-                  size="compact"
-                  icon="nest"
-                  onClick={() => {}}
-                />
-              }
-              items={nestFieldMenuItems()}
-              onOpenChange={open => setIsNestFieldMenuOpen(open)}
-            />
-          ) : (
-            <Button
-              variant="flat"
-              size="compact"
-              icon="nest"
-              onClick={() => {}}
-            />
-          )}
-        </>
-      }
-    />
+    <HoverCard field={field} pathParts={path}>
+      <FieldToken
+        field={field}
+        onClick={addFieldToMainQuery}
+        hasMenu={hasAddFieldMenu}
+        menuItems={addFieldMenuItems()}
+        hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
+        hoverActions={
+          <>
+            {hasAddFieldMenu ? (
+              <Menu
+                trigger={<Button variant="flat" size="compact" icon="insert" />}
+                items={addFieldMenuItems()}
+                onOpenChange={open => setIsAddFieldMenuOpen(open)}
+              />
+            ) : (
+              <Button
+                variant="flat"
+                size="compact"
+                icon="insert"
+                onClick={addFieldToMainQuery}
+              />
+            )}
+            {hadNestFieldMenu ? (
+              <Menu
+                trigger={
+                  <Button
+                    variant="flat"
+                    size="compact"
+                    icon="nest"
+                    onClick={() => {}}
+                  />
+                }
+                items={nestFieldMenuItems()}
+                onOpenChange={open => setIsNestFieldMenuOpen(open)}
+              />
+            ) : (
+              <Button
+                variant="flat"
+                size="compact"
+                icon="nest"
+                onClick={() => {}}
+              />
+            )}
+          </>
+        }
+      />
+    </HoverCard>
   );
 }

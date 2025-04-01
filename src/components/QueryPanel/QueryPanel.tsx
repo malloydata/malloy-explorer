@@ -49,7 +49,7 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
-    width: '640px',
+    width: '360px',
     background: 'rgba(255, 255, 255, 1)',
     borderRight: '1px solid rgba(204, 211, 219, 1)',
   },

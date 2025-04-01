@@ -159,6 +159,8 @@ const styles = stylex.create({
     width: '280px',
     backgroundColor: '#F1F4F7',
     boxShadow: '-1px 0px 0px 0px #C8CCD2 inset',
+    // A positive zIndex allows nested tooltips to overlay properly.
+    zIndex: 1,
   },
   header: {
     display: 'flex',
