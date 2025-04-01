@@ -10,7 +10,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 import {flattenFieldsTree} from '../utils';
 
-export function useQueryOperations(
+export function useOperations(
   segment: QueryBuilder.ASTSegmentViewDefinition | undefined,
   field: Malloy.FieldInfo,
   path: string[]
@@ -64,7 +64,7 @@ export function useQueryOperations(
       .filter(field => field.kind === 'dimension')
       .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
       .some(field => field.name === fieldName);
-  }, [segment, field, path]);
+  }, [segment, field]);
 
   return {isAggregateAllowed, isGroupByAllowed, isOrderByAllowed};
 }

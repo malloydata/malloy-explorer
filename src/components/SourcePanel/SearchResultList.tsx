@@ -32,7 +32,7 @@ export default function SearchResultList({
         ...group,
         items: groupFieldItemsByPath(source, group.items),
       }));
-  }, [items]);
+  }, [source, items]);
 
   return (
     <div {...stylex.props(styles.main)}>

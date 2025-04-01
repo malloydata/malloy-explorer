@@ -14,12 +14,12 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
-import {Button, Icon} from '../../primitives';
+import {Button} from '../../primitives';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {useContext} from 'react';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
-import {Menu} from '../../Menu';
 import {AddMenu} from '../AddMenu/AddMenu';
+import {DropdownMenu, DropdownMenuItem} from '../../DropdownMenu';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -45,17 +45,6 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
   return (
     <div {...stylex.props(styles.tokenContainer)}>
       {nests.map((nest, key) => {
-        const actions = [
-          {
-            icon: <Icon name="clear" />,
-            label: 'Delete Query',
-            onClick: () => {
-              nest.delete();
-              setQuery?.(rootQuery.build());
-            },
-          },
-        ];
-
         return (
           <div key={key} {...stylex.props(viewStyles.indent)}>
             <CollapsiblePanel
@@ -63,8 +52,7 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
               icon="nest"
               controls={
                 <>
-                  <Menu
-                    items={actions}
+                  <DropdownMenu
                     trigger={
                       <Button
                         variant="flat"
@@ -73,7 +61,16 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
                         tooltip="More Actions"
                       />
                     }
-                  />
+                  >
+                    <DropdownMenuItem
+                      icon="clear"
+                      label="Delete Query"
+                      onClick={() => {
+                        nest.delete();
+                        setQuery?.(rootQuery.build());
+                      }}
+                    />
+                  </DropdownMenu>
                   <AddMenu rootQuery={rootQuery} view={nest.view} />
                 </>
               }
