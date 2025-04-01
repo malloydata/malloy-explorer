@@ -7,7 +7,7 @@ import {OperationDropdownMenuItems} from './OperationDropdownMenuItems';
 import {DropdownMenu, DropdownSubMenuItem} from '../primitives';
 
 interface NestFieldDropdownMenuProps {
-  segment: ASTSegmentViewDefinition;
+  segment?: ASTSegmentViewDefinition;
   field: FieldInfo;
   path: string[];
   trigger: React.ReactElement;

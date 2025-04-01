@@ -5,7 +5,7 @@ import {OperationDropdownMenuItems} from './OperationDropdownMenuItems';
 import {DropdownMenu} from '../primitives';
 
 interface AddFieldDropdownMenuProps {
-  segment: ASTSegmentViewDefinition;
+  segment?: ASTSegmentViewDefinition;
   field: FieldInfo;
   path: string[];
   trigger: React.ReactElement;
