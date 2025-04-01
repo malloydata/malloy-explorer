@@ -14,10 +14,12 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
-import {Icon} from '../../primitives';
+import {Button, Icon} from '../../primitives';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {useContext} from 'react';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
+import {Menu} from '../../Menu';
+import {AddMenu} from '../AddMenu/AddMenu';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -56,7 +58,26 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
 
         return (
           <div key={key} {...stylex.props(viewStyles.indent)}>
-            <CollapsiblePanel title={nest.name} icon="nest" menuItems={actions}>
+            <CollapsiblePanel
+              title={nest.name}
+              icon="nest"
+              controls={
+                <>
+                  <Menu
+                    items={actions}
+                    trigger={
+                      <Button
+                        variant="flat"
+                        icon="meatballs"
+                        size="compact"
+                        tooltip="More Actions"
+                      />
+                    }
+                  />
+                  <AddMenu rootQuery={rootQuery} view={nest.view} />
+                </>
+              }
+            >
               <View rootQuery={rootQuery} view={nest.view} />
             </CollapsiblePanel>
           </div>
