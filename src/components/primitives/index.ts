@@ -20,6 +20,7 @@ export {
   DropdownMenu,
   DropdownMenuItem,
   DropdownSubMenuItem,
+  DropdownMenuLabel,
 } from './DropdownMenu';
 
 export {type IconType} from './utils/icon';

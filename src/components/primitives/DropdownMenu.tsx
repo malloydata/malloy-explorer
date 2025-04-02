@@ -21,7 +21,8 @@ type Modifiers = Pick<
 
 type DropdownMenuChild =
   | React.ReactElement<DropdownMenuItemProps, typeof DropdownMenuItem>
-  | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>;
+  | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>
+  | React.ReactElement<DropdownMenuLabelProps, typeof DropdownMenuLabel>;
 
 interface DropdownMenuProps {
   trigger: ReactElement;
@@ -90,16 +91,12 @@ export function DropdownMenuItem({
   );
 }
 
-type DropdownSubMenuItemChild =
-  | React.ReactElement<DropdownMenuItemProps, typeof DropdownMenuItem>
-  | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>;
-
 interface DropdownSubMenuItemProps {
   icon?: IconType;
   label: string;
   sublabel?: string;
   disabled?: boolean;
-  children: DropdownSubMenuItemChild | DropdownSubMenuItemChild[];
+  children: DropdownMenuChild | DropdownMenuChild[];
 }
 
 export function DropdownSubMenuItem({
@@ -133,6 +130,20 @@ export function DropdownSubMenuItem({
         {React.Children.map(children, child => child)}
       </PrimitiveDropdownMenu.SubContent>
     </PrimitiveDropdownMenu.Sub>
+  );
+}
+
+interface DropdownMenuLabelProps {
+  label: string;
+}
+
+export function DropdownMenuLabel({label}: DropdownMenuLabelProps) {
+  return (
+    <PrimitiveDropdownMenu.Label
+      {...stylex.props(fontStyles.supporting, styles.menuLabel)}
+    >
+      {label}
+    </PrimitiveDropdownMenu.Label>
   );
 }
 
@@ -172,6 +183,10 @@ const styles = stylex.create({
       default: textColors.secondary,
       ':is([data-disabled])': textColors.disabled,
     },
+  },
+  menuLabel: {
+    padding: '4px 8px',
+    color: textColors.secondary,
   },
   center: {
     display: 'flex',
