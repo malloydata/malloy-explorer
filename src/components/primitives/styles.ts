@@ -10,10 +10,12 @@ import stylex from '@stylexjs/stylex';
 export const tooltipStyles = stylex.create({
   default: {
     padding: '4px 8px',
-    borderRadius: '6px',
+    borderRadius: '12px',
     color: 'rgba(221, 226, 232, 1)',
-    backgroundColor: 'rgba(50, 52, 54, 1)',
+    backgroundColor: 'rgba(37, 54, 63, 1)',
     maxWidth: '360px',
+    boxShadow:
+      '0px 2px 12px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.1)',
   },
 });
 

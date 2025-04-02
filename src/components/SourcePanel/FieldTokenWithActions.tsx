@@ -62,7 +62,14 @@ export function FieldTokenWithActions({
             segment={segment}
             field={field}
             path={path}
-            trigger={<Button variant="flat" size="compact" icon="insert" />}
+            trigger={
+              <Button
+                variant="flat"
+                size="compact"
+                icon="insert"
+                tooltip="Add to main query"
+              />
+            }
             onOpenChange={open => setIsAddFieldMenuOpen(open)}
           />
         ) : (
@@ -71,6 +78,7 @@ export function FieldTokenWithActions({
             size="compact"
             icon="insert"
             onClick={addViewToMainQuery}
+            tooltip="Add to main query"
           />
         )}
         {hasNestFieldMenu ? (
@@ -78,7 +86,14 @@ export function FieldTokenWithActions({
             segment={segment}
             field={field}
             path={path}
-            trigger={<Button variant="flat" size="compact" icon="nest" />}
+            trigger={
+              <Button
+                variant="flat"
+                size="compact"
+                icon="nest"
+                tooltip="Add to nested query"
+              />
+            }
             onOpenChange={open => setIsNestFieldMenuOpen(open)}
           />
         ) : (
@@ -87,6 +102,7 @@ export function FieldTokenWithActions({
             size="compact"
             icon="nest"
             onClick={nestViewWithinMainQuery}
+            tooltip="Add to nested query"
           />
         )}
       </>
