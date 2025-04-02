@@ -27,12 +27,6 @@ export function Source({rootQuery}: SourceProps) {
   const {isSourcePanelOpen, setIsSourcePanelOpen} = useContext(
     ExplorerPanelsContext
   );
-  console.info(
-    'xxx',
-    isSourcePanelOpen,
-    setIsSourcePanelOpen,
-    !(isSourcePanelOpen && setIsSourcePanelOpen)
-  );
   if (
     !(isSourcePanelOpen && setIsSourcePanelOpen) &&
     rootQuery.definition instanceof ASTArrowQueryDefinition
