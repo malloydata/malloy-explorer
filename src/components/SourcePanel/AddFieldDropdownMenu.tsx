@@ -2,7 +2,7 @@ import React from 'react';
 import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {OperationDropdownMenuItems} from './OperationDropdownMenuItems';
-import {DropdownMenu} from '../primitives';
+import {DropdownMenu, DropdownMenuLabel} from '../primitives';
 
 interface AddFieldDropdownMenuProps {
   segment?: ASTSegmentViewDefinition;
@@ -21,6 +21,7 @@ export function AddFieldDropdownMenu({
 }: AddFieldDropdownMenuProps) {
   return (
     <DropdownMenu trigger={trigger} onOpenChange={onOpenChange}>
+      <DropdownMenuLabel label="Add to main query as..." />
       <OperationDropdownMenuItems segment={segment} field={field} path={path} />
     </DropdownMenu>
   );

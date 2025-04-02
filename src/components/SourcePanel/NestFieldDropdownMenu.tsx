@@ -4,7 +4,11 @@ import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {useNestOperations} from './hooks/useNestOperations';
 import {OperationDropdownMenuItems} from './OperationDropdownMenuItems';
-import {DropdownMenu, DropdownSubMenuItem} from '../primitives';
+import {
+  DropdownMenu,
+  DropdownMenuLabel,
+  DropdownSubMenuItem,
+} from '../primitives';
 
 interface NestFieldDropdownMenuProps {
   segment?: ASTSegmentViewDefinition;
@@ -28,21 +32,30 @@ export function NestFieldDropdownMenu({
   return (
     <DropdownMenu trigger={trigger} onOpenChange={onOpenChange}>
       {nestOperations.length === 0 ? (
-        <OperationDropdownMenuItems
-          segment={segment}
-          field={field}
-          path={path}
-          withEmptyNest={true}
-        />
+        <>
+          <DropdownMenuLabel label={'Add to new nested query as...'} />
+          <OperationDropdownMenuItems
+            segment={segment}
+            field={field}
+            path={path}
+            withEmptyNest={true}
+          />
+        </>
       ) : (
         <>
+          <DropdownMenuLabel label={'Add to nested query...'} />
           {nestOperations.map((operation, index) => (
             <DropdownSubMenuItem key={index} label={operation.name}>
-              <OperationDropdownMenuItems
-                segment={operation.view.getOrAddDefaultSegment()}
-                field={field}
-                path={path}
-              />
+              <>
+                <DropdownMenuLabel
+                  label={`Add to ${operation.name} query as...`}
+                />
+                <OperationDropdownMenuItems
+                  segment={operation.view.getOrAddDefaultSegment()}
+                  field={field}
+                  path={path}
+                />
+              </>
             </DropdownSubMenuItem>
           ))}
         </>
