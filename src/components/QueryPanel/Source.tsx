@@ -28,7 +28,7 @@ export function Source({rootQuery}: SourceProps) {
     ExplorerPanelsContext
   );
   if (
-    !isSourcePanelOpen &&
+    !(isSourcePanelOpen && setIsSourcePanelOpen) &&
     rootQuery.definition instanceof ASTArrowQueryDefinition
   ) {
     return (
@@ -41,11 +41,13 @@ export function Source({rootQuery}: SourceProps) {
               .source.as.ReferenceQueryArrowSource().name
           }
         </div>
-        <Button
-          variant="flat"
-          onClick={() => setIsSourcePanelOpen(true)}
-          label="Open data panel"
-        />
+        {setIsSourcePanelOpen && (
+          <Button
+            variant="flat"
+            onClick={() => setIsSourcePanelOpen(true)}
+            label="Open data panel"
+          />
+        )}
       </div>
     );
   }

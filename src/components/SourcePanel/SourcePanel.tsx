@@ -105,13 +105,15 @@ export function SourcePanel({source}: SourcePanelProps) {
               onClick={() => setSubpanelType(null)}
             />
           )}
-          <div>
-            <Button
-              icon="chevronLeft"
-              tooltip="Close the source panel"
-              onClick={() => setIsSourcePanelOpen(false)}
-            />
-          </div>
+          {setIsSourcePanelOpen && (
+            <div>
+              <Button
+                icon="chevronLeft"
+                tooltip="Close the source panel"
+                onClick={() => setIsSourcePanelOpen(false)}
+              />
+            </div>
+          )}
         </div>
         <TextInput
           value={searchQuery}

@@ -18,7 +18,6 @@ export interface QueryEditorProps {
   source: Malloy.SourceInfo;
   query?: Malloy.Query;
   setQuery?: (query: Malloy.Query | undefined) => void;
-  showSource?: boolean;
 }
 
 /**
@@ -27,7 +26,6 @@ export interface QueryEditorProps {
  *
  * @param source The source object to be used for query building.
  * @param query A query to be edited. Omit for a new query.
- * @param showSource (optional)
  * @returns
  */
 export function QueryEditor({source, query, setQuery}: QueryEditorProps) {
