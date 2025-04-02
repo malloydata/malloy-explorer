@@ -40,7 +40,7 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
   const tokens = [
     <SelectorToken
       key="first"
-      style={styles.first}
+      customStyle={styles.first}
       icon={`viz_${currentRenderer}`}
       value={currentRenderer}
       items={vizes}

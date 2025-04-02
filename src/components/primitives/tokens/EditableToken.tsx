@@ -52,7 +52,7 @@ interface EditableTokenBaseProps<T> {
   /**
    * Optional custom styles for the token.
    */
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
   /**
    * Optional error message to show. If an error message exists, the token will
    * include error styles.
@@ -74,7 +74,7 @@ export default function EditableToken({
   icon,
   color = DEFAULT_TOKEN_COLOR,
   size = DEFAULT_TOKEN_SIZE,
-  style,
+  customStyle,
   type,
   errorMessage,
 }: EditableTokenStringProps | EditableTokenNumberProps) {
@@ -115,7 +115,7 @@ export default function EditableToken({
           tokenSizeVariants[size],
           isFocused && styles.focused,
           !!errorMessage && styles.hasError,
-          style
+          customStyle
         )}
       >
         {icon && <Icon name={icon} style={styles.icon} />}

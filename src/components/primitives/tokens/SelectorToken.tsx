@@ -34,7 +34,7 @@ export interface SelectorTokenProps<T extends string> {
   size?: TokenSize;
   items: SelectorTokenItem<T>[];
   isSearchable?: boolean;
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 export default function SelectorToken<T extends string>({
@@ -45,7 +45,7 @@ export default function SelectorToken<T extends string>({
   size = DEFAULT_TOKEN_SIZE,
   items,
   isSearchable = false,
-  style,
+  customStyle,
 }: SelectorTokenProps<T>) {
   const [searchQuery, setSearchQuery] = React.useState<string>('');
 
@@ -77,7 +77,7 @@ export default function SelectorToken<T extends string>({
           tokenSizeVariants[size],
           fontStyles.body,
           tokenStyles.label,
-          style
+          customStyle
         )}
       >
         {icon && <Icon name={icon} style={tokenStyles.icon} />}

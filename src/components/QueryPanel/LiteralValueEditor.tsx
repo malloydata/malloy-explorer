@@ -8,14 +8,20 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {RawLiteralValue} from '@malloydata/malloy-query-builder';
-import {EditableToken} from '../primitives';
+import {EditableToken, SelectorToken, Token} from '../primitives';
+import {StyleXStyles} from '@stylexjs/stylex';
 
 export interface LiteralValueEditorProps {
   value: Malloy.LiteralValue | undefined;
   setValue: (value: RawLiteralValue) => void;
+  customStyle?: StyleXStyles;
 }
 
-export function LiteralValueEditor({value, setValue}: LiteralValueEditorProps) {
+export function LiteralValueEditor({
+  value,
+  setValue,
+  customStyle,
+}: LiteralValueEditorProps) {
   if (!value) {
     return null;
   }
@@ -23,10 +29,14 @@ export function LiteralValueEditor({value, setValue}: LiteralValueEditorProps) {
   switch (value.kind) {
     case 'boolean_literal':
       return (
-        <input
-          type="checkbox"
-          checked={value.boolean_value}
-          onChange={event => setValue(event.target.checked)}
+        <SelectorToken
+          value={value.boolean_value ? 'true' : 'false'}
+          items={[
+            {label: 'true', value: 'true'},
+            {label: 'false', value: 'false'},
+          ]}
+          onChange={value => setValue(value === 'true')}
+          customStyle={customStyle}
         />
       );
     case 'date_literal':
@@ -43,13 +53,14 @@ export function LiteralValueEditor({value, setValue}: LiteralValueEditorProps) {
         />
       );
     case 'null_literal':
-      return '∅';
+      return <Token label="∅" />;
     case 'number_literal':
       return (
-        <input
+        <EditableToken
           value={value.number_value}
           type="number"
-          onChange={event => setValue(event.target.valueAsNumber)}
+          onChange={value => setValue(value)}
+          customStyle={customStyle}
         />
       );
     case 'string_literal':
@@ -57,6 +68,7 @@ export function LiteralValueEditor({value, setValue}: LiteralValueEditorProps) {
         <EditableToken
           value={value.string_value}
           onChange={value => setValue(value)}
+          customStyle={customStyle}
         />
       );
     case 'timestamp_literal':

@@ -19,6 +19,7 @@ import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
 import {PillInput} from './PillInput';
 import {TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
+import {StyleXStyles} from '@stylexjs/stylex';
 
 type StringFilterType =
   | 'is_equal_to'
@@ -173,10 +174,23 @@ interface StringEditorProps {
   values: string[];
   setValues(values: string[]): void;
   escape?: boolean;
+  customStyle?: StyleXStyles;
 }
 
-function StringEditor({color, values, setValues}: StringEditorProps) {
-  return <PillInput color={color} values={values} setValues={setValues} />;
+function StringEditor({
+  color,
+  values,
+  setValues,
+  customStyle,
+}: StringEditorProps) {
+  return (
+    <PillInput
+      color={color}
+      values={values}
+      setValues={setValues}
+      customStyle={customStyle}
+    />
+  );
 }
 
 function escapeValue(val: string) {
