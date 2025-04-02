@@ -118,7 +118,7 @@ export default function EditableToken({
           customStyle
         )}
       >
-        {icon && <Icon name={icon} style={styles.icon} />}
+        {icon && <Icon name={icon} customStyle={styles.icon} />}
         <span {...stylex.props(styles.inputWrapper)}>
           <span
             {...stylex.props(fontStyles.body, styles.placeholder)}

@@ -28,7 +28,7 @@ type SpinnerSize = keyof typeof SIZES;
 interface SpinnerProps {
   size: SpinnerSize;
 
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 const SPREAD = 0.75;
@@ -36,7 +36,7 @@ const START_POINT = 1.5;
 const INACTIVE_COLOR = 'rgba(0, 0, 0, 0.1)';
 const ACTIVE_COLOR = 'rgba(0, 100, 224, 1)';
 
-export default function Spinner({size, style}: SpinnerProps) {
+export default function Spinner({size, customStyle}: SpinnerProps) {
   const ref = React.useRef<HTMLCanvasElement>(null);
 
   React.useEffect(() => {
@@ -83,7 +83,7 @@ export default function Spinner({size, style}: SpinnerProps) {
   const {border, diameter} = SIZES[size];
   const frameSize = diameter + border * 2;
   return (
-    <div {...stylex.props(styles.root, style)}>
+    <div {...stylex.props(styles.root, customStyle)}>
       <span
         aria-valuetext="Loading"
         {...stylex.props(styles.spinner)}

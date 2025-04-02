@@ -21,16 +21,20 @@ interface DividerProps {
   /**
    * Custom styles for the divider.
    */
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 export default function Divider({
   orientation = DEFAULT_ORIENTATION,
-  style,
+  customStyle,
 }: DividerProps) {
   return (
     <div
-      {...stylex.props(styles.main, orientationVariants[orientation], style)}
+      {...stylex.props(
+        styles.main,
+        orientationVariants[orientation],
+        customStyle
+      )}
     ></div>
   );
 }

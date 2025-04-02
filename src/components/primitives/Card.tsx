@@ -16,12 +16,12 @@ interface CardProps {
 
   children: React.ReactNode;
 
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
-export default function Card({header, children, style}: CardProps) {
+export default function Card({header, children, customStyle}: CardProps) {
   return (
-    <div {...stylex.props(styles.container, style)}>
+    <div {...stylex.props(styles.container, customStyle)}>
       <div {...stylex.props(styles.header)}>{header}</div>
       <div {...stylex.props(styles.content)}>{children}</div>
     </div>

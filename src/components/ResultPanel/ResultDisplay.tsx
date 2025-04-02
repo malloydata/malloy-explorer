@@ -123,7 +123,7 @@ function LoadingDisplay({
   return (
     <div {...stylex.props(styles.statusContainer)}>
       <div {...stylex.props(styles.statusHeader)}>
-        <Spinner size="large" style={styles.spinner} />
+        <Spinner size="large" customStyle={styles.spinner} />
         <div
           {...stylex.props(fontStyles.emphasized)}
         >{`${EXECUTION_STATES[executionState]} query...`}</div>

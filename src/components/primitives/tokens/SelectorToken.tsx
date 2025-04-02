@@ -80,7 +80,7 @@ export default function SelectorToken<T extends string>({
           customStyle
         )}
       >
-        {icon && <Icon name={icon} style={tokenStyles.icon} />}
+        {icon && <Icon name={icon} customStyle={tokenStyles.icon} />}
         <Select.Value>{label}</Select.Value>
       </Select.Trigger>
       <Select.Portal>
@@ -143,9 +143,9 @@ function SelectItem<T>({
       {...props}
     >
       {value === selectedValue ? (
-        <Icon name="radioChecked" style={styles.radioChecked} />
+        <Icon name="radioChecked" customStyle={styles.radioChecked} />
       ) : (
-        <Icon name="radioUnchecked" style={styles.radioUnchecked} />
+        <Icon name="radioUnchecked" customStyle={styles.radioUnchecked} />
       )}
       <Select.ItemText>{children}</Select.ItemText>
     </Select.Item>

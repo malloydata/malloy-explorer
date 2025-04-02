@@ -77,7 +77,7 @@ export function DropdownMenuItem({
       }}
       disabled={disabled}
     >
-      {icon && <Icon name={icon} style={styles.icon} />}
+      {icon && <Icon name={icon} customStyle={styles.icon} />}
       <div {...stylex.props(styles.center)}>
         <span {...stylex.props(fontStyles.body, styles.label)}>{label}</span>
         {sublabel && (
@@ -115,7 +115,7 @@ export function DropdownSubMenuItem({
         {...stylex.props(styles.item)}
         disabled={disabled}
       >
-        {icon && <Icon name={icon} style={styles.icon} />}
+        {icon && <Icon name={icon} customStyle={styles.icon} />}
         <div {...stylex.props(styles.center)}>
           <span {...stylex.props(fontStyles.body, styles.label)}>{label}</span>
           {sublabel && (
@@ -124,7 +124,7 @@ export function DropdownSubMenuItem({
             </span>
           )}
         </div>
-        <Icon name="chevronRight" style={styles.icon} />
+        <Icon name="chevronRight" customStyle={styles.icon} />
       </PrimitiveDropdownMenu.SubTrigger>
       <PrimitiveDropdownMenu.SubContent
         {...stylex.props(styles.content)}

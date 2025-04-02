@@ -20,7 +20,7 @@ export default function BadgeForField({field}: BadgeForFieldProps) {
         label="view"
         icon="view_filled"
         color="purple"
-        style={styles.noBackground}
+        customStyle={styles.noBackground}
       />
     );
   } else if (field.kind === 'dimension') {
@@ -30,7 +30,7 @@ export default function BadgeForField({field}: BadgeForFieldProps) {
         label="dimension"
         icon="dimension"
         color="cyan"
-        style={styles.noBackground}
+        customStyle={styles.noBackground}
       />
     );
   } else if (field.kind === 'measure') {
@@ -40,7 +40,7 @@ export default function BadgeForField({field}: BadgeForFieldProps) {
         label="measure"
         icon="measure"
         color="green"
-        style={styles.noBackground}
+        customStyle={styles.noBackground}
       />
     );
   } else if (field.kind === 'join') {
@@ -50,7 +50,7 @@ export default function BadgeForField({field}: BadgeForFieldProps) {
         label="join"
         icon="many_to_one"
         color="gray"
-        style={styles.noBackground}
+        customStyle={styles.noBackground}
       />
     );
   }

@@ -35,17 +35,17 @@ interface BadgeProps {
   /**
    * Optional additional styling for the badge
    */
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 export default function Badge({
   label,
   color = DEFAULT_COLOR,
   icon,
-  style,
+  customStyle,
 }: BadgeProps) {
   return (
-    <div {...stylex.props(styles.main, colorVariants[color], style)}>
+    <div {...stylex.props(styles.main, colorVariants[color], customStyle)}>
       {icon && <Icon color={color} name={icon} />}
       <div {...stylex.props(fontStyles.badge, styles.label)}>{label}</div>
     </div>

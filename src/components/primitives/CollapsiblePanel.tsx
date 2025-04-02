@@ -37,7 +37,7 @@ export default function CollapsiblePanel({
   return (
     <div {...stylex.props(styles.container)}>
       <div {...stylex.props(styles.topBar)}>
-        {icon && <Icon name={icon} style={styles.icon} />}
+        {icon && <Icon name={icon} customStyle={styles.icon} />}
         <div {...stylex.props(styles.title)}>{title}</div>
         <div {...stylex.props(styles.topBarRightSection)}>
           <div {...stylex.props(styles.controls)}>{controls}</div>
