@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {CodeBlock} from './primitives';
+import {CodeBlock} from '../../src/components/primitives';
 
 export interface RawPreviewProps {
   source: Malloy.SourceInfo;
