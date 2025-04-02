@@ -15,11 +15,13 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   return (
-    <MalloyExplorerProvider>
-      <div style={{display: 'flex', height: '100%'}}>
-        <SourcePanel source={source} />
-      </div>
-    </MalloyExplorerProvider>
+    <React.StrictMode>
+      <MalloyExplorerProvider source={source}>
+        <div style={{display: 'flex', height: '100%'}}>
+          <SourcePanel source={source} setQuery={() => {}} />
+        </div>
+      </MalloyExplorerProvider>
+    </React.StrictMode>
   );
 };
 
