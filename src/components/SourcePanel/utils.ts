@@ -71,9 +71,12 @@ export function groupFieldItemsByKind(items: FieldItem[]): FieldGroupByKind[] {
   );
 }
 
-export const getNestName = (segment: ASTSegmentViewDefinition) => {
+export const getNestName = (
+  segment: ASTSegmentViewDefinition,
+  rename = 'Nest'
+) => {
   const nestNo = segmentNestNo(segment);
-  return `Nest ${nestNo}`;
+  return nestNo > 1 ? `${rename} ${nestNo}` : rename;
 };
 
 export const FIELD_KIND_TO_TITLE = {
