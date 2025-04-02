@@ -7,7 +7,7 @@ import {getNestName} from './utils';
 import {NestFieldDropdownMenu} from './NestFieldDropdownMenu';
 import {useNestOperations} from './hooks/useNestOperations';
 import {AddFieldDropdownMenu} from './AddFieldDropdownMenu';
-import HoverCard from '../HoverCard';
+import {FieldHoverCard} from '../FieldHoverCard';
 
 interface FieldTokenWithActionsProps {
   field: Malloy.FieldInfo;
@@ -109,31 +109,29 @@ export function FieldTokenWithActions({
     );
   };
 
-  return (
-    <HoverCard field={field} pathParts={path}>
-      {hasAddFieldMenu ? (
-        <AddFieldDropdownMenu
-          segment={segment}
-          field={field}
-          path={path}
-          trigger={
-            <FieldToken
-              field={field}
-              hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
-              hoverActions={hoverActions()}
-              asButtonTrigger
-            />
-          }
-          onOpenChange={open => setIsAddFieldMenuOpen(open)}
-        />
-      ) : (
+  return hasAddFieldMenu ? (
+    <AddFieldDropdownMenu
+      segment={segment}
+      field={field}
+      path={path}
+      trigger={
         <FieldToken
           field={field}
-          onClick={addViewToMainQuery}
-          hoverActions={hoverActions()}
           hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
+          hoverActions={hoverActions()}
+          asButtonTrigger
         />
-      )}
-    </HoverCard>
+      }
+      onOpenChange={open => setIsAddFieldMenuOpen(open)}
+      tooltip={<FieldHoverCard field={field} path={path} />}
+    />
+  ) : (
+    <FieldToken
+      field={field}
+      onClick={addViewToMainQuery}
+      hoverActions={hoverActions()}
+      hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
+      tooltip={<FieldHoverCard field={field} path={path} />}
+    />
   );
 }

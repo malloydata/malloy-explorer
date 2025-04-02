@@ -8,9 +8,10 @@
 import * as React from 'react';
 import {ReactElement} from 'react';
 import * as PrimitiveDropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
 import {Icon, IconType} from '.';
-import {fontStyles} from './styles';
+import {fontStyles, tooltipStyles} from './styles';
 import {iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars, sublabelVars} from './dropdown-menu.stylex';
 
@@ -26,20 +27,59 @@ type DropdownMenuChild =
 
 interface DropdownMenuProps {
   trigger: ReactElement;
+  tooltip?: string | ReactElement;
   onOpenChange?: (open: boolean) => void;
   children: DropdownMenuChild | DropdownMenuChild[];
 }
 
 export function DropdownMenu({
   trigger,
+  tooltip,
   onOpenChange,
   children,
 }: DropdownMenuProps) {
+  const [isTooltipOpen, setIsTooltipOpen] = React.useState<
+    boolean | undefined
+  >();
+
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setIsTooltipOpen(false);
+    }
+    onOpenChange?.(open);
+  };
+
   return (
-    <PrimitiveDropdownMenu.Root onOpenChange={onOpenChange}>
-      <PrimitiveDropdownMenu.Trigger asChild>
-        {trigger}
-      </PrimitiveDropdownMenu.Trigger>
+    <PrimitiveDropdownMenu.Root onOpenChange={handleOpenChange}>
+      {tooltip ? (
+        <Tooltip.Root
+          open={isTooltipOpen}
+          onOpenChange={setIsTooltipOpen}
+          delayDuration={300}
+        >
+          <Tooltip.Trigger asChild>
+            <PrimitiveDropdownMenu.Trigger asChild>
+              {trigger}
+            </PrimitiveDropdownMenu.Trigger>
+          </Tooltip.Trigger>
+          <Tooltip.Content
+            side="bottom"
+            align="start"
+            sideOffset={4}
+            {...stylex.props(
+              typeof tooltip === 'string'
+                ? tooltipStyles.default
+                : tooltipStyles.card
+            )}
+          >
+            {tooltip}
+          </Tooltip.Content>
+        </Tooltip.Root>
+      ) : (
+        <PrimitiveDropdownMenu.Trigger asChild>
+          {trigger}
+        </PrimitiveDropdownMenu.Trigger>
+      )}
       <PrimitiveDropdownMenu.Portal>
         <PrimitiveDropdownMenu.Content
           {...stylex.props(fontStyles.body, styles.content)}

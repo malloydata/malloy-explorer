@@ -104,16 +104,11 @@ export default function Button({
     return (
       <Tooltip delayDuration={300}>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent {...stylex.props(styles.tooltip)} sideOffset={8}>
-          <div
-            {...stylex.props(
-              fontStyles.body,
-              tooltipStyles.default,
-              styles.tooltip
-            )}
-          >
-            {tooltip}
-          </div>
+        <TooltipContent
+          sideOffset={8}
+          {...stylex.props(fontStyles.body, tooltipStyles.default)}
+        >
+          {tooltip}
         </TooltipContent>
       </Tooltip>
     );
@@ -160,9 +155,6 @@ const styles = stylex.create({
     borderRadius: '8px',
     width: '100%',
     height: '100%',
-  },
-  tooltip: {
-    zIndex: 100,
   },
 });
 

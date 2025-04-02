@@ -6,12 +6,6 @@
  */
 
 import {FieldInfo, ViewInfo} from '@malloydata/malloy-interfaces';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipPortal,
-  TooltipTrigger,
-} from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
 import * as React from 'react';
 import BadgeForField from './primitives/BadgeForField';
@@ -20,7 +14,7 @@ import {fontStyles} from './primitives/styles';
 import ViewAttributeTable from './ResultPanel/ViewAttributeTable';
 import {QueryEditorContext} from '../contexts/QueryEditorContext';
 
-interface HoverCardContentProps {
+interface FieldHoverCardProps {
   /**
    * The field information associated with the field token.
    */
@@ -29,42 +23,13 @@ interface HoverCardContentProps {
   /**
    * The different items in the path to the field.
    */
-  pathParts: string[];
+  path: string[];
 }
 
-interface HoverCardProps extends HoverCardContentProps {
-  children: React.ReactElement;
-}
-
-/**
- * Renders the a hover card for a field when the user hovers over the
- * children of this component.
- **/
-export default function HoverCard({
-  field,
-  children,
-  pathParts,
-}: HoverCardProps) {
-  return (
-    <Tooltip>
-      <TooltipPortal />
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent
-        side="bottom"
-        align="start"
-        sideOffset={4}
-        style={{zIndex: 100}}
-      >
-        <HoverCardContent field={field} pathParts={pathParts} />
-      </TooltipContent>
-    </Tooltip>
-  );
-}
-
-function HoverCardContent({field, pathParts}: HoverCardContentProps) {
+export function FieldHoverCard({field, path}: FieldHoverCardProps) {
   const {source} = React.useContext(QueryEditorContext);
 
-  const pathString = [source?.name ?? '', ...pathParts].join(' > ');
+  const pathString = [source?.name ?? '', ...path].join(' > ');
   const descriptionAnnotation = field.annotations?.find(a =>
     a.value.startsWith('#"')
   );
@@ -85,7 +50,7 @@ function HoverCardContent({field, pathParts}: HoverCardContentProps) {
 
   return (
     <div {...stylex.props(styles.container, fontStyles.body)}>
-      <div {...stylex.props(styles.metadataSection)}>
+      <div>
         <div {...stylex.props(styles.badge)}>
           <BadgeForField field={field} />
         </div>
@@ -101,9 +66,6 @@ function HoverCardContent({field, pathParts}: HoverCardContentProps) {
 }
 
 const styles = stylex.create({
-  content: {
-    zIndex: 100,
-  },
   container: {
     width: '323px',
     maxHeight: '248px',
@@ -118,7 +80,6 @@ const styles = stylex.create({
     flexDirection: 'column',
     gap: '8px',
   },
-  metadataSection: {},
   badge: {
     marginBottom: '4px',
   },
