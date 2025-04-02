@@ -16,7 +16,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import stylex from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {useClickOutside} from '../hooks/useClickOutside';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from '../primitives/tokens/types';
 import {iconVars, labelVars} from '../primitives/tokens/token.stylex';
@@ -34,6 +34,7 @@ interface PillInputProps {
   type?: string;
   focusElement?: RefObject<HTMLDivElement>;
   color?: TokenColor;
+  customStyle?: StyleXStyles;
 }
 
 export const PillInput: React.FC<PillInputProps> = ({
@@ -46,6 +47,7 @@ export const PillInput: React.FC<PillInputProps> = ({
   setValue: setControlledValue,
   focusElement,
   color = DEFAULT_TOKEN_COLOR,
+  customStyle,
 }) => {
   const [uncontrolledValue, setUncontrolledValue] = useState('');
   const [_focused, setFocused] = useState(false);
@@ -140,7 +142,7 @@ export const PillInput: React.FC<PillInputProps> = ({
 
   return (
     <div
-      {...stylex.props(styles.outer)}
+      {...stylex.props(styles.outer, customStyle)}
       onKeyUp={onKeyUp}
       onClick={() => inp.current?.focus()}
       ref={ref}
@@ -230,7 +232,7 @@ const styles = stylex.create({
     fontFamily: 'sans-serif',
     fontSize: 14,
     fontWeight: 'normal',
-    borderRadius: 5,
+    borderRadius: 4,
     border: '1px solid rgba(230, 235, 239, 1)',
     backgroundColor: 'rgba(230, 235, 239, 1)',
     padding: '2px 3px',
