@@ -15,6 +15,7 @@ import {
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {segmentNestNo} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
+import {isIndexView} from '../../utils/fields';
 
 export interface AddViewProps {
   rootQuery: ASTQuery;
@@ -24,7 +25,10 @@ export interface AddViewProps {
 
 export function AddView({rootQuery, view, segment}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const fields = segment.getInputSchema().fields;
+  const allFields = segment.getInputSchema().fields;
+  const fields = allFields.filter(
+    field => field.kind === 'view' && !isIndexView(field)
+  );
 
   return (
     <AddFieldItem

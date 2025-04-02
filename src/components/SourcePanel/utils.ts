@@ -1,6 +1,7 @@
 import {FieldInfo, SourceInfo} from '@malloydata/malloy-interfaces';
 import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {segmentNestNo} from '../utils/segment';
+import {isIndexView} from '../utils/fields';
 
 export type FieldItem = {
   path: string[];
@@ -24,6 +25,11 @@ export function flattenFieldsTree(
   return fields.flatMap<FieldItem>(field => {
     switch (field.kind) {
       case 'view':
+        if (isIndexView(field)) {
+          return [];
+        } else {
+          return [{path, field}];
+        }
       case 'measure':
       case 'dimension':
         return [{path, field}];

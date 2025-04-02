@@ -32,3 +32,21 @@ export function sortFieldInfos(fields: Malloy.FieldInfo[]): Malloy.FieldInfo[] {
     return orderA === orderB ? a.name.localeCompare(b.name) : orderB - orderA;
   });
 }
+
+const INDEX_FIELDS = [
+  'fieldName',
+  'fieldPath',
+  'fieldValue',
+  'fieldType',
+  'fieldRange',
+  'weight',
+] as const;
+
+export function isIndexView(field: Malloy.FieldInfoWithView) {
+  const allFields = new Set([
+    ...INDEX_FIELDS,
+    ...field.schema.fields.map(field => field.name),
+  ]);
+  // Complete overlap of fields
+  return allFields.size === INDEX_FIELDS.length;
+}
