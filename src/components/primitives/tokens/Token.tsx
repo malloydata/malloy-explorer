@@ -80,7 +80,7 @@ export default function Token({
         customStyle
       )}
     >
-      {icon && <Icon name={icon} style={tokenStyles.icon} />}
+      {icon && <Icon name={icon} customStyle={tokenStyles.icon} />}
       {(onClick || asButtonTrigger) && (
         <button
           {...stylex.props(styles.button)}

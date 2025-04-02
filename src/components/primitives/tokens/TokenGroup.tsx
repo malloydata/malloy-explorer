@@ -18,17 +18,17 @@ interface TokenGroupProps {
   /**
    * Custom styles
    */
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 export default function TokenGroup({
   children,
   color = DEFAULT_TOKEN_COLOR,
-  style,
+  customStyle,
 }: TokenGroupProps) {
   const count = React.Children.count(children);
   return (
-    <div {...stylex.props(styles.main, style)}>
+    <div {...stylex.props(styles.main, customStyle)}>
       {React.Children.map(children, (child, index) =>
         React.cloneElement(child, {
           customStyle: {

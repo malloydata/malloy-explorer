@@ -84,7 +84,7 @@ export default function Button({
       {...props}
     >
       <div {...stylex.props(styles.content)}>
-        {icon && <Icon name={icon} style={styles.icon} />}
+        {icon && <Icon name={icon} customStyle={styles.icon} />}
         {label && (
           <div
             {...stylex.props(

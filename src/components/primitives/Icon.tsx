@@ -24,10 +24,14 @@ interface IconProps {
   /**
    * Custom styles for the icon.
    */
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
-export default function Icon({name, color = 'primary', style}: IconProps) {
+export default function Icon({
+  name,
+  color = 'primary',
+  customStyle,
+}: IconProps) {
   const IconComponent = ICON_MAP[name];
 
   if (!IconComponent) {
@@ -40,7 +44,7 @@ export default function Icon({name, color = 'primary', style}: IconProps) {
         styles.main,
         colorVariants[color],
         SMALL_ICONS.includes(name) && styles.scaleUp,
-        style
+        customStyle
       )}
     />
   );

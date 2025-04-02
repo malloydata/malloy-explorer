@@ -23,7 +23,7 @@ export default function ErrorIcon({errorMessage}: ErrorIconProps) {
     <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>
         <div {...stylex.props(styles.iconWrapper)}>
-          <Icon name="warning" style={styles.errorIcon} />
+          <Icon name="warning" customStyle={styles.errorIcon} />
         </div>
       </TooltipTrigger>
       <TooltipContent>

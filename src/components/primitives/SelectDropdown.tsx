@@ -20,7 +20,7 @@ interface SelectDropdownProps<T> {
   disabled?: boolean;
   valueEqual?: (a: T, b: T) => boolean;
   width?: number | string;
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 const styles = stylex.create({
@@ -112,7 +112,7 @@ export const SelectDropdown = <T,>({
   disabled = false,
   valueEqual = (a: T, b: T) => a === b,
   width = 200,
-  style,
+  customStyle,
 }: SelectDropdownProps<T>): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -128,7 +128,7 @@ export const SelectDropdown = <T,>({
   };
 
   return (
-    <div {...stylex.props(styles.wrapper, style)}>
+    <div {...stylex.props(styles.wrapper, customStyle)}>
       <button
         type="button"
         autoFocus={autoFocus}
@@ -175,7 +175,7 @@ interface SelectListProps<T> {
   options: {label: string | JSX.Element; value: T; divider?: boolean}[];
   valueEqual?: (a: T, b: T) => boolean;
   onChange: (value: T) => void;
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 export function SelectList<T>({
@@ -183,12 +183,12 @@ export function SelectList<T>({
   value,
   onChange,
   valueEqual = (a: T, b: T) => a === b,
-  style,
+  customStyle,
 }: SelectListProps<T>): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div {...stylex.props(styles.selectListDiv, style)}>
+    <div {...stylex.props(styles.selectListDiv, customStyle)}>
       {options.reduce<JSX.Element[]>((result, option, index) => {
         const isSelected =
           value !== undefined && valueEqual(value, option.value);
@@ -218,7 +218,7 @@ export function SelectList<T>({
             />
             <Icon
               name="checkmark"
-              style={{
+              customStyle={{
                 ...styles.checkIcon,
                 ...(isSelected ? styles.checkIconSelected : undefined),
               }}

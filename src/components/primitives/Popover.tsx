@@ -36,7 +36,7 @@ interface PopoverProps {
   yOffset?: number;
   disabled?: boolean;
   children: ReactNode;
-  style?: StyleXStyles;
+  customStyle?: StyleXStyles;
 }
 
 const styleX = stylex.create({
@@ -82,7 +82,7 @@ export const Popover: React.FC<PopoverProps> = ({
   xOffset = 0,
   yOffset = 10,
   disabled = false,
-  style,
+  customStyle,
 }) => {
   const triggerRef = useRef<HTMLDivElement>(null);
   const {side, align} = convertPlacementToRadixProps(placement);
@@ -104,7 +104,7 @@ export const Popover: React.FC<PopoverProps> = ({
   };
 
   return (
-    <div {...stylex.props(styleX.wrapper, style)} ref={triggerRef}>
+    <div {...stylex.props(styleX.wrapper, customStyle)} ref={triggerRef}>
       <RadixPopover.Root open={open && !disabled} onOpenChange={setOpen}>
         <RadixPopover.Anchor asChild>
           <div ref={referenceDiv || triggerRef} />

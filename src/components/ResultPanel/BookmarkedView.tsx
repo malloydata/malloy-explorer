@@ -30,7 +30,7 @@ export function BookmarkedView({viewInfo, onClick}: BookmarkedViewProps) {
                 label="view"
                 icon="view_filled"
                 color="purple"
-                style={styles.viewBadge}
+                customStyle={styles.viewBadge}
               />
               <Button
                 variant="default"
@@ -51,7 +51,7 @@ export function BookmarkedView({viewInfo, onClick}: BookmarkedViewProps) {
             </div>
           </div>
         }
-        style={styles.card}
+        customStyle={styles.card}
       >
         <ViewAttributeTable viewInfo={viewInfo} />
       </Card>
