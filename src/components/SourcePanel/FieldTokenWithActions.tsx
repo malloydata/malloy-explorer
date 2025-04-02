@@ -49,7 +49,7 @@ export function FieldTokenWithActions({
 
   const nestViewWithinMainQuery = () => {
     if (field.kind === 'view') {
-      segment?.addNest(field.name, getNestName(segment));
+      segment?.addNest(field.name, getNestName(segment, field.name));
       setQuery?.(rootQuery?.build());
     }
   };
