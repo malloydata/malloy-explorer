@@ -6,7 +6,7 @@ import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {getNestName} from './utils';
 import {DropdownMenuItem} from '../primitives';
 
-type Operation = 'aggregate' | 'groupBy' | 'orderBy';
+type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
 interface OperationDropdownMenuItemsProps {
   segment?: ASTSegmentViewDefinition;
@@ -23,25 +23,43 @@ export function OperationDropdownMenuItems({
 }: OperationDropdownMenuItemsProps) {
   const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
 
-  const {isAggregateAllowed, isGroupByAllowed, isOrderByAllowed} =
-    useOperations(segment, field, path);
+  const {
+    isGroupByAllowed,
+    isAggregateAllowed,
+    isFilterAllowed,
+    isOrderByAllowed,
+  } = useOperations(segment, field, path);
 
   const handleMenuItemClick = (operation: Operation) => {
-    const currentSegment = withEmptyNest
-      ? segment
-          ?.addEmptyNest(getNestName(segment))
-          .view.definition.getOrAddDefaultSegment()
-      : segment;
+    if (field.kind === 'dimension' || field.kind === 'measure') {
+      const currentSegment = withEmptyNest
+        ? segment
+            ?.addEmptyNest(getNestName(segment))
+            .view.definition.getOrAddDefaultSegment()
+        : segment;
 
-    if (operation === 'aggregate' && isAggregateAllowed) {
-      currentSegment?.addAggregate(field.name, path);
-    } else if (operation === 'groupBy' && isGroupByAllowed) {
-      currentSegment?.addGroupBy(field.name, path);
-    } else if (operation === 'orderBy' && isOrderByAllowed) {
-      currentSegment?.addOrderBy(field.name, 'asc');
+      if (operation === 'groupBy' && isGroupByAllowed) {
+        currentSegment?.addGroupBy(field.name, path);
+      } else if (operation === 'aggregate' && isAggregateAllowed) {
+        currentSegment?.addAggregate(field.name, path);
+      } else if (operation === 'filter' && isFilterAllowed) {
+        if (field.type.kind === 'string_type') {
+          currentSegment?.addWhere(field.name, path, '-null');
+        } else if (field.type.kind === 'boolean_type') {
+          currentSegment?.addWhere(field.name, path, 'true');
+        } else if (field.type.kind === 'number_type') {
+          currentSegment?.addWhere(field.name, path, '0');
+        } else if (field.type.kind === 'date_type') {
+          currentSegment?.addWhere(field.name, path, 'today');
+        } else if (field.type.kind === 'timestamp_type') {
+          currentSegment?.addWhere(field.name, path, 'now');
+        }
+      } else if (operation === 'orderBy' && isOrderByAllowed) {
+        currentSegment?.addOrderBy(field.name, 'asc');
+      }
+
+      setQuery?.(rootQuery?.build());
     }
-
-    setQuery?.(rootQuery?.build());
   };
 
   return (
@@ -53,6 +71,12 @@ export function OperationDropdownMenuItems({
             label="Aggregate"
             disabled={!isAggregateAllowed}
             onClick={() => handleMenuItemClick('aggregate')}
+          />
+          <DropdownMenuItem
+            icon="filter"
+            label="Filter"
+            disabled={!isFilterAllowed}
+            onClick={() => handleMenuItemClick('filter')}
           />
           <DropdownMenuItem
             icon="orderBy"
@@ -68,6 +92,12 @@ export function OperationDropdownMenuItems({
             label="Group by"
             disabled={!isGroupByAllowed}
             onClick={() => handleMenuItemClick('groupBy')}
+          />
+          <DropdownMenuItem
+            icon="filter"
+            label="Filter"
+            disabled={!isFilterAllowed}
+            onClick={() => handleMenuItemClick('filter')}
           />
           <DropdownMenuItem
             icon="orderBy"

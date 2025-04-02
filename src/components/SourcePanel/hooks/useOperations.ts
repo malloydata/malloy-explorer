@@ -26,6 +26,7 @@ export function useOperations(
     const filteredFieldItems = flattenFieldsTree(inputSchemaFields).filter(
       item => item.field.kind === 'dimension'
     );
+
     return (
       filteredFieldItems.some(
         item =>
@@ -45,6 +46,7 @@ export function useOperations(
     const filteredFieldItems = flattenFieldsTree(inputSchemaFields).filter(
       item => item.field.kind === 'measure'
     );
+
     return (
       filteredFieldItems.some(
         item =>
@@ -54,6 +56,19 @@ export function useOperations(
     );
   }, [segment, field, path]);
 
+  const isFilterAllowed = useMemo(() => {
+    if (!segment) {
+      return false;
+    }
+    const fieldName = field.name;
+    const inputSchemaFields = segment.getInputSchema().fields;
+
+    return inputSchemaFields
+      .filter(field => field.kind === 'dimension' || field.kind === 'measure')
+      .filter(field => FILTERABLE_TYPES.includes(field.type.kind))
+      .some(field => field.name === fieldName);
+  }, [segment, field]);
+
   const isOrderByAllowed = useMemo(() => {
     if (!segment) {
       return false;
@@ -61,6 +76,7 @@ export function useOperations(
 
     const fieldName = field.name;
     const outputSchemaFields = segment.getOutputSchema().fields;
+
     return outputSchemaFields
       .filter(field => field.kind === 'dimension')
       .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
@@ -68,8 +84,21 @@ export function useOperations(
       .some(field => field.name === fieldName);
   }, [segment, field]);
 
-  return {isAggregateAllowed, isGroupByAllowed, isOrderByAllowed};
+  return {
+    isGroupByAllowed,
+    isAggregateAllowed,
+    isFilterAllowed,
+    isOrderByAllowed,
+  };
 }
+
+const FILTERABLE_TYPES: Malloy.AtomicTypeType[] = [
+  'string_type',
+  'boolean_type',
+  'number_type',
+  'date_type',
+  'timestamp_type',
+] as const;
 
 const ORDERABLE_TYPES: Malloy.AtomicTypeType[] = [
   'string_type',
