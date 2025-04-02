@@ -7,8 +7,8 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {useQueryBuilder} from '../hooks/useQueryBuilder';
-import {CodeBlock} from './primitives';
+import {useQueryBuilder} from '../../src/hooks/useQueryBuilder';
+import {CodeBlock} from '../../src/components/primitives';
 
 export interface MalloyPreviewProps {
   source: Malloy.SourceInfo;

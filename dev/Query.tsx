@@ -9,18 +9,15 @@ import * as React from 'react';
 import * as QB from '@malloydata/malloy-query-builder';
 import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {
-  MalloyExplorerProvider,
-  MalloyPreview,
-  QueryActionBar,
-  QueryEditor,
-  RawPreview,
-} from '../src';
+import {MalloyExplorerProvider, QueryActionBar, QueryEditor} from '../src';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import {MalloyPreview} from './components/MalloyPreview';
+import {RawPreview} from './components/RawPreview';
 import {
   modelInfo,
   queries as exampleQueries,
 } from './sample_models/example_model';
+
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const queries = [undefined, ...exampleQueries];

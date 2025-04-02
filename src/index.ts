@@ -6,8 +6,14 @@
  */
 
 export {MalloyExplorerProvider} from './components/MalloyExplorerProvider';
-export {MalloyPreview} from './components/MalloyPreview';
 export {QueryActionBar, QueryEditor} from './components/QueryPanel';
-export {RawPreview} from './components/RawPreview';
-export {SourcePanel} from './components/SourcePanel';
 export {ResultPanel} from './components/ResultPanel';
+export type {
+  EXECUTION_STATES,
+  QueryExecutionState,
+  QueryResponse,
+  RunStats,
+  SubmittedQuery,
+} from './components/ResultPanel/SubmittedQuery';
+export {SourcePanel} from './components/SourcePanel';
+export {ExplorerPanelsContext} from './contexts/ExplorerPanelsContext';

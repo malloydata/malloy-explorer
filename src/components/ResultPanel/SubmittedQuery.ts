@@ -17,7 +17,7 @@ export type SubmittedQuery = {
   response?: QueryResponse;
 };
 
-type RunStats = {
+export type RunStats = {
   compileTime: number;
   runTime: number;
   rowsProcessed: number;
