@@ -29,6 +29,8 @@ import {
 } from './utils';
 import SearchResultList from './SearchResultList';
 import FieldGroupList from './FieldGroupList';
+import {useContext} from 'react';
+import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
 
 export interface SourcePanelProps {
   source: Malloy.SourceInfo;
@@ -41,6 +43,9 @@ type SubpanelType = 'view' | 'dimension' | 'measure' | null;
 export function SourcePanel({source}: SourcePanelProps) {
   const [subpanelType, setSubpanelType] = React.useState<SubpanelType>(null);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
+  const {isSourcePanelOpen, setIsSourcePanelOpen} = useContext(
+    ExplorerPanelsContext
+  );
 
   const fieldItems = React.useMemo(() => {
     return sourceToFieldItems(source);
@@ -78,10 +83,14 @@ export function SourcePanel({source}: SourcePanelProps) {
 
   const isSearchActive = !!searchQuery;
 
+  if (!isSourcePanelOpen) {
+    return null;
+  }
+
   return (
     <div {...stylex.props(styles.main)}>
       <div {...stylex.props(fontStyles.body, styles.header)}>
-        <div>
+        <div {...stylex.props(styles.headerTopRow)}>
           {subpanelType == null ? (
             <div {...stylex.props(styles.heading)}>
               <Icon name="database" color="gray" />
@@ -96,6 +105,13 @@ export function SourcePanel({source}: SourcePanelProps) {
               onClick={() => setSubpanelType(null)}
             />
           )}
+          <div>
+            <Button
+              icon="chevronLeft"
+              tooltip="Close the source panel"
+              onClick={() => setIsSourcePanelOpen(false)}
+            />
+          </div>
         </div>
         <TextInput
           value={searchQuery}
@@ -171,6 +187,10 @@ const styles = stylex.create({
     color: textColors.primary,
     fontWeight: 700,
     gap: '8px',
+  },
+  headerTopRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   heading: {
     display: 'flex',

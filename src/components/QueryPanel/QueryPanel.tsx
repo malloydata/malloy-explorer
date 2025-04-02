@@ -23,7 +23,6 @@ interface QueryPanelProps {
 export default function QueryPanel({
   source,
   query,
-  showSource = true,
   setQuery,
   runQuery,
 }: QueryPanelProps) {
@@ -39,12 +38,7 @@ export default function QueryPanel({
       </div>
       <ScrollableArea>
         <div {...stylex.props(styles.content)}>
-          <QueryEditor
-            source={source}
-            query={query}
-            setQuery={setQuery}
-            showSource={showSource}
-          />
+          <QueryEditor source={source} query={query} setQuery={setQuery} />
         </div>
       </ScrollableArea>
     </div>

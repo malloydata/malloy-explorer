@@ -30,12 +30,7 @@ export interface QueryEditorProps {
  * @param showSource (optional)
  * @returns
  */
-export function QueryEditor({
-  source,
-  query,
-  setQuery,
-  showSource = true,
-}: QueryEditorProps) {
+export function QueryEditor({source, query, setQuery}: QueryEditorProps) {
   const rootQuery = useQueryBuilder(source, query);
 
   if (!rootQuery) {
@@ -44,7 +39,7 @@ export function QueryEditor({
 
   return (
     <div {...stylex.props(queryExplorerStyles.main)}>
-      {showSource && <Source rootQuery={rootQuery} />}
+      <Source rootQuery={rootQuery} />
       <Parameters rootQuery={rootQuery} />
       <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
     </div>
