@@ -6,10 +6,7 @@
  */
 
 import * as React from 'react';
-import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
 import {ViewDefinition} from './ViewDefinition';
-import {AddMenu} from './AddMenu/AddMenu';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {Visualization} from './Visualization';
 
@@ -23,9 +20,6 @@ export function View({rootQuery, view}: ViewProps) {
     <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
       <Visualization rootQuery={rootQuery} view={view} />
       <ViewDefinition rootQuery={rootQuery} viewDef={view.definition} />
-      <div {...stylex.props(styles.queryFooter)}>
-        <AddMenu rootQuery={rootQuery} view={view} />
-      </div>
     </div>
   );
 }
