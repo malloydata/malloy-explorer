@@ -11,8 +11,10 @@ import {
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
-import {styles} from '../styles';
-import {Icon} from '../primitives';
+import {styles as componentStyles} from '../styles';
+import {Button, Icon} from '../primitives';
+import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
+import {useContext} from 'react';
 
 /**
  * Source
@@ -22,10 +24,16 @@ export interface SourceProps {
 }
 
 export function Source({rootQuery}: SourceProps) {
-  if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
+  const {isSourcePanelOpen, setIsSourcePanelOpen} = useContext(
+    ExplorerPanelsContext
+  );
+  if (
+    !isSourcePanelOpen &&
+    rootQuery.definition instanceof ASTArrowQueryDefinition
+  ) {
     return (
-      <div {...stylex.props(styles.queryCard)}>
-        <div {...stylex.props(styles.labelWithIcon)}>
+      <div {...stylex.props(componentStyles.queryCard, styles.flex)}>
+        <div {...stylex.props(componentStyles.labelWithIcon)}>
           <Icon name="database" />
           {
             rootQuery.definition.as
@@ -33,8 +41,20 @@ export function Source({rootQuery}: SourceProps) {
               .source.as.ReferenceQueryArrowSource().name
           }
         </div>
+        <Button
+          variant="flat"
+          onClick={() => setIsSourcePanelOpen(true)}
+          label="Open data panel"
+        />
       </div>
     );
   }
   return null;
 }
+
+const styles = stylex.create({
+  flex: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+});
