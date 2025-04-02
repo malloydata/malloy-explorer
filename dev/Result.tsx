@@ -32,7 +32,7 @@ const App = () => {
     : undefined;
 
   return (
-    <>
+    <React.StrictMode>
       <div style={{boxSizing: 'border-box', padding: '8px', height: '100vh'}}>
         <ResultPanel
           source={source}
@@ -43,7 +43,7 @@ const App = () => {
         />
       </div>
       <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
-    </>
+    </React.StrictMode>
   );
 };
 

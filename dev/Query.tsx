@@ -39,39 +39,43 @@ const App = () => {
   }, [queryIdx]);
 
   return (
-    <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
-      <div style={{gap: 8, display: 'flex'}}>
-        <div style={{padding: 8, width: 500}}>
-          Query: {queryIdx}{' '}
-          <button onClick={() => setQueryIdx((queryIdx + 1) % queries.length)}>
-            Change Query
-          </button>{' '}
-          <button onClick={() => setQuery(queries[queryIdx])}>Reset</button>
-          <hr />
-          <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
-            <QueryActionBar
-              source={source}
-              query={query}
-              clearQuery={() => setQuery(undefined)}
-              runQuery={(source, query) => {
-                const qb = new QB.ASTQuery({source, query});
-                window.alert(qb.toMalloy());
-              }}
-            />
-            <QueryEditor source={source} query={query} setQuery={setQuery} />
+    <React.StrictMode>
+      <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
+        <div style={{gap: 8, display: 'flex'}}>
+          <div style={{padding: 8, width: 500}}>
+            Query: {queryIdx}{' '}
+            <button
+              onClick={() => setQueryIdx((queryIdx + 1) % queries.length)}
+            >
+              Change Query
+            </button>{' '}
+            <button onClick={() => setQuery(queries[queryIdx])}>Reset</button>
+            <hr />
+            <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
+              <QueryActionBar
+                source={source}
+                query={query}
+                clearQuery={() => setQuery(undefined)}
+                runQuery={(source, query) => {
+                  const qb = new QB.ASTQuery({source, query});
+                  window.alert(qb.toMalloy());
+                }}
+              />
+              <QueryEditor source={source} query={query} setQuery={setQuery} />
+            </div>
+          </div>
+          <div>
+            <MalloyPreview source={source} query={query} />
+            <hr />
+            {query ? (
+              <RawPreview source={source} query={query} />
+            ) : (
+              <div>No query</div>
+            )}
           </div>
         </div>
-        <div>
-          <MalloyPreview source={source} query={query} />
-          <hr />
-          {query ? (
-            <RawPreview source={source} query={query} />
-          ) : (
-            <div>No query</div>
-          )}
-        </div>
-      </div>
-    </MalloyExplorerProvider>
+      </MalloyExplorerProvider>
+    </React.StrictMode>
   );
 };
 

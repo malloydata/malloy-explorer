@@ -21,32 +21,34 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
   return (
-    <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
-      <div {...stylex.props(styles.page)}>
-        <div {...stylex.props(fontStyles.body, styles.banner)}>
-          WARNING: This page shows all the components beside each other, but
-          they do not actually work correctly yet.
+    <React.StrictMode>
+      <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
+        <div {...stylex.props(styles.page)}>
+          <div {...stylex.props(fontStyles.body, styles.banner)}>
+            WARNING: This page shows all the components beside each other, but
+            they do not actually work correctly yet.
+          </div>
+          <div {...stylex.props(styles.content)}>
+            <SourcePanel source={source} query={query} setQuery={setQuery} />
+            <QueryPanel
+              source={source}
+              query={query}
+              setQuery={setQuery}
+              runQuery={(source, query) => {
+                const qb = new QueryBuilder.ASTQuery({source, query});
+                window.alert(qb.toMalloy());
+              }}
+              showSource={false}
+            />
+            <ResultPanel
+              source={source}
+              draftQuery={query}
+              setDraftQuery={setQuery}
+            />
+          </div>
         </div>
-        <div {...stylex.props(styles.content)}>
-          <SourcePanel source={source} query={query} setQuery={setQuery} />
-          <QueryPanel
-            source={source}
-            query={query}
-            setQuery={setQuery}
-            runQuery={(source, query) => {
-              const qb = new QueryBuilder.ASTQuery({source, query});
-              window.alert(qb.toMalloy());
-            }}
-            showSource={false}
-          />
-          <ResultPanel
-            source={source}
-            draftQuery={query}
-            setDraftQuery={setQuery}
-          />
-        </div>
-      </div>
-    </MalloyExplorerProvider>
+      </MalloyExplorerProvider>
+    </React.StrictMode>
   );
 };
 

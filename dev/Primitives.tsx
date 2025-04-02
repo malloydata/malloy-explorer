@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import {createRoot} from 'react-dom/client';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {MalloyExplorerProvider} from '../src';
 import Buttons from './components/Buttons';
 import TokenGroups from './components/TokensGroups';
@@ -16,28 +17,33 @@ import DatePickers from './components/DatePickers';
 import SelectorTokens from './components/SelectorTokens';
 import PillInputs from './components/PillInput';
 import CodeBlocks from './components/CodeBlocks';
+import {modelInfo} from './sample_models/example_model';
+
+const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   return (
-    <MalloyExplorerProvider>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          padding: '16px',
-        }}
-      >
-        <Buttons />
-        <EditableTokens />
-        <SelectorTokens />
-        <TokenGroups />
-        <TextInputs />
-        <DatePickers />
-        <PillInputs />
-        <CodeBlocks />
-      </div>
-    </MalloyExplorerProvider>
+    <React.StrictMode>
+      <MalloyExplorerProvider source={source}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            padding: '16px',
+          }}
+        >
+          <Buttons />
+          <EditableTokens />
+          <SelectorTokens />
+          <TokenGroups />
+          <TextInputs />
+          <DatePickers />
+          <PillInputs />
+          <CodeBlocks />
+        </div>
+      </MalloyExplorerProvider>
+    </React.StrictMode>
   );
 };
 
