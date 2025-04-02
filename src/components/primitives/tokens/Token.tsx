@@ -7,8 +7,9 @@
 
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import Icon from '../Icon';
-import {fontStyles} from '../styles';
+import {fontStyles, tooltipStyles} from '../styles';
 import {IconType} from '../utils/icon';
 import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
 import {
@@ -55,6 +56,11 @@ export interface TokenProps extends React.ComponentProps<'button'> {
   asButtonTrigger?: boolean;
 
   /**
+   * The tooltip to show when hovering over the token.
+   */
+  tooltip?: string | React.ReactElement;
+
+  /**
    * Custom styles for the token.
    */
   customStyle?: StyleXStyles;
@@ -68,10 +74,11 @@ export default function Token({
   onClick,
   onHover,
   asButtonTrigger = false,
+  tooltip,
   customStyle,
   ...props
 }: TokenProps) {
-  return (
+  const token = (
     <div
       {...stylex.props(
         tokenStyles.main,
@@ -96,6 +103,26 @@ export default function Token({
         <div {...stylex.props(fontStyles.body, tokenStyles.label)}>{label}</div>
       )}
     </div>
+  );
+
+  return tooltip ? (
+    <Tooltip.Root delayDuration={300}>
+      <Tooltip.Trigger asChild>{token}</Tooltip.Trigger>
+      <Tooltip.Content
+        side="bottom"
+        align="start"
+        sideOffset={4}
+        {...stylex.props(
+          typeof tooltip === 'string'
+            ? tooltipStyles.default
+            : tooltipStyles.card
+        )}
+      >
+        {tooltip}
+      </Tooltip.Content>
+    </Tooltip.Root>
+  ) : (
+    token
   );
 }
 
