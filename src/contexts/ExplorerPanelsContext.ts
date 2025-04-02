@@ -10,7 +10,7 @@ import * as React from 'react';
 export interface ExplorerPanelsContextProps {
   /** Manages the state of the source panel UI.  */
   isSourcePanelOpen: boolean;
-  setIsSourcePanelOpen: (isOpen: boolean) => void;
+  setIsSourcePanelOpen?: (isOpen: boolean) => void;
 }
 
 /**
@@ -21,5 +21,5 @@ export interface ExplorerPanelsContextProps {
 export const ExplorerPanelsContext =
   React.createContext<ExplorerPanelsContextProps>({
     isSourcePanelOpen: true,
-    setIsSourcePanelOpen: () => {},
+    setIsSourcePanelOpen: undefined,
   });
