@@ -161,7 +161,6 @@ const colorVariants = stylex.create({
       default: 'rgba(230, 235, 239, 1)',
       ':hover': 'rgba(221, 226, 232, 1)',
       ':active': 'rgba(204, 211, 219, 1)',
-      ':disabled': 'rgba(255, 255, 255, 0.5)',
     },
     [iconVars.color]: {
       default: iconColors.primary,
@@ -177,7 +176,6 @@ const colorVariants = stylex.create({
       default: 'transparent',
       ':hover': 'rgba(0, 0, 0, 0.05)',
       ':active': 'rgba(0, 0, 0, 0.1)',
-      ':disabled': 'rgba(255, 255, 255, 0.5)',
     },
     [iconVars.color]: {
       default: iconColors.primary,
@@ -193,7 +191,6 @@ const colorVariants = stylex.create({
       default: 'rgba(0, 100, 224, 1)',
       ':hover': 'rgba(4, 87, 203, 1)',
       ':active': 'rgba(0, 76, 188, 1)',
-      ':disabled': 'rgba(0, 100, 224, 1), rgba(255, 255, 255, 0.5)',
     },
     [iconVars.color]: {
       default: iconColors.primaryOnMedia,
