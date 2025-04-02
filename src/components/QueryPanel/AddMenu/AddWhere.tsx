@@ -24,8 +24,15 @@ export function AddWhere({rootQuery, segment}: AddWhereProps) {
   const allFields = segment.getInputSchema().fields;
 
   const fields = allFields
-    .filter(field => field.kind === 'dimension' || field.kind === 'measure')
-    .filter(field => FILTERABLE_TYPES.has(field.type.kind));
+    .filter(
+      field =>
+        field.kind === 'dimension' ||
+        field.kind === 'measure' ||
+        field.kind === 'join'
+    )
+    .filter(
+      field => field.kind === 'join' || FILTERABLE_TYPES.has(field.type.kind)
+    );
 
   return (
     <AddFieldItem
