@@ -14,6 +14,10 @@ export const backgroundColors = stylex.defineVars({
   cyan: 'rgba(3, 167, 215, 0.2)',
   washOnWeb: 'rgba(241, 244, 247, 1)',
   accentDeemphasized: 'rgba(0, 130, 251, 0.2)',
+  positiveDeemphasized: 'rgba(11, 153, 31, 0.2)',
+  warningDeemphasized: 'rgba(226, 164, 0, 0.2)',
+  negativeDeemphasized: 'rgba(227, 25, 59, 0.2)',
+  divider: 'rgba(204, 211, 219, 1)',
 });
 
 export const textColors = stylex.defineVars({
@@ -39,4 +43,7 @@ export const iconColors = stylex.defineVars({
   green: 'rgba(7, 109, 41, 1)',
   cyan: 'rgba(2, 141, 193, 1)',
   warning: 'rgba(233, 175, 8, 1)',
+  accent: 'rgba(0, 100, 224, 1)',
+  positive: 'rgba(13, 134, 38, 1)',
+  negative: 'rgba(227, 25, 59, 1)',
 });

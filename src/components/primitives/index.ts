@@ -17,6 +17,7 @@ export {default as Spinner} from './Spinner';
 export {default as NumberInput} from './NumberInput';
 export {default as DatePicker} from './DatePicker';
 export {default as ResizeBar} from './ResizeBar';
+export {default as Banner} from './Banner';
 export {
   DropdownMenu,
   DropdownMenuItem,

@@ -17,6 +17,7 @@ import DatePickers from './components/DatePickers';
 import SelectorTokens from './components/SelectorTokens';
 import PillInputs from './components/PillInput';
 import CodeBlocks from './components/CodeBlocks';
+import ErrorBanners from './components/Banners';
 import {modelInfo} from './sample_models/example_model';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
@@ -41,6 +42,7 @@ const App = () => {
           <DatePickers />
           <PillInputs />
           <CodeBlocks />
+          <ErrorBanners />
         </div>
       </MalloyExplorerProvider>
     </React.StrictMode>

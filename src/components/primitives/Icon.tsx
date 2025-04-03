@@ -10,7 +10,7 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {ICON_MAP, IconType, SMALL_ICONS} from './utils/icon';
 import {iconColors} from './colors.stylex';
 
-type Color = keyof typeof colorVariants;
+export type Color = keyof typeof colorVariants;
 
 interface IconProps {
   /**
@@ -87,7 +87,16 @@ const colorVariants = stylex.create({
   cyan: {
     color: iconColors.cyan,
   },
+  info: {
+    color: iconColors.accent,
+  },
   warning: {
     color: iconColors.warning,
+  },
+  positive: {
+    color: iconColors.positive,
+  },
+  negative: {
+    color: iconColors.negative,
   },
 });
