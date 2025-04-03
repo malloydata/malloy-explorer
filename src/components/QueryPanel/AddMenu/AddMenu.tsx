@@ -76,6 +76,7 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
         {search ? (
           <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
             <FieldList
+              segment={segment}
               fields={segment.getInputSchema().fields}
               types={['dimension', 'measure', 'view']}
               onClick={function (field: FieldInfo, path: string[]): void {
