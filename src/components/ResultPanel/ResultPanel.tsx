@@ -17,6 +17,7 @@ import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {useEffect} from 'react';
+import {colors} from '../QueryPanel/AddMenu/colors.stylex';
 
 enum Tab {
   RESULTS = 'Results',
@@ -72,7 +73,16 @@ export default function ResultPanel({
           <Trigger
             value={Tab.RESULTS}
             disabled={!submittedQueryExists}
-            {...stylex.props(fontStyles.body, styles.tab)}
+            {...stylex.props(
+              fontStyles.body,
+              styles.tab,
+              !submittedQueryExists && styles.disabledTab
+            )}
+            title={
+              !submittedQueryExists
+                ? 'Run a query to see the results.'
+                : undefined
+            }
           >
             {Tab.RESULTS}
           </Trigger>
@@ -85,7 +95,16 @@ export default function ResultPanel({
           <Trigger
             value={Tab.SQL}
             disabled={!submittedQueryExists}
-            {...stylex.props(fontStyles.body, styles.tab)}
+            {...stylex.props(
+              fontStyles.body,
+              styles.tab,
+              !submittedQueryExists && styles.disabledTab
+            )}
+            title={
+              !submittedQueryExists
+                ? 'Run a query to see generated SQL.'
+                : undefined
+            }
           >
             {Tab.SQL}
           </Trigger>
@@ -235,11 +254,16 @@ const styles = stylex.create({
     padding: '4px 8px',
     borderRadius: '8px',
     backgroundColor: 'transparent',
+    cursor: 'pointer',
     ":is([data-state='active'])": {
       color: textColors.link,
       fontWeight: '700',
       backgroundColor: backgroundColors.accentDeemphasized,
     },
+  },
+  disabledTab: {
+    color: colors.disabledText,
+    cursor: 'initial',
   },
   contentContainer: {
     flexGrow: '1',
