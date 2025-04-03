@@ -11,6 +11,7 @@ import {addMenuStyles} from './styles';
 import {Token} from '../../primitives';
 import {SearchIndexResult, useSearch} from './hooks/useSearch';
 import {colors} from './colors.stylex';
+import {useMemo} from 'react';
 
 export interface FieldListProps {
   search: string;
@@ -19,12 +20,15 @@ export interface FieldListProps {
 
 export function ValueList({onClick, search}: FieldListProps) {
   const {searchResults} = useSearch(search);
-  const stringSearchResults =
-    searchResults &&
-    searchResults
-      .filter(r => r.fieldType === 'string' && r.fieldValue !== null)
-      .sort((a, b) => b.weight - a.weight)
-      .slice(0, 100);
+  const stringSearchResults = useMemo(
+    () =>
+      searchResults &&
+      searchResults
+        .filter(r => r.fieldType === 'string' && r.fieldValue !== null)
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 100),
+    [searchResults]
+  );
 
   return (
     <div>

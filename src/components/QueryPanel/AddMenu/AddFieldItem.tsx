@@ -7,6 +7,8 @@
 
 import * as React from 'react';
 import {useState} from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import Icon from '../../primitives/Icon';
 import {addMenuStyles} from './styles';
 import stylex from '@stylexjs/stylex';
@@ -20,18 +22,26 @@ import {tooltipStyles} from '../../primitives/styles';
 export interface AddGroupByProps {
   label: string;
   icon: IconType;
+  segment: ASTSegmentViewDefinition;
   fields: FieldInfo[];
   onClick(field: FieldInfo, path: string[]): void;
   types: Array<'dimension' | 'measure' | 'view'>;
+  filter?: (
+    segment: ASTSegmentViewDefinition,
+    field: Malloy.FieldInfo,
+    path: string[]
+  ) => boolean;
   disabledMessage?: string;
 }
 
 export function AddFieldItem({
+  segment,
   fields,
   icon,
   label,
   onClick,
   types,
+  filter,
   disabledMessage,
 }: AddGroupByProps) {
   const disabled = fields.length === 0;
@@ -74,7 +84,13 @@ export function AddFieldItem({
       </Popover.Trigger>
       <Popover.Content side="right" align="start" alignOffset={-16}>
         <Popover.Arrow width={0} height={0} />
-        <FieldMenu types={types} fields={fields} onClick={onClick} />
+        <FieldMenu
+          types={types}
+          filter={filter}
+          segment={segment}
+          fields={fields}
+          onClick={onClick}
+        />
       </Popover.Content>
     </Popover.Root>
   );

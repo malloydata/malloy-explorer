@@ -22,18 +22,16 @@ export interface AddGroupByProps {
 
 export function AddGroupBy({rootQuery, segment}: AddGroupByProps) {
   const {setQuery} = useContext(QueryEditorContext);
-
-  const allFields = segment.getInputSchema().fields;
-  const fields = allFields.filter(
-    field => !segment.hasField(field.name /* TODO , field.path */)
-  );
+  const {fields} = segment.getInputSchema();
 
   return (
     <AddFieldItem
       label="Add group by"
       icon="groupBy"
+      segment={segment}
       fields={fields}
       types={['dimension']}
+      filter={(segment, field, path) => !segment.hasField(field.name, path)}
       onClick={(field, path) => {
         addGroupBy(rootQuery, segment, field, path, setQuery);
       }}
