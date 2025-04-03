@@ -19,6 +19,23 @@ export function fieldKindToColor(
   return fieldKindMap[kind];
 }
 
+export function fieldToIcon(field: Malloy.FieldInfo): IconType {
+  let icon: IconType;
+  switch (field.kind) {
+    case 'view':
+      icon = 'query';
+      break;
+    case 'dimension':
+    case 'measure':
+      icon = atomicTypeToIcon(field.type.kind);
+      break;
+    case 'join':
+      icon = relationshipToIcon(field.relationship);
+      break;
+  }
+  return icon;
+}
+
 export function relationshipToIcon(
   relationship: Malloy.Relationship
 ): IconType {

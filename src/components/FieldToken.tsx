@@ -10,7 +10,7 @@ import {FieldInfo} from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {Token} from './primitives';
 import {hoverActionsVars} from './SourcePanel/field-token.stylex';
-import {atomicTypeToIcon, fieldKindToColor} from './utils/icon';
+import {fieldKindToColor, fieldToIcon} from './utils/icon';
 
 interface FieldTokenProps extends React.ComponentProps<typeof Token> {
   /**
@@ -35,10 +35,6 @@ export default function FieldToken({
   hoverActionsVisible,
   ...props
 }: FieldTokenProps) {
-  if (field.kind === 'join') {
-    return null;
-  }
-
   return (
     <div
       {...stylex.props(
@@ -50,11 +46,7 @@ export default function FieldToken({
         <Token
           label={field.name}
           color={fieldKindToColor(field.kind)}
-          icon={
-            field.kind === 'dimension' || field.kind === 'measure'
-              ? atomicTypeToIcon(field.type.kind)
-              : 'view'
-          }
+          icon={fieldToIcon(field)}
           {...props}
         />
       </div>
