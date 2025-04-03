@@ -20,7 +20,7 @@ import {PillInput} from './PillInput';
 import {TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
 import {StyleXStyles} from '@stylexjs/stylex';
-import {Field} from '../QueryPanel/Field';
+import FieldToken from '../FieldToken';
 
 type StringFilterType =
   | 'is_equal_to'
@@ -135,10 +135,7 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
 
   const color = fieldKindToColor(fieldInfo.kind);
 
-  const tokens = [
-    <Field key="field" field={fieldInfo} path={path} />,
-    typeDropdown,
-  ];
+  const tokens = [<FieldToken key="field" field={fieldInfo} />, typeDropdown];
 
   switch (currentFilter.operator) {
     case '=':

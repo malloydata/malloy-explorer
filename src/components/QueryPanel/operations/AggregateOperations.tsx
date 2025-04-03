@@ -17,10 +17,10 @@ import {
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {hoverStyles} from './hover.stylex';
-import {Field} from '../Field';
 import {ClearButton} from './ClearButton';
 import {OperationActionTitle} from './OperationActionTitle';
 import {FieldHover} from '../FieldHover';
+import FieldToken from '../../FieldToken';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
@@ -67,7 +67,7 @@ export function AggregateOperations({
               align="start"
             >
               <div {...stylex.props(hoverStyles.main)}>
-                <Field field={fieldInfo} path={path} />
+                <FieldToken field={fieldInfo} />
                 <div {...stylex.props(hoverStyles.hoverActions)}>
                   <ClearButton
                     onClick={() => {

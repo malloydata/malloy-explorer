@@ -11,9 +11,9 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
 import {sortFieldInfos} from '../../utils/fields';
-import {Field} from '../Field';
 import {FieldHover} from '../FieldHover';
 import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
+import FieldToken from '../../FieldToken';
 
 interface Group {
   name: string;
@@ -114,7 +114,7 @@ export function FieldList({
                   {...stylex.props(addMenuStyles.item, styles.fieldItem)}
                   onClick={() => onClick(field, group.path)}
                 >
-                  <Field field={field} path={group.path} />
+                  <FieldToken field={field} />
                 </div>
               </FieldHover>
             ))}
