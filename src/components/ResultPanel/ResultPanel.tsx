@@ -290,6 +290,7 @@ const styles = stylex.create({
     backgroundColor: 'transparent',
     border: 'none',
     padding: '0px',
+    cursor: 'pointer',
   },
   warningIcon: {
     paddingRight: '8px',
