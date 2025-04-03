@@ -144,9 +144,7 @@ export default function ResultPanel({
                     <span> to the last run query.</span>
                   </div>
                 )}
-              <ScrollableArea>
-                <ResultDisplay query={submittedQuery} />
-              </ScrollableArea>
+              <ResultDisplay query={submittedQuery} />
             </>
           )}
         </Content>

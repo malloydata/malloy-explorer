@@ -8,7 +8,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {Button, Spinner} from '../primitives';
+import {Button, ScrollableArea, Spinner} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {
   EXECUTION_STATES,
@@ -97,13 +97,13 @@ function FinishedResultDisplay({result}: FinishedResultDisplay) {
   }, [result]);
 
   return (
-    <div>
+    <ScrollableArea>
       {rendering ? (
         <Spinner size="large" />
       ) : (
         <div>{html && <DOMElement element={html} />}</div>
       )}
-    </div>
+    </ScrollableArea>
   );
 }
 
