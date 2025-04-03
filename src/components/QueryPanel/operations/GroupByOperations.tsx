@@ -55,31 +55,31 @@ export function GroupByOperations({
         }}
       />
       <div {...stylex.props(commonStyles.tokenContainer)}>
-        {groupBys.map((groupBy, key) => (
-          <FieldHover
-            key={key}
-            field={groupBy.getFieldInfo()}
-            path={groupBy.field.getReference().path}
-            side="right"
-            align="start"
-          >
-            <div {...stylex.props(hoverStyles.main)}>
-              <Field
-                key={key}
-                field={groupBy.getFieldInfo()}
-                path={groupBy.field.getReference().path}
-              />
-              <div {...stylex.props(hoverStyles.hoverActions)}>
-                <ClearButton
-                  onClick={() => {
-                    groupBy.delete();
-                    setQuery?.(rootQuery.build());
-                  }}
-                />
+        {groupBys.map(groupBy => {
+          const fieldInfo = groupBy.getFieldInfo();
+          const path = groupBy.field.getReference().path ?? [];
+          return (
+            <FieldHover
+              key={[...path, fieldInfo.name].join('.')}
+              field={fieldInfo}
+              path={path}
+              side="right"
+              align="start"
+            >
+              <div {...stylex.props(hoverStyles.main)}>
+                <Field field={fieldInfo} path={path} />
+                <div {...stylex.props(hoverStyles.hoverActions)}>
+                  <ClearButton
+                    onClick={() => {
+                      groupBy.delete();
+                      setQuery?.(rootQuery.build());
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          </FieldHover>
-        ))}
+            </FieldHover>
+          );
+        })}
       </div>
     </div>
   );

@@ -55,31 +55,31 @@ export function AggregateOperations({
         }}
       />{' '}
       <div {...stylex.props(styles.tokenContainer)}>
-        {aggregates.map((aggregate, key) => (
-          <FieldHover
-            key={key}
-            field={aggregate.getFieldInfo()}
-            path={aggregate.field.getReference().path}
-            side="right"
-            align="start"
-          >
-            <div key={key} {...stylex.props(hoverStyles.main)}>
-              <Field
-                key={key}
-                field={aggregate.getFieldInfo()}
-                path={aggregate.field.getReference().path}
-              />
-              <div {...stylex.props(hoverStyles.hoverActions)}>
-                <ClearButton
-                  onClick={() => {
-                    aggregate.delete();
-                    setQuery?.(rootQuery.build());
-                  }}
-                />
+        {aggregates.map(aggregate => {
+          const fieldInfo = aggregate.getFieldInfo();
+          const path = aggregate.field.getReference().path ?? [];
+          return (
+            <FieldHover
+              key={[...path, fieldInfo.name].join('.')}
+              field={fieldInfo}
+              path={path}
+              side="right"
+              align="start"
+            >
+              <div {...stylex.props(hoverStyles.main)}>
+                <Field field={fieldInfo} path={path} />
+                <div {...stylex.props(hoverStyles.hoverActions)}>
+                  <ClearButton
+                    onClick={() => {
+                      aggregate.delete();
+                      setQuery?.(rootQuery.build());
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          </FieldHover>
-        ))}
+            </FieldHover>
+          );
+        })}
       </div>
     </div>
   );
