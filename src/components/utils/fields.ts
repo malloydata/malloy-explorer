@@ -17,7 +17,7 @@ export function sortFieldInfoOrder(field: Malloy.FieldInfo): 0 | 1 | 2 | 3 {
     return 3;
   } else if (field.kind === 'view') {
     return 2;
-  } else if (field.kind === 'measure') {
+  } else if (field.kind === 'dimension') {
     return 1;
   } else {
     return 0;

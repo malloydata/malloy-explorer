@@ -17,10 +17,11 @@ import {
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {hoverStyles} from './hover.stylex';
-import {Field} from './Field';
+import {Field} from '../Field';
 import {ClearButton} from './ClearButton';
 import {addGroupBy} from '../../utils/segment';
 import {OperationActionTitle} from './OperationActionTitle';
+import {FieldHover} from '../FieldHover';
 
 export interface GroupByOperationsProps {
   rootQuery: ASTQuery;
@@ -58,17 +59,29 @@ export function GroupByOperations({
       />
       <div {...stylex.props(commonStyles.tokenContainer)}>
         {groupBys.map((groupBy, key) => (
-          <div key={key} {...stylex.props(hoverStyles.main)}>
-            <Field type="dimension" key={key} field={groupBy.field} />
-            <div {...stylex.props(hoverStyles.hoverActions)}>
-              <ClearButton
-                onClick={() => {
-                  groupBy.delete();
-                  setQuery?.(rootQuery.build());
-                }}
+          <FieldHover
+            key={key}
+            field={groupBy.getFieldInfo()}
+            path={groupBy.field.getReference().path}
+            side="right"
+            align="start"
+          >
+            <div {...stylex.props(hoverStyles.main)}>
+              <Field
+                key={key}
+                field={groupBy.getFieldInfo()}
+                path={groupBy.field.getReference().path}
               />
+              <div {...stylex.props(hoverStyles.hoverActions)}>
+                <ClearButton
+                  onClick={() => {
+                    groupBy.delete();
+                    setQuery?.(rootQuery.build());
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          </FieldHover>
         ))}
       </div>
     </div>

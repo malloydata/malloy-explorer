@@ -23,6 +23,8 @@ import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {FieldList} from './FieldList';
 import {segmentHasLimit, segmentNestNo} from '../../utils/segment';
+import {ValueList} from './ValueList';
+import {SearchIndexResult} from './hooks/useSearch';
 
 export interface AddMenuProps {
   rootQuery: ASTQuery;
@@ -72,29 +74,44 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
         </div>
         <Divider />
         {search ? (
-          <FieldList
-            fields={segment.getInputSchema().fields}
-            types={['dimension', 'measure', 'view']}
-            onClick={function (field: FieldInfo, path: string[]): void {
-              if (field.kind === 'dimension') {
-                segment.addGroupBy(field.name, path);
-                if (!segmentHasLimit(segment)) {
-                  segment.setLimit(10);
+          <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
+            <FieldList
+              fields={segment.getInputSchema().fields}
+              types={['dimension', 'measure', 'view']}
+              onClick={function (field: FieldInfo, path: string[]): void {
+                if (field.kind === 'dimension') {
+                  segment.addGroupBy(field.name, path);
+                  if (!segmentHasLimit(segment)) {
+                    segment.setLimit(10);
+                  }
+                  segment.addOrderBy(field.name);
+                } else if (field.kind === 'measure') {
+                  segment.addAggregate(field.name, path);
+                } else {
+                  const nestNo = segmentNestNo(segment, field.name);
+                  segment.addNest(
+                    field.name,
+                    nestNo > 1 ? `${field.name} ${nestNo}` : undefined
+                  );
                 }
-                segment.addOrderBy(field.name);
-              } else if (field.kind === 'measure') {
-                segment.addAggregate(field.name, path);
-              } else {
-                const nestNo = segmentNestNo(segment, field.name);
-                segment.addNest(
-                  field.name,
-                  nestNo > 1 ? `${field.name} ${nestNo}` : undefined
-                );
-              }
-              setQuery?.(rootQuery.build());
-            }}
-            search={search}
-          />
+                setQuery?.(rootQuery.build());
+              }}
+              search={search}
+            />
+            <Divider />
+            <ValueList
+              search={search}
+              onClick={(value: SearchIndexResult) => {
+                const path = value.fieldName.split('.'); // TODO handle escaped .s
+                const name = path.pop() as string;
+                segment.addWhere(name, path, {
+                  kind: 'string',
+                  parsed: {operator: '=', values: [value.fieldValue ?? '∅']},
+                });
+                setQuery?.(rootQuery.build());
+              }}
+            />
+          </div>
         ) : (
           <>
             <AddGroupBy rootQuery={rootQuery} segment={segment} />

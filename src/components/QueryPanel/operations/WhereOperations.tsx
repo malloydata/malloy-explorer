@@ -60,6 +60,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
               <StringFilterToken
                 key={key}
                 fieldInfo={fieldInfo}
+                path={where.filter.fieldReference.path ?? []}
                 filter={filter.parsed}
                 setFilter={filter => {
                   where.filter.setFilter({kind: 'string', parsed: filter});

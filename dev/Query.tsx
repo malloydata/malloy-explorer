@@ -17,7 +17,7 @@ import {
   modelInfo,
   queries as exampleQueries,
 } from './sample_models/example_model';
-
+import {topValues} from './sample_models/example_top_values';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const queries = [undefined, ...exampleQueries];
@@ -37,7 +37,12 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
+      <MalloyExplorerProvider
+        source={source}
+        query={query}
+        setQuery={setQuery}
+        topValues={topValues}
+      >
         <div style={{gap: 8, display: 'flex'}}>
           <div style={{padding: 8, width: 500}}>
             Query: {queryIdx}{' '}
