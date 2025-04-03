@@ -18,6 +18,7 @@ export const backgroundColors = stylex.defineVars({
   warningDeemphasized: 'rgba(226, 164, 0, 0.2)',
   negativeDeemphasized: 'rgba(227, 25, 59, 0.2)',
   divider: 'rgba(204, 211, 219, 1)',
+  token: 'rgba(230, 235, 239, 1)',
 });
 
 export const textColors = stylex.defineVars({

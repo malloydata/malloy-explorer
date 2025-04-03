@@ -1,5 +1,5 @@
 import stylex from '@stylexjs/stylex';
-import {iconColors, textColors} from '../colors.stylex';
+import {backgroundColors, iconColors, textColors} from '../colors.stylex';
 import {iconVars, labelVars} from './token.stylex';
 
 export const tokenStyles = stylex.create({
@@ -14,7 +14,7 @@ export const tokenStyles = stylex.create({
     cursor: 'pointer',
     overflow: 'hidden',
     background: {
-      default: 'rgba(230, 235, 239, 1)',
+      default: backgroundColors.token,
       ':hover': 'rgba(221, 226, 232, 1)',
     },
     position: 'relative',

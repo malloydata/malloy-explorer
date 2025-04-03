@@ -18,6 +18,7 @@ import {
   TokenColor,
   TokenSize,
 } from './types';
+import {backgroundColors} from '../colors.stylex';
 
 export interface TokenProps extends React.ComponentProps<'button'> {
   /**
@@ -78,17 +79,20 @@ export default function Token({
   customStyle,
   ...props
 }: TokenProps) {
+  const isInteractive = onClick !== undefined || asButtonTrigger;
+
   const token = (
     <div
       {...stylex.props(
         tokenStyles.main,
         tokenColorVariants[color],
         tokenSizeVariants[size],
+        !isInteractive && styles.nonInteractive,
         customStyle
       )}
     >
       {icon && <Icon name={icon} customStyle={tokenStyles.icon} />}
-      {(onClick || asButtonTrigger) && (
+      {isInteractive && (
         <button
           {...stylex.props(styles.button)}
           {...(onClick && {onClick})}
@@ -136,5 +140,9 @@ const styles = stylex.create({
     background: 'transparent',
     borderStyle: 'none',
     cursor: 'pointer',
+  },
+  nonInteractive: {
+    cursor: 'default',
+    background: backgroundColors.token,
   },
 });
