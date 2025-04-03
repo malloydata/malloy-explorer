@@ -36,21 +36,23 @@ const App = () => {
         >
           <div {...stylex.props(styles.page)}>
             <div {...stylex.props(styles.content)}>
-              <div
-                {...stylex.props(styles.panel)}
-                style={{width: `${sourcePanelWidth}px`}}
-              >
-                <SourcePanel
-                  source={source}
-                  query={query}
-                  setQuery={setQuery}
-                />
-                <ResizeBar
-                  minWidth={180}
-                  width={sourcePanelWidth}
-                  onWidthChange={setSourcePanelWidth}
-                />
-              </div>
+              {isSourcePanelOpen && (
+                <div
+                  {...stylex.props(styles.panel)}
+                  style={{width: `${sourcePanelWidth}px`}}
+                >
+                  <SourcePanel
+                    source={source}
+                    query={query}
+                    setQuery={setQuery}
+                  />
+                  <ResizeBar
+                    minWidth={180}
+                    width={sourcePanelWidth}
+                    onWidthChange={setSourcePanelWidth}
+                  />
+                </div>
+              )}
 
               <div
                 {...stylex.props(styles.panel)}
@@ -67,7 +69,7 @@ const App = () => {
                   showSource={false}
                 />
                 <ResizeBar
-                  minWidth={180}
+                  minWidth={230}
                   width={queryPanelWidth}
                   onWidthChange={setQueryPanelWidth}
                 />
