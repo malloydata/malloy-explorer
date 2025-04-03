@@ -20,6 +20,7 @@ const getLineNumberTransformer: GetTransformer = ({
             'margin-right: 35px;',
             'width: 1px;',
             'display: inline-block;',
+            'user-select: none',
           ],
         },
       };
