@@ -19,18 +19,21 @@ export function fieldKindToColor(
   return fieldKindMap[kind];
 }
 
-export function fieldToIcon(field: Malloy.FieldInfo): IconType | undefined {
+export function fieldToIcon(field: Malloy.FieldInfo): IconType {
+  let icon: IconType;
   switch (field.kind) {
     case 'view':
-      return 'query';
+      icon = 'query';
+      break;
     case 'dimension':
     case 'measure':
-      return atomicTypeToIcon(field.type.kind);
+      icon = atomicTypeToIcon(field.type.kind);
+      break;
     case 'join':
-      return relationshipToIcon(field.relationship);
-    default:
-      return undefined;
+      icon = relationshipToIcon(field.relationship);
+      break;
   }
+  return icon;
 }
 
 export function relationshipToIcon(
