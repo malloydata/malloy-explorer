@@ -12,9 +12,9 @@ import {fontStyles} from './styles';
 import Icon, {IconProps} from './Icon';
 import ScrollableArea from './ScrollableArea';
 
-type Variant = keyof typeof variantColors;
+export type Variant = keyof typeof variantColors;
 
-interface BannerProps {
+export interface BannerProps {
   /**
    * Title.
    */

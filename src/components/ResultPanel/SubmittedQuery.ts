@@ -1,4 +1,5 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
+import {ExplorerError} from '../../types/error';
 
 export const EXECUTION_STATES = {
   compiling: 'Compiling',
@@ -26,7 +27,7 @@ export type RunStats = {
 };
 
 export type QueryResponse = {
-  error?: undefined;
+  error?: ExplorerError;
   result?: Malloy.Result;
   runStats?: RunStats;
 };
