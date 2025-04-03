@@ -14,38 +14,65 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {modelInfo} from './sample_models/example_model';
 import stylex from '@stylexjs/stylex';
 import {QueryPanel} from '../src/components/QueryPanel';
-import {fontStyles} from '../src/components/primitives/styles';
 import {ExplorerPanelsContext} from '../src/contexts/ExplorerPanelsContext';
+import ResizeBar from '../src/components/primitives/ResizeBar';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
   const [isSourcePanelOpen, setIsSourcePanelOpen] = useState(true);
+  const [sourcePanelWidth, setSourcePanelWidth] = useState(280);
+  const [queryPanelWidth, setQueryPanelWidth] = useState(360);
 
   return (
     <React.StrictMode>
       <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
         <ExplorerPanelsContext.Provider
-          value={{isSourcePanelOpen, setIsSourcePanelOpen}}
+          value={{
+            isSourcePanelOpen,
+            setIsSourcePanelOpen,
+          }}
         >
           <div {...stylex.props(styles.page)}>
-            <div {...stylex.props(fontStyles.body, styles.banner)}>
-              WARNING: This page shows all the components beside each other, but
-              they do not actually work correctly yet.
-            </div>
             <div {...stylex.props(styles.content)}>
-              <SourcePanel source={source} query={query} setQuery={setQuery} />
-              <QueryPanel
-                source={source}
-                query={query}
-                setQuery={setQuery}
-                runQuery={(source, query) => {
-                  const qb = new QueryBuilder.ASTQuery({source, query});
-                  window.alert(qb.toMalloy());
-                }}
-                showSource={false}
-              />
+              <div
+                {...stylex.props(styles.panel)}
+                style={{width: `${sourcePanelWidth}px`}}
+              >
+                <SourcePanel
+                  source={source}
+                  query={query}
+                  setQuery={setQuery}
+                />
+                <ResizeBar
+                  minWidth={180}
+                  width={sourcePanelWidth}
+                  onWidthChange={setSourcePanelWidth}
+                />
+              </div>
+
+              <div
+                {...stylex.props(styles.panel)}
+                style={{width: `${queryPanelWidth}px`}}
+              >
+                <QueryPanel
+                  source={source}
+                  query={query}
+                  setQuery={setQuery}
+                  runQuery={(source, query) => {
+                    const qb = new QueryBuilder.ASTQuery({source, query});
+                    window.alert(qb.toMalloy());
+                  }}
+                  showSource={false}
+                />
+                <ResizeBar
+                  minWidth={180}
+                  width={queryPanelWidth}
+                  onWidthChange={setQueryPanelWidth}
+                />
+              </div>
+
               <ResultPanel
                 source={source}
                 draftQuery={query}
@@ -79,5 +106,10 @@ const styles = stylex.create({
     display: 'flex',
     height: '100%',
     overflowY: 'auto',
+  },
+  panel: {
+    position: 'relative',
+    height: '100%',
+    flex: '0 0 auto',
   },
 });

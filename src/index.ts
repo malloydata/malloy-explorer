@@ -16,4 +16,5 @@ export type {
   SubmittedQuery,
 } from './components/ResultPanel/SubmittedQuery';
 export {SourcePanel} from './components/SourcePanel';
+export {ResizeBar} from './components/primitives';
 export {ExplorerPanelsContext} from './contexts/ExplorerPanelsContext';
