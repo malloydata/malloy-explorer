@@ -12,7 +12,7 @@ import {Content, List, Root, Trigger} from '@radix-ui/react-tabs';
 import stylex from '@stylexjs/stylex';
 import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
-import {Button, CodeBlock, Icon, ScrollableArea} from '../primitives';
+import {Button, CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
@@ -144,9 +144,7 @@ export default function ResultPanel({
                     <span> to the last run query.</span>
                   </div>
                 )}
-              <ScrollableArea>
-                <ResultDisplay query={submittedQuery} />
-              </ScrollableArea>
+              <ResultDisplay query={submittedQuery} />
             </>
           )}
         </Content>
