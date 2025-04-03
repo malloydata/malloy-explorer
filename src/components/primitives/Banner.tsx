@@ -10,6 +10,7 @@ import stylex from '@stylexjs/stylex';
 import {backgroundColors} from './colors.stylex';
 import {fontStyles} from './styles';
 import Icon, {IconProps} from './Icon';
+import ScrollableArea from './ScrollableArea';
 
 type Variant = keyof typeof variantColors;
 
@@ -60,7 +61,9 @@ export default function Banner({
         </div>
       </div>
       {children && (
-        <div {...stylex.props(styles.content, fontStyles.body)}>{children}</div>
+        <div {...stylex.props(styles.content, fontStyles.body)}>
+          <ScrollableArea>{children}</ScrollableArea>
+        </div>
       )}
     </div>
   );
@@ -116,6 +119,7 @@ const styles = stylex.create({
     padding: '16px',
     backgroundColor: 'white',
     borderRadius: '0px 0px 10px 10px',
+    overflow: 'hidden',
   },
 });
 

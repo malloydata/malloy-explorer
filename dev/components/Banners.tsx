@@ -20,9 +20,30 @@ export default function Banners() {
           description="I'm a description"
           variant="info"
         />
-        <Banner title="Success Banner" variant="success">
-          With optional content.
-        </Banner>
+        <div style={{height: '200px'}}>
+          <Banner title="Success Banner" variant="success">
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+            With optional content. With optional content. With optional content.
+          </Banner>
+        </div>
         <Banner
           title="Warn Banner"
           description="I'm a description that is long - really, really, really, really, really, really, really, really, really, really, really, really, really, really"
