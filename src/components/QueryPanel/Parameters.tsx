@@ -42,8 +42,8 @@ export function Parameters({rootQuery}: ParametersProps) {
     return (
       <CollapsiblePanel title="Source parameters">
         <div {...stylex.props(styles.indent)}>
-          {sourceParameters.map((parameter, key) => (
-            <TokenGroup key={key}>
+          {sourceParameters.map(parameter => (
+            <TokenGroup key={parameter.name}>
               <Token
                 icon={atomicTypeToIcon(parameter.type.kind)}
                 label={parameter.name}

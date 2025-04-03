@@ -43,9 +43,9 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
 
   return (
     <div {...stylex.props(styles.tokenContainer)}>
-      {nests.map((nest, key) => {
+      {nests.map(nest => {
         return (
-          <div key={key} {...stylex.props(viewStyles.indent)}>
+          <div key={nest.name} {...stylex.props(viewStyles.indent)}>
             <CollapsiblePanel
               title={nest.name}
               icon="nest"
