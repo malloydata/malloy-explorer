@@ -41,7 +41,7 @@ export function Parameters({rootQuery}: ParametersProps) {
 
     return (
       <CollapsiblePanel title="Source parameters">
-        <div {...stylex.props(styles.indent)}>
+        <div {...stylex.props(styles.content)}>
           {sourceParameters.map(parameter => (
             <TokenGroup key={parameter.name}>
               <Token
@@ -68,7 +68,8 @@ export function Parameters({rootQuery}: ParametersProps) {
 }
 
 const styles = stylex.create({
-  indent: {
-    marginLeft: 12,
+  content: {
+    display: 'flex',
+    paddingLeft: '12px',
   },
 });

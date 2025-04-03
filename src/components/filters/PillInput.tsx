@@ -240,7 +240,7 @@ const styles = stylex.create({
     display: 'flex',
     overflow: 'hidden',
     gap: 3,
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     borderColor: {
       default: 'none',
       ':focus': '#4285F4',

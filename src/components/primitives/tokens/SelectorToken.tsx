@@ -73,6 +73,7 @@ export default function SelectorToken<T extends string>({
       <Select.Trigger
         {...stylex.props(
           tokenStyles.main,
+          styles.selectTrigger,
           tokenColorVariants[color],
           tokenSizeVariants[size],
           fontStyles.body,
@@ -81,7 +82,9 @@ export default function SelectorToken<T extends string>({
         )}
       >
         {icon && <Icon name={icon} customStyle={tokenStyles.icon} />}
-        <Select.Value>{label}</Select.Value>
+        <Select.Value asChild>
+          <div {...stylex.props(styles.selectLabel)}>{label}</div>
+        </Select.Value>
       </Select.Trigger>
       <Select.Portal>
         <Select.Content side="bottom" position="popper" sideOffset={4}>
@@ -153,6 +156,15 @@ function SelectItem<T>({
 }
 
 const styles = stylex.create({
+  selectTrigger: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  selectLabel: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
   selectViewport: {
     borderRadius: '12px',
     background: 'rgba(255, 255, 255, 1)',

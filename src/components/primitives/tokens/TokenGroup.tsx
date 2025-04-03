@@ -59,7 +59,8 @@ const getTokenColor = (
 
 const styles = stylex.create({
   main: {
-    display: 'inline-flex',
+    display: 'grid',
+    gridAutoFlow: 'column',
     alignItems: 'center',
     gap: '1px',
   },
