@@ -37,10 +37,7 @@ export default function ViewAttributeTable({
                 <Visualization annotations={viewInfo.annotations || []} />
               </div>
             </ViewAttributeTableRow>
-
-            {/* <ViewAttributeTableRow attribute="aggregate" />
-          <ViewAttributeTableRow attribute="group by" /> */}
-            <ViewAttributeTableRow attribute="dimension">
+            <ViewAttributeTableRow attribute="output">
               {dimensions.map(f => (
                 <span key={`${f.kind}::${f.name}`}>
                   <FieldToken
