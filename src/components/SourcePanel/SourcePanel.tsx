@@ -70,15 +70,10 @@ export function SourcePanel({source}: SourcePanelProps) {
   }, [source, fieldItems]);
 
   const fieldGroupList = React.useMemo(() => {
-    const groupItems =
+    return (
       fieldGroupsByKindByPath.find(({group}) => group === subpanelType)
-        ?.items ?? [];
-
-    if (subpanelType === 'view') {
-      return groupItems.filter(item => item.groupPath.length === 0);
-    }
-
-    return groupItems;
+        ?.items ?? []
+    );
   }, [fieldGroupsByKindByPath, subpanelType]);
 
   const isSearchActive = !!searchQuery;

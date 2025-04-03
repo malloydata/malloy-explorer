@@ -27,6 +27,8 @@ export function flattenFieldsTree(
       case 'view':
         if (isIndexView(field)) {
           return [];
+        } else if (path.length > 0) {
+          return []; // exclude views in join fields
         } else {
           return [{path, field}];
         }
