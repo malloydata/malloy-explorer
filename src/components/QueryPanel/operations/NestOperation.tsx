@@ -19,6 +19,7 @@ import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {useContext} from 'react';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 import {AddMenu} from '../AddMenu/AddMenu';
+import {VisualizationIcon} from '../VisualizationIcon';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -49,6 +50,7 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
             <CollapsiblePanel
               title={nest.name}
               icon="nest"
+              defaultOpen={false}
               controls={
                 <>
                   <DropdownMenu
@@ -73,6 +75,7 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
                   <AddMenu rootQuery={rootQuery} view={nest.view} />
                 </>
               }
+              collapsedControls={<VisualizationIcon view={nest.view} />}
             >
               <View rootQuery={rootQuery} view={nest.view} />
             </CollapsiblePanel>
