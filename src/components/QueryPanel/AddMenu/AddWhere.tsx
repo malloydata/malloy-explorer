@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext, useMemo} from 'react';
+import {useContext} from 'react';
 import {
   ASTQuery,
   ASTSegmentViewDefinition,
@@ -21,23 +21,7 @@ export interface AddWhereProps {
 
 export function AddWhere({rootQuery, segment}: AddWhereProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const allFields = segment.getInputSchema().fields;
-
-  const fields = useMemo(
-    () =>
-      allFields
-        .filter(
-          field =>
-            field.kind === 'dimension' ||
-            field.kind === 'measure' ||
-            field.kind === 'join'
-        )
-        .filter(
-          field =>
-            field.kind === 'join' || FILTERABLE_TYPES.has(field.type.kind)
-        ),
-    [allFields]
-  );
+  const {fields} = segment.getInputSchema();
 
   return (
     <AddFieldItem
@@ -46,6 +30,10 @@ export function AddWhere({rootQuery, segment}: AddWhereProps) {
       segment={segment}
       fields={fields}
       types={['measure', 'dimension']}
+      filter={(_segment, field) =>
+        (field.kind === 'dimension' || field.kind === 'measure') &&
+        FILTERABLE_TYPES.has(field.type.kind)
+      }
       onClick={(field, path) => {
         if (field.kind === 'dimension' || field.kind === 'measure') {
           if (field.type.kind === 'string_type') {

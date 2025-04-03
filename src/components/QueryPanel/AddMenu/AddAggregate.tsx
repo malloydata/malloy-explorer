@@ -30,7 +30,7 @@ export function AddAggregate({rootQuery, segment}: AddAggregateProps) {
       segment={segment}
       fields={fields}
       types={['measure']}
-      removeDuplicates={true}
+      filter={(segment, field, path) => !segment.hasField(field.name, path)}
       onClick={(field, path) => {
         segment.addAggregate(field.name, path);
         setQuery?.(rootQuery.build());

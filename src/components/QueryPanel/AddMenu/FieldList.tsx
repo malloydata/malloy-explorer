@@ -31,7 +31,11 @@ export interface FieldListProps {
   search: string;
   onClick: (field: Malloy.FieldInfo, path: string[]) => void;
   types: Array<'dimension' | 'measure' | 'view'>;
-  removeDuplicates?: boolean;
+  filter?: (
+    segment: ASTSegmentViewDefinition,
+    field: Malloy.FieldInfo,
+    path: string[]
+  ) => boolean;
 }
 
 export function FieldList({
@@ -40,7 +44,7 @@ export function FieldList({
   onClick,
   search,
   types,
-  removeDuplicates = false,
+  filter,
 }: FieldListProps) {
   const groups = useMemo(() => {
     const groups: Group[] = [];
@@ -56,9 +60,7 @@ export function FieldList({
         .filter(
           field => field.name.includes(search) && types.includes(field.kind)
         )
-        .filter(
-          field => !removeDuplicates || !segment.hasField(field.name, path)
-        );
+        .filter(field => (filter ? filter(segment, field, path) : true));
 
       const joins = fields.filter(field => field.kind === 'join');
 
@@ -83,7 +85,7 @@ export function FieldList({
     buildGroups(types, [], 'Source', fields);
 
     return groups;
-  }, [fields, search, types]);
+  }, [fields, filter, search, segment, types]);
 
   return (
     <div>

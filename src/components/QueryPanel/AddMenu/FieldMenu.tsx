@@ -17,7 +17,11 @@ export interface FieldMenuProps {
   segment: ASTSegmentViewDefinition;
   fields: Array<Malloy.FieldInfo>;
   types: Array<'dimension' | 'measure' | 'view'>;
-  removeDuplicates?: boolean;
+  filter?: (
+    segment: ASTSegmentViewDefinition,
+    field: Malloy.FieldInfo,
+    path: string[]
+  ) => boolean;
   onClick: (field: Malloy.FieldInfo, path: string[]) => void;
 }
 
@@ -25,7 +29,7 @@ export function FieldMenu({
   segment,
   fields,
   types,
-  removeDuplicates = false,
+  filter,
   onClick,
 }: FieldMenuProps) {
   const [search, setSearch] = useState('');
@@ -47,7 +51,7 @@ export function FieldMenu({
           fields={fields}
           search={search}
           types={types}
-          removeDuplicates={removeDuplicates}
+          filter={filter}
           onClick={onClick}
         />
       </div>

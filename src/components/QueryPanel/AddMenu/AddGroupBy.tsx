@@ -31,7 +31,7 @@ export function AddGroupBy({rootQuery, segment}: AddGroupByProps) {
       segment={segment}
       fields={fields}
       types={['dimension']}
-      removeDuplicates={true}
+      filter={(segment, field, path) => !segment.hasField(field.name, path)}
       onClick={(field, path) => {
         addGroupBy(rootQuery, segment, field, path, setQuery);
       }}

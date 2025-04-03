@@ -53,7 +53,9 @@ export function OperationActionTitle({
               segment={segment}
               fields={fields}
               types={types}
-              removeDuplicates={true}
+              filter={(segment, field, path) =>
+                !segment.hasField(field.name, path)
+              }
               onClick={onClick}
             />
           </Popover.PopoverContent>
