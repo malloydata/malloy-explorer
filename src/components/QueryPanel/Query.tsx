@@ -18,6 +18,7 @@ import CollapsiblePanel from '../primitives/CollapsiblePanel';
 import {AddMenu} from './AddMenu/AddMenu';
 import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
 import stylex from '@stylexjs/stylex';
+import {VisualizationIcon} from './VisualizationIcon';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -57,6 +58,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
           <AddMenu rootQuery={rootQuery} view={query} />
         </>
       }
+      collapsedControls={<VisualizationIcon view={query} />}
     >
       {query.definition instanceof ASTArrowQueryDefinition ? (
         <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>

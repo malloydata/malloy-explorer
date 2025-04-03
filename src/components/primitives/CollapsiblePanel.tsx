@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {ReactElement, useState} from 'react';
+import {ReactNode, useState} from 'react';
 import Button from './Button';
 import {IconType} from './utils/icon';
 import Icon from './Icon';
@@ -19,8 +19,14 @@ interface CollapsiblePanelProps {
   // The icon to be shown to the left of the title.
   icon?: IconType;
 
-  // Additional controls to display by the collapse button
-  controls?: ReactElement | ReactElement[];
+  // Controls whether the panel starts open, default true
+  defaultOpen?: boolean;
+
+  // Additional controls to display by the collapse button when open
+  controls?: ReactNode;
+
+  // Additional controls to display by the collapse button when closed
+  collapsedControls?: ReactNode;
 }
 
 /*
@@ -30,9 +36,11 @@ export default function CollapsiblePanel({
   title,
   children,
   icon,
+  defaultOpen = true,
   controls,
+  collapsedControls,
 }: CollapsiblePanelProps) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(defaultOpen);
 
   return (
     <div {...stylex.props(styles.container)}>
@@ -40,7 +48,12 @@ export default function CollapsiblePanel({
         {icon && <Icon name={icon} customStyle={styles.icon} />}
         <div {...stylex.props(styles.title)}>{title}</div>
         <div {...stylex.props(styles.topBarRightSection)}>
-          <div {...stylex.props(styles.controls)}>{controls}</div>
+          {isExpanded ? (
+            <div {...stylex.props(styles.controls)}>{controls}</div>
+          ) : (
+            <div {...stylex.props(styles.controls)}>{collapsedControls}</div>
+          )}
+
           <Button
             variant="flat"
             size="compact"
