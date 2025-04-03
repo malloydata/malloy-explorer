@@ -12,7 +12,7 @@ import {iconColors} from './colors.stylex';
 
 type Color = keyof typeof colorVariants;
 
-interface IconProps {
+export interface IconProps {
   /**
    * The name of the icon to render.
    */
@@ -87,7 +87,16 @@ const colorVariants = stylex.create({
   cyan: {
     color: iconColors.cyan,
   },
+  info: {
+    color: iconColors.accent,
+  },
   warning: {
     color: iconColors.warning,
+  },
+  positive: {
+    color: iconColors.positive,
+  },
+  negative: {
+    color: iconColors.negative,
   },
 });

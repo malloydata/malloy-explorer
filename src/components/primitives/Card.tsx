@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {backgroundColors} from './colors.stylex';
 
 interface CardProps {
   /**
@@ -38,7 +39,7 @@ const styles = stylex.create({
     borderRadius: '12px',
     borderStyle: 'solid',
     borderWidth: '1px',
-    borderColor: '#CCD3DB',
+    borderColor: backgroundColors.divider,
     padding: '12px',
     flexShrink: 0,
   },
