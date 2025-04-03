@@ -9,20 +9,25 @@ import * as React from 'react';
 import stylex from '@stylexjs/stylex';
 import {backgroundColors} from './colors.stylex';
 import {fontStyles} from './styles';
-import Icon, {Color} from './Icon';
-import {IconType} from './utils/icon';
+import Icon, {IconProps} from './Icon';
 
 type Variant = keyof typeof variantColors;
 
 interface BannerProps {
+  /**
+   * Title.
+   */
   title: string;
+  /**
+   * Optional description.
+   */
   description?: string;
   /**
-   * Semantic coloring variant; defaults to 'info'
+   * Semantic coloring variant; defaults to 'info.'
    */
   variant?: Variant;
   /**
-   * Optional content, displayed on a neutral background below the header.
+   * Optional content; displayed on a neutral background below the header.
    */
   children?: React.ReactNode;
 }
@@ -114,7 +119,7 @@ const styles = stylex.create({
   },
 });
 
-const VARIANT_ICON_PROPS: Record<Variant, {name: IconType; color: Color}> = {
+const VARIANT_ICON_PROPS: Record<Variant, IconProps> = {
   info: {
     name: 'info',
     color: 'info',

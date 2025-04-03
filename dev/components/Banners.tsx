@@ -3,7 +3,7 @@ import {Banner} from '../../src/components/primitives';
 
 export default function Banners() {
   return (
-    <div style={{height: '200px'}}>
+    <>
       <div
         style={{
           fontFamily: 'sans-serif',
@@ -15,23 +15,21 @@ export default function Banners() {
         Banners
       </div>
       <div>
-        <div>
-          <Banner
-            title="Info Banner"
-            description="I'm a description"
-            variant="info"
-          />
-          <Banner title="Success Banner" variant="success">
-            With optional content.
-          </Banner>
-          <Banner
-            title="Warn Banner"
-            description="I'm a description that is long - really, really, really, really, really, really, really, really, really, really, really, really, really, really"
-            variant="warn"
-          ></Banner>
-          <Banner title="Critical Banner" variant="critical"></Banner>
-        </div>
+        <Banner
+          title="Info Banner"
+          description="I'm a description"
+          variant="info"
+        />
+        <Banner title="Success Banner" variant="success">
+          With optional content.
+        </Banner>
+        <Banner
+          title="Warn Banner"
+          description="I'm a description that is long - really, really, really, really, really, really, really, really, really, really, really, really, really, really"
+          variant="warn"
+        />
+        <Banner title="Critical Banner" variant="critical" />
       </div>
-    </div>
+    </>
   );
 }

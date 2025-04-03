@@ -10,9 +10,9 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {ICON_MAP, IconType, SMALL_ICONS} from './utils/icon';
 import {iconColors} from './colors.stylex';
 
-export type Color = keyof typeof colorVariants;
+type Color = keyof typeof colorVariants;
 
-interface IconProps {
+export interface IconProps {
   /**
    * The name of the icon to render.
    */
