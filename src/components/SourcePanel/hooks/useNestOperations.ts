@@ -9,7 +9,7 @@ import {
 } from '@malloydata/malloy-query-builder';
 import {useMemo} from 'react';
 
-type NestOperation = {
+export type NestOperation = {
   name: string;
   view: ASTViewDefinition;
 };
