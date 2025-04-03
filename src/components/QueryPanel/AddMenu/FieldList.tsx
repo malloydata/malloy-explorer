@@ -11,9 +11,9 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
 import {sortFieldInfos} from '../../utils/fields';
-import {FieldHover} from '../FieldHover';
 import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import FieldToken from '../../FieldToken';
+import {FieldHoverCard} from '../../FieldHoverCard';
 
 interface Group {
   name: string;
@@ -101,22 +101,18 @@ export function FieldList({
               </div>
             </div>
             {group.fields.map(field => (
-              <FieldHover
+              <div
                 key={group.name + ':' + field.name}
-                field={field}
-                path={group.path}
-                side="right"
-                align="start"
+                role="menuitem"
+                tabIndex={-1}
+                {...stylex.props(addMenuStyles.item, styles.fieldItem)}
               >
-                <div
-                  role="menuitem"
-                  tabIndex={-1}
-                  {...stylex.props(addMenuStyles.item, styles.fieldItem)}
+                <FieldToken
+                  field={field}
+                  tooltip={<FieldHoverCard field={field} path={group.path} />}
                   onClick={() => onClick(field, group.path)}
-                >
-                  <FieldToken field={field} />
-                </div>
-              </FieldHover>
+                />
+              </div>
             ))}
           </div>
         ))
