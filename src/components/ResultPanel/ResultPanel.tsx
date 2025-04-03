@@ -129,19 +129,25 @@ export default function ResultPanel({
                 submittedQuery &&
                 !queriesAreEqual(draftQuery, submittedQuery.query) && (
                   <div {...stylex.props(styles.warning, fontStyles.body)}>
-                    <Icon name="warning" color="warning" />
-                    <span>
-                      Query was updated. Run query to see new result or{' '}
-                    </span>
-                    <button
-                      {...stylex.props(styles.warningAction, fontStyles.link)}
-                      onClick={() => {
-                        setDraftQuery(submittedQuery.query);
-                      }}
-                    >
-                      revert
-                    </button>
-                    <span> to the last run query.</span>
+                    <Icon
+                      name="warning"
+                      color="warning"
+                      customStyle={styles.warningIcon}
+                    />
+                    <div>
+                      <span>
+                        Query was updated. Run query to see new result or
+                      </span>
+                      <button
+                        {...stylex.props(styles.warningAction, fontStyles.link)}
+                        onClick={() => {
+                          setDraftQuery(submittedQuery.query);
+                        }}
+                      >
+                        &nbsp;revert&nbsp;
+                      </button>
+                      <span>to the last run query.</span>
+                    </div>
                   </div>
                 )}
               <ResultDisplay query={submittedQuery} />
@@ -254,9 +260,14 @@ const styles = stylex.create({
   warning: {
     display: 'flex',
     alignItems: 'center',
+    marginBottom: '8px',
   },
   warningAction: {
     backgroundColor: 'transparent',
     border: 'none',
+    padding: '0px',
+  },
+  warningIcon: {
+    paddingRight: '8px',
   },
 });
