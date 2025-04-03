@@ -10,6 +10,8 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {Button} from '../primitives';
+import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
+import {fontStyles, tooltipStyles} from '../primitives/styles';
 
 /**
  * Source
@@ -28,6 +30,8 @@ export function QueryActionBar({
   runQuery,
 }: QueryActionBarProps) {
   const rootQuery = useQueryBuilder(source, query);
+  const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
+  const isRunEnabled = rootQuery?.isRunnable();
   return (
     <div {...stylex.props(actionBarStyles.root)}>
       <div {...stylex.props(actionBarStyles.title)}>Query</div>
@@ -39,14 +43,27 @@ export function QueryActionBar({
           variant="flat"
           size="compact"
         />
-        <Button
-          icon="play"
-          onClick={() => query && runQuery(source, query)}
-          isDisabled={!rootQuery?.isRunnable()}
-          label="Run"
-          variant="primary"
-          size="compact"
-        />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              icon="play"
+              onClick={() => query && runQuery(source, query)}
+              isDisabled={!isRunEnabled}
+              label="Run"
+              variant="primary"
+              size="compact"
+            />
+          </TooltipTrigger>
+          <TooltipContent>
+            <div {...stylex.props(fontStyles.body, tooltipStyles.default)}>
+              {isRunEnabled
+                ? 'Execute the query.'
+                : isQueryEmpty
+                  ? 'The current query is empty.'
+                  : 'The current query cannot be executed.'}
+            </div>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
@@ -57,6 +74,7 @@ const actionBarStyles = stylex.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    zIndex: 1,
   },
   title: {
     fontFamily: 'sans-serif',
