@@ -70,7 +70,7 @@ export function tagToRenderer(tag: Tag | undefined) {
     const tags = Object.keys(tagProps);
 
     for (const tag of tags) {
-      if (RENDERERS.includes(tag as RendererName)) {
+      if (RENDERERS.includes(tag as RendererName) && !tagProps[tag].deleted) {
         return tag as RendererName;
       }
     }
