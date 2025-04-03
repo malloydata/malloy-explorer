@@ -29,6 +29,7 @@ export interface OperationActionTitleProps {
 
 export function OperationActionTitle({
   actionTitle,
+  segment,
   fields,
   title,
   types,
@@ -48,7 +49,13 @@ export function OperationActionTitle({
             align="start"
             alignOffset={-16}
           >
-            <FieldMenu fields={fields} types={types} onClick={onClick} />
+            <FieldMenu
+              segment={segment}
+              fields={fields}
+              types={types}
+              removeDuplicates={true}
+              onClick={onClick}
+            />
           </Popover.PopoverContent>
         </Popover.Root>
       </div>

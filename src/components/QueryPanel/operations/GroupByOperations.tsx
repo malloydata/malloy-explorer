@@ -39,10 +39,7 @@ export function GroupByOperations({
     return null;
   }
 
-  const allFields = segment.getInputSchema().fields;
-  const fields = allFields.filter(
-    field => !segment.hasField(field.name /* TODO , field.path */)
-  );
+  const {fields} = segment.getInputSchema();
 
   return (
     <div>

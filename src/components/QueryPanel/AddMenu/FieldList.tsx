@@ -13,6 +13,7 @@ import {addMenuStyles} from './styles';
 import {sortFieldInfos} from '../../utils/fields';
 import {Field} from '../Field';
 import {FieldHover} from '../FieldHover';
+import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 
 interface Group {
   name: string;
@@ -25,13 +26,22 @@ interface Group {
 }
 
 export interface FieldListProps {
+  segment: ASTSegmentViewDefinition;
   fields: Malloy.FieldInfo[];
   search: string;
   onClick: (field: Malloy.FieldInfo, path: string[]) => void;
   types: Array<'dimension' | 'measure' | 'view'>;
+  removeDuplicates?: boolean;
 }
 
-export function FieldList({fields, onClick, search, types}: FieldListProps) {
+export function FieldList({
+  segment,
+  fields,
+  onClick,
+  search,
+  types,
+  removeDuplicates = false,
+}: FieldListProps) {
   const groups = useMemo(() => {
     const groups: Group[] = [];
 
@@ -45,6 +55,9 @@ export function FieldList({fields, onClick, search, types}: FieldListProps) {
         .filter(field => field.kind !== 'join')
         .filter(
           field => field.name.includes(search) && types.includes(field.kind)
+        )
+        .filter(
+          field => !removeDuplicates || !segment.hasField(field.name, path)
         );
 
       const joins = fields.filter(field => field.kind === 'join');

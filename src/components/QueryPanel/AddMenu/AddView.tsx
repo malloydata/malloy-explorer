@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
+import {useContext, useMemo} from 'react';
 import {
   ASTQuery,
   ASTSegmentViewDefinition,
@@ -26,14 +26,17 @@ export interface AddViewProps {
 export function AddView({rootQuery, view, segment}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const allFields = segment.getInputSchema().fields;
-  const fields = allFields.filter(
-    field => field.kind === 'view' && !isIndexView(field)
+  const fields = useMemo(
+    () =>
+      allFields.filter(field => field.kind === 'view' && !isIndexView(field)),
+    [allFields]
   );
 
   return (
     <AddFieldItem
       label="Add view"
       icon="view"
+      segment={segment}
       fields={fields}
       types={['view']}
       onClick={field => {

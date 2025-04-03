@@ -21,18 +21,16 @@ export interface AddAggregateProps {
 
 export function AddAggregate({rootQuery, segment}: AddAggregateProps) {
   const {setQuery} = useContext(QueryEditorContext);
-
-  const allFields = segment.getInputSchema().fields;
-  const fields = allFields.filter(
-    field => !segment.hasField(field.name /* TODO , path */)
-  );
+  const {fields} = segment.getInputSchema();
 
   return (
     <AddFieldItem
       label="Add aggregate"
       icon="aggregate"
+      segment={segment}
       fields={fields}
       types={['measure']}
+      removeDuplicates={true}
       onClick={(field, path) => {
         segment.addAggregate(field.name, path);
         setQuery?.(rootQuery.build());

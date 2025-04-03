@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
+import {useContext, useMemo} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTQuery,
@@ -25,15 +25,20 @@ export function AddOrderBy({rootQuery, segment}: AddEmptyNestProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const outputSchemaFields = segment.getOutputSchema().fields;
 
-  const fields = outputSchemaFields
-    .filter(field => field.kind === 'dimension')
-    .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
-    .filter(field => !segmentHasOrderBy(segment, field.name));
+  const fields = useMemo(
+    () =>
+      outputSchemaFields
+        .filter(field => field.kind === 'dimension')
+        .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
+        .filter(field => !segmentHasOrderBy(segment, field.name)),
+    [outputSchemaFields, segment]
+  );
 
   return (
     <AddFieldItem
       label="Add order by"
       icon="orderBy"
+      segment={segment}
       fields={fields}
       types={['dimension']}
       onClick={field => {
