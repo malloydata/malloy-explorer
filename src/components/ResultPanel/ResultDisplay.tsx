@@ -8,17 +8,19 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {Button, ScrollableArea, Spinner} from '../primitives';
+import {Banner, Button, ScrollableArea, Spinner} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {
   EXECUTION_STATES,
   QueryExecutionState,
+  QueryResponse,
   SubmittedQuery,
 } from './SubmittedQuery';
 import * as render from '@malloydata/render';
 import DOMElement from '../primitives/DOMElement';
 
 import '@malloydata/render/webcomponent';
+import {BannerProps, Variant} from '../primitives/Banner';
 
 export interface ResultDisplayProps {
   query: SubmittedQuery;
@@ -51,22 +53,70 @@ export default function ResultDisplay({query}: ResultDisplayProps) {
       );
       break;
     case 'finished':
-      displayComponent = (
-        <FinishedResultDisplay
-          result={query.response?.result as Malloy.Result}
-        />
-      );
+      displayComponent = <ResponseDisplay response={query.response} />;
       break;
   }
 
   return displayComponent;
 }
 
-interface FinishedResultDisplay {
+interface ResponseProps {
+  response: QueryResponse | undefined;
+}
+
+function ResponseDisplay({response}: ResponseProps) {
+  let bannerProps: BannerProps | undefined = undefined;
+
+  if (!response) {
+    bannerProps = {
+      title: 'Empty Response',
+      variant: 'critical',
+    };
+  } else if (!response.result) {
+    bannerProps = {
+      title: 'Empty Result',
+      variant: 'critical',
+    };
+  } else if (response.error) {
+    const e = response.error;
+    let variant: Variant;
+    switch (e.severity) {
+      case 'DEBUG':
+      case 'INFO':
+        variant = 'info';
+        break;
+      case 'WARN':
+        variant = 'warn';
+        break;
+      case 'ERROR':
+      case 'FATAL':
+        variant = 'critical';
+        break;
+      default:
+        variant = 'critical';
+    }
+
+    bannerProps = {
+      title: e.title,
+      description: e.description,
+      children: e.content,
+      variant,
+    };
+  }
+
+  return (
+    <div>
+      {bannerProps && <Banner {...bannerProps} />}
+      {response?.result && <RenderedResult result={response.result} />}
+    </div>
+  );
+}
+
+interface RenderedResultProps {
   result: Malloy.Result;
 }
 
-function FinishedResultDisplay({result}: FinishedResultDisplay) {
+function RenderedResult({result}: RenderedResultProps) {
   const [html, setHTML] = React.useState<HTMLElement>();
   const [rendering, setRendering] = React.useState<boolean>(true);
 
