@@ -89,7 +89,6 @@ export interface StringFilterBuilderProps {
 export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
   fieldInfo,
   filter,
-  path,
   setFilter,
 }) => {
   filter ??= {operator: '=', values: []};
