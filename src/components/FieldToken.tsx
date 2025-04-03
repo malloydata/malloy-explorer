@@ -73,16 +73,16 @@ const styles = stylex.create({
     width: '100%',
     gap: '4px',
     cursor: 'pointer',
-    [hoverActionsVars.visibility]: {
-      default: 'hidden',
-      ':hover': 'visible',
+    [hoverActionsVars.display]: {
+      default: 'none',
+      ':hover': 'block',
     },
   },
   hoverActions: {
-    visibility: hoverActionsVars.visibility,
+    display: hoverActionsVars.display,
     flexShrink: 0,
   },
   showHoverActions: {
-    [hoverActionsVars.visibility]: 'visible',
+    [hoverActionsVars.display]: 'block',
   },
 });
