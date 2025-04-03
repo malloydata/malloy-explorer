@@ -1,0 +1,28 @@
+name: npmjs.com Pre-release
+
+on: [workflow_dispatch]
+
+jobs:
+  test:
+    uses: './.github/workflows/test.yaml'
+
+  npm-prerelease:
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: npm install, build, and publish
+        run: |
+          npm ci --loglevel error
+          PRERELEASE=$(date +%y%m%d%H%M%S)
+          VERSION=$(jq -r .version ./package.json)-dev$PRERELEASE
+          npm version --no-git-tag-version $VERSION
+          npm publish --access=public
+        env:
+          CI: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
