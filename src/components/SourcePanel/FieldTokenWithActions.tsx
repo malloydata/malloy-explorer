@@ -42,7 +42,11 @@ export function FieldTokenWithActions({
 
   const addViewToMainQuery = () => {
     if (field.kind === 'view') {
-      rootQuery?.setView(field.name);
+      if (rootQuery?.isEmpty()) {
+        rootQuery?.setView(field.name);
+      } else {
+        segment?.addNest(field.name, getNestName(segment, field.name));
+      }
       setQuery?.(rootQuery?.build());
     }
   };
