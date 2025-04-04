@@ -122,7 +122,6 @@ const styles = stylex.create({
     gap: 8,
     borderRadius: '4px',
     borderWidth: 0,
-    cursor: 'pointer',
     position: 'relative',
     overflow: 'hidden',
     background: 'rgba(230, 235, 239, 1)',
