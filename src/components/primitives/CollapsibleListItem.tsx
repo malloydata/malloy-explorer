@@ -94,7 +94,7 @@ const styles = stylex.create({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '4px 0px 8px 32px',
+    padding: '4px 0px 8px 0px',
     gap: '4px',
   },
 });
