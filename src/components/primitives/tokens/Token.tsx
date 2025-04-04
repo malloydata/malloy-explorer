@@ -61,6 +61,13 @@ export interface TokenProps extends React.ComponentProps<'button'> {
    */
   tooltip?: string | React.ReactElement;
 
+  tooltipProps?: {
+    align?: 'start' | 'center' | 'end';
+    side?: 'top' | 'bottom' | 'left' | 'right';
+    alignOffset?: number;
+    sideOffset?: number;
+  };
+
   /**
    * Custom styles for the token.
    */
@@ -76,6 +83,7 @@ export default function Token({
   onHover,
   asButtonTrigger = false,
   tooltip,
+  tooltipProps,
   customStyle,
   ...props
 }: TokenProps) {
@@ -113,9 +121,7 @@ export default function Token({
     <Tooltip.Root delayDuration={300}>
       <Tooltip.Trigger asChild>{token}</Tooltip.Trigger>
       <Tooltip.Content
-        side="bottom"
-        align="start"
-        sideOffset={4}
+        {...tooltipProps}
         {...stylex.props(
           typeof tooltip === 'string'
             ? tooltipStyles.default
