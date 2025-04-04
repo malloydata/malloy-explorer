@@ -3,6 +3,7 @@
   "version": "0.0.257",
   "description": "Malloy visual query builder",
   "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build-bundle && npm run build-types && npm run build-flow",
     "build-bundle": "vite build --outDir 'dist' --config vite.config.ts",
