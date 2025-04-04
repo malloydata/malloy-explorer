@@ -136,6 +136,7 @@ export function FieldTokenWithActions({
       hoverActions={hoverActions()}
       hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
       tooltip={<FieldHoverCard field={field} path={path} />}
+      tooltipProps={{side: 'bottom', align: 'start', sideOffset: 4}}
     />
   );
 }

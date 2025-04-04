@@ -109,8 +109,13 @@ export function FieldList({
               >
                 <FieldToken
                   field={field}
-                  tooltip={<FieldHoverCard field={field} path={group.path} />}
                   onClick={() => onClick(field, group.path)}
+                  tooltip={<FieldHoverCard field={field} path={group.path} />}
+                  tooltipProps={{
+                    side: 'right',
+                    align: 'start',
+                    sideOffset: 4,
+                  }}
                 />
               </div>
             ))}
