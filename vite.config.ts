@@ -32,11 +32,11 @@ export default defineConfig({
         'react',
         'react-dom',
         'react/jsx-runtime',
-        '@malloydata/malloy',
-        '@malloydata/render',
         '@malloydata/malloy-tag',
         '@malloydata/malloy-filter',
         '@malloydata/malloy-interfaces',
+        '@malloydata/malloy-query-builder',
+        '@malloydata/render',
         '@malloydata/render/webcomponent',
       ],
       output: {

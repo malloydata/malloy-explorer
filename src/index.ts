@@ -6,7 +6,7 @@
  */
 
 export {MalloyExplorerProvider} from './components/MalloyExplorerProvider';
-export {QueryActionBar, QueryEditor} from './components/QueryPanel';
+export {QueryActionBar, QueryEditor, QueryPanel} from './components/QueryPanel';
 export {ResultPanel} from './components/ResultPanel';
 export type {
   EXECUTION_STATES,
