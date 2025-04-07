@@ -16,8 +16,13 @@ import * as Popover from '@radix-ui/react-popover';
 import {FieldMenu} from './FieldMenu';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {IconType} from '../../primitives';
-import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
-import {tooltipStyles} from '../../primitives/styles';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
+import {fontStyles, tooltipStyles} from '../../primitives/styles';
 
 export interface AddGroupByProps {
   label: string;
@@ -66,9 +71,15 @@ export function AddFieldItem({
     return (
       <Tooltip>
         <TooltipTrigger asChild>{trigger}</TooltipTrigger>
-        <TooltipContent>
-          <div {...stylex.props(tooltipStyles.default)}>{disabledMessage}</div>
-        </TooltipContent>
+        <TooltipPortal>
+          <TooltipContent>
+            <div
+              {...stylex.props(fontStyles.supporting, tooltipStyles.default)}
+            >
+              {disabledMessage}
+            </div>
+          </TooltipContent>
+        </TooltipPortal>
       </Tooltip>
     );
   }
@@ -82,16 +93,18 @@ export function AddFieldItem({
       >
         {trigger}
       </Popover.Trigger>
-      <Popover.Content side="right" align="start" alignOffset={-16}>
-        <Popover.Arrow width={0} height={0} />
-        <FieldMenu
-          types={types}
-          filter={filter}
-          segment={segment}
-          fields={fields}
-          onClick={onClick}
-        />
-      </Popover.Content>
+      <Popover.Portal>
+        <Popover.Content side="right" align="start" alignOffset={-16}>
+          <Popover.Arrow width={0} height={0} />
+          <FieldMenu
+            types={types}
+            filter={filter}
+            segment={segment}
+            fields={fields}
+            onClick={onClick}
+          />
+        </Popover.Content>
+      </Popover.Portal>
     </Popover.Root>
   );
 }

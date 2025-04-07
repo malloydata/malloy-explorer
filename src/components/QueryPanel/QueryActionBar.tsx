@@ -10,7 +10,12 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {Button} from '../primitives';
-import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../primitives/styles';
 
 /**
@@ -54,15 +59,17 @@ export function QueryActionBar({
               size="compact"
             />
           </TooltipTrigger>
-          <TooltipContent>
-            <div {...stylex.props(fontStyles.body, tooltipStyles.default)}>
-              {isRunEnabled
-                ? 'Execute the query.'
-                : isQueryEmpty
-                  ? 'The current query is empty.'
-                  : 'The current query cannot be executed.'}
-            </div>
-          </TooltipContent>
+          <TooltipPortal>
+            <TooltipContent>
+              <div {...stylex.props(fontStyles.body, tooltipStyles.default)}>
+                {isRunEnabled
+                  ? 'Execute the query.'
+                  : isQueryEmpty
+                    ? 'The current query is empty.'
+                    : 'The current query cannot be executed.'}
+              </div>
+            </TooltipContent>
+          </TooltipPortal>
         </Tooltip>
       </div>
     </div>

@@ -30,7 +30,7 @@ export function FieldHover({
     <Tooltip.Root>
       <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
       <Tooltip.Portal>
-        <Tooltip.Content side={side} align={align} style={{zIndex: 1}}>
+        <Tooltip.Content side={side} align={align}>
           <FieldHoverCard field={field} path={path ?? []} />
         </Tooltip.Content>
       </Tooltip.Portal>

@@ -6,7 +6,12 @@
  */
 
 import * as React from 'react';
-import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
 import {tooltipStyles} from './styles';
 import Icon from './Icon';
@@ -26,9 +31,11 @@ export default function ErrorIcon({errorMessage}: ErrorIconProps) {
           <Icon name="warning" customStyle={styles.errorIcon} />
         </div>
       </TooltipTrigger>
-      <TooltipContent>
-        <div {...stylex.props(tooltipStyles.default)}>{errorMessage}</div>
-      </TooltipContent>
+      <TooltipPortal>
+        <TooltipContent>
+          <div {...stylex.props(tooltipStyles.default)}>{errorMessage}</div>
+        </TooltipContent>
+      </TooltipPortal>
     </Tooltip>
   );
 }
