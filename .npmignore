@@ -1,0 +1,6 @@
+dev/
+src/
+coverage/
+*.tgz
+docs/
+dist/tsconfig.tsbuildinfo

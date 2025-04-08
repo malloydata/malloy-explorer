@@ -7,15 +7,19 @@
 
 import * as React from 'react';
 import * as QueryBuilder from '@malloydata/malloy-query-builder';
+import * as Malloy from '@malloydata/malloy-interfaces';
+import stylex from '@stylexjs/stylex';
 import {useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {MalloyExplorerProvider, ResultPanel, SourcePanel} from '../src';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {
+  ExplorerPanelsContext,
+  QueryPanel,
+  ResizeBar,
+  MalloyExplorerProvider,
+  ResultPanel,
+  SourcePanel,
+} from '../src';
 import {modelInfo} from './sample_models/example_model';
-import stylex from '@stylexjs/stylex';
-import {QueryPanel} from '../src/components/QueryPanel';
-import {ExplorerPanelsContext} from '../src/contexts/ExplorerPanelsContext';
-import ResizeBar from '../src/components/primitives/ResizeBar';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 

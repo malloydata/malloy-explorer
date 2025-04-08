@@ -67,13 +67,17 @@ const App = () => {
             </div>
           </div>
           <div>
-            <MalloyPreview source={source} query={query} />
+            <div>
+              <MalloyPreview source={source} query={query} />
+            </div>
             <hr />
-            {query ? (
-              <RawPreview source={source} query={query} />
-            ) : (
-              <div>No query</div>
-            )}
+            <div>
+              {query ? (
+                <RawPreview source={source} query={query} />
+              ) : (
+                <div>No query</div>
+              )}
+            </div>
           </div>
         </div>
       </MalloyExplorerProvider>
