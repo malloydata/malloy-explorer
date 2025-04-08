@@ -4,13 +4,12 @@ import {resolve} from 'path';
 import replace from '@rollup/plugin-replace';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
-import stylex from '@stylexjs/rollup-plugin';
+import babelConfig from './babel.config.mjs';
 
 export default defineConfig({
   plugins: [
-    stylex({}),
     svgr(),
-    react({jsxRuntime: 'automatic'}),
+    react({babel: babelConfig}),
     replace({
       'Object.defineProperty(exports, "__esModule", { value: true });':
         'Object.defineProperty(typeof exports !== \'undefined\' ? exports : {}, "__esModule", { value: true });',

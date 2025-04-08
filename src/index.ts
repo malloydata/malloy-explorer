@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import './stylex.css';
 export {MalloyExplorerProvider} from './components/MalloyExplorerProvider';
 export {QueryActionBar, QueryEditor, QueryPanel} from './components/QueryPanel';
 export {ResultPanel} from './components/ResultPanel';
