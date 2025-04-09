@@ -27,6 +27,7 @@ export default defineConfig({
       name: 'index',
     },
     rollupOptions: {
+      preserveSymlinks: true,
       external: [
         'react',
         'react-dom',
@@ -49,5 +50,16 @@ export default defineConfig({
   },
   define: {
     'process.env': {},
+  },
+  optimizeDeps: {
+    force: true,
+    include: [
+      '@malloydata/render',
+      '@malloydata/malloy-tag',
+      '@malloydata/malloy-filter',
+      '@malloydata/malloy-interfaces',
+      '@malloydata/malloy-query-builder',
+      '@malloydata/render/webcomponent',
+    ],
   },
 });
