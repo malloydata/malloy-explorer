@@ -27,6 +27,7 @@ export default defineConfig({
       name: 'index',
     },
     rollupOptions: {
+      preserveSymlinks: true,
       external: [
         'react',
         'react-dom',
