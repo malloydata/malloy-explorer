@@ -63,14 +63,6 @@ const styles = stylex.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  description: {
-    overflow: 'hidden',
-  },
-  descriptionText: {
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
   viewBadge: {
     backgroundColor: 'transparent',
   },
