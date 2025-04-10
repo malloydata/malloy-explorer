@@ -19,6 +19,7 @@ export const backgroundColors = stylex.defineVars({
   negativeDeemphasized: 'rgba(227, 25, 59, 0.2)',
   divider: 'rgba(204, 211, 219, 1)',
   token: 'rgba(230, 235, 239, 1)',
+  tooltip: 'rgba(37, 54, 63, 1)',
 });
 
 export const textColors = stylex.defineVars({

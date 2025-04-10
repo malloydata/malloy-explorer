@@ -14,6 +14,8 @@ import {fontStyles} from './primitives/styles';
 import ViewAttributeTable from './ResultPanel/ViewAttributeTable';
 import {QueryEditorContext} from '../contexts/QueryEditorContext';
 import {TopValuesTable} from './TopValuesTable';
+import {getDescriptionAnnotation} from './utils/annotations';
+import {HoverText} from './primitives/HoverText';
 
 interface FieldHoverCardProps {
   /**
@@ -31,12 +33,10 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
   const {source} = React.useContext(QueryEditorContext);
 
   const pathString = [source?.name ?? '', ...path].join(' > ');
-  const descriptionAnnotation = field.annotations?.find(a =>
-    a.value.startsWith('#"')
+  const descriptionAnnotation = getDescriptionAnnotation(
+    field.annotations ?? []
   );
-  const description = descriptionAnnotation
-    ? descriptionAnnotation.value.substring(2)
-    : 'This is a ' + field.kind + '.';
+  const description = descriptionAnnotation ?? 'This is a ' + field.kind + '.';
 
   let details = null;
   if (field.kind === 'view') {
@@ -61,7 +61,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
           {pathString}
         </div>
         <div {...stylex.props(fontStyles.emphasized)}>{field.name}</div>
-        {description && <div>{description}</div>}
+        {description && <HoverText text={description} />}
       </div>
       {details && <div {...stylex.props(styles.detailsSection)}>{details}</div>}
     </div>

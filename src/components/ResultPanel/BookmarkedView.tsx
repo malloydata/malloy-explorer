@@ -11,6 +11,8 @@ import {Badge, Button, Card} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
 import ViewAttributeTable from './ViewAttributeTable';
+import {getDescriptionAnnotation} from '../utils/annotations';
+import {HoverText} from '../primitives/HoverText';
 
 interface BookmarkedViewProps {
   viewInfo: Malloy.ViewInfo;
@@ -43,11 +45,7 @@ export function BookmarkedView({viewInfo, onClick}: BookmarkedViewProps) {
               <div {...stylex.props(fontStyles.emphasized)}>
                 {viewInfo.name}
               </div>
-              {description && (
-                <div {...stylex.props(fontStyles.supporting)}>
-                  {description}
-                </div>
-              )}
+              {description && <HoverText text={description} />}
             </div>
           </div>
         }
@@ -59,24 +57,19 @@ export function BookmarkedView({viewInfo, onClick}: BookmarkedViewProps) {
   );
 }
 
-const DESCRIPTION_ANNOTATION_PREFIX: string = '#" ';
-
-const getDescriptionAnnotation = (
-  annotations: Array<Malloy.Annotation>
-): string | undefined => {
-  const firstDesc = annotations
-    ?.map(a => a.value)
-    ?.filter(val => val.startsWith(DESCRIPTION_ANNOTATION_PREFIX))
-    .at(0);
-
-  return firstDesc?.slice(DESCRIPTION_ANNOTATION_PREFIX.length);
-};
-
 const styles = stylex.create({
   viewHeader: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  description: {
+    overflow: 'hidden',
+  },
+  descriptionText: {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
   },
   viewBadge: {
     backgroundColor: 'transparent',
