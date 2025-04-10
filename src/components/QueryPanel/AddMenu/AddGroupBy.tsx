@@ -7,32 +7,35 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import {
-  ASTQuery,
-  ASTSegmentViewDefinition,
-} from '@malloydata/malloy-query-builder';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {addGroupBy} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
+import {
+  viewParentDoesNotHaveField,
+  ViewParent,
+  getInputSchemaFromViewParent,
+} from '../../utils/fields';
 
 export interface AddGroupByProps {
   rootQuery: ASTQuery;
-  segment: ASTSegmentViewDefinition;
+  view: ViewParent;
 }
 
-export function AddGroupBy({rootQuery, segment}: AddGroupByProps) {
+export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const {fields} = segment.getInputSchema();
+  const {fields} = getInputSchemaFromViewParent(view);
 
   return (
     <AddFieldItem
       label="Add group by"
       icon="groupBy"
-      segment={segment}
+      view={view}
       fields={fields}
       types={['dimension']}
-      filter={(segment, field, path) => !segment.hasField(field.name, path)}
+      filter={viewParentDoesNotHaveField}
       onClick={(field, path) => {
+        const segment = view.getOrAddDefaultSegment();
         addGroupBy(rootQuery, segment, field, path, setQuery);
       }}
     />

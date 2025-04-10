@@ -7,25 +7,24 @@
 
 import * as React from 'react';
 import {useContext, useMemo} from 'react';
-import {
-  ASTQuery,
-  ASTSegmentViewDefinition,
-  ASTView,
-} from '@malloydata/malloy-query-builder';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {segmentNestNo} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
-import {isIndexView} from '../../utils/fields';
+import {
+  getInputSchemaFromViewParent,
+  isIndexView,
+  ViewParent,
+} from '../../utils/fields';
 
 export interface AddViewProps {
   rootQuery: ASTQuery;
-  view: ASTQuery | ASTView;
-  segment: ASTSegmentViewDefinition;
+  view: ViewParent;
 }
 
-export function AddView({rootQuery, view, segment}: AddViewProps) {
+export function AddView({rootQuery, view}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const allFields = segment.getInputSchema().fields;
+  const allFields = getInputSchemaFromViewParent(view).fields;
   const fields = useMemo(
     () =>
       allFields.filter(field => field.kind === 'view' && !isIndexView(field)),
@@ -36,13 +35,14 @@ export function AddView({rootQuery, view, segment}: AddViewProps) {
     <AddFieldItem
       label="Add view"
       icon="view"
-      segment={segment}
+      view={view}
       fields={fields}
       types={['view']}
       onClick={field => {
-        if (view === rootQuery && rootQuery.isEmpty()) {
+        if (rootQuery.isEmpty()) {
           rootQuery.setView(field.name);
         } else {
+          const segment = view.getOrAddDefaultSegment();
           const nestNo = segmentNestNo(segment, field.name);
 
           segment.addNest(
