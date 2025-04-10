@@ -39,7 +39,15 @@ const App = () => {
           draftQuery={draftQuery}
           setDraftQuery={q => setDraftQuery(q)}
           submittedQuery={isRun ? submitted : undefined}
-          options={{showRawQuery: true}}
+          options={{
+            showRawQuery: true,
+            debugOptions: {
+              debuggers: ['one', 'two'],
+              onDebugQuery: (a, b) => {
+                alert(`Callback with:\n${JSON.stringify(a)} \nusing "${b}"`);
+              },
+            },
+          }}
         />
       </div>
       <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
