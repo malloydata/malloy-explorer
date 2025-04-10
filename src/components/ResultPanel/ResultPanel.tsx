@@ -19,6 +19,7 @@ import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {useEffect} from 'react';
 import {colors} from '../QueryPanel/AddMenu/colors.stylex';
 import DebugPane, {DebugOptions} from './DebugPane';
+import {TooltipProvider} from '@radix-ui/react-tooltip';
 
 enum Tab {
   RESULTS = 'Results',
@@ -64,162 +65,169 @@ export default function ResultPanel({
     setTab(Tab.RESULTS);
   }, [submittedQuery]);
 
-  return draftQuery || submittedQuery ? (
-    <Root
-      {...stylex.props(styles.tabRoot, fontStyles.body)}
-      value={tab}
-      onValueChange={val => setTab(val as Tab)}
-    >
-      <div {...stylex.props(styles.tabsContainer)}>
-        <List {...stylex.props(styles.tabs)}>
-          <Trigger
-            value={Tab.RESULTS}
-            disabled={!submittedQueryExists}
-            {...stylex.props(
-              fontStyles.body,
-              styles.tab,
-              !submittedQueryExists && styles.disabledTab
-            )}
-            title={
-              !submittedQueryExists
-                ? 'Run a query to see the results.'
-                : undefined
-            }
-          >
-            {Tab.RESULTS}
-          </Trigger>
-          <Trigger
-            value={Tab.MALLOY}
-            {...stylex.props(fontStyles.body, styles.tab)}
-          >
-            {Tab.MALLOY}
-          </Trigger>
-          <Trigger
-            value={Tab.SQL}
-            disabled={!submittedQueryExists}
-            {...stylex.props(
-              fontStyles.body,
-              styles.tab,
-              !submittedQueryExists && styles.disabledTab
-            )}
-            title={
-              !submittedQueryExists
-                ? 'Run a query to see generated SQL.'
-                : undefined
-            }
-          >
-            {Tab.SQL}
-          </Trigger>
-          {options?.showRawQuery && (
-            <Trigger
-              value={Tab.RAW_QUERY}
-              {...stylex.props(fontStyles.body, styles.tab)}
-            >
-              {Tab.RAW_QUERY}
-            </Trigger>
-          )}
-        </List>
-        {tab !== Tab.RESULTS && (
-          <Button
-            variant="flat"
-            size="compact"
-            label="Copy Code"
-            icon="copy"
-            onClick={() => {
-              if (tab === Tab.MALLOY && malloyText) {
-                navigator.clipboard.writeText(malloyText);
-              } else if (
-                tab === Tab.SQL &&
-                submittedQuery?.response?.result?.sql
-              ) {
-                navigator.clipboard.writeText(
-                  submittedQuery.response.result.sql
-                );
-              } else if (tab === Tab.RAW_QUERY) {
-                navigator.clipboard.writeText(JSON.stringify(draftQuery));
-              }
-            }}
-          />
-        )}
-      </div>
-      <div {...stylex.props(styles.contentContainer)}>
-        <Content
-          value={Tab.RESULTS}
-          {...stylex.props(styles.content, styles.overflow)}
+  return (
+    <TooltipProvider>
+      {draftQuery || submittedQuery ? (
+        <Root
+          {...stylex.props(styles.tabRoot, fontStyles.body)}
+          value={tab}
+          onValueChange={val => setTab(val as Tab)}
         >
-          {submittedQuery && (
-            <>
-              {draftQuery &&
-                submittedQuery &&
-                !queriesAreEqual(draftQuery, submittedQuery.query) && (
-                  <div {...stylex.props(styles.warning, fontStyles.body)}>
-                    <Icon
-                      name="warning"
-                      color="warning"
-                      customStyle={styles.warningIcon}
-                    />
-                    <div>
-                      <span>
-                        Query was updated. Run query to see new result or
-                      </span>
-                      <button
-                        {...stylex.props(styles.warningAction, fontStyles.link)}
-                        onClick={() => {
-                          setDraftQuery(submittedQuery.query);
-                        }}
-                      >
-                        &nbsp;revert&nbsp;
-                      </button>
-                      <span>to the last run query.</span>
-                    </div>
-                  </div>
+          <div {...stylex.props(styles.tabsContainer)}>
+            <List {...stylex.props(styles.tabs)}>
+              <Trigger
+                value={Tab.RESULTS}
+                disabled={!submittedQueryExists}
+                {...stylex.props(
+                  fontStyles.body,
+                  styles.tab,
+                  !submittedQueryExists && styles.disabledTab
                 )}
-              <ResultDisplay query={submittedQuery} />
-            </>
-          )}
-        </Content>
-        <Content
-          value={Tab.MALLOY}
-          {...stylex.props(styles.content, styles.codeContent)}
-        >
-          <CodeBlock code={malloyText ?? ''} language="malloy" />
-        </Content>
-        <Content
-          value={Tab.SQL}
-          {...stylex.props(styles.content, styles.codeContent)}
-        >
-          {submittedQuery?.response?.result?.sql && (
-            <CodeBlock
-              code={submittedQuery.response.result.sql}
-              language="sql"
-            />
-          )}
-        </Content>
-        {options?.showRawQuery && (
-          <Content
-            value={Tab.RAW_QUERY}
-            {...stylex.props(styles.content, styles.codeContent)}
-          >
-            <DebugPane
-              query={draftQuery as Malloy.Query}
-              debug={
-                options.debugOptions
-                  ? {
-                      debuggers: options.debugOptions.debuggers,
-                      onDebugQuery: options.debugOptions.onDebugQuery,
-                    }
-                  : undefined
-              }
-            />
-          </Content>
-        )}
-      </div>
-    </Root>
-  ) : (
-    <EmptyQueryDisplay
-      views={views}
-      onSelectView={v => setDraftQuery(viewToQuery(v.name, source.name))}
-    />
+                title={
+                  !submittedQueryExists
+                    ? 'Run a query to see the results.'
+                    : undefined
+                }
+              >
+                {Tab.RESULTS}
+              </Trigger>
+              <Trigger
+                value={Tab.MALLOY}
+                {...stylex.props(fontStyles.body, styles.tab)}
+              >
+                {Tab.MALLOY}
+              </Trigger>
+              <Trigger
+                value={Tab.SQL}
+                disabled={!submittedQueryExists}
+                {...stylex.props(
+                  fontStyles.body,
+                  styles.tab,
+                  !submittedQueryExists && styles.disabledTab
+                )}
+                title={
+                  !submittedQueryExists
+                    ? 'Run a query to see generated SQL.'
+                    : undefined
+                }
+              >
+                {Tab.SQL}
+              </Trigger>
+              {options?.showRawQuery && (
+                <Trigger
+                  value={Tab.RAW_QUERY}
+                  {...stylex.props(fontStyles.body, styles.tab)}
+                >
+                  {Tab.RAW_QUERY}
+                </Trigger>
+              )}
+            </List>
+            {tab !== Tab.RESULTS && (
+              <Button
+                variant="flat"
+                size="compact"
+                label="Copy Code"
+                icon="copy"
+                onClick={() => {
+                  if (tab === Tab.MALLOY && malloyText) {
+                    navigator.clipboard.writeText(malloyText);
+                  } else if (
+                    tab === Tab.SQL &&
+                    submittedQuery?.response?.result?.sql
+                  ) {
+                    navigator.clipboard.writeText(
+                      submittedQuery.response.result.sql
+                    );
+                  } else if (tab === Tab.RAW_QUERY) {
+                    navigator.clipboard.writeText(JSON.stringify(draftQuery));
+                  }
+                }}
+              />
+            )}
+          </div>
+          <div {...stylex.props(styles.contentContainer)}>
+            <Content
+              value={Tab.RESULTS}
+              {...stylex.props(styles.content, styles.overflow)}
+            >
+              {submittedQuery && (
+                <>
+                  {draftQuery &&
+                    submittedQuery &&
+                    !queriesAreEqual(draftQuery, submittedQuery.query) && (
+                      <div {...stylex.props(styles.warning, fontStyles.body)}>
+                        <Icon
+                          name="warning"
+                          color="warning"
+                          customStyle={styles.warningIcon}
+                        />
+                        <div>
+                          <span>
+                            Query was updated. Run query to see new result or
+                          </span>
+                          <button
+                            {...stylex.props(
+                              styles.warningAction,
+                              fontStyles.link
+                            )}
+                            onClick={() => {
+                              setDraftQuery(submittedQuery.query);
+                            }}
+                          >
+                            &nbsp;revert&nbsp;
+                          </button>
+                          <span>to the last run query.</span>
+                        </div>
+                      </div>
+                    )}
+                  <ResultDisplay query={submittedQuery} />
+                </>
+              )}
+            </Content>
+            <Content
+              value={Tab.MALLOY}
+              {...stylex.props(styles.content, styles.codeContent)}
+            >
+              <CodeBlock code={malloyText ?? ''} language="malloy" />
+            </Content>
+            <Content
+              value={Tab.SQL}
+              {...stylex.props(styles.content, styles.codeContent)}
+            >
+              {submittedQuery?.response?.result?.sql && (
+                <CodeBlock
+                  code={submittedQuery.response.result.sql}
+                  language="sql"
+                />
+              )}
+            </Content>
+            {options?.showRawQuery && (
+              <Content
+                value={Tab.RAW_QUERY}
+                {...stylex.props(styles.content, styles.codeContent)}
+              >
+                <DebugPane
+                  query={draftQuery as Malloy.Query}
+                  debug={
+                    options.debugOptions
+                      ? {
+                          debuggers: options.debugOptions.debuggers,
+                          onDebugQuery: options.debugOptions.onDebugQuery,
+                        }
+                      : undefined
+                  }
+                />
+              </Content>
+            )}
+          </div>
+        </Root>
+      ) : (
+        <EmptyQueryDisplay
+          views={views}
+          onSelectView={v => setDraftQuery(viewToQuery(v.name, source.name))}
+        />
+      )}
+    </TooltipProvider>
   );
 }
 

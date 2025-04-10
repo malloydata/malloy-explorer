@@ -82,4 +82,12 @@ export const fontStyles = stylex.create({
     lineHeight: '16px',
     letterSpacing: '-0.24px',
   },
+  tooltipText: {
+    fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
+    color: 'rgba(221, 226, 232, 1)',
+    fontSize: '14px',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: '20px',
+  },
 });
