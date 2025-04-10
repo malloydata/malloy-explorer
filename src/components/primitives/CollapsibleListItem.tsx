@@ -16,24 +16,27 @@ export interface CollapsibleListItemProps {
    * The label for the list item.
    */
   label: string;
-
   /**
    * The sublabel for the list item.
    */
   sublabel?: string;
-
   /**
    * The children items to render.
    */
   children: React.ReactNode[];
+  /**
+   * Sets the initial expansion state of the collapsible list item.
+   */
+  isInitiallyExpanded?: boolean;
 }
 
 export default function CollapsibleListItem({
   label,
   sublabel,
   children,
+  isInitiallyExpanded = false,
 }: CollapsibleListItemProps) {
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(isInitiallyExpanded);
 
   const handleToggle = () => {
     setIsExpanded(prev => !prev);

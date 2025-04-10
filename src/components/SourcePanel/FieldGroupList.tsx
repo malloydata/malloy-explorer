@@ -38,11 +38,12 @@ export default function FieldGroupList({
     <div {...stylex.props(styles.main)}>
       <div {...stylex.props(fontStyles.body, styles.title)}>{title}</div>
       <List>
-        {items.map(item => (
+        {items.map((item, index) => (
           <CollapsibleListItem
             key={item.groupPath.join('.')}
             label={getLabelFromPath(source, item.groupPath)}
             sublabel={getSublabelFromPath(source, item.groupPath)}
+            isInitiallyExpanded={index === 0}
           >
             {item.items.map(({field, path}) => (
               <FieldTokenWithActions
