@@ -5,4 +5,5 @@ export type ExplorerError = {
   title: string;
   description?: string;
   content?: string;
+  customRenderer?: React.ReactNode;
 };

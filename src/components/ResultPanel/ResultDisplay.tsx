@@ -77,7 +77,7 @@ function ResponseDisplay({response}: ResponseProps) {
       title: 'Empty Result',
       variant: 'critical',
     };
-  } else if (response.error) {
+  } else if (response.error && !response.error.customRenderer) {
     const e = response.error;
     let variant: Variant;
     switch (e.severity) {
@@ -107,6 +107,7 @@ function ResponseDisplay({response}: ResponseProps) {
   return (
     <div>
       {bannerProps && <Banner {...bannerProps} />}
+      {response?.error?.customRenderer}
       {response?.result && <RenderedResult result={response.result} />}
     </div>
   );
