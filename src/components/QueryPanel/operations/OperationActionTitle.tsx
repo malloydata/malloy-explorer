@@ -43,22 +43,23 @@ export function OperationActionTitle({
           <Popover.Trigger asChild>
             <div {...stylex.props(styles.action)}>{actionTitle}</div>
           </Popover.Trigger>
-          <Popover.PopoverContent
-            style={{zIndex: 1}}
-            side="right"
-            align="start"
-            alignOffset={-16}
-          >
-            <FieldMenu
-              segment={segment}
-              fields={fields}
-              types={types}
-              filter={(segment, field, path) =>
-                !segment.hasField(field.name, path)
-              }
-              onClick={onClick}
-            />
-          </Popover.PopoverContent>
+          <Popover.Portal>
+            <Popover.PopoverContent
+              side="right"
+              align="start"
+              alignOffset={-16}
+            >
+              <FieldMenu
+                segment={segment}
+                fields={fields}
+                types={types}
+                filter={(segment, field, path) =>
+                  !segment.hasField(field.name, path)
+                }
+                onClick={onClick}
+              />
+            </Popover.PopoverContent>
+          </Popover.Portal>
         </Popover.Root>
       </div>
     </div>

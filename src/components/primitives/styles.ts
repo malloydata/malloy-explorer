@@ -16,12 +16,12 @@ export const tooltipStyles = stylex.create({
     maxWidth: '360px',
     boxShadow:
       '0px 2px 12px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.1)',
-    zIndex: 1,
+    zIndex: 2,
   },
   card: {
     width: 'var(--radix-tooltip-trigger-width)',
     maxHeight: 'var(--radix-tooltip-content-available-height)',
-    zIndex: 1,
+    zIndex: 2,
   },
 });
 

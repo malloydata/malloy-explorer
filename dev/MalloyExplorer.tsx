@@ -20,6 +20,7 @@ import {
   SourcePanel,
 } from '../src';
 import {modelInfo} from './sample_models/example_model';
+import {exampleResult} from './sample_models/example_result';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
@@ -83,6 +84,19 @@ const App = () => {
                 source={source}
                 draftQuery={query}
                 setDraftQuery={setQuery}
+                submittedQuery={
+                  query
+                    ? {
+                        executionState: 'finished',
+                        response: {
+                          result: exampleResult,
+                        },
+                        query,
+                        queryResolutionStartMillis: Date.now(),
+                        onCancel: () => {},
+                      }
+                    : undefined
+                }
               />
             </div>
           </div>

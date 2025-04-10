@@ -41,14 +41,16 @@ export function AddItem({icon, label, detail, disable, onClick}: AddItemProps) {
           </div>
         </Tooltip.Trigger>
         {detail ? (
-          <Tooltip.Content
-            {...stylex.props(addMenuStyles.tooltip)}
-            side="right"
-            align="start"
-            alignOffset={-16}
-          >
-            {detail}
-          </Tooltip.Content>
+          <Tooltip.Portal>
+            <Tooltip.Content
+              {...stylex.props(addMenuStyles.tooltip)}
+              side="right"
+              align="start"
+              alignOffset={-16}
+            >
+              {detail}
+            </Tooltip.Content>
+          </Tooltip.Portal>
         ) : null}
       </Tooltip.Root>
     </div>

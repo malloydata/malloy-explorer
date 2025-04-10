@@ -12,7 +12,12 @@ import Icon from './Icon';
 import {iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars} from './button.stylex';
 import {fontStyles, tooltipStyles} from './styles';
-import {Tooltip, TooltipContent, TooltipTrigger} from '@radix-ui/react-tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 
 const DEFAULT_VARIANT = 'default';
 const DEFAULT_SIZE = 'default';
@@ -104,12 +109,14 @@ export default function Button({
     return (
       <Tooltip delayDuration={300}>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent
-          sideOffset={8}
-          {...stylex.props(fontStyles.body, tooltipStyles.default)}
-        >
-          {tooltip}
-        </TooltipContent>
+        <TooltipPortal>
+          <TooltipContent
+            sideOffset={8}
+            {...stylex.props(fontStyles.body, tooltipStyles.default)}
+          >
+            {tooltip}
+          </TooltipContent>
+        </TooltipPortal>
       </Tooltip>
     );
   } else {

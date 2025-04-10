@@ -120,16 +120,18 @@ export default function Token({
   return tooltip ? (
     <Tooltip.Root delayDuration={300}>
       <Tooltip.Trigger asChild>{token}</Tooltip.Trigger>
-      <Tooltip.Content
-        {...tooltipProps}
-        {...stylex.props(
-          typeof tooltip === 'string'
-            ? tooltipStyles.default
-            : tooltipStyles.card
-        )}
-      >
-        {tooltip}
-      </Tooltip.Content>
+      <Tooltip.Portal>
+        <Tooltip.Content
+          {...tooltipProps}
+          {...stylex.props(
+            typeof tooltip === 'string'
+              ? tooltipStyles.default
+              : tooltipStyles.card
+          )}
+        >
+          {tooltip}
+        </Tooltip.Content>
+      </Tooltip.Portal>
     </Tooltip.Root>
   ) : (
     token

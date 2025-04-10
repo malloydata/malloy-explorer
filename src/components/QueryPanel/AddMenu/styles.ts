@@ -12,7 +12,6 @@ export const addMenuStyles = stylex.create({
     maxHeight: '50vh',
     display: 'flex',
     flexDirection: 'column',
-    zIndex: 1,
   },
   item: {
     alignItems: 'center',

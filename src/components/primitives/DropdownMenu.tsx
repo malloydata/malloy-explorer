@@ -62,18 +62,20 @@ export function DropdownMenu({
               {trigger}
             </PrimitiveDropdownMenu.Trigger>
           </Tooltip.Trigger>
-          <Tooltip.Content
-            side="bottom"
-            align="start"
-            sideOffset={4}
-            {...stylex.props(
-              typeof tooltip === 'string'
-                ? tooltipStyles.default
-                : tooltipStyles.card
-            )}
-          >
-            {tooltip}
-          </Tooltip.Content>
+          <Tooltip.Portal>
+            <Tooltip.Content
+              side="bottom"
+              align="start"
+              sideOffset={4}
+              {...stylex.props(
+                typeof tooltip === 'string'
+                  ? tooltipStyles.default
+                  : tooltipStyles.card
+              )}
+            >
+              {tooltip}
+            </Tooltip.Content>
+          </Tooltip.Portal>
         </Tooltip.Root>
       ) : (
         <PrimitiveDropdownMenu.Trigger asChild>
