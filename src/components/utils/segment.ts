@@ -4,8 +4,10 @@ import {
   ASTNestViewOperation,
   ASTOrderByViewOperation,
   ASTQuery,
+  ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
+import {ViewParent, getViewDefinition} from './fields';
 
 export function segmentHasLimit(segment: ASTSegmentViewDefinition) {
   return (
@@ -59,4 +61,18 @@ export function addGroupBy(
     segment.setLimit(1000);
   }
   setQuery?.(rootQuery.build());
+}
+
+export function getSegmentIfPresent(
+  parent: ViewParent
+): ASTSegmentViewDefinition | undefined {
+  const definition = getViewDefinition(parent);
+  if (definition instanceof ASTSegmentViewDefinition) {
+    return definition;
+  } else if (definition instanceof ASTRefinementViewDefinition) {
+    if (definition.refinement instanceof ASTSegmentViewDefinition) {
+      return definition.refinement;
+    }
+  }
+  return undefined;
 }

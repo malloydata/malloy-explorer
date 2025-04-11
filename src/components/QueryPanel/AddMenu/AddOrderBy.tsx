@@ -8,29 +8,30 @@
 import * as React from 'react';
 import {useContext, useMemo} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {
-  ASTQuery,
-  ASTSegmentViewDefinition,
-} from '@malloydata/malloy-query-builder';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {segmentHasOrderBy} from '../../utils/segment';
+import {getSegmentIfPresent, segmentHasOrderBy} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
+import {ViewParent} from '../../utils/fields';
 
 export interface AddEmptyNestProps {
   rootQuery: ASTQuery;
-  segment: ASTSegmentViewDefinition;
+  view: ViewParent;
 }
 
-export function AddOrderBy({rootQuery, segment}: AddEmptyNestProps) {
+export function AddOrderBy({rootQuery, view}: AddEmptyNestProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const outputSchemaFields = segment.getOutputSchema().fields;
+  const outputSchemaFields = view.getOutputSchema().fields;
+  const segment = getSegmentIfPresent(view);
 
   const fields = useMemo(
     () =>
       outputSchemaFields
         .filter(field => field.kind === 'dimension')
         .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
-        .filter(field => !segmentHasOrderBy(segment, field.name)),
+        .filter(field =>
+          segment ? !segmentHasOrderBy(segment, field.name) : true
+        ),
     [outputSchemaFields, segment]
   );
 
@@ -38,10 +39,11 @@ export function AddOrderBy({rootQuery, segment}: AddEmptyNestProps) {
     <AddFieldItem
       label="Add order by"
       icon="orderBy"
-      segment={segment}
+      view={view}
       fields={fields}
       types={['dimension']}
       onClick={field => {
+        const segment = view.getOrAddDefaultSegment();
         segment.addOrderBy(field.name, 'asc');
         setQuery?.(rootQuery.build());
       }}

@@ -6,11 +6,7 @@
  */
 
 import * as React from 'react';
-import {
-  ASTNestViewOperation,
-  ASTQuery,
-  ASTSegmentViewDefinition,
-} from '@malloydata/malloy-query-builder';
+import {ASTNestViewOperation, ASTQuery} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
@@ -23,7 +19,6 @@ import {VisualizationIcon} from '../VisualizationIcon';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
-  segment: ASTSegmentViewDefinition;
   nests: ASTNestViewOperation[];
 }
 

@@ -20,24 +20,40 @@ import {Button, Icon, IconType} from '../primitives';
 import ViewAttributeTable from '../ResultPanel/ViewAttributeTable';
 import {JSX, useState} from 'react';
 import {textColors} from '../primitives/colors.stylex';
+import {ViewParent} from '../utils/fields';
 
 export interface ViewProps {
   rootQuery: ASTQuery;
+  view: ViewParent;
   viewDef: ASTViewDefinition;
 }
 
-export function ViewDefinition({rootQuery, viewDef}: ViewProps) {
+export function ViewDefinition({rootQuery, view, viewDef}: ViewProps) {
   if (viewDef instanceof ASTArrowViewDefinition) {
-    return <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.view} />;
+    return (
+      <ViewDefinition
+        rootQuery={rootQuery}
+        view={view}
+        viewDef={viewDef.view}
+      />
+    );
   } else if (viewDef instanceof ASTRefinementViewDefinition) {
     return (
       <div>
-        <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.base} />
-        <ViewDefinition rootQuery={rootQuery} viewDef={viewDef.refinement} />
+        <ViewDefinition
+          rootQuery={rootQuery}
+          view={view}
+          viewDef={viewDef.base}
+        />
+        <ViewDefinition
+          rootQuery={rootQuery}
+          view={view}
+          viewDef={viewDef.refinement}
+        />
       </div>
     );
   } else if (viewDef instanceof ASTSegmentViewDefinition) {
-    return <Operations rootQuery={rootQuery} viewDef={viewDef} />;
+    return <Operations rootQuery={rootQuery} view={view} viewDef={viewDef} />;
   } else {
     return <CollapsingView rootQuery={rootQuery} viewDef={viewDef} />;
   }

@@ -13,6 +13,7 @@ import {
   ASTNestViewOperation,
   ASTOrderByViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
   ASTViewDefinition,
   ASTWhereViewOperation,
 } from '@malloydata/malloy-query-builder';
@@ -23,6 +24,7 @@ import {AggregateOperations} from './operations/AggregateOperations';
 import {OrderByOperations} from './operations/OrderByOperations';
 import {NestOperations} from './operations/NestOperation';
 import stylex from '@stylexjs/stylex';
+import {ViewParent} from '../utils/fields';
 
 const operationStyles = stylex.create({
   indent: {
@@ -33,10 +35,11 @@ const operationStyles = stylex.create({
 
 export interface OperationsProps {
   rootQuery: ASTQuery;
+  view: ViewParent;
   viewDef: ASTViewDefinition;
 }
 
-export function Operations({rootQuery, viewDef}: OperationsProps) {
+export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   const groupBys: ASTGroupByViewOperation[] = [];
   const aggregates: ASTAggregateViewOperation[] = [];
   const wheres: ASTWhereViewOperation[] = [];
@@ -44,7 +47,11 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
   const nests: ASTNestViewOperation[] = [];
   let limit: ASTLimitViewOperation | undefined;
 
-  const segment = viewDef.getOrAddDefaultSegment();
+  if (!(viewDef instanceof ASTSegmentViewDefinition)) {
+    return null;
+  }
+
+  const segment = viewDef;
 
   segment.operations.items.forEach(operation => {
     if (operation instanceof ASTGroupByViewOperation) {
@@ -66,26 +73,18 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
     <div {...stylex.props(operationStyles.indent)}>
       <GroupByOperations
         rootQuery={rootQuery}
-        segment={segment}
+        view={view}
         groupBys={groupBys}
       />
       <AggregateOperations
         rootQuery={rootQuery}
-        segment={segment}
+        view={view}
         aggregates={aggregates}
       />
-      <WhereOperations
-        rootQuery={rootQuery}
-        segment={segment}
-        wheres={wheres}
-      />
-      <OrderByOperations
-        rootQuery={rootQuery}
-        segment={segment}
-        orderBys={orderBys}
-      />
-      <NestOperations rootQuery={rootQuery} segment={segment} nests={nests} />
-      <LimitOperation rootQuery={rootQuery} segment={segment} limit={limit} />
+      <WhereOperations rootQuery={rootQuery} wheres={wheres} />
+      <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
+      <NestOperations rootQuery={rootQuery} nests={nests} />
+      <LimitOperation rootQuery={rootQuery} limit={limit} />
     </div>
   );
 }

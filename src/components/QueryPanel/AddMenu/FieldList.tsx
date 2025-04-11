@@ -10,8 +10,7 @@ import {useMemo} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
-import {sortFieldInfos} from '../../utils/fields';
-import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
+import {sortFieldInfos, ViewParent} from '../../utils/fields';
 import FieldToken from '../../FieldToken';
 import {FieldHoverCard} from '../../FieldHoverCard';
 
@@ -26,20 +25,20 @@ interface Group {
 }
 
 export interface FieldListProps {
-  segment: ASTSegmentViewDefinition;
+  view: ViewParent;
   fields: Malloy.FieldInfo[];
   search: string;
   onClick: (field: Malloy.FieldInfo, path: string[]) => void;
   types: Array<'dimension' | 'measure' | 'view'>;
   filter?: (
-    segment: ASTSegmentViewDefinition,
+    view: ViewParent,
     field: Malloy.FieldInfo,
     path: string[]
   ) => boolean;
 }
 
 export function FieldList({
-  segment,
+  view,
   fields,
   onClick,
   search,
@@ -60,7 +59,7 @@ export function FieldList({
         .filter(
           field => field.name.includes(search) && types.includes(field.kind)
         )
-        .filter(field => (filter ? filter(segment, field, path) : true));
+        .filter(field => (filter ? filter(view, field, path) : true));
 
       const joins = fields.filter(field => field.kind === 'join');
 
@@ -85,7 +84,7 @@ export function FieldList({
     buildGroups(types, [], 'Source', fields);
 
     return groups;
-  }, [fields, filter, search, segment, types]);
+  }, [fields, filter, search, view, types]);
 
   return (
     <div>
@@ -115,6 +114,7 @@ export function FieldList({
                     side: 'right',
                     align: 'start',
                     sideOffset: 4,
+                    alignOffset: 24,
                   }}
                 />
               </div>

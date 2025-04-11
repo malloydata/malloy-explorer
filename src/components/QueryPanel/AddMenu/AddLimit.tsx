@@ -6,25 +6,24 @@
  */
 
 import * as React from 'react';
-import {useContext, useMemo} from 'react';
-import {
-  ASTQuery,
-  ASTSegmentViewDefinition,
-} from '@malloydata/malloy-query-builder';
+import {useContext} from 'react';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import Icon from '../../primitives/Icon';
 import {AddItem} from './AddItem';
-import {segmentHasLimit} from '../../utils/segment';
+import {getSegmentIfPresent, segmentHasLimit} from '../../utils/segment';
+import {ViewParent} from '../../utils/fields';
 
 export interface AddLimitProps {
   rootQuery: ASTQuery;
-  segment: ASTSegmentViewDefinition;
+  view: ViewParent;
 }
 
-export function AddLimit({rootQuery, segment}: AddLimitProps) {
+export function AddLimit({rootQuery, view}: AddLimitProps) {
   const {setQuery} = useContext(QueryEditorContext);
 
-  const hasLimit = useMemo(() => segmentHasLimit(segment), [segment]);
+  const segment = getSegmentIfPresent(view);
+  const hasLimit = segment ? segmentHasLimit(segment) : false;
 
   return (
     <AddItem
@@ -32,6 +31,7 @@ export function AddLimit({rootQuery, segment}: AddLimitProps) {
       label="Limit"
       disable={() => hasLimit}
       onClick={() => {
+        const segment = view.getOrAddDefaultSegment();
         segment.setLimit(10);
         setQuery?.(rootQuery.build());
       }}

@@ -19,7 +19,11 @@ export function View({rootQuery, view}: ViewProps) {
   return (
     <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
       <Visualization rootQuery={rootQuery} view={view} />
-      <ViewDefinition rootQuery={rootQuery} viewDef={view.definition} />
+      <ViewDefinition
+        rootQuery={rootQuery}
+        view={view}
+        viewDef={view.definition}
+      />
     </div>
   );
 }
