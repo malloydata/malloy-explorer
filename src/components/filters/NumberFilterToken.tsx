@@ -244,11 +244,15 @@ export function makeFilterWithNewType(
   switch (type) {
     case 'is_equal_to':
     case 'is_not_equal_to':
+      return {...NumberFilterFragments[type], values} as BasicNumberFilter;
     case 'is_greater_than':
     case 'is_less_than':
     case 'is_greater_than_or_equal_to':
     case 'is_less_than_or_equal_to':
-      return {...NumberFilterFragments[type], values} as BasicNumberFilter;
+      return {
+        ...NumberFilterFragments[type],
+        values: values.length > 0 ? [values[0]] : values,
+      } as BasicNumberFilter;
     case 'is_null':
     case 'is_not_null':
       return {...NumberFilterFragments[type]} as BasicNumberFilter;
