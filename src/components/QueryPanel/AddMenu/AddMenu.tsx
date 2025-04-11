@@ -84,9 +84,8 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                   if (field.kind === 'dimension') {
                     segment.addGroupBy(field.name, path);
                     if (!segmentHasLimit(segment)) {
-                      segment.setLimit(10);
+                      segment.setLimit(1000);
                     }
-                    segment.addOrderBy(field.name);
                   } else if (field.kind === 'measure') {
                     segment.addAggregate(field.name, path);
                   } else {

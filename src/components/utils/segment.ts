@@ -56,8 +56,7 @@ export function addGroupBy(
 ): void {
   segment.addGroupBy(field.name, path);
   if (!segmentHasLimit(segment)) {
-    segment.setLimit(10);
+    segment.setLimit(1000);
   }
-  segment.addOrderBy(field.name);
   setQuery?.(rootQuery.build());
 }
