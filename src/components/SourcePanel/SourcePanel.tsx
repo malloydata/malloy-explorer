@@ -89,7 +89,7 @@ export function SourcePanel({source}: SourcePanelProps) {
           {subpanelType == null ? (
             <div {...stylex.props(styles.heading)}>
               <Icon name="database" color="gray" />
-              {source.name}
+              <div {...stylex.props(styles.title)}>{source.name}</div>
             </div>
           ) : (
             <Button
@@ -106,6 +106,7 @@ export function SourcePanel({source}: SourcePanelProps) {
                 icon="chevronLeft"
                 tooltip="Close the source panel"
                 onClick={() => setIsSourcePanelOpen(false)}
+                size="compact"
               />
             </div>
           )}
@@ -195,6 +196,11 @@ const styles = stylex.create({
     alignItems: 'center',
     gap: '8px',
     padding: '4px 8px',
+    overflow: 'hidden',
+  },
+  title: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   content: {
     display: 'flex',
