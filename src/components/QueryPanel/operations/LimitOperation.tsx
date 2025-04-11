@@ -10,6 +10,7 @@ import {useContext} from 'react';
 import {
   ASTLimitViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -20,6 +21,7 @@ import {ClearButton} from './ClearButton';
 
 export interface LimitOperationProps {
   rootQuery: ASTQuery;
+  segment: ASTSegmentViewDefinition;
   limit: ASTLimitViewOperation | undefined;
 }
 

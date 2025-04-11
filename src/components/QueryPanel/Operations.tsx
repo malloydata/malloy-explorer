@@ -13,7 +13,6 @@ import {
   ASTNestViewOperation,
   ASTOrderByViewOperation,
   ASTQuery,
-  ASTSegmentViewDefinition,
   ASTViewDefinition,
   ASTWhereViewOperation,
 } from '@malloydata/malloy-query-builder';
@@ -45,12 +44,7 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
   const nests: ASTNestViewOperation[] = [];
   let limit: ASTLimitViewOperation | undefined;
 
-  if (!(viewDef instanceof ASTSegmentViewDefinition)) {
-    return null;
-  }
-
-  const segment = viewDef;
-  const view = viewDef.parent.as.View();
+  const segment = viewDef.getOrAddDefaultSegment();
 
   segment.operations.items.forEach(operation => {
     if (operation instanceof ASTGroupByViewOperation) {
@@ -72,18 +66,26 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
     <div {...stylex.props(operationStyles.indent)}>
       <GroupByOperations
         rootQuery={rootQuery}
-        view={view}
+        segment={segment}
         groupBys={groupBys}
       />
       <AggregateOperations
         rootQuery={rootQuery}
-        view={view}
+        segment={segment}
         aggregates={aggregates}
       />
-      <WhereOperations rootQuery={rootQuery} wheres={wheres} />
-      <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
-      <NestOperations rootQuery={rootQuery} nests={nests} />
-      <LimitOperation rootQuery={rootQuery} limit={limit} />
+      <WhereOperations
+        rootQuery={rootQuery}
+        segment={segment}
+        wheres={wheres}
+      />
+      <OrderByOperations
+        rootQuery={rootQuery}
+        segment={segment}
+        orderBys={orderBys}
+      />
+      <NestOperations rootQuery={rootQuery} segment={segment} nests={nests} />
+      <LimitOperation rootQuery={rootQuery} segment={segment} limit={limit} />
     </div>
   );
 }

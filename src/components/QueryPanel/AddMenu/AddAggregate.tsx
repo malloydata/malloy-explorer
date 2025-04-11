@@ -7,34 +7,31 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
+import {
+  ASTQuery,
+  ASTSegmentViewDefinition,
+} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {AddFieldItem} from './AddFieldItem';
-import {
-  getInputSchemaFromViewParent,
-  viewParentDoesNotHaveField,
-  ViewParent,
-} from '../../utils/fields';
 
 export interface AddAggregateProps {
   rootQuery: ASTQuery;
-  view: ViewParent;
+  segment: ASTSegmentViewDefinition;
 }
 
-export function AddAggregate({rootQuery, view}: AddAggregateProps) {
+export function AddAggregate({rootQuery, segment}: AddAggregateProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const {fields} = getInputSchemaFromViewParent(view);
+  const {fields} = segment.getInputSchema();
 
   return (
     <AddFieldItem
       label="Add aggregate"
       icon="aggregate"
-      view={view}
+      segment={segment}
       fields={fields}
       types={['measure']}
-      filter={viewParentDoesNotHaveField}
+      filter={(segment, field, path) => !segment.hasField(field.name, path)}
       onClick={(field, path) => {
-        const segment = view.getOrAddDefaultSegment();
         segment.addAggregate(field.name, path);
         setQuery?.(rootQuery.build());
       }}

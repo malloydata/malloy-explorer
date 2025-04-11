@@ -9,6 +9,7 @@ import * as React from 'react';
 import {useContext} from 'react';
 import {
   ASTQuery,
+  ASTSegmentViewDefinition,
   ASTWhereViewOperation,
   ParsedFilter,
 } from '@malloydata/malloy-query-builder';
@@ -27,6 +28,7 @@ import {ErrorElement} from '../../ErrorElement';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
+  segment: ASTSegmentViewDefinition;
   wheres: ASTWhereViewOperation[];
 }
 

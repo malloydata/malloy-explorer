@@ -8,17 +8,17 @@
 import * as React from 'react';
 import {useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {Divider, TextInput} from '../../primitives';
 import {addMenuStyles} from './styles';
 import {FieldList} from './FieldList';
-import {ViewParent} from '../../utils/fields';
 export interface FieldMenuProps {
-  view: ViewParent;
+  segment: ASTSegmentViewDefinition;
   fields: Array<Malloy.FieldInfo>;
   types: Array<'dimension' | 'measure' | 'view'>;
   filter?: (
-    view: ViewParent,
+    segment: ASTSegmentViewDefinition,
     field: Malloy.FieldInfo,
     path: string[]
   ) => boolean;
@@ -26,7 +26,7 @@ export interface FieldMenuProps {
 }
 
 export function FieldMenu({
-  view,
+  segment,
   fields,
   types,
   filter,
@@ -47,7 +47,7 @@ export function FieldMenu({
       <Divider />
       <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
         <FieldList
-          view={view}
+          segment={segment}
           fields={fields}
           search={search}
           types={types}

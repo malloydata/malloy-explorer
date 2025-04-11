@@ -8,6 +8,7 @@
 import * as React from 'react';
 import {useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import Icon from '../../primitives/Icon';
 import {addMenuStyles} from './styles';
 import stylex from '@stylexjs/stylex';
@@ -22,17 +23,16 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../../primitives/styles';
-import {ViewParent} from '../../utils/fields';
 
 export interface AddGroupByProps {
   label: string;
   icon: IconType;
-  view: ViewParent;
+  segment: ASTSegmentViewDefinition;
   fields: FieldInfo[];
   onClick(field: FieldInfo, path: string[]): void;
   types: Array<'dimension' | 'measure' | 'view'>;
   filter?: (
-    view: ViewParent,
+    segment: ASTSegmentViewDefinition,
     field: Malloy.FieldInfo,
     path: string[]
   ) => boolean;
@@ -40,7 +40,7 @@ export interface AddGroupByProps {
 }
 
 export function AddFieldItem({
-  view,
+  segment,
   fields,
   icon,
   label,
@@ -99,7 +99,7 @@ export function AddFieldItem({
           <FieldMenu
             types={types}
             filter={filter}
-            view={view}
+            segment={segment}
             fields={fields}
             onClick={onClick}
           />

@@ -13,6 +13,7 @@ import {styles} from '../../styles';
 import {
   ASTAggregateViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {hoverStyles} from './hover.stylex';
@@ -20,17 +21,16 @@ import {ClearButton} from './ClearButton';
 import {OperationActionTitle} from './OperationActionTitle';
 import {FieldHover} from '../FieldHover';
 import FieldToken from '../../FieldToken';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
-  view: ViewParent;
+  segment: ASTSegmentViewDefinition;
   aggregates: ASTAggregateViewOperation[];
 }
 
 export function AggregateOperations({
   rootQuery,
-  view,
+  segment,
   aggregates,
 }: AggregateOperationsProps) {
   const {setQuery} = useContext(QueryEditorContext);
@@ -38,7 +38,7 @@ export function AggregateOperations({
     return null;
   }
 
-  const {fields} = getInputSchemaFromViewParent(view);
+  const {fields} = segment.getInputSchema();
 
   return (
     <div>
@@ -46,11 +46,10 @@ export function AggregateOperations({
         title="aggregate"
         actionTitle="Add aggregate"
         rootQuery={rootQuery}
-        view={view}
+        segment={segment}
         fields={fields}
         types={['measure']}
         onClick={(field: Malloy.FieldInfo, path: string[]) => {
-          const segment = view.getOrAddDefaultSegment();
           segment.addAggregate(field.name, path);
           setQuery?.(rootQuery.build());
         }}

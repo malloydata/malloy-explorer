@@ -55,9 +55,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
               <></>
             )}
           </DropdownMenu>
-          {query.definition instanceof ASTArrowQueryDefinition ? (
-            <AddMenu rootQuery={rootQuery} view={query.definition} />
-          ) : null}
+          <AddMenu rootQuery={rootQuery} view={query} />
         </>
       }
       collapsedControls={<VisualizationIcon view={query} />}
