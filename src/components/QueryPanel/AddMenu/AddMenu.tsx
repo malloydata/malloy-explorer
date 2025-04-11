@@ -22,7 +22,7 @@ import {AddView} from './AddView';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {FieldList} from './FieldList';
-import {segmentNestNo} from '../../utils/segment';
+import {segmentHasLimit, segmentNestNo} from '../../utils/segment';
 import {ValueList} from './ValueList';
 import {SearchIndexResult} from './hooks/useSearch';
 
@@ -83,6 +83,9 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                 onClick={function (field: FieldInfo, path: string[]): void {
                   if (field.kind === 'dimension') {
                     segment.addGroupBy(field.name, path);
+                    if (!segmentHasLimit(segment)) {
+                      segment.setLimit(1000);
+                    }
                   } else if (field.kind === 'measure') {
                     segment.addAggregate(field.name, path);
                   } else {

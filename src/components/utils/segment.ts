@@ -55,5 +55,8 @@ export function addGroupBy(
   setQuery?: (query: Malloy.Query) => void
 ): void {
   segment.addGroupBy(field.name, path);
+  if (!segmentHasLimit(segment)) {
+    segment.setLimit(1000);
+  }
   setQuery?.(rootQuery.build());
 }
