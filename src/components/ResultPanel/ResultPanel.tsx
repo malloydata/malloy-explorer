@@ -18,6 +18,7 @@ import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {useEffect} from 'react';
 import {colors} from '../QueryPanel/AddMenu/colors.stylex';
+import DebugPane, {DebugOptions} from './DebugPane';
 
 enum Tab {
   RESULTS = 'Results',
@@ -28,6 +29,7 @@ enum Tab {
 
 type ResultPanelOptions = {
   showRawQuery: boolean;
+  debugOptions?: DebugOptions;
 };
 
 export interface ResultPanelProps {
@@ -198,9 +200,16 @@ export default function ResultPanel({
             value={Tab.RAW_QUERY}
             {...stylex.props(styles.content, styles.codeContent)}
           >
-            <CodeBlock
-              code={JSON.stringify(draftQuery, null, 2)}
-              language="json"
+            <DebugPane
+              query={draftQuery as Malloy.Query}
+              debug={
+                options.debugOptions
+                  ? {
+                      debuggers: options.debugOptions.debuggers,
+                      onDebugQuery: options.debugOptions.onDebugQuery,
+                    }
+                  : undefined
+              }
             />
           </Content>
         )}
