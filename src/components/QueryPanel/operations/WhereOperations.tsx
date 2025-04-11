@@ -23,6 +23,7 @@ import {StringFilterToken} from '../../filters/StringFilterToken';
 import {BooleanFilterToken} from '../../filters/BooleanFilterToken';
 import {NumberFilterToken} from '../../filters/NumberFilterToken';
 import {DateTimeFilterToken} from '../../filters/DateTimeFilterToken';
+import {ErrorElement} from '../../ErrorElement';
 
 export interface WhereOperationsProps {
   rootQuery: ASTQuery;
@@ -31,6 +32,7 @@ export interface WhereOperationsProps {
 
 export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
   const {setQuery} = useContext(QueryEditorContext);
+
   if (wheres.length === 0) {
     return null;
   }
@@ -40,113 +42,134 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
       <div {...stylex.props(styles.title)}>filter by</div>
       <div {...stylex.props(styles.tokenContainer)}>
         {wheres.map((where, key) => {
-          const {fieldReference, filterString} = where.filter;
-          const fieldInfo = fieldReference.getFieldInfo();
-
-          if (fieldInfo.kind !== 'dimension' && fieldInfo.kind !== 'measure') {
-            return null;
-          }
-
-          const icon = atomicTypeToIcon(fieldInfo.type.kind);
-          const color = fieldKindToColor(fieldInfo.kind);
-          const filter = where.filter.getFilter();
-
-          let rhsToken: React.ReactElement | null = null;
-
-          if (filter.kind === 'string') {
-            rhsToken = (
-              <StringFilterToken
-                key={key}
-                fieldInfo={fieldInfo}
-                path={where.filter.fieldReference.path ?? []}
-                filter={filter.parsed}
-                setFilter={filter => {
-                  where.filter.setFilter({kind: 'string', parsed: filter});
-                  setQuery?.(rootQuery.build());
-                }}
-              />
-            );
-          }
-
-          if (filter.kind === 'boolean' && filter.parsed) {
-            rhsToken = (
-              <BooleanFilterToken
-                key={key}
-                fieldInfo={fieldInfo}
-                filter={filter.parsed}
-                setFilter={filter => {
-                  where.filter.setFilter({kind: 'boolean', parsed: filter});
-                  setQuery?.(rootQuery.build());
-                }}
-              />
-            );
-          }
-          if (filter.kind === 'number' && filter.parsed) {
-            rhsToken = (
-              <NumberFilterToken
-                key={key}
-                fieldInfo={fieldInfo}
-                filter={filter.parsed}
-                setFilter={filter => {
-                  where.filter.setFilter({kind: 'number', parsed: filter});
-                  setQuery?.(rootQuery.build());
-                }}
-              />
-            );
-          }
-          if (filter.kind === 'date' && filter.parsed) {
-            rhsToken = (
-              <DateTimeFilterToken
-                key={key}
-                fieldInfo={fieldInfo}
-                filter={filter.parsed}
-                setFilter={filter => {
-                  where.filter.setFilter({kind: 'date', parsed: filter});
-                  setQuery?.(rootQuery.build());
-                }}
-              />
-            );
-          }
-          if (filter.kind === 'timestamp' && filter.parsed) {
-            rhsToken = (
-              <DateTimeFilterToken
-                key={key}
-                fieldInfo={fieldInfo}
-                filter={filter.parsed}
-                setFilter={filter => {
-                  where.filter.setFilter({kind: 'timestamp', parsed: filter});
-                  setQuery?.(rootQuery.build());
-                }}
-              />
-            );
-          }
-
-          const {op, value} = parsedToLabels(filter, filterString);
-
-          if (!rhsToken) {
-            rhsToken = (
-              <TokenGroup color={color}>
-                <Token icon={icon} label={fieldInfo.name} />
-                <Token label={op} />
-                <Token label={value} />
-              </TokenGroup>
-            );
-          }
-
           return (
-            <div key={key} {...stylex.props(hoverStyles.main)}>
-              {rhsToken}
-              <div {...stylex.props(hoverStyles.hoverActions)}>
-                <ClearButton
-                  onClick={() => {
-                    where.delete();
-                    setQuery?.(rootQuery.build());
-                  }}
-                />
-              </div>
-            </div>
+            <ErrorElement
+              key={key}
+              fallback={
+                <div>
+                  Invalid filter
+                  <ClearButton
+                    onClick={() => {
+                      where.delete();
+                      setQuery?.(rootQuery.build());
+                    }}
+                  />
+                </div>
+              }
+            >
+              <SingleWhereOperation where={where} rootQuery={rootQuery} />
+            </ErrorElement>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+interface SingleWhereOperationProps {
+  rootQuery: ASTQuery;
+  where: ASTWhereViewOperation;
+}
+function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
+  const {fieldReference, filterString} = where.filter;
+  const fieldInfo = fieldReference.getFieldInfo();
+  const {setQuery} = useContext(QueryEditorContext);
+
+  if (fieldInfo.kind !== 'dimension' && fieldInfo.kind !== 'measure') {
+    return null;
+  }
+
+  const icon = atomicTypeToIcon(fieldInfo.type.kind);
+  const color = fieldKindToColor(fieldInfo.kind);
+  const filter = where.filter.getFilter();
+
+  let rhsToken: React.ReactElement | null = null;
+
+  if (filter.kind === 'string') {
+    rhsToken = (
+      <StringFilterToken
+        fieldInfo={fieldInfo}
+        path={where.filter.fieldReference.path ?? []}
+        filter={filter.parsed}
+        setFilter={filter => {
+          where.filter.setFilter({kind: 'string', parsed: filter});
+          setQuery?.(rootQuery.build());
+        }}
+      />
+    );
+  }
+
+  if (filter.kind === 'boolean' && filter.parsed) {
+    rhsToken = (
+      <BooleanFilterToken
+        fieldInfo={fieldInfo}
+        filter={filter.parsed}
+        setFilter={filter => {
+          where.filter.setFilter({kind: 'boolean', parsed: filter});
+          setQuery?.(rootQuery.build());
+        }}
+      />
+    );
+  }
+  if (filter.kind === 'number' && filter.parsed) {
+    rhsToken = (
+      <NumberFilterToken
+        fieldInfo={fieldInfo}
+        filter={filter.parsed}
+        setFilter={filter => {
+          where.filter.setFilter({kind: 'number', parsed: filter});
+          setQuery?.(rootQuery.build());
+        }}
+      />
+    );
+  }
+  if (filter.kind === 'date' && filter.parsed) {
+    rhsToken = (
+      <DateTimeFilterToken
+        fieldInfo={fieldInfo}
+        filter={filter.parsed}
+        setFilter={filter => {
+          where.filter.setFilter({kind: 'date', parsed: filter});
+          setQuery?.(rootQuery.build());
+        }}
+      />
+    );
+  }
+  if (filter.kind === 'timestamp' && filter.parsed) {
+    rhsToken = (
+      <DateTimeFilterToken
+        fieldInfo={fieldInfo}
+        filter={filter.parsed}
+        setFilter={filter => {
+          where.filter.setFilter({kind: 'timestamp', parsed: filter});
+          setQuery?.(rootQuery.build());
+        }}
+      />
+    );
+  }
+
+  const {op, value} = parsedToLabels(filter, filterString);
+
+  if (!rhsToken) {
+    rhsToken = (
+      <TokenGroup color={color}>
+        <Token icon={icon} label={fieldInfo.name} />
+        <Token label={op} />
+        <Token label={value} />
+      </TokenGroup>
+    );
+  }
+
+  return (
+    <div {...stylex.props(hoverStyles.main)}>
+      {rhsToken}
+      <div {...stylex.props(hoverStyles.hoverActions)}>
+        <ClearButton
+          onClick={() => {
+            where.delete();
+            setQuery?.(rootQuery.build());
+          }}
+        />
       </div>
     </div>
   );
