@@ -15,6 +15,7 @@ export default {
       include: ['src/**/*.{js,jsx,ts,tsx}'],
       useCSSLayers: true,
       babelConfig,
+      classNamePrefix: 'mly',
     },
   },
 };
