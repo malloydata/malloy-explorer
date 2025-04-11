@@ -70,9 +70,10 @@ export default function CollapsibleListItem({
 
 const styles = stylex.create({
   main: {
-    display: 'flex',
+    display: 'grid',
+    gridAutoFlow: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'start',
     padding: '8px',
     gap: '8px',
     borderRadius: '8px',
@@ -85,14 +86,19 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    overflow: 'hidden',
   },
   label: {
     flexGrow: 1,
     fontWeight: 700,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   sublabel: {
     flexGrow: 1,
     color: textColors.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   content: {
     display: 'flex',
