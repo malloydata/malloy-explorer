@@ -72,11 +72,6 @@ function ResponseDisplay({response}: ResponseProps) {
       title: 'Empty Response',
       variant: 'critical',
     };
-  } else if (!response.result) {
-    bannerProps = {
-      title: 'Empty Result',
-      variant: 'critical',
-    };
   } else if (response.error && !response.error.customRenderer) {
     const e = response.error;
     let variant: Variant;
@@ -101,6 +96,11 @@ function ResponseDisplay({response}: ResponseProps) {
       description: e.description,
       children: e.content,
       variant,
+    };
+  } else if (!response.result) {
+    bannerProps = {
+      title: 'Empty Result',
+      variant: 'critical',
     };
   }
 
