@@ -10,7 +10,6 @@ import {useContext} from 'react';
 import {
   ASTOrderByViewOperation,
   ASTQuery,
-  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -22,7 +21,6 @@ import {ClearButton} from './ClearButton';
 
 export interface OrderByOperationsProps {
   rootQuery: ASTQuery;
-  segment: ASTSegmentViewDefinition;
   orderBys: ASTOrderByViewOperation[];
 }
 
