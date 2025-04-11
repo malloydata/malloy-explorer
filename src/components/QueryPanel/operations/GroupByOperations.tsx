@@ -13,6 +13,7 @@ import {styles as commonStyles} from '../../styles';
 import {
   ASTGroupByViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {hoverStyles} from './hover.stylex';
@@ -21,17 +22,16 @@ import {addGroupBy} from '../../utils/segment';
 import {OperationActionTitle} from './OperationActionTitle';
 import {FieldHover} from '../FieldHover';
 import FieldToken from '../../FieldToken';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 
 export interface GroupByOperationsProps {
   rootQuery: ASTQuery;
-  view: ViewParent;
+  segment: ASTSegmentViewDefinition;
   groupBys: ASTGroupByViewOperation[];
 }
 
 export function GroupByOperations({
   rootQuery,
-  view,
+  segment,
   groupBys,
 }: GroupByOperationsProps) {
   const {setQuery} = useContext(QueryEditorContext);
@@ -39,7 +39,7 @@ export function GroupByOperations({
     return null;
   }
 
-  const {fields} = getInputSchemaFromViewParent(view);
+  const {fields} = segment.getInputSchema();
 
   return (
     <div>
@@ -47,11 +47,10 @@ export function GroupByOperations({
         title="group by"
         actionTitle="Add group by"
         rootQuery={rootQuery}
-        view={view}
+        segment={segment}
         fields={fields}
         types={['dimension']}
         onClick={(field: Malloy.FieldInfo, path: string[]) => {
-          const segment = view.getOrAddDefaultSegment();
           addGroupBy(rootQuery, segment, field, path, setQuery);
         }}
       />

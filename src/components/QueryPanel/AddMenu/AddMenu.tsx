@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import {useContext, useState} from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
+import {ASTView, ASTQuery} from '@malloydata/malloy-query-builder';
 import * as Popover from '@radix-ui/react-popover';
 import stylex from '@stylexjs/stylex';
 import {Button, Divider, TextInput} from '../../primitives';
@@ -25,17 +25,18 @@ import {FieldList} from './FieldList';
 import {segmentHasLimit, segmentNestNo} from '../../utils/segment';
 import {ValueList} from './ValueList';
 import {SearchIndexResult} from './hooks/useSearch';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 
 export interface AddMenuProps {
   rootQuery: ASTQuery;
-  view: ViewParent;
+  view: ASTView | ASTQuery;
 }
 
 export function AddMenu({rootQuery, view}: AddMenuProps) {
   const [open, setOpen] = useState(false);
   const {setQuery} = useContext(QueryEditorContext);
   const [search, setSearch] = useState('');
+
+  const segment = view.getOrAddDefaultSegment();
 
   return (
     <Popover.Root
@@ -76,11 +77,10 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
           {search ? (
             <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
               <FieldList
-                view={view}
-                fields={getInputSchemaFromViewParent(view).fields}
+                segment={segment}
+                fields={segment.getInputSchema().fields}
                 types={['dimension', 'measure', 'view']}
                 onClick={function (field: FieldInfo, path: string[]): void {
-                  const segment = view.getOrAddDefaultSegment();
                   if (field.kind === 'dimension') {
                     segment.addGroupBy(field.name, path);
                     if (!segmentHasLimit(segment)) {
@@ -106,7 +106,6 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                 onClick={(value: SearchIndexResult) => {
                   const path = value.fieldName.split('.'); // TODO handle escaped .s
                   const name = path.pop() as string;
-                  const segment = view.getOrAddDefaultSegment();
                   segment.addWhere(name, path, {
                     kind: 'string',
                     parsed: {operator: '=', values: [value.fieldValue ?? '∅']},
@@ -117,14 +116,14 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
             </div>
           ) : (
             <>
-              <AddGroupBy rootQuery={rootQuery} view={view} />
-              <AddAggregate rootQuery={rootQuery} view={view} />
-              <AddWhere rootQuery={rootQuery} view={view} />
-              <AddView rootQuery={rootQuery} view={view} />
+              <AddGroupBy rootQuery={rootQuery} segment={segment} />
+              <AddAggregate rootQuery={rootQuery} segment={segment} />
+              <AddWhere rootQuery={rootQuery} segment={segment} />
+              <AddView rootQuery={rootQuery} view={view} segment={segment} />
               <Divider />
-              <AddLimit rootQuery={rootQuery} view={view} />
-              <AddOrderBy rootQuery={rootQuery} view={view} />
-              <AddEmptyNest rootQuery={rootQuery} view={view} />
+              <AddLimit rootQuery={rootQuery} segment={segment} />
+              <AddOrderBy rootQuery={rootQuery} segment={segment} />
+              <AddEmptyNest rootQuery={rootQuery} segment={segment} />
             </>
           )}
         </Popover.Content>

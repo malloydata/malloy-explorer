@@ -6,13 +6,6 @@
  */
 
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {
-  ASTArrowQueryDefinition,
-  ASTSegmentViewDefinition,
-  ASTView,
-} from '@malloydata/malloy-query-builder';
-
-export type ViewParent = ASTArrowQueryDefinition | ASTView;
 
 /**
  *
@@ -56,37 +49,4 @@ export function isIndexView(field: Malloy.FieldInfoWithView) {
   ]);
   // Complete overlap of fields
   return allFields.size === INDEX_FIELDS.length;
-}
-
-export function getViewDefinition(parent: ViewParent) {
-  return parent instanceof ASTArrowQueryDefinition
-    ? parent.view
-    : parent.definition;
-}
-
-export function getInputSchemaFromViewParent(
-  parent: ViewParent
-): Malloy.Schema {
-  const definition = getViewDefinition(parent);
-  return definition.getInputSchema();
-}
-
-export function viewParentHasField(
-  parent: ViewParent,
-  field: Malloy.FieldInfo,
-  path: string[]
-) {
-  const definition = getViewDefinition(parent);
-  if (definition instanceof ASTSegmentViewDefinition) {
-    return definition.hasField(field.name, path);
-  }
-  return false;
-}
-
-export function viewParentDoesNotHaveField(
-  parent: ViewParent,
-  field: Malloy.FieldInfo,
-  path: string[]
-) {
-  return !viewParentHasField(parent, field, path);
 }

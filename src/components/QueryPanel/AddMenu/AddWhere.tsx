@@ -7,25 +7,27 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
+import {
+  ASTQuery,
+  ASTSegmentViewDefinition,
+} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {AddFieldItem} from './AddFieldItem';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 
 export interface AddWhereProps {
   rootQuery: ASTQuery;
-  view: ViewParent;
+  segment: ASTSegmentViewDefinition;
 }
 
-export function AddWhere({rootQuery, view}: AddWhereProps) {
+export function AddWhere({rootQuery, segment}: AddWhereProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const {fields} = getInputSchemaFromViewParent(view);
+  const {fields} = segment.getInputSchema();
 
   return (
     <AddFieldItem
       label="Add filter"
       icon="filter"
-      view={view}
+      segment={segment}
       fields={fields}
       types={['measure', 'dimension']}
       filter={(_segment, field) =>
@@ -33,7 +35,6 @@ export function AddWhere({rootQuery, view}: AddWhereProps) {
         FILTERABLE_TYPES.has(field.type.kind)
       }
       onClick={(field, path) => {
-        const segment = view.getOrAddDefaultSegment();
         if (field.kind === 'dimension' || field.kind === 'measure') {
           if (field.type.kind === 'string_type') {
             segment.addWhere(field.name, path, '-null');

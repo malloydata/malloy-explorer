@@ -8,16 +8,18 @@
 import * as React from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
+import {
+  ASTQuery,
+  ASTSegmentViewDefinition,
+} from '@malloydata/malloy-query-builder';
 import {hoverStyles} from './hover.stylex';
 import {styles as commonStyles} from '../../styles';
 import {FieldMenu} from '../AddMenu/FieldMenu';
 import stylex from '@stylexjs/stylex';
-import {viewParentDoesNotHaveField, ViewParent} from '../../utils/fields';
 
 export interface OperationActionTitleProps {
   rootQuery: ASTQuery;
-  view: ViewParent;
+  segment: ASTSegmentViewDefinition;
   title: string;
   actionTitle: string;
   fields: Malloy.FieldInfo[];
@@ -27,7 +29,7 @@ export interface OperationActionTitleProps {
 
 export function OperationActionTitle({
   actionTitle,
-  view,
+  segment,
   fields,
   title,
   types,
@@ -48,10 +50,12 @@ export function OperationActionTitle({
               alignOffset={-16}
             >
               <FieldMenu
-                view={view}
+                segment={segment}
                 fields={fields}
                 types={types}
-                filter={viewParentDoesNotHaveField}
+                filter={(segment, field, path) =>
+                  !segment.hasField(field.name, path)
+                }
                 onClick={onClick}
               />
             </Popover.PopoverContent>

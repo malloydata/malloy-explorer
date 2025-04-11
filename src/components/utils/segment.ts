@@ -6,7 +6,6 @@ import {
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {ViewParent, getViewDefinition} from './fields';
 
 export function segmentHasLimit(segment: ASTSegmentViewDefinition) {
   return (
@@ -61,14 +60,4 @@ export function addGroupBy(
   }
   segment.addOrderBy(field.name);
   setQuery?.(rootQuery.build());
-}
-
-export function getSegmentIfPresent(
-  parent: ViewParent
-): ASTSegmentViewDefinition | undefined {
-  const definition = getViewDefinition(parent);
-  if (definition instanceof ASTSegmentViewDefinition) {
-    return definition.getOrAddDefaultSegment();
-  }
-  return undefined;
 }
