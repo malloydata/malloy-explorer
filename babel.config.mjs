@@ -29,7 +29,7 @@ export default {
           type: 'commonJS',
           rootDir: __dirname,
         },
-        classNamePrefix: 'mly',
+        // classNamePrefix: 'mly',
       },
     ],
   ],
