@@ -4,6 +4,7 @@ import {
   ASTNestViewOperation,
   ASTOrderByViewOperation,
   ASTQuery,
+  ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {ViewParent, getViewDefinition} from './fields';
@@ -67,7 +68,10 @@ export function getSegmentIfPresent(
   parent: ViewParent
 ): ASTSegmentViewDefinition | undefined {
   const definition = getViewDefinition(parent);
-  if (definition instanceof ASTSegmentViewDefinition) {
+  if (
+    definition instanceof ASTSegmentViewDefinition ||
+    definition instanceof ASTRefinementViewDefinition
+  ) {
     return definition.getOrAddDefaultSegment();
   }
   return undefined;

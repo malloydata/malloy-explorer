@@ -69,6 +69,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
           )}
           <ViewDefinition
             rootQuery={rootQuery}
+            view={query.definition}
             viewDef={query.definition.view}
           />
         </div>

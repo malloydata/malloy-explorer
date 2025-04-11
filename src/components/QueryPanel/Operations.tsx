@@ -24,6 +24,7 @@ import {AggregateOperations} from './operations/AggregateOperations';
 import {OrderByOperations} from './operations/OrderByOperations';
 import {NestOperations} from './operations/NestOperation';
 import stylex from '@stylexjs/stylex';
+import {ViewParent} from '../utils/fields';
 
 const operationStyles = stylex.create({
   indent: {
@@ -34,10 +35,11 @@ const operationStyles = stylex.create({
 
 export interface OperationsProps {
   rootQuery: ASTQuery;
+  view: ViewParent;
   viewDef: ASTViewDefinition;
 }
 
-export function Operations({rootQuery, viewDef}: OperationsProps) {
+export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   const groupBys: ASTGroupByViewOperation[] = [];
   const aggregates: ASTAggregateViewOperation[] = [];
   const wheres: ASTWhereViewOperation[] = [];
@@ -50,7 +52,6 @@ export function Operations({rootQuery, viewDef}: OperationsProps) {
   }
 
   const segment = viewDef;
-  const view = viewDef.parent.as.View();
 
   segment.operations.items.forEach(operation => {
     if (operation instanceof ASTGroupByViewOperation) {
