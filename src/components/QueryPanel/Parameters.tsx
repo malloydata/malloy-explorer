@@ -70,6 +70,8 @@ export function Parameters({rootQuery}: ParametersProps) {
 const styles = stylex.create({
   content: {
     display: 'flex',
-    paddingLeft: '12px',
+    flexDirection: 'column',
+    gap: '4px',
+    paddingLeft: '16px',
   },
 });
