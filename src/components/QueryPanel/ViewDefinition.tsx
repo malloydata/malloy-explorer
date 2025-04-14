@@ -16,9 +16,9 @@ import {
   ASTSegmentViewDefinition,
   ASTViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {Button, Icon, IconType} from '../primitives';
+import {Button, Icon} from '../primitives';
 import ViewAttributeTable from '../ResultPanel/ViewAttributeTable';
-import {JSX, useState} from 'react';
+import {useState} from 'react';
 import {textColors} from '../primitives/colors.stylex';
 import {ViewParent} from '../utils/fields';
 
@@ -70,17 +70,15 @@ function CollapsingView({viewDef}: CollapsingViewProps) {
     <div
       {...stylex.props(styles.view, collapsed ? styles.viewCollapsed : null)}
     >
-      <Header
-        icon="query"
-        title={viewDef.name}
-        rightControls={
-          <Button
-            icon={collapsed ? 'chevronRight' : 'chevronDown'}
-            onClick={() => setCollapsed(!collapsed)}
-            size="compact"
-          />
-        }
-      />
+      <div {...stylex.props(styles.header)}>
+        <Icon name="query" color="purple" />
+        <div {...stylex.props(styles.headerTitle)}>{viewDef.name}</div>
+        <Button
+          icon={collapsed ? 'chevronRight' : 'chevronDown'}
+          onClick={() => setCollapsed(!collapsed)}
+          size="compact"
+        />
+      </div>
       {!collapsed && (
         <ViewAttributeTable
           viewInfo={viewDef.getViewInfo()}
@@ -91,32 +89,15 @@ function CollapsingView({viewDef}: CollapsingViewProps) {
   );
 }
 
-interface HeaderProps {
-  icon: IconType;
-  title: string;
-  hoverControls?: JSX.Element;
-  rightControls?: JSX.Element;
-}
-
-function Header({icon, title, hoverControls, rightControls}: HeaderProps) {
-  return (
-    <div {...stylex.props(styles.header)}>
-      <Icon name={icon} color="purple" />
-      <div>{title}</div>
-      <div {...stylex.props(styles.spacer)} />
-      <div>{hoverControls}</div>
-      <div>{rightControls}</div>
-    </div>
-  );
-}
-
 const styles = stylex.create({
   view: {
     display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     borderRadius: '4px',
     background: 'rgba(230, 235, 239, 1)',
     height: 'auto',
-    flexDirection: 'column',
     paddingBottom: 8,
     paddingLeft: 8,
     paddingRight: 8,
@@ -128,13 +109,12 @@ const styles = stylex.create({
     padding: 4,
   },
   header: {
-    display: 'inline-flex',
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridTemplateColumns: 'auto 1fr auto',
     color: textColors.purple,
     alignItems: 'center',
-    justifyContent: 'center',
-    height: '20px',
-    paddingTop: 4,
-    paddingBottom: 4,
+    justifyContent: 'start',
     gap: 8,
     borderRadius: '4px',
     borderWidth: 0,
@@ -143,8 +123,10 @@ const styles = stylex.create({
     background: 'rgba(230, 235, 239, 1)',
     width: '100%',
   },
-  spacer: {
-    flexGrow: 1,
+  headerTitle: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   preview: {
     height: 'auto',
