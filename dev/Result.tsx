@@ -8,7 +8,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {createRoot} from 'react-dom/client';
-import {ResultPanel} from '../src';
+import {MalloyExplorerProvider, ResultPanel} from '../src';
 import {modelInfo, result} from './sample_models/example_model';
 import {SubmittedQuery} from '../src/components/ResultPanel/SubmittedQuery';
 import {Button} from '../src/components/primitives';
@@ -33,24 +33,31 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <div style={{boxSizing: 'border-box', padding: '8px', height: '100vh'}}>
-        <ResultPanel
-          source={source}
-          draftQuery={draftQuery}
-          setDraftQuery={q => setDraftQuery(q)}
-          submittedQuery={isRun ? submitted : undefined}
-          options={{
-            showRawQuery: true,
-            debugOptions: {
-              debuggers: ['one', 'two'],
-              onDebugQuery: (a, b) => {
-                alert(`Callback with:\n${JSON.stringify(a)} \nusing "${b}"`);
+      <MalloyExplorerProvider
+        source={source}
+        query={draftQuery}
+        setQuery={() => {}}
+        topValues={[]}
+      >
+        <div style={{boxSizing: 'border-box', padding: '8px', height: '100vh'}}>
+          <ResultPanel
+            source={source}
+            draftQuery={draftQuery}
+            setDraftQuery={q => setDraftQuery(q)}
+            submittedQuery={isRun ? submitted : undefined}
+            options={{
+              showRawQuery: true,
+              debugOptions: {
+                debuggers: ['one', 'two'],
+                onDebugQuery: (a, b) => {
+                  alert(`Callback with:\n${JSON.stringify(a)} \nusing "${b}"`);
+                },
               },
-            },
-          }}
-        />
-      </div>
-      <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
+            }}
+          />
+        </div>
+        <Button label="Toggle Query Ran" onClick={() => setIsRun(p => !p)} />
+      </MalloyExplorerProvider>
     </React.StrictMode>
   );
 };
