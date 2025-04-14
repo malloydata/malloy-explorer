@@ -10,6 +10,7 @@ import {useContext} from 'react';
 import {
   ASTQuery,
   ASTWhereViewOperation,
+  ASTHavingViewOperation,
   ParsedFilter,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
@@ -25,15 +26,15 @@ import {NumberFilterToken} from '../../filters/NumberFilterToken';
 import {DateTimeFilterToken} from '../../filters/DateTimeFilterToken';
 import {ErrorElement} from '../../ErrorElement';
 
-export interface WhereOperationsProps {
+export interface FilterOperationsProps {
   rootQuery: ASTQuery;
-  wheres: ASTWhereViewOperation[];
+  filters: Array<ASTWhereViewOperation | ASTHavingViewOperation>;
 }
 
-export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
+export function FilterOperations({rootQuery, filters}: FilterOperationsProps) {
   const {setQuery} = useContext(QueryEditorContext);
 
-  if (wheres.length === 0) {
+  if (filters.length === 0) {
     return null;
   }
 
@@ -41,7 +42,7 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
     <div>
       <div {...stylex.props(styles.title)}>filter by</div>
       <div {...stylex.props(styles.tokenContainer)}>
-        {wheres.map((where, key) => {
+        {filters.map((filterOperation, key) => {
           return (
             <ErrorElement
               key={key}
@@ -50,14 +51,17 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
                   Invalid filter
                   <ClearButton
                     onClick={() => {
-                      where.delete();
+                      filterOperation.delete();
                       setQuery?.(rootQuery.build());
                     }}
                   />
                 </div>
               }
             >
-              <SingleWhereOperation where={where} rootQuery={rootQuery} />
+              <SingleFilterOperation
+                filterOperation={filterOperation}
+                rootQuery={rootQuery}
+              />
             </ErrorElement>
           );
         })}
@@ -66,12 +70,15 @@ export function WhereOperations({rootQuery, wheres}: WhereOperationsProps) {
   );
 }
 
-interface SingleWhereOperationProps {
+interface SingleFilterOperationProps {
   rootQuery: ASTQuery;
-  where: ASTWhereViewOperation;
+  filterOperation: ASTWhereViewOperation | ASTHavingViewOperation;
 }
-function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
-  const {fieldReference, filterString} = where.filter;
+function SingleFilterOperation({
+  rootQuery,
+  filterOperation,
+}: SingleFilterOperationProps) {
+  const {fieldReference, filterString} = filterOperation.filter;
   const fieldInfo = fieldReference.getFieldInfo();
   const {setQuery} = useContext(QueryEditorContext);
 
@@ -81,7 +88,7 @@ function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
 
   const icon = atomicTypeToIcon(fieldInfo.type.kind);
   const color = fieldKindToColor(fieldInfo.kind);
-  const filter = where.filter.getFilter();
+  const filter = filterOperation.filter.getFilter();
 
   let rhsToken: React.ReactElement | null = null;
 
@@ -89,10 +96,10 @@ function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
     rhsToken = (
       <StringFilterToken
         fieldInfo={fieldInfo}
-        path={where.filter.fieldReference.path ?? []}
+        path={filterOperation.filter.fieldReference.path ?? []}
         filter={filter.parsed}
         setFilter={filter => {
-          where.filter.setFilter({kind: 'string', parsed: filter});
+          filterOperation.filter.setFilter({kind: 'string', parsed: filter});
           setQuery?.(rootQuery.build());
         }}
       />
@@ -105,7 +112,7 @@ function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
         fieldInfo={fieldInfo}
         filter={filter.parsed}
         setFilter={filter => {
-          where.filter.setFilter({kind: 'boolean', parsed: filter});
+          filterOperation.filter.setFilter({kind: 'boolean', parsed: filter});
           setQuery?.(rootQuery.build());
         }}
       />
@@ -117,7 +124,7 @@ function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
         fieldInfo={fieldInfo}
         filter={filter.parsed}
         setFilter={filter => {
-          where.filter.setFilter({kind: 'number', parsed: filter});
+          filterOperation.filter.setFilter({kind: 'number', parsed: filter});
           setQuery?.(rootQuery.build());
         }}
       />
@@ -129,7 +136,7 @@ function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
         fieldInfo={fieldInfo}
         filter={filter.parsed}
         setFilter={filter => {
-          where.filter.setFilter({kind: 'date', parsed: filter});
+          filterOperation.filter.setFilter({kind: 'date', parsed: filter});
           setQuery?.(rootQuery.build());
         }}
       />
@@ -141,7 +148,7 @@ function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
         fieldInfo={fieldInfo}
         filter={filter.parsed}
         setFilter={filter => {
-          where.filter.setFilter({kind: 'timestamp', parsed: filter});
+          filterOperation.filter.setFilter({kind: 'timestamp', parsed: filter});
           setQuery?.(rootQuery.build());
         }}
       />
@@ -166,7 +173,7 @@ function SingleWhereOperation({rootQuery, where}: SingleWhereOperationProps) {
       <div {...stylex.props(hoverStyles.hoverActions)}>
         <ClearButton
           onClick={() => {
-            where.delete();
+            filterOperation.delete();
             setQuery?.(rootQuery.build());
           }}
         />

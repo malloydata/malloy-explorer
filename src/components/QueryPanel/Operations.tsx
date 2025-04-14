@@ -16,9 +16,10 @@ import {
   ASTSegmentViewDefinition,
   ASTViewDefinition,
   ASTWhereViewOperation,
+  ASTHavingViewOperation,
 } from '@malloydata/malloy-query-builder';
 import {GroupByOperations} from './operations/GroupByOperations';
-import {WhereOperations} from './operations/WhereOperations';
+import {FilterOperations} from './operations/FilterOperations';
 import {LimitOperation} from './operations/LimitOperation';
 import {AggregateOperations} from './operations/AggregateOperations';
 import {OrderByOperations} from './operations/OrderByOperations';
@@ -42,7 +43,7 @@ export interface OperationsProps {
 export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   const groupBys: ASTGroupByViewOperation[] = [];
   const aggregates: ASTAggregateViewOperation[] = [];
-  const wheres: ASTWhereViewOperation[] = [];
+  const filters: Array<ASTWhereViewOperation | ASTHavingViewOperation> = [];
   const orderBys: ASTOrderByViewOperation[] = [];
   const nests: ASTNestViewOperation[] = [];
   let limit: ASTLimitViewOperation | undefined;
@@ -59,7 +60,9 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
     } else if (operation instanceof ASTAggregateViewOperation) {
       aggregates.push(operation);
     } else if (operation instanceof ASTWhereViewOperation) {
-      wheres.push(operation);
+      filters.push(operation);
+    } else if (operation instanceof ASTHavingViewOperation) {
+      filters.push(operation);
     } else if (operation instanceof ASTOrderByViewOperation) {
       orderBys.push(operation);
     } else if (operation instanceof ASTNestViewOperation) {
@@ -81,7 +84,7 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
         view={view}
         aggregates={aggregates}
       />
-      <WhereOperations rootQuery={rootQuery} wheres={wheres} />
+      <FilterOperations rootQuery={rootQuery} filters={filters} />
       <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
       <NestOperations rootQuery={rootQuery} nests={nests} />
       <LimitOperation rootQuery={rootQuery} limit={limit} />
