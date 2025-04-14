@@ -5,6 +5,7 @@ import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {getNestName} from './utils';
 import {DropdownMenuItem} from '../primitives';
+import {OpenFilterModalCallback} from '../filters/hooks/useFilterModal';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
@@ -13,6 +14,7 @@ interface OperationDropdownMenuItemsProps {
   field: FieldInfo;
   path: string[];
   withEmptyNest?: boolean;
+  openFilterModal: OpenFilterModalCallback;
 }
 
 export function OperationDropdownMenuItems({
@@ -20,6 +22,7 @@ export function OperationDropdownMenuItems({
   field,
   path,
   withEmptyNest = false,
+  openFilterModal,
 }: OperationDropdownMenuItemsProps) {
   const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
 
@@ -43,31 +46,7 @@ export function OperationDropdownMenuItems({
       } else if (operation === 'aggregate' && isAggregateAllowed) {
         currentSegment?.addAggregate(field.name, path);
       } else if (operation === 'filter' && isFilterAllowed) {
-        if (field.kind === 'dimension') {
-          if (field.type.kind === 'string_type') {
-            currentSegment?.addWhere(field.name, path, '-null');
-          } else if (field.type.kind === 'boolean_type') {
-            currentSegment?.addWhere(field.name, path, 'true');
-          } else if (field.type.kind === 'number_type') {
-            currentSegment?.addWhere(field.name, path, '0');
-          } else if (field.type.kind === 'date_type') {
-            currentSegment?.addWhere(field.name, path, 'today');
-          } else if (field.type.kind === 'timestamp_type') {
-            currentSegment?.addWhere(field.name, path, 'now');
-          }
-        } else {
-          if (field.type.kind === 'string_type') {
-            currentSegment?.addHaving(field.name, path, '-null');
-          } else if (field.type.kind === 'boolean_type') {
-            currentSegment?.addHaving(field.name, path, 'true');
-          } else if (field.type.kind === 'number_type') {
-            currentSegment?.addHaving(field.name, path, '0');
-          } else if (field.type.kind === 'date_type') {
-            currentSegment?.addHaving(field.name, path, 'today');
-          } else if (field.type.kind === 'timestamp_type') {
-            currentSegment?.addHaving(field.name, path, 'now');
-          }
-        }
+        openFilterModal({fieldInfo: field, path});
       } else if (operation === 'orderBy' && isOrderByAllowed) {
         currentSegment?.addOrderBy(field.name, 'asc');
       }

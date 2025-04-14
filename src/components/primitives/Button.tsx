@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import stylex from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {IconType} from './utils/icon';
 import Icon from './Icon';
 import {iconColors, textColors} from './colors.stylex';
@@ -63,6 +63,11 @@ interface ButtonProps extends React.ComponentProps<'button'> {
    * Whether the button is disabled.
    */
   isDisabled?: boolean;
+
+  /**
+   * Custom styling
+   */
+  customStyle?: StyleXStyles;
 }
 
 export default function Button({
@@ -73,11 +78,17 @@ export default function Button({
   tooltip,
   onClick,
   isDisabled = false,
+  customStyle,
   ...props
 }: ButtonProps) {
   const button = (
     <button
-      {...stylex.props(styles.main, colorVariants[variant], sizeVariants[size])}
+      {...stylex.props(
+        styles.main,
+        colorVariants[variant],
+        sizeVariants[size],
+        customStyle
+      )}
       {...(onClick && {
         onClick: e => {
           e.preventDefault();

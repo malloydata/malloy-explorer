@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
+import {useCallback, useContext} from 'react';
 import {
   ASTQuery,
   ASTWhereViewOperation,
@@ -16,15 +16,12 @@ import {
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {Token, TokenGroup} from '../../primitives';
+import {Token} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
-import {atomicTypeToIcon, fieldKindToColor} from '../../utils/icon';
+import {atomicTypeToIcon} from '../../utils/icon';
 import {ClearButton} from './ClearButton';
-import {StringFilterToken} from '../../filters/StringFilterToken';
-import {BooleanFilterToken} from '../../filters/BooleanFilterToken';
-import {NumberFilterToken} from '../../filters/NumberFilterToken';
-import {DateTimeFilterToken} from '../../filters/DateTimeFilterToken';
 import {ErrorElement} from '../../ErrorElement';
+import {useFilterPopup} from '../../filters/hooks/useFilterPopup';
 
 export interface FilterOperationsProps {
   rootQuery: ASTQuery;
@@ -79,97 +76,30 @@ function SingleFilterOperation({
   filterOperation,
 }: SingleFilterOperationProps) {
   const {fieldReference, filterString} = filterOperation.filter;
+  const filter = filterOperation.filter.getFilter();
   const fieldInfo = fieldReference.getFieldInfo();
   const {setQuery} = useContext(QueryEditorContext);
-
   if (fieldInfo.kind !== 'dimension' && fieldInfo.kind !== 'measure') {
-    return null;
+    throw new Error(`Invalid filter field kind: ${fieldInfo.kind}`);
   }
+  const setFilter = useCallback(
+    (filter: ParsedFilter) => {
+      filterOperation.filter.setFilter(filter);
+      setQuery?.(rootQuery.build());
+    },
+    [filterOperation.filter, rootQuery, setQuery]
+  );
+  const {FilterPopup} = useFilterPopup(fieldInfo, filter, setFilter);
 
   const icon = atomicTypeToIcon(fieldInfo.type.kind);
-  const color = fieldKindToColor(fieldInfo.kind);
-  const filter = filterOperation.filter.getFilter();
-
-  let rhsToken: React.ReactElement | null = null;
-
-  if (filter.kind === 'string') {
-    rhsToken = (
-      <StringFilterToken
-        fieldInfo={fieldInfo}
-        path={filterOperation.filter.fieldReference.path ?? []}
-        filter={filter.parsed}
-        setFilter={filter => {
-          filterOperation.filter.setFilter({kind: 'string', parsed: filter});
-          setQuery?.(rootQuery.build());
-        }}
-      />
-    );
-  }
-
-  if (filter.kind === 'boolean' && filter.parsed) {
-    rhsToken = (
-      <BooleanFilterToken
-        fieldInfo={fieldInfo}
-        filter={filter.parsed}
-        setFilter={filter => {
-          filterOperation.filter.setFilter({kind: 'boolean', parsed: filter});
-          setQuery?.(rootQuery.build());
-        }}
-      />
-    );
-  }
-  if (filter.kind === 'number' && filter.parsed) {
-    rhsToken = (
-      <NumberFilterToken
-        fieldInfo={fieldInfo}
-        filter={filter.parsed}
-        setFilter={filter => {
-          filterOperation.filter.setFilter({kind: 'number', parsed: filter});
-          setQuery?.(rootQuery.build());
-        }}
-      />
-    );
-  }
-  if (filter.kind === 'date' && filter.parsed) {
-    rhsToken = (
-      <DateTimeFilterToken
-        fieldInfo={fieldInfo}
-        filter={filter.parsed}
-        setFilter={filter => {
-          filterOperation.filter.setFilter({kind: 'date', parsed: filter});
-          setQuery?.(rootQuery.build());
-        }}
-      />
-    );
-  }
-  if (filter.kind === 'timestamp' && filter.parsed) {
-    rhsToken = (
-      <DateTimeFilterToken
-        fieldInfo={fieldInfo}
-        filter={filter.parsed}
-        setFilter={filter => {
-          filterOperation.filter.setFilter({kind: 'timestamp', parsed: filter});
-          setQuery?.(rootQuery.build());
-        }}
-      />
-    );
-  }
 
   const {op, value} = parsedToLabels(filter, filterString);
 
-  if (!rhsToken) {
-    rhsToken = (
-      <TokenGroup color={color}>
-        <Token icon={icon} label={fieldInfo.name} />
-        <Token label={op} />
-        <Token label={value} />
-      </TokenGroup>
-    );
-  }
+  const label = `${fieldInfo.name} ${op} ${value}`;
 
   return (
     <div {...stylex.props(hoverStyles.main)}>
-      {rhsToken}
+      <FilterPopup trigger={<Token icon={icon} color="cyan" label={label} />} />
       <div {...stylex.props(hoverStyles.hoverActions)}>
         <ClearButton
           onClick={() => {

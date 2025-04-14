@@ -562,6 +562,12 @@ export const modelInfo: Malloy.ModelInfo = {
           },
           {
             kind: 'dimension',
+            name: 'private',
+            type: {kind: 'boolean_type'},
+            annotations: undefined,
+          },
+          {
+            kind: 'dimension',
             name: 'flight_num',
             type: {kind: 'string_type'},
             annotations: undefined,

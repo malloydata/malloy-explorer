@@ -31,7 +31,7 @@ export default function ResizeBar({
 
     const handleMouseMove = (event: MouseEvent) => {
       const newWidth = initialWidth + (event.clientX - initialMousePosition);
-      console.info('newWidth: ' + newWidth);
+      // console.info('newWidth: ' + newWidth);
       onWidthChange(Math.max(newWidth, minWidth));
     };
 

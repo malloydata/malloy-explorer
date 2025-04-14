@@ -11,6 +11,7 @@ import {
   DropdownSubMenuItem,
 } from '../primitives';
 import {getNestName} from './utils';
+import {useFilterModal} from '../filters/hooks/useFilterModal';
 
 interface NestFieldDropdownMenuProps {
   segment?: ASTSegmentViewDefinition;
@@ -28,6 +29,16 @@ export function NestFieldDropdownMenu({
   onOpenChange,
 }: NestFieldDropdownMenuProps) {
   const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
+  const {FilterModal, openFilterModal} = useFilterModal(
+    (field, path: string[], filter) => {
+      if (field.kind === 'dimension') {
+        segment?.addWhere(field.name, path, filter);
+      } else {
+        segment?.addHaving(field.name, path, filter);
+      }
+      setQuery?.(rootQuery?.build());
+    }
+  );
 
   const nestOperations = useNestOperations(rootQuery);
 
@@ -38,44 +49,49 @@ export function NestFieldDropdownMenu({
   };
 
   return (
-    <DropdownMenu trigger={trigger} onOpenChange={onOpenChange}>
-      {nestOperations.length === 0 ? (
-        <>
-          <DropdownMenuLabel label={'Add to new nested query as...'} />
-          <OperationDropdownMenuItems
-            segment={segment}
-            field={field}
-            path={path}
-            withEmptyNest={true}
-          />
-        </>
-      ) : (
-        <>
-          <DropdownMenuLabel label={'Add to nested query...'} />
-          {nestOperations.map((operation, index) => {
-            return field.kind === 'view' ? (
-              <DropdownMenuItem
-                key={index}
-                label={operation.name}
-                onClick={() => nestViewWithinNestQuery(operation)}
-              />
-            ) : (
-              <DropdownSubMenuItem key={index} label={operation.name}>
-                <>
-                  <DropdownMenuLabel
-                    label={`Add to ${operation.name} query as...`}
-                  />
-                  <OperationDropdownMenuItems
-                    segment={operation.view.getOrAddDefaultSegment()}
-                    field={field}
-                    path={path}
-                  />
-                </>
-              </DropdownSubMenuItem>
-            );
-          })}
-        </>
-      )}
-    </DropdownMenu>
+    <>
+      <DropdownMenu trigger={trigger} onOpenChange={onOpenChange}>
+        {nestOperations.length === 0 ? (
+          <>
+            <DropdownMenuLabel label={'Add to new nested query as...'} />
+            <OperationDropdownMenuItems
+              segment={segment}
+              field={field}
+              path={path}
+              withEmptyNest={true}
+              openFilterModal={openFilterModal}
+            />
+          </>
+        ) : (
+          <>
+            <DropdownMenuLabel label={'Add to nested query...'} />
+            {nestOperations.map((operation, index) => {
+              return field.kind === 'view' ? (
+                <DropdownMenuItem
+                  key={index}
+                  label={operation.name}
+                  onClick={() => nestViewWithinNestQuery(operation)}
+                />
+              ) : (
+                <DropdownSubMenuItem key={index} label={operation.name}>
+                  <>
+                    <DropdownMenuLabel
+                      label={`Add to ${operation.name} query as...`}
+                    />
+                    <OperationDropdownMenuItems
+                      segment={operation.view.getOrAddDefaultSegment()}
+                      field={field}
+                      path={path}
+                      openFilterModal={openFilterModal}
+                    />
+                  </>
+                </DropdownSubMenuItem>
+              );
+            })}
+          </>
+        )}
+      </DropdownMenu>
+      <FilterModal />
+    </>
   );
 }

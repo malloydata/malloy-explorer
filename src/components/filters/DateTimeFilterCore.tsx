@@ -6,7 +6,6 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   Null,
   TemporalFilter,
@@ -18,8 +17,7 @@ import {
   NowMoment,
   TemporalLiteral,
 } from '@malloydata/malloy-filter';
-import {EditableToken, SelectorToken, Token, TokenGroup} from '../primitives';
-import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
+import {EditableToken, SelectorToken} from '../primitives';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
 import DatePicker from '../primitives/DatePicker';
@@ -83,16 +81,16 @@ function extractDateFromMoment(momentObj?: Moment): Date {
   return new Date();
 }
 
-export interface DateTimeFilterBuilderProps {
-  fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure;
+export interface DateTimeFilterCoreProps {
   filter: TemporalFilter | null;
   setFilter: (filter: TemporalFilter) => void;
+  isDateTime: boolean;
 }
 
-export const DateTimeFilterToken: React.FC<DateTimeFilterBuilderProps> = ({
-  fieldInfo,
+export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
   filter,
   setFilter,
+  isDateTime,
 }) => {
   // Default filter if none provided
   filter ??= {
@@ -116,44 +114,45 @@ export const DateTimeFilterToken: React.FC<DateTimeFilterBuilderProps> = ({
 
   const type = typeFromFilter(currentFilter);
 
-  // Determine if we're dealing with a date or a datetime
-  const isDateTime = fieldInfo.type.kind === 'timestamp_type';
   const maxLevel = isDateTime ? 'second' : 'day';
 
-  const typeDropdown = (
-    <SelectorToken
-      value={type}
-      onChange={changeType}
-      items={[
-        {value: 'is_equal_to', label: 'is'},
-        {value: 'is_before', label: 'is before'},
-        {value: 'is_after', label: 'is after'},
-        {value: 'is_between', label: 'is between'},
-        {value: 'is_null', label: 'is null'},
-        {value: 'is_not_null', label: 'is not null'},
-      ]}
-    />
+  return (
+    <>
+      <SelectorToken
+        value={type}
+        onChange={changeType}
+        items={[
+          {value: 'is_equal_to', label: 'is'},
+          {value: 'is_before', label: 'is before'},
+          {value: 'is_after', label: 'is after'},
+          {value: 'is_between', label: 'is between'},
+          {value: 'is_null', label: 'is null'},
+          {value: 'is_not_null', label: 'is not null'},
+        ]}
+      />
+      {getEditor(currentFilter, updateFilter, maxLevel)}
+    </>
   );
+};
 
-  const icon = atomicTypeToIcon(fieldInfo.type.kind);
-  const color = fieldKindToColor(fieldInfo.kind);
+// Variables for case blocks
+let inDate: Date;
+let beforeDate: Date;
+let afterDate: Date;
+let fromDate: Date;
+let toDate: Date;
 
-  let editor = <span></span>;
-
-  // Variables for case blocks
-  let inDate: Date;
-  let beforeDate: Date;
-  let afterDate: Date;
-  let fromDate: Date;
-  let toDate: Date;
-
+function getEditor(
+  currentFilter: TemporalFilter,
+  updateFilter: (filter: TemporalFilter) => void,
+  maxLevel: 'day' | 'second'
+) {
   switch (currentFilter.operator) {
     case 'in': {
       const inMoment = currentFilter as InMoment;
       inDate = extractDateFromMoment(inMoment.in);
-      editor = (
+      return (
         <DateTimeEditor
-          _color={color}
           value={inDate}
           setValue={newDate => {
             updateFilter({
@@ -161,17 +160,15 @@ export const DateTimeFilterToken: React.FC<DateTimeFilterBuilderProps> = ({
               in: createTemporalLiteral(newDate),
             } as InMoment);
           }}
-          maxLevel={maxLevel as 'day' | 'second'}
+          maxLevel={maxLevel}
         />
       );
-      break;
     }
     case 'before': {
       const beforeMoment = currentFilter as Before;
       beforeDate = extractDateFromMoment(beforeMoment.before);
-      editor = (
+      return (
         <DateTimeEditor
-          _color={color}
           value={beforeDate}
           setValue={newDate => {
             updateFilter({
@@ -179,17 +176,15 @@ export const DateTimeFilterToken: React.FC<DateTimeFilterBuilderProps> = ({
               before: createTemporalLiteral(newDate),
             } as Before);
           }}
-          maxLevel={maxLevel as 'day' | 'second'}
+          maxLevel={maxLevel}
         />
       );
-      break;
     }
     case 'after': {
       const afterMoment = currentFilter as After;
       afterDate = extractDateFromMoment(afterMoment.after);
-      editor = (
+      return (
         <DateTimeEditor
-          _color={color}
           value={afterDate}
           setValue={newDate => {
             updateFilter({
@@ -197,18 +192,16 @@ export const DateTimeFilterToken: React.FC<DateTimeFilterBuilderProps> = ({
               after: createTemporalLiteral(newDate),
             } as After);
           }}
-          maxLevel={maxLevel as 'day' | 'second'}
+          maxLevel={maxLevel}
         />
       );
-      break;
     }
     case 'to': {
       const toMoment = currentFilter as To;
       fromDate = extractDateFromMoment(toMoment.fromMoment);
       toDate = extractDateFromMoment(toMoment.toMoment);
-      editor = (
+      return (
         <DateTimeRangeEditor
-          _color={color}
           fromValue={fromDate}
           toValue={toDate}
           setFromValue={newFromDate => {
@@ -226,18 +219,10 @@ export const DateTimeFilterToken: React.FC<DateTimeFilterBuilderProps> = ({
           maxLevel={maxLevel as 'day' | 'second'}
         />
       );
-      break;
     }
   }
-
-  return (
-    <TokenGroup color={color}>
-      <Token icon={icon} label={fieldInfo.name} />
-      {typeDropdown}
-      {editor}
-    </TokenGroup>
-  );
-};
+  return null;
+}
 
 interface ClickableDateTokenProps {
   color?: TokenColor;
