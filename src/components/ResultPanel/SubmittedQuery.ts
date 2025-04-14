@@ -1,5 +1,4 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {ExplorerError} from '../../types/error';
 
 export const EXECUTION_STATES = {
   compiling: 'Compiling',
@@ -27,7 +26,21 @@ export type RunStats = {
 };
 
 export type QueryResponse = {
-  error?: ExplorerError;
+  /**
+   * @deprecated use 'messages'
+   */
+  error?: Message;
   result?: Malloy.Result;
   runStats?: RunStats;
+  messages?: Array<Message>;
+};
+
+export type SeverityLevel = 'INFO' | 'DEBUG' | 'WARN' | 'ERROR' | 'FATAL';
+
+export type Message = {
+  severity: SeverityLevel;
+  title: string;
+  description?: string;
+  content?: string;
+  customRenderer?: React.ReactNode;
 };

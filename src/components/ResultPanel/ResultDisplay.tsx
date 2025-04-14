@@ -12,6 +12,7 @@ import {Banner, Button, ScrollableArea, Spinner} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {
   EXECUTION_STATES,
+  Message,
   QueryExecutionState,
   QueryResponse,
   SubmittedQuery,
@@ -20,7 +21,7 @@ import * as render from '@malloydata/render';
 import DOMElement from '../primitives/DOMElement';
 
 import '@malloydata/render/webcomponent';
-import {BannerProps, Variant} from '../primitives/Banner';
+import {Variant} from '../primitives/Banner';
 
 export interface ResultDisplayProps {
   query: SubmittedQuery;
@@ -65,50 +66,74 @@ interface ResponseProps {
 }
 
 function ResponseDisplay({response}: ResponseProps) {
-  let bannerProps: BannerProps | undefined = undefined;
+  let messageComponent = null;
 
   if (!response) {
-    bannerProps = {
-      title: 'Empty Response',
-      variant: 'critical',
-    };
-  } else if (response.error && !response.error.customRenderer) {
-    const e = response.error;
-    let variant: Variant;
-    switch (e.severity) {
-      case 'DEBUG':
-      case 'INFO':
-        variant = 'info';
-        break;
-      case 'WARN':
-        variant = 'warn';
-        break;
-      case 'ERROR':
-      case 'FATAL':
-        variant = 'critical';
-        break;
-      default:
-        variant = 'critical';
-    }
-
-    bannerProps = {
-      title: e.title,
-      description: e.description,
-      children: e.content,
-      variant,
-    };
+    messageComponent = <Banner title="Empty Response" variant="critical" />;
+  } else if (response.error || response.messages) {
+    messageComponent = (
+      <Banners
+        messages={[
+          ...(response.error ? [response.error] : []),
+          ...(response.messages ? response.messages : []),
+        ]}
+      />
+    );
   } else if (!response.result) {
-    bannerProps = {
-      title: 'Empty Result',
-      variant: 'critical',
-    };
+    messageComponent = <Banner title="Empty Result" variant="critical" />;
   }
 
   return (
     <div>
-      {bannerProps && <Banner {...bannerProps} />}
-      {response?.error?.customRenderer}
+      {messageComponent}
       {response?.result && <RenderedResult result={response.result} />}
+    </div>
+  );
+}
+
+interface BannersProps {
+  messages: Array<Message>;
+}
+
+function Banners({messages}: BannersProps) {
+  return (
+    <div>
+      {messages.map(m => {
+        let banner = null;
+
+        if (m.customRenderer) {
+          banner = m.customRenderer;
+        } else {
+          let variant: Variant;
+          switch (m.severity) {
+            case 'DEBUG':
+            case 'INFO':
+              variant = 'info';
+              break;
+            case 'WARN':
+              variant = 'warn';
+              break;
+            case 'ERROR':
+            case 'FATAL':
+              variant = 'critical';
+              break;
+            default:
+              variant = 'critical';
+          }
+
+          banner = (
+            <Banner
+              title={m.title}
+              description={m.description}
+              variant={variant}
+            >
+              {m.content}
+            </Banner>
+          );
+        }
+
+        return <div key={m.title}>{banner}</div>;
+      })}
     </div>
   );
 }
