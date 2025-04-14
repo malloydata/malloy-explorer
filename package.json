@@ -67,8 +67,8 @@
     "@stylexjs/stylex": "^0.10.1",
     "assert": "^2.1.0",
     "moment": "^2.30.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": ">= 19.0.0",
+    "react-dom": ">= 19.0.0"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.26.3",
@@ -98,12 +98,12 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "peerDependencies": {
+    "@malloydata/malloy-filter": "0.0.261",
+    "@malloydata/malloy-interfaces": "0.0.261",
+    "@malloydata/malloy-query-builder": "0.0.261",
+    "@malloydata/malloy-tag": "0.0.261",
+    "@malloydata/render": "0.0.261",
     "react": ">= 19.0.0",
-    "react-dom": ">= 19.0.0",
-    "@malloydata/malloy-filter": ">= 0.0.257",
-    "@malloydata/malloy-interfaces": ">= 0.0.257",
-    "@malloydata/malloy-query-builder": ">= 0.0.257",
-    "@malloydata/malloy-tag": ">= 0.0.257",
-    "@malloydata/render": ">= 0.0.257"
+    "react-dom": ">= 19.0.0"
   }
 }

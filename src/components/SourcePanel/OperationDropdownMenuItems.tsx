@@ -43,16 +43,30 @@ export function OperationDropdownMenuItems({
       } else if (operation === 'aggregate' && isAggregateAllowed) {
         currentSegment?.addAggregate(field.name, path);
       } else if (operation === 'filter' && isFilterAllowed) {
-        if (field.type.kind === 'string_type') {
-          currentSegment?.addWhere(field.name, path, '-null');
-        } else if (field.type.kind === 'boolean_type') {
-          currentSegment?.addWhere(field.name, path, 'true');
-        } else if (field.type.kind === 'number_type') {
-          currentSegment?.addWhere(field.name, path, '0');
-        } else if (field.type.kind === 'date_type') {
-          currentSegment?.addWhere(field.name, path, 'today');
-        } else if (field.type.kind === 'timestamp_type') {
-          currentSegment?.addWhere(field.name, path, 'now');
+        if (field.kind === 'dimension') {
+          if (field.type.kind === 'string_type') {
+            currentSegment?.addWhere(field.name, path, '-null');
+          } else if (field.type.kind === 'boolean_type') {
+            currentSegment?.addWhere(field.name, path, 'true');
+          } else if (field.type.kind === 'number_type') {
+            currentSegment?.addWhere(field.name, path, '0');
+          } else if (field.type.kind === 'date_type') {
+            currentSegment?.addWhere(field.name, path, 'today');
+          } else if (field.type.kind === 'timestamp_type') {
+            currentSegment?.addWhere(field.name, path, 'now');
+          }
+        } else {
+          if (field.type.kind === 'string_type') {
+            currentSegment?.addHaving(field.name, path, '-null');
+          } else if (field.type.kind === 'boolean_type') {
+            currentSegment?.addHaving(field.name, path, 'true');
+          } else if (field.type.kind === 'number_type') {
+            currentSegment?.addHaving(field.name, path, '0');
+          } else if (field.type.kind === 'date_type') {
+            currentSegment?.addHaving(field.name, path, 'today');
+          } else if (field.type.kind === 'timestamp_type') {
+            currentSegment?.addHaving(field.name, path, 'now');
+          }
         }
       } else if (operation === 'orderBy' && isOrderByAllowed) {
         currentSegment?.addOrderBy(field.name, 'asc');

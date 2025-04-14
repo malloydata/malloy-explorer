@@ -34,7 +34,7 @@ export function AddWhere({rootQuery, view}: AddWhereProps) {
       }
       onClick={(field, path) => {
         const segment = view.getOrAddDefaultSegment();
-        if (field.kind === 'dimension' || field.kind === 'measure') {
+        if (field.kind === 'dimension') {
           if (field.type.kind === 'string_type') {
             segment.addWhere(field.name, path, '-null');
           } else if (field.type.kind === 'boolean_type') {
@@ -45,6 +45,19 @@ export function AddWhere({rootQuery, view}: AddWhereProps) {
             segment.addWhere(field.name, path, 'today');
           } else if (field.type.kind === 'timestamp_type') {
             segment.addWhere(field.name, path, 'now');
+          }
+          setQuery?.(rootQuery.build());
+        } else if (field.kind === 'measure') {
+          if (field.type.kind === 'string_type') {
+            segment.addHaving(field.name, path, '-null');
+          } else if (field.type.kind === 'boolean_type') {
+            segment.addHaving(field.name, path, 'true');
+          } else if (field.type.kind === 'number_type') {
+            segment.addHaving(field.name, path, '0');
+          } else if (field.type.kind === 'date_type') {
+            segment.addHaving(field.name, path, 'today');
+          } else if (field.type.kind === 'timestamp_type') {
+            segment.addHaving(field.name, path, 'now');
           }
           setQuery?.(rootQuery.build());
         }
