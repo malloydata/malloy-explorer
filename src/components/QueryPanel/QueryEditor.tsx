@@ -6,13 +6,14 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
 import * as Malloy from '@malloydata/malloy-interfaces';
 
 import {Query} from './Query';
 import {Source} from './Source';
 import {Parameters} from './Parameters';
-import {useQueryBuilder} from '../../hooks/useQueryBuilder';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface QueryEditorProps {
   source: Malloy.SourceInfo;
@@ -28,10 +29,11 @@ export interface QueryEditorProps {
  * @param query A query to be edited. Omit for a new query.
  * @returns
  */
-export function QueryEditor({source, query, setQuery}: QueryEditorProps) {
-  const rootQuery = useQueryBuilder(source, query);
+export function QueryEditor() {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   if (!rootQuery) {
+    console.error('Missing <MalloyExplorerProvider>');
     return null;
   }
 

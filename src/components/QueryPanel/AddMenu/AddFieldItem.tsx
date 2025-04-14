@@ -29,7 +29,7 @@ export interface AddGroupByProps {
   icon: IconType;
   view: ViewParent;
   fields: FieldInfo[];
-  onClick(field: FieldInfo, path: string[]): void;
+  onClick(field: FieldInfo, path: string[], event: React.MouseEvent): void;
   types: Array<'dimension' | 'measure' | 'view'>;
   filter?: (
     view: ViewParent,

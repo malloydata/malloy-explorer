@@ -77,11 +77,13 @@ export function HoverText({
               {text}
             </div>
           </Tooltip.Trigger>
-          <Tooltip.Content side={side} align={align}>
-            <pre {...stylex.props(styles.hoverText, fontStyles.tooltipText)}>
-              {text}
-            </pre>
-          </Tooltip.Content>
+          <Tooltip.Portal>
+            <Tooltip.Content side={side} align={align}>
+              <pre {...stylex.props(styles.hoverText, fontStyles.tooltipText)}>
+                {text}
+              </pre>
+            </Tooltip.Content>
+          </Tooltip.Portal>
         </Tooltip.Root>
       </div>
     </div>

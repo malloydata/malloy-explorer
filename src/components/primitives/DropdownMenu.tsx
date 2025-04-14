@@ -106,7 +106,7 @@ interface DropdownMenuItemProps {
   icon?: IconType;
   label: string;
   sublabel?: string;
-  onClick?: (modifiers: Modifiers) => void;
+  onClick?: (event: React.MouseEvent) => void;
   disabled?: boolean;
 }
 
@@ -120,8 +120,8 @@ export function DropdownMenuItem({
   return (
     <PrimitiveDropdownMenu.Item
       {...stylex.props(styles.item)}
-      onClick={({altKey, ctrlKey, metaKey, shiftKey}) => {
-        onClick?.({altKey, ctrlKey, metaKey, shiftKey});
+      onClick={event => {
+        onClick?.(event);
       }}
       disabled={disabled}
     >

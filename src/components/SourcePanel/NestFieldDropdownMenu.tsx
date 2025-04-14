@@ -1,5 +1,4 @@
-import React from 'react';
-import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
+import React, {useContext} from 'react';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {NestOperation, useNestOperations} from './hooks/useNestOperations';
@@ -11,9 +10,10 @@ import {
   DropdownSubMenuItem,
 } from '../primitives';
 import {getNestName} from './utils';
+import {ViewParent} from '../utils/fields';
 
 interface NestFieldDropdownMenuProps {
-  segment?: ASTSegmentViewDefinition;
+  view: ViewParent;
   field: FieldInfo;
   path: string[];
   trigger: React.ReactElement;
@@ -21,13 +21,13 @@ interface NestFieldDropdownMenuProps {
 }
 
 export function NestFieldDropdownMenu({
-  segment,
+  view,
   field,
   path,
   trigger,
   onOpenChange,
 }: NestFieldDropdownMenuProps) {
-  const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   const nestOperations = useNestOperations(rootQuery);
 
@@ -43,7 +43,7 @@ export function NestFieldDropdownMenu({
         <>
           <DropdownMenuLabel label={'Add to new nested query as...'} />
           <OperationDropdownMenuItems
-            segment={segment}
+            view={view}
             field={field}
             path={path}
             withEmptyNest={true}
@@ -61,16 +61,14 @@ export function NestFieldDropdownMenu({
               />
             ) : (
               <DropdownSubMenuItem key={index} label={operation.name}>
-                <>
-                  <DropdownMenuLabel
-                    label={`Add to ${operation.name} query as...`}
-                  />
-                  <OperationDropdownMenuItems
-                    segment={operation.view.getOrAddDefaultSegment()}
-                    field={field}
-                    path={path}
-                  />
-                </>
+                <DropdownMenuLabel
+                  label={`Add to ${operation.name} query as...`}
+                />
+                <OperationDropdownMenuItems
+                  view={operation.view.parent.as.View()}
+                  field={field}
+                  path={path}
+                />
               </DropdownSubMenuItem>
             );
           })}

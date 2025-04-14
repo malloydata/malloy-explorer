@@ -8,7 +8,6 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {useQueryBuilder} from '../../hooks/useQueryBuilder';
 import {Button} from '../primitives';
 import {
   Tooltip,
@@ -17,32 +16,32 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../primitives/styles';
+import {useContext} from 'react';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 /**
  * Source
  */
 export interface QueryActionBarProps {
-  source: Malloy.SourceInfo;
-  query?: Malloy.Query;
-  clearQuery: () => void;
   runQuery: (source: Malloy.SourceInfo, query: Malloy.Query) => void;
 }
 
-export function QueryActionBar({
-  source,
-  query,
-  clearQuery,
-  runQuery,
-}: QueryActionBarProps) {
-  const rootQuery = useQueryBuilder(source, query);
+export function QueryActionBar({runQuery}: QueryActionBarProps) {
+  const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
+
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
   const isRunEnabled = rootQuery?.isRunnable();
+  const onRunQuery = () => {
+    if (source && rootQuery) {
+      runQuery(source, rootQuery.build());
+    }
+  };
   return (
     <div {...stylex.props(actionBarStyles.root)}>
       <div {...stylex.props(actionBarStyles.title)}>Query</div>
       <div {...stylex.props(actionBarStyles.buttons)}>
         <Button
-          onClick={() => clearQuery()}
+          onClick={() => setQuery?.(undefined)}
           isDisabled={!rootQuery || rootQuery?.isEmpty()}
           label="Clear"
           variant="flat"
@@ -52,7 +51,7 @@ export function QueryActionBar({
           <TooltipTrigger asChild>
             <Button
               icon="play"
-              onClick={() => query && runQuery(source, query)}
+              onClick={onRunQuery}
               isDisabled={!isRunEnabled}
               label="Run"
               variant="primary"

@@ -28,7 +28,11 @@ export interface FieldListProps {
   view: ViewParent;
   fields: Malloy.FieldInfo[];
   search: string;
-  onClick: (field: Malloy.FieldInfo, path: string[]) => void;
+  onClick: (
+    field: Malloy.FieldInfo,
+    path: string[],
+    event: React.MouseEvent
+  ) => void;
   types: Array<'dimension' | 'measure' | 'view'>;
   filter?: (
     view: ViewParent,
@@ -108,7 +112,7 @@ export function FieldList({
               >
                 <FieldToken
                   field={field}
-                  onClick={() => onClick(field, group.path)}
+                  onClick={event => onClick(field, group.path, event)}
                   tooltip={<FieldHoverCard field={field} path={group.path} />}
                   tooltipProps={{
                     side: 'right',

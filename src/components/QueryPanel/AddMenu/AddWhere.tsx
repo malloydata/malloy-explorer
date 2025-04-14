@@ -8,61 +8,40 @@
 import * as React from 'react';
 import {useContext} from 'react';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {AddFieldItem} from './AddFieldItem';
 import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
+import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 
 export interface AddWhereProps {
   rootQuery: ASTQuery;
   view: ViewParent;
 }
 
-export function AddWhere({rootQuery, view}: AddWhereProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function AddWhere({view}: AddWhereProps) {
+  const {openFilterModal} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
 
   return (
-    <AddFieldItem
-      label="Add filter"
-      icon="filter"
-      view={view}
-      fields={fields}
-      types={['measure', 'dimension']}
-      filter={(_segment, field) =>
-        (field.kind === 'dimension' || field.kind === 'measure') &&
-        FILTERABLE_TYPES.has(field.type.kind)
-      }
-      onClick={(field, path) => {
-        const segment = view.getOrAddDefaultSegment();
-        if (field.kind === 'dimension') {
-          if (field.type.kind === 'string_type') {
-            segment.addWhere(field.name, path, '-null');
-          } else if (field.type.kind === 'boolean_type') {
-            segment.addWhere(field.name, path, 'true');
-          } else if (field.type.kind === 'number_type') {
-            segment.addWhere(field.name, path, '0');
-          } else if (field.type.kind === 'date_type') {
-            segment.addWhere(field.name, path, 'today');
-          } else if (field.type.kind === 'timestamp_type') {
-            segment.addWhere(field.name, path, 'now');
-          }
-          setQuery?.(rootQuery.build());
-        } else if (field.kind === 'measure') {
-          if (field.type.kind === 'string_type') {
-            segment.addHaving(field.name, path, '-null');
-          } else if (field.type.kind === 'boolean_type') {
-            segment.addHaving(field.name, path, 'true');
-          } else if (field.type.kind === 'number_type') {
-            segment.addHaving(field.name, path, '0');
-          } else if (field.type.kind === 'date_type') {
-            segment.addHaving(field.name, path, 'today');
-          } else if (field.type.kind === 'timestamp_type') {
-            segment.addHaving(field.name, path, 'now');
-          }
-          setQuery?.(rootQuery.build());
+    <>
+      <AddFieldItem
+        label="Add filter"
+        icon="filter"
+        view={view}
+        fields={fields}
+        types={['measure', 'dimension']}
+        filter={(_segment, field) =>
+          (field.kind === 'dimension' || field.kind === 'measure') &&
+          FILTERABLE_TYPES.has(field.type.kind)
         }
-      }}
-    />
+        onClick={(fieldInfo, path, event) => {
+          const x = event.clientX;
+          const y = event.clientY;
+          if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
+            openFilterModal({view, fieldInfo, path, x, y});
+          }
+        }}
+      />
+    </>
   );
 }
 
