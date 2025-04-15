@@ -128,6 +128,11 @@ export function FieldTokenWithActions({
       }
       onOpenChange={open => setIsAddFieldMenuOpen(open)}
       tooltip={<FieldHoverCard field={field} path={path} />}
+      tooltipProps={{
+        side: 'right',
+        align: 'start',
+        alignOffset: 28,
+      }}
     />
   ) : (
     <FieldToken
@@ -136,7 +141,11 @@ export function FieldTokenWithActions({
       hoverActions={hoverActions()}
       hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
       tooltip={<FieldHoverCard field={field} path={path} />}
-      tooltipProps={{side: 'bottom', align: 'start', sideOffset: 4}}
+      tooltipProps={{
+        side: 'right',
+        align: 'start',
+        alignOffset: 28,
+      }}
     />
   );
 }

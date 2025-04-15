@@ -30,6 +30,12 @@ interface DropdownMenuProps {
   tooltip?: string | ReactElement;
   onOpenChange?: (open: boolean) => void;
   children: DropdownMenuChild | DropdownMenuChild[];
+  tooltipProps?: {
+    align?: 'start' | 'center' | 'end';
+    side?: 'top' | 'bottom' | 'left' | 'right';
+    alignOffset?: number;
+    sideOffset?: number;
+  };
 }
 
 export function DropdownMenu({
@@ -37,6 +43,7 @@ export function DropdownMenu({
   tooltip,
   onOpenChange,
   children,
+  tooltipProps,
 }: DropdownMenuProps) {
   const [isTooltipOpen, setIsTooltipOpen] = React.useState<
     boolean | undefined
@@ -64,9 +71,7 @@ export function DropdownMenu({
           </Tooltip.Trigger>
           <Tooltip.Portal>
             <Tooltip.Content
-              side="bottom"
-              align="start"
-              sideOffset={4}
+              {...tooltipProps}
               {...stylex.props(
                 typeof tooltip === 'string'
                   ? tooltipStyles.default
