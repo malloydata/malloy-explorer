@@ -68,7 +68,7 @@ export function AggregateOperations({
               align="start"
             >
               <div {...stylex.props(hoverStyles.main)}>
-                <FieldToken field={fieldInfo} />
+                <FieldToken field={fieldInfo} color="green" />
                 <div {...stylex.props(hoverStyles.hoverActions)}>
                   <ClearButton
                     onClick={() => {
