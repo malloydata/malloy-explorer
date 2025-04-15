@@ -290,8 +290,10 @@ function ClickableDateToken({
   };
 
   useClickOutside(ref, () => {
-    setIsPickerOpen(false);
-    checkForErrorsOrCommit(new Date(innerValue));
+    if (isPickerOpen) {
+      setIsPickerOpen(false);
+      checkForErrorsOrCommit(new Date(innerValue));
+    }
   });
 
   // Returns the date parsed from the text box only if it is a valid date.
