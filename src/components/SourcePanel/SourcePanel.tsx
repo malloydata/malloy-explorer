@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import * as Malloy from '@malloydata/malloy-interfaces';
 
 import {
   Badge,
@@ -31,16 +30,12 @@ import SearchResultList from './SearchResultList';
 import FieldGroupList from './FieldGroupList';
 import {useContext} from 'react';
 import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
-
-export interface SourcePanelProps {
-  source: Malloy.SourceInfo;
-  query?: Malloy.Query;
-  setQuery: (query: Malloy.Query | undefined) => void;
-}
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 type SubpanelType = 'view' | 'dimension' | 'measure' | null;
 
-export function SourcePanel({source}: SourcePanelProps) {
+export function SourcePanel() {
+  const {source} = React.useContext(QueryEditorContext);
   const [subpanelType, setSubpanelType] = React.useState<SubpanelType>(null);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const {isSourcePanelOpen, setIsSourcePanelOpen} = useContext(
@@ -48,7 +43,10 @@ export function SourcePanel({source}: SourcePanelProps) {
   );
 
   const fieldItems = React.useMemo(() => {
-    return sourceToFieldItems(source);
+    if (source) {
+      return sourceToFieldItems(source);
+    }
+    return [];
   }, [source]);
 
   const views = fieldItems.filter(item => item.field.kind === 'view');
@@ -63,10 +61,13 @@ export function SourcePanel({source}: SourcePanelProps) {
   }, [fieldItems, searchQuery]);
 
   const fieldGroupsByKindByPath = React.useMemo(() => {
-    return groupFieldItemsByKind(fieldItems).map(group => ({
-      ...group,
-      items: groupFieldItemsByPath(source, group.items),
-    }));
+    if (source) {
+      return groupFieldItemsByKind(fieldItems).map(group => ({
+        ...group,
+        items: groupFieldItemsByPath(source, group.items),
+      }));
+    }
+    return [];
   }, [source, fieldItems]);
 
   const fieldGroupList = React.useMemo(() => {
@@ -78,7 +79,7 @@ export function SourcePanel({source}: SourcePanelProps) {
 
   const isSearchActive = !!searchQuery;
 
-  if (!isSourcePanelOpen) {
+  if (!isSourcePanelOpen || !source) {
     return null;
   }
 

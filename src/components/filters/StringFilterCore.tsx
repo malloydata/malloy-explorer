@@ -6,45 +6,29 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   Null,
   StringCondition,
   StringEmpty,
-  StringFilter,
   StringMatch,
 } from '@malloydata/malloy-filter';
-import {SelectorToken, TokenGroup} from '../primitives';
-import {fieldKindToColor} from '../utils/icon';
 import {PillInput} from './PillInput';
 import {TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
-import {StyleXStyles} from '@stylexjs/stylex';
-import FieldToken from '../FieldToken';
+import {filterStyles} from './styles';
+import {SelectDropdown} from '../primitives/SelectDropdown';
 
-type StringFilterType =
-  | 'is_equal_to'
-  | 'starts_with'
-  | 'ends_with'
-  | 'contains'
-  | 'matches'
-  | 'is_blank'
-  | 'is_null'
-  | 'is_not_equal_to'
-  | 'does_not_start_with'
-  | 'does_not_end_with'
-  | 'does_not_contain'
-  | 'does_not_match'
-  | 'is_not_blank'
-  | 'is_not_null';
+export type BasicStringFilter =
+  | StringCondition
+  | StringMatch
+  | Null
+  | StringEmpty;
 
 type BasicStringFilterFragments =
   | Omit<StringCondition, 'values'>
   | Omit<StringMatch, 'escaped_values'>
   | Null
   | StringEmpty;
-
-type BasicStringFilter = StringCondition | StringMatch | Null | StringEmpty;
 
 const StringFilterFragments: Record<
   StringFilterType,
@@ -66,7 +50,23 @@ const StringFilterFragments: Record<
   is_not_null: {operator: 'null', not: true},
 } as const;
 
-function typeFromFilter(filter: StringFilter): StringFilterType {
+type StringFilterType =
+  | 'is_equal_to'
+  | 'starts_with'
+  | 'ends_with'
+  | 'contains'
+  | 'matches'
+  | 'is_blank'
+  | 'is_null'
+  | 'is_not_equal_to'
+  | 'does_not_start_with'
+  | 'does_not_end_with'
+  | 'does_not_contain'
+  | 'does_not_match'
+  | 'is_not_blank'
+  | 'is_not_null';
+
+function typeFromFilter(filter: BasicStringFilter): StringFilterType {
   for (const key in StringFilterFragments) {
     const type = key as StringFilterType;
     const value = StringFilterFragments[type];
@@ -79,21 +79,19 @@ function typeFromFilter(filter: StringFilter): StringFilterType {
   throw new Error(`Unhandled string filter type ${filter.operator}`);
 }
 
-export interface StringFilterBuilderProps {
-  fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure;
-  filter: StringFilter | null;
-  path: string[];
-  setFilter: (filter: StringFilter) => void;
+export interface StringFilterCoreProps {
+  filter: BasicStringFilter | null;
+  setFilter: (filter: BasicStringFilter) => void;
 }
 
-export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
-  fieldInfo,
+export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
   filter,
   setFilter,
 }) => {
   filter ??= {operator: '=', values: []};
-  // Keep a copy of the filter locally so when we enter an invalid state and
-  // lose context we can still maintain the UI.
+
+  const type = typeFromFilter(filter);
+
   const [currentFilter, setCurrentFilter] = useState(filter);
   const changeType = (type: string) => {
     updateFilter(
@@ -101,70 +99,56 @@ export const StringFilterToken: React.FC<StringFilterBuilderProps> = ({
     );
   };
 
-  const updateFilter = (newFilter: StringFilter) => {
+  const updateFilter = (newFilter: BasicStringFilter) => {
     setCurrentFilter(newFilter);
     setFilter(newFilter);
   };
 
-  const type = typeFromFilter(currentFilter);
-
-  const typeDropdown = (
-    <SelectorToken
-      key="type"
-      value={type}
-      onChange={changeType}
-      items={[
-        {value: 'is_equal_to', label: 'is'},
-        {value: 'starts_with', label: 'starts with'},
-        {value: 'ends_with', label: 'ends with'},
-        {value: 'contains', label: 'contains'},
-        {value: 'is_blank', label: 'is blank'},
-        {value: 'is_null', label: 'is null'},
-        {value: 'matches', label: 'matches'},
-        {value: 'is_not_equal_to', label: 'is not'},
-        {value: 'does_not_start_with', label: 'does not start with'},
-        {value: 'does_not_end_with', label: 'does not end with'},
-        {value: 'does_not_contain', label: 'does not contain'},
-        {value: 'is_not_blank', label: 'is not blank'},
-        {value: 'is_not_null', label: 'is not null'},
-        {value: 'does_not_match', label: 'does not match'},
-      ]}
-    />
-  );
-
-  const color = fieldKindToColor(fieldInfo.kind);
-
-  const tokens = [<FieldToken key="field" field={fieldInfo} />, typeDropdown];
-
-  switch (currentFilter.operator) {
-    case '=':
-    case 'starts':
-    case 'ends':
-    case 'contains':
-      tokens.push(
+  return (
+    <>
+      <SelectDropdown
+        key="type"
+        value={type}
+        onChange={changeType}
+        options={[
+          {value: 'is_equal_to', label: 'is'},
+          {value: 'starts_with', label: 'starts with'},
+          {value: 'ends_with', label: 'ends with'},
+          {value: 'contains', label: 'contains'},
+          {value: 'is_blank', label: 'is blank'},
+          {value: 'is_null', label: 'is null'},
+          {value: 'matches', label: 'matches'},
+          {value: 'is_not_equal_to', label: 'is not'},
+          {value: 'does_not_start_with', label: 'does not start with'},
+          {value: 'does_not_end_with', label: 'does not end with'},
+          {value: 'does_not_contain', label: 'does not contain'},
+          {value: 'is_not_blank', label: 'is not blank'},
+          {value: 'is_not_null', label: 'is not null'},
+          {value: 'does_not_match', label: 'does not match'},
+        ]}
+        customStyle={filterStyles.filterTypeDropdown}
+      />
+      {currentFilter.operator === '=' ||
+      currentFilter.operator === 'starts' ||
+      currentFilter.operator === 'ends' ||
+      currentFilter.operator === 'contains' ? (
         <StringEditor
           key="editor"
-          color={color}
           values={currentFilter.values}
           setValues={values => updateFilter({...currentFilter, values})}
         />
-      );
-      break;
-    case '~':
-      tokens.push(
+      ) : currentFilter.operator === '~' ? (
         <StringEditor
           key="editor"
-          color={color}
           values={currentFilter.escaped_values}
           setValues={escaped_values =>
             updateFilter({...currentFilter, escaped_values})
           }
           escape={true}
         />
-      );
-  }
-
-  return <TokenGroup color={color}>{tokens}</TokenGroup>;
+      ) : null}
+    </>
+  );
 };
 
 interface StringEditorProps {
@@ -172,23 +156,10 @@ interface StringEditorProps {
   values: string[];
   setValues(values: string[]): void;
   escape?: boolean;
-  customStyle?: StyleXStyles;
 }
 
-function StringEditor({
-  color,
-  values,
-  setValues,
-  customStyle,
-}: StringEditorProps) {
-  return (
-    <PillInput
-      color={color}
-      values={values}
-      setValues={setValues}
-      customStyle={customStyle}
-    />
-  );
+function StringEditor({color, values, setValues}: StringEditorProps) {
+  return <PillInput color={color} values={values} setValues={setValues} />;
 }
 
 function escapeValue(val: string) {
@@ -201,7 +172,7 @@ function unescapeValue(val: string) {
 
 // eslint-disable-next-line consistent-return
 export function stringFilterChangeType(
-  filter: StringFilter,
+  filter: BasicStringFilter,
   type: StringFilterType
 ): BasicStringFilter {
   const values =

@@ -8,6 +8,7 @@ import {NestFieldDropdownMenu} from './NestFieldDropdownMenu';
 import {useNestOperations} from './hooks/useNestOperations';
 import {AddFieldDropdownMenu} from './AddFieldDropdownMenu';
 import {FieldHoverCard} from '../FieldHoverCard';
+import {ASTArrowQueryDefinition} from '@malloydata/malloy-query-builder';
 
 interface FieldTokenWithActionsProps {
   field: Malloy.FieldInfo;
@@ -20,8 +21,6 @@ export function FieldTokenWithActions({
 }: FieldTokenWithActionsProps) {
   const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
 
-  const segment = rootQuery?.getOrAddDefaultSegment();
-
   const [isAddFieldMenuOpen, setIsAddFieldMenuOpen] = useState<
     boolean | undefined
   >();
@@ -31,6 +30,11 @@ export function FieldTokenWithActions({
   >();
 
   const nestViews = useNestOperations(rootQuery);
+  const viewDef = rootQuery?.definition;
+
+  if (!(viewDef instanceof ASTArrowQueryDefinition)) {
+    return null;
+  }
 
   const hasAddFieldMenu =
     field.kind === 'measure' || field.kind === 'dimension';
@@ -41,6 +45,7 @@ export function FieldTokenWithActions({
     (field.kind === 'view' && nestViews.length > 0);
 
   const addViewToMainQuery = () => {
+    const segment = rootQuery?.getOrAddDefaultSegment();
     if (field.kind === 'view') {
       if (rootQuery?.isEmpty()) {
         rootQuery?.setView(field.name);
@@ -53,6 +58,7 @@ export function FieldTokenWithActions({
 
   const nestViewWithinMainQuery = () => {
     if (field.kind === 'view') {
+      const segment = rootQuery?.getOrAddDefaultSegment();
       segment?.addNest(field.name, getNestName(segment, field.name));
       setQuery?.(rootQuery?.build());
     }
@@ -63,7 +69,7 @@ export function FieldTokenWithActions({
       <>
         {hasAddFieldMenu ? (
           <AddFieldDropdownMenu
-            segment={segment}
+            view={viewDef}
             field={field}
             path={path}
             trigger={
@@ -87,7 +93,7 @@ export function FieldTokenWithActions({
         )}
         {hasNestFieldMenu ? (
           <NestFieldDropdownMenu
-            segment={segment}
+            view={viewDef}
             field={field}
             path={path}
             trigger={
@@ -115,7 +121,7 @@ export function FieldTokenWithActions({
 
   return hasAddFieldMenu ? (
     <AddFieldDropdownMenu
-      segment={segment}
+      view={viewDef}
       field={field}
       path={path}
       trigger={

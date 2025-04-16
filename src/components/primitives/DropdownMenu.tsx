@@ -15,11 +15,6 @@ import {fontStyles, tooltipStyles} from './styles';
 import {iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars, sublabelVars} from './dropdown-menu.stylex';
 
-type Modifiers = Pick<
-  React.MouseEvent,
-  'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'
->;
-
 type DropdownMenuChild =
   | React.ReactElement<DropdownMenuItemProps, typeof DropdownMenuItem>
   | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>
@@ -106,7 +101,7 @@ interface DropdownMenuItemProps {
   icon?: IconType;
   label: string;
   sublabel?: string;
-  onClick?: (modifiers: Modifiers) => void;
+  onClick?: (event: React.MouseEvent) => void;
   disabled?: boolean;
 }
 
@@ -120,8 +115,8 @@ export function DropdownMenuItem({
   return (
     <PrimitiveDropdownMenu.Item
       {...stylex.props(styles.item)}
-      onClick={({altKey, ctrlKey, metaKey, shiftKey}) => {
-        onClick?.({altKey, ctrlKey, metaKey, shiftKey});
+      onClick={event => {
+        onClick?.(event);
       }}
       disabled={disabled}
     >

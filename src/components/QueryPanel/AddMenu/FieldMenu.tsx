@@ -22,7 +22,11 @@ export interface FieldMenuProps {
     field: Malloy.FieldInfo,
     path: string[]
   ) => boolean;
-  onClick: (field: Malloy.FieldInfo, path: string[]) => void;
+  onClick: (
+    field: Malloy.FieldInfo,
+    path: string[],
+    event: React.MouseEvent
+  ) => void;
 }
 
 export function FieldMenu({

@@ -6,14 +6,21 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
+import {useContext} from 'react';
 import {CodeBlock} from '../../src/components/primitives';
+import {QueryEditorContext} from '../../src/contexts/QueryEditorContext';
 
-export interface RawPreviewProps {
-  source: Malloy.SourceInfo;
-  query: Malloy.Query;
-}
+export function RawPreview() {
+  const {rootQuery} = useContext(QueryEditorContext);
 
-export function RawPreview({query}: RawPreviewProps) {
-  return <CodeBlock code={JSON.stringify(query, null, 2)} language="json" />;
+  if (!rootQuery) {
+    return <div>No query</div>;
+  }
+
+  return (
+    <CodeBlock
+      code={JSON.stringify(rootQuery.build(), null, 2)}
+      language="json"
+    />
+  );
 }

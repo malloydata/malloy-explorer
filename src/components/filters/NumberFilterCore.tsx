@@ -6,15 +6,11 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
 import {Null, NumberCondition, NumberFilter} from '@malloydata/malloy-filter';
-import {SelectorToken, Token, TokenGroup} from '../primitives';
-import {atomicTypeToIcon, fieldKindToColor} from '../utils/icon';
 import {PillInput} from './PillInput';
-import {TokenColor} from '../primitives/tokens/types';
 import {useEffect, useState} from 'react';
 import ErrorIcon from '../primitives/ErrorIcon';
-import stylex from '@stylexjs/stylex';
+import {SelectDropdown} from '../primitives/SelectDropdown';
 
 type NumberFilterType =
   | 'is_equal_to'
@@ -60,21 +56,19 @@ function typeFromFilter(filter: NumberFilter): NumberFilterType {
   throw new Error(`Unhandled number filter type ${filter.operator}`);
 }
 
-export interface NumberFilterBuilderProps {
-  fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure;
+export interface NumberFilterCoreProps {
   filter: NumberFilter | null;
   setFilter: (filter: NumberFilter) => void;
 }
 
-export const NumberFilterToken: React.FC<NumberFilterBuilderProps> = ({
-  fieldInfo,
+export const NumberFilterCore: React.FC<NumberFilterCoreProps> = ({
   filter,
   setFilter,
 }) => {
   filter ??= {operator: '=', values: []};
   // Maintain the text content of the input inside this component, and only
   // update the parent when the content passes validation.
-  const [innerValues, setInnerValues] = useState<string[]>([]);
+  const [innerValues, setInnerValues] = useState<string[]>(['0']);
   const [errorMessage, setErrorMessage] = useState('');
 
   const changeType = (type: string) => {
@@ -104,32 +98,9 @@ export const NumberFilterToken: React.FC<NumberFilterBuilderProps> = ({
       }
       setInnerValues(values);
     } else {
-      setInnerValues([]);
+      setInnerValues(['0']);
     }
   }, [filter]);
-
-  const typeDropdown = (
-    <SelectorToken
-      value={type}
-      onChange={changeType}
-      items={[
-        {value: 'is_equal_to', label: 'is'},
-        {value: 'is_not_equal_to', label: 'is not'},
-        {value: 'is_greater_than', label: 'is greater than'},
-        {value: 'is_less_than', label: 'is less than'},
-        {
-          value: 'is_greater_than_or_equal_to',
-          label: 'is greater than or equal to',
-        },
-        {value: 'is_less_than_or_equal_to', label: 'is less than or equal to'},
-        {value: 'is_null', label: 'is null'},
-        {value: 'is_not_null', label: 'is not null'},
-      ]}
-    />
-  );
-
-  const icon = atomicTypeToIcon(fieldInfo.type.kind);
-  const color = fieldKindToColor(fieldInfo.kind);
 
   const validateAndUpdateValues = (values: string[]) => {
     const numberCondition = filter as NumberCondition;
@@ -151,63 +122,75 @@ export const NumberFilterToken: React.FC<NumberFilterBuilderProps> = ({
     }
   };
 
-  let editor = <span></span>;
+  return (
+    <>
+      <SelectDropdown
+        value={type}
+        onChange={changeType}
+        options={[
+          {value: 'is_equal_to', label: 'is'},
+          {value: 'is_not_equal_to', label: 'is not'},
+          {value: 'is_greater_than', label: 'is greater than'},
+          {value: 'is_less_than', label: 'is less than'},
+          {
+            value: 'is_greater_than_or_equal_to',
+            label: 'is greater than or equal to',
+          },
+          {
+            value: 'is_less_than_or_equal_to',
+            label: 'is less than or equal to',
+          },
+          {value: 'is_null', label: 'is null'},
+          {value: 'is_not_null', label: 'is not null'},
+        ]}
+      />
+      {errorMessage ? <ErrorIcon errorMessage={errorMessage} /> : null}
+      {getEditor(filter, innerValues, validateAndUpdateValues)}
+    </>
+  );
+};
 
+function getEditor(
+  filter: NumberFilter,
+  innerValues: string[],
+  validateAndUpdateValues: (values: string[]) => void
+) {
   switch (filter.operator) {
     case '!=':
     case '=':
-      editor = (
+      return (
         <NumberEditor
-          color={color}
           values={innerValues.map(String)}
           setValues={values => validateAndUpdateValues(values)}
           type="number"
         />
       );
-      break;
     case '>':
     case '<':
     case '>=':
     case '<=':
-      editor = (
+      return (
         <SingleNumberEditor
-          color={color}
           value={innerValues[0]}
           setValue={value => validateAndUpdateValues([value])}
           type="number"
         />
       );
-      break;
-    case 'null':
-      // Defaults to
-      break;
   }
-
-  return (
-    <div {...stylex.props(styles.flex)}>
-      <TokenGroup color={color}>
-        <Token icon={icon} label={fieldInfo.name} />
-        {typeDropdown}
-        {editor}
-      </TokenGroup>
-      {errorMessage ? <ErrorIcon errorMessage={errorMessage} /> : null}
-    </div>
-  );
-};
+  return null;
+}
 
 interface SingleNumberEditorProps {
-  color?: TokenColor;
   value: string;
   setValue(value: string): void;
   type?: string;
   placeholder?: string;
 }
 
-function SingleNumberEditor({color, value, setValue}: SingleNumberEditorProps) {
+function SingleNumberEditor({value, setValue}: SingleNumberEditorProps) {
   return (
     <input
       type="number"
-      color={color}
       value={value}
       onChange={e => {
         setValue(e.target.value);
@@ -217,21 +200,13 @@ function SingleNumberEditor({color, value, setValue}: SingleNumberEditorProps) {
 }
 
 interface NumberEditorProps {
-  color?: TokenColor;
   values: string[];
   setValues(values: string[]): void;
   type?: string;
 }
 
-function NumberEditor({color, values, setValues}: NumberEditorProps) {
-  return (
-    <PillInput
-      color={color}
-      values={values}
-      setValues={setValues}
-      type={'number'}
-    />
-  );
+function NumberEditor({values, setValues}: NumberEditorProps) {
+  return <PillInput values={values} setValues={setValues} type={'number'} />;
 }
 
 // eslint-disable-next-line consistent-return
@@ -258,9 +233,3 @@ export function makeFilterWithNewType(
       return {...NumberFilterFragments[type]} as BasicNumberFilter;
   }
 }
-
-const styles = stylex.create({
-  flex: {
-    display: 'flex',
-  },
-});

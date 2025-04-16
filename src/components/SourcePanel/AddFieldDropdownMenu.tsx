@@ -1,20 +1,20 @@
 import React from 'react';
-import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {OperationDropdownMenuItems} from './OperationDropdownMenuItems';
 import {DropdownMenu, DropdownMenuLabel} from '../primitives';
+import {ViewParent} from '../utils/fields';
 
 type DropdownMenuProps = React.ComponentProps<typeof DropdownMenu>;
 
 interface AddFieldDropdownMenuProps
   extends Omit<DropdownMenuProps, 'children'> {
-  segment?: ASTSegmentViewDefinition;
+  view: ViewParent;
   field: FieldInfo;
   path: string[];
 }
 
 export function AddFieldDropdownMenu({
-  segment,
+  view,
   field,
   path,
   ...props
@@ -22,7 +22,7 @@ export function AddFieldDropdownMenu({
   return (
     <DropdownMenu {...props}>
       <DropdownMenuLabel label="Add to main query as..." />
-      <OperationDropdownMenuItems segment={segment} field={field} path={path} />
+      <OperationDropdownMenuItems view={view} field={field} path={path} />
     </DropdownMenu>
   );
 }
