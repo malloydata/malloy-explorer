@@ -40,8 +40,8 @@ export function MalloyExplorerProvider({
         value={{source, rootQuery, setQuery, topValues, openFilterModal}}
       >
         {children}
+        <FilterModal />
       </QueryEditorContext.Provider>
-      <FilterModal />
     </TooltipProvider>
   );
 }

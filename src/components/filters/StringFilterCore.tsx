@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   Null,
   StringCondition,
@@ -14,9 +15,10 @@ import {
 } from '@malloydata/malloy-filter';
 import {PillInput} from './PillInput';
 import {TokenColor} from '../primitives/tokens/types';
-import {useState} from 'react';
+import {RefObject, useRef, useState} from 'react';
 import {filterStyles} from './styles';
 import {SelectDropdown} from '../primitives/SelectDropdown';
+import {ValueList} from '../QueryPanel/AddMenu/ValueList';
 
 export type BasicStringFilter =
   | StringCondition
@@ -82,13 +84,19 @@ function typeFromFilter(filter: BasicStringFilter): StringFilterType {
 export interface StringFilterCoreProps {
   filter: BasicStringFilter | null;
   setFilter: (filter: BasicStringFilter) => void;
+  field: Malloy.FieldInfo;
+  path: string[];
 }
 
 export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
   filter,
   setFilter,
+  field,
+  path,
 }) => {
   filter ??= {operator: '=', values: []};
+  const [searchValue, setSearchValue] = useState('');
+  const valueListRef = useRef<HTMLDivElement>(null);
 
   const type = typeFromFilter(filter);
 
@@ -132,11 +140,30 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
       currentFilter.operator === 'starts' ||
       currentFilter.operator === 'ends' ||
       currentFilter.operator === 'contains' ? (
-        <StringEditor
-          key="editor"
-          values={currentFilter.values}
-          setValues={values => updateFilter({...currentFilter, values})}
-        />
+        <>
+          <StringEditor
+            key="editor"
+            values={currentFilter.values}
+            setValues={values => updateFilter({...currentFilter, values})}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            focusElement={valueListRef}
+          />
+          <ValueList
+            ref={valueListRef}
+            search={searchValue}
+            fieldPath={[...path, field.name].join('.')}
+            onClick={value => {
+              if (value.fieldValue) {
+                updateFilter({
+                  ...currentFilter,
+                  values: [...currentFilter.values, value.fieldValue],
+                });
+                setSearchValue('');
+              }
+            }}
+          />
+        </>
       ) : currentFilter.operator === '~' ? (
         <StringEditor
           key="editor"
@@ -145,6 +172,8 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
             updateFilter({...currentFilter, escaped_values})
           }
           escape={true}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
         />
       ) : null}
     </>
@@ -156,10 +185,29 @@ interface StringEditorProps {
   values: string[];
   setValues(values: string[]): void;
   escape?: boolean;
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+  focusElement?: RefObject<HTMLDivElement | null>;
 }
 
-function StringEditor({color, values, setValues}: StringEditorProps) {
-  return <PillInput color={color} values={values} setValues={setValues} />;
+function StringEditor({
+  color,
+  values,
+  setValues,
+  searchValue,
+  setSearchValue,
+  focusElement,
+}: StringEditorProps) {
+  return (
+    <PillInput
+      color={color}
+      values={values}
+      setValues={setValues}
+      value={searchValue}
+      setValue={setSearchValue}
+      focusElement={focusElement}
+    />
+  );
 }
 
 function escapeValue(val: string) {

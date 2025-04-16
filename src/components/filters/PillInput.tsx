@@ -32,7 +32,7 @@ interface PillInputProps {
   autoFocus?: boolean;
   placeholder?: string;
   type?: string;
-  focusElement?: RefObject<HTMLDivElement>;
+  focusElement?: RefObject<HTMLDivElement | null>;
   color?: TokenColor;
   customStyle?: StyleXStyles;
 }

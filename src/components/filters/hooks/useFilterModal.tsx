@@ -82,6 +82,7 @@ export function useFilterModal() {
             </Dialog.Description>
             <FilterDialog
               fieldInfo={fieldInfo}
+              path={path}
               filter={filter}
               setFilter={filter => setFilter(filter)}
               setOpen={setOpen}
