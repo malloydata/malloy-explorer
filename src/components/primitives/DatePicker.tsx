@@ -419,7 +419,7 @@ export default function DatePicker({
                 setValue(moment(date).hour(newHour24).toDate());
               }}
               width="40px"
-            ></NumberInput>
+            />
             {(maxLevel === 'minute' || maxLevel === 'second') && (
               <NumberInput
                 label="Minutes"
@@ -428,7 +428,7 @@ export default function DatePicker({
                   setValue(moment(date).minute(minute).toDate());
                 }}
                 width="40px"
-              ></NumberInput>
+              />
             )}
             {maxLevel === 'second' && (
               <NumberInput
@@ -438,7 +438,7 @@ export default function DatePicker({
                   setValue(moment(date).second(second).toDate());
                 }}
                 width="40px"
-              ></NumberInput>
+              />
             )}
             <div
               style={{

@@ -7,22 +7,17 @@
 
 import * as React from 'react';
 import {
-  Null,
   TemporalFilter,
-  Before,
-  After,
-  To,
-  InMoment,
   Moment,
   NowMoment,
   TemporalLiteral,
 } from '@malloydata/malloy-filter';
-import {EditableToken, SelectorToken} from '../primitives';
-import {DEFAULT_TOKEN_COLOR, TokenColor} from '../primitives/tokens/types';
 import {useState} from 'react';
 import DatePicker from '../primitives/DatePicker';
 import moment from 'moment';
 import {useClickOutside} from '../hooks/useClickOutside';
+import {SelectDropdown} from '../primitives/SelectDropdown';
+import ErrorIcon from '../primitives/ErrorIcon';
 
 type DateTimeFilterType =
   | 'is_equal_to'
@@ -96,7 +91,7 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
   filter ??= {
     operator: 'in',
     in: createNowMoment(),
-  } as InMoment;
+  };
 
   // Keep a copy of the filter locally
   const [currentFilter, setCurrentFilter] = useState<TemporalFilter>(filter);
@@ -118,10 +113,10 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
 
   return (
     <>
-      <SelectorToken
+      <SelectDropdown
         value={type}
         onChange={changeType}
-        items={[
+        options={[
           {value: 'is_equal_to', label: 'is'},
           {value: 'is_before', label: 'is before'},
           {value: 'is_after', label: 'is after'},
@@ -149,7 +144,7 @@ function getEditor(
 ) {
   switch (currentFilter.operator) {
     case 'in': {
-      const inMoment = currentFilter as InMoment;
+      const inMoment = currentFilter;
       inDate = extractDateFromMoment(inMoment.in);
       return (
         <DateTimeEditor
@@ -158,14 +153,14 @@ function getEditor(
             updateFilter({
               ...currentFilter,
               in: createTemporalLiteral(newDate),
-            } as InMoment);
+            });
           }}
           maxLevel={maxLevel}
         />
       );
     }
     case 'before': {
-      const beforeMoment = currentFilter as Before;
+      const beforeMoment = currentFilter;
       beforeDate = extractDateFromMoment(beforeMoment.before);
       return (
         <DateTimeEditor
@@ -174,14 +169,14 @@ function getEditor(
             updateFilter({
               ...currentFilter,
               before: createTemporalLiteral(newDate),
-            } as Before);
+            });
           }}
           maxLevel={maxLevel}
         />
       );
     }
     case 'after': {
-      const afterMoment = currentFilter as After;
+      const afterMoment = currentFilter;
       afterDate = extractDateFromMoment(afterMoment.after);
       return (
         <DateTimeEditor
@@ -190,14 +185,14 @@ function getEditor(
             updateFilter({
               ...currentFilter,
               after: createTemporalLiteral(newDate),
-            } as After);
+            });
           }}
           maxLevel={maxLevel}
         />
       );
     }
     case 'to': {
-      const toMoment = currentFilter as To;
+      const toMoment = currentFilter;
       fromDate = extractDateFromMoment(toMoment.fromMoment);
       toDate = extractDateFromMoment(toMoment.toMoment);
       return (
@@ -208,13 +203,13 @@ function getEditor(
             updateFilter({
               ...currentFilter,
               fromMoment: createTemporalLiteral(newFromDate),
-            } as To);
+            });
           }}
           setToValue={newToDate => {
             updateFilter({
               ...currentFilter,
               toMoment: createTemporalLiteral(newToDate),
-            } as To);
+            });
           }}
           maxLevel={maxLevel as 'day' | 'second'}
         />
@@ -225,7 +220,6 @@ function getEditor(
 }
 
 interface ClickableDateTokenProps {
-  color?: TokenColor;
   value: Date;
   setValue(value: Date): void;
   maxLevel: 'day' | 'second';
@@ -242,7 +236,6 @@ const formatDate = (date: Date, maxLevel: 'day' | 'second'): string => {
 };
 
 function ClickableDateToken({
-  color = DEFAULT_TOKEN_COLOR,
   value,
   setValue,
   maxLevel,
@@ -298,7 +291,7 @@ function ClickableDateToken({
   return (
     <div
       ref={ref}
-      style={{position: 'relative'}}
+      style={{position: 'relative', color: 'rgb(95, 99, 104)'}}
       onFocus={() => setIsPickerOpen(true)}
       onBlur={e => {
         if (
@@ -311,14 +304,21 @@ function ClickableDateToken({
         }
       }}
     >
-      <EditableToken
-        value={label ? `${label}: ${innerValue}` : innerValue}
-        color={color}
-        onChange={text => {
-          setInnerValue(text);
-        }}
-        errorMessage={errorMessage}
-      />
+      <div style={{display: 'flex'}}>
+        <input
+          value={label ? `${label}: ${innerValue}` : innerValue}
+          onChange={event => {
+            setInnerValue(event.target.value);
+          }}
+          style={{
+            border: '1px solid #e0e0e0',
+            color: 'rgb(95, 99, 104)',
+            padding: '4px 8px 4px 8px',
+            borderRadius: 5,
+          }}
+        />
+        {errorMessage && <ErrorIcon errorMessage={errorMessage} />}
+      </div>
       {isPickerOpen && (
         <div
           style={{
@@ -348,30 +348,18 @@ function ClickableDateToken({
 }
 
 interface DateTimeEditorProps {
-  _color?: TokenColor;
   value: Date;
   setValue(value: Date): void;
   maxLevel: 'day' | 'second';
 }
 
-function DateTimeEditor({
-  _color,
-  value,
-  setValue,
-  maxLevel,
-}: DateTimeEditorProps) {
+function DateTimeEditor({value, setValue, maxLevel}: DateTimeEditorProps) {
   return (
-    <ClickableDateToken
-      color={_color}
-      value={value}
-      setValue={setValue}
-      maxLevel={maxLevel}
-    />
+    <ClickableDateToken value={value} setValue={setValue} maxLevel={maxLevel} />
   );
 }
 
 interface DateTimeRangeEditorProps {
-  _color?: TokenColor;
   fromValue: Date;
   toValue: Date;
   setFromValue(value: Date): void;
@@ -380,7 +368,6 @@ interface DateTimeRangeEditorProps {
 }
 
 function DateTimeRangeEditor({
-  _color,
   fromValue,
   toValue,
   setFromValue,
@@ -390,13 +377,11 @@ function DateTimeRangeEditor({
   return (
     <div style={{display: 'flex', gap: '10px'}}>
       <ClickableDateToken
-        color={_color}
         value={fromValue}
         setValue={setFromValue}
         maxLevel={maxLevel}
       />
       <ClickableDateToken
-        color={_color}
         value={toValue}
         setValue={setToValue}
         maxLevel={maxLevel}
@@ -415,14 +400,14 @@ export function dateTimeFilterChangeType(
   let endDate = moment(currentDate).add(1, 'day').toDate();
 
   if (filter.operator === 'in') {
-    currentDate = extractDateFromMoment((filter as InMoment).in);
+    currentDate = extractDateFromMoment(filter.in);
   } else if (filter.operator === 'before') {
-    currentDate = extractDateFromMoment((filter as Before).before);
+    currentDate = extractDateFromMoment(filter.before);
   } else if (filter.operator === 'after') {
-    currentDate = extractDateFromMoment((filter as After).after);
+    currentDate = extractDateFromMoment(filter.after);
   } else if (filter.operator === 'to') {
-    currentDate = extractDateFromMoment((filter as To).fromMoment);
-    endDate = extractDateFromMoment((filter as To).toMoment);
+    currentDate = extractDateFromMoment(filter.fromMoment);
+    endDate = extractDateFromMoment(filter.toMoment);
   }
 
   // Create a new filter based on the type
@@ -431,32 +416,32 @@ export function dateTimeFilterChangeType(
       return {
         operator: 'in',
         in: createTemporalLiteral(currentDate),
-      } as InMoment;
+      };
     case 'is_before':
       return {
         operator: 'before',
         before: createTemporalLiteral(currentDate),
-      } as Before;
+      };
     case 'is_after':
       return {
         operator: 'after',
         after: createTemporalLiteral(currentDate),
-      } as After;
+      };
     case 'is_between':
       return {
         operator: 'to',
         fromMoment: createTemporalLiteral(currentDate),
         toMoment: createTemporalLiteral(endDate),
-      } as To;
+      };
     case 'is_null':
       return {
         operator: 'null',
-      } as Null;
+      };
     case 'is_not_null':
       return {
         operator: 'null',
         not: true,
-      } as Null;
+      };
     default:
       return filter;
   }
