@@ -14,6 +14,8 @@ import {FilterDialog} from '../FilterDialog';
 import {ParsedFilter} from '@malloydata/malloy-query-builder';
 import {ViewParent} from '../../utils/fields';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
+import {TemporalLiteral} from '@malloydata/malloy-filter';
+import moment from 'moment';
 
 export interface OpenFilterModalParams {
   view: ViewParent;
@@ -108,14 +110,21 @@ function getDefaultFilter(
   } else if (fieldInfo.type.kind === 'date_type') {
     return {
       kind: 'date',
-      parsed: {operator: 'after', after: {moment: 'now'}},
+      parsed: {operator: 'after', after: createTemporalDefault()},
     };
   } else {
     return {
       kind: 'timestamp',
-      parsed: {operator: 'after', after: {moment: 'now'}},
+      parsed: {operator: 'after', after: createTemporalDefault()},
     };
   }
+}
+
+function createTemporalDefault(): TemporalLiteral {
+  return {
+    moment: 'literal',
+    literal: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.0'),
+  };
 }
 
 const styles = stylex.create({

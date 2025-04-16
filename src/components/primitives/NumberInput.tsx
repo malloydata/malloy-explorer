@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import stylex from '@stylexjs/stylex';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 
@@ -48,7 +49,17 @@ export default function NumberInput({
           }
         }}
         autoFocus={autoFocus}
+        {...stylex.props(styles.numberInput)}
       />
     </div>
   );
 }
+
+const styles = stylex.create({
+  numberInput: {
+    border: '1px solid rgb(239, 239, 239)',
+    borderRadius: 4,
+    color: 'rgb(95, 99, 104)',
+    padding: '3px 3px 3px 10px',
+  },
+});

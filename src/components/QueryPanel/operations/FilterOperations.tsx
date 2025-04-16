@@ -22,6 +22,7 @@ import {atomicTypeToIcon} from '../../utils/icon';
 import {ClearButton} from './ClearButton';
 import {ErrorElement} from '../../ErrorElement';
 import {useFilterPopup} from '../../filters/hooks/useFilterPopup';
+import {Moment} from '@malloydata/malloy-filter';
 
 export interface FilterOperationsProps {
   rootQuery: ASTQuery;
@@ -201,21 +202,21 @@ const parsedToLabels = (
           {
             const {not} = temporalClause;
             op = `is${not ? ' not' : ''} after`;
-            value = temporalClause.after.moment;
+            value = displayTimeFromMoment(temporalClause.after);
           }
           break;
         case 'before':
           {
             const {not} = temporalClause;
             op = `is${not ? ' not' : ''} before`;
-            value = temporalClause.before.moment;
+            value = displayTimeFromMoment(temporalClause.before);
           }
           break;
         case 'in':
           {
             const {not} = temporalClause;
             op = `is${not ? ' not' : ''} in`;
-            value = temporalClause.in.moment;
+            value = displayTimeFromMoment(temporalClause.in);
           }
           break;
         case 'in_last':
@@ -255,3 +256,16 @@ const parsedToLabels = (
   }
   return {op, value};
 };
+
+function displayTimeFromMoment(momentObj?: Moment): string {
+  if (!momentObj) {
+    return '';
+  }
+
+  if (momentObj.moment === 'literal') {
+    return momentObj.literal;
+  } else if (momentObj.moment === 'now') {
+    return 'now';
+  }
+  return momentObj.moment;
+}
