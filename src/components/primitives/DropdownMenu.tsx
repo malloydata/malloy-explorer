@@ -15,11 +15,6 @@ import {fontStyles, tooltipStyles} from './styles';
 import {iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars, sublabelVars} from './dropdown-menu.stylex';
 
-type Modifiers = Pick<
-  React.MouseEvent,
-  'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'
->;
-
 type DropdownMenuChild =
   | React.ReactElement<DropdownMenuItemProps, typeof DropdownMenuItem>
   | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>
