@@ -90,7 +90,12 @@ function SingleFilterOperation({
     },
     [filterOperation.filter, rootQuery, setQuery]
   );
-  const {FilterPopup} = useFilterPopup(fieldInfo, filter, setFilter);
+  const {FilterPopup} = useFilterPopup(
+    fieldInfo,
+    fieldReference.path ?? [],
+    filter,
+    setFilter
+  );
 
   const icon = atomicTypeToIcon(fieldInfo.type.kind);
 

@@ -14,6 +14,7 @@ import {ParsedFilter} from '@malloydata/malloy-query-builder';
 
 export function useFilterPopup(
   fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure,
+  path: string[],
   filter: ParsedFilter,
   setFilter: (filter: ParsedFilter) => void
 ) {
@@ -27,6 +28,7 @@ export function useFilterPopup(
           <FilterDialog
             fieldInfo={fieldInfo}
             filter={filter}
+            path={path}
             setFilter={setFilter}
             setOpen={setOpen}
           />
