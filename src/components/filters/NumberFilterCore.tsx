@@ -11,6 +11,7 @@ import {PillInput} from './PillInput';
 import {useEffect, useState} from 'react';
 import ErrorIcon from '../primitives/ErrorIcon';
 import {SelectDropdown} from '../primitives/SelectDropdown';
+import stylex from '@stylexjs/stylex';
 
 type NumberFilterType =
   | 'is_equal_to'
@@ -195,6 +196,7 @@ function SingleNumberEditor({value, setValue}: SingleNumberEditorProps) {
       onChange={e => {
         setValue(e.target.value);
       }}
+      {...stylex.props(styles.numberInput)}
     />
   );
 }
@@ -233,3 +235,12 @@ export function makeFilterWithNewType(
       return {...NumberFilterFragments[type]} as BasicNumberFilter;
   }
 }
+
+const styles = stylex.create({
+  numberInput: {
+    border: '1px solid rgb(239, 239, 239)',
+    borderRadius: 4,
+    color: 'rgb(95, 99, 104)',
+    padding: '3px 3px 3px 10px',
+  },
+});

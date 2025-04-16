@@ -234,7 +234,6 @@ const styles = stylex.create({
     fontWeight: 'normal',
     borderRadius: 4,
     border: '1px solid rgba(230, 235, 239, 1)',
-    backgroundColor: 'rgba(230, 235, 239, 1)',
     padding: '2px 3px',
     outline: 'none',
     display: 'flex',
