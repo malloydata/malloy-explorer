@@ -6,34 +6,20 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
 import {useContext} from 'react';
-import {ASTQuery, ParsedFilter} from '@malloydata/malloy-query-builder';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {AddFieldItem} from './AddFieldItem';
 import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
-import {useFilterModal} from '../../filters/hooks/useFilterModal';
+import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 
 export interface AddWhereProps {
   rootQuery: ASTQuery;
   view: ViewParent;
 }
 
-export function AddWhere({rootQuery, view}: AddWhereProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function AddWhere({view}: AddWhereProps) {
+  const {openFilterModal} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
-
-  const {openFilterModal, FilterModal} = useFilterModal(
-    (field: Malloy.FieldInfo, path: string[], filter: ParsedFilter) => {
-      const segment = view.getOrAddDefaultSegment();
-      if (field.kind === 'dimension') {
-        segment.addWhere(field.name, path, filter);
-      } else {
-        segment.addHaving(field.name, path, filter);
-      }
-      setQuery?.(rootQuery.build());
-    }
-  );
 
   return (
     <>
@@ -49,11 +35,10 @@ export function AddWhere({rootQuery, view}: AddWhereProps) {
         }
         onClick={(fieldInfo, path) => {
           if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
-            openFilterModal({fieldInfo, path});
+            openFilterModal({view, fieldInfo, path});
           }
         }}
       />
-      <FilterModal />
     </>
   );
 }

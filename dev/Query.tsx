@@ -55,28 +55,21 @@ const App = () => {
             <hr />
             <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
               <QueryActionBar
-                source={source}
-                query={query}
-                clearQuery={() => setQuery(undefined)}
                 runQuery={(source, query) => {
                   const qb = new QB.ASTQuery({source, query});
                   window.alert(qb.toMalloy());
                 }}
               />
-              <QueryEditor source={source} query={query} setQuery={setQuery} />
+              <QueryEditor />
             </div>
           </div>
           <div>
             <div>
-              <MalloyPreview source={source} query={query} />
+              <MalloyPreview />
             </div>
             <hr />
             <div>
-              {query ? (
-                <RawPreview source={source} query={query} />
-              ) : (
-                <div>No query</div>
-              )}
+              <RawPreview />
             </div>
           </div>
         </div>

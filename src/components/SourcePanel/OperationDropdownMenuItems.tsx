@@ -1,40 +1,39 @@
 import React from 'react';
 import {useOperations} from './hooks/useOperations';
-import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {getNestName} from './utils';
 import {DropdownMenuItem} from '../primitives';
-import {OpenFilterModalCallback} from '../filters/hooks/useFilterModal';
+import {ViewParent} from '../utils/fields';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
 interface OperationDropdownMenuItemsProps {
-  segment?: ASTSegmentViewDefinition;
+  view: ViewParent;
   field: FieldInfo;
   path: string[];
   withEmptyNest?: boolean;
-  openFilterModal: OpenFilterModalCallback;
 }
 
 export function OperationDropdownMenuItems({
-  segment,
+  view,
   field,
   path,
   withEmptyNest = false,
-  openFilterModal,
 }: OperationDropdownMenuItemsProps) {
-  const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
+  const {rootQuery, setQuery, openFilterModal} =
+    React.useContext(QueryEditorContext);
 
   const {
     isGroupByAllowed,
     isAggregateAllowed,
     isFilterAllowed,
     isOrderByAllowed,
-  } = useOperations(segment, field, path);
+  } = useOperations(view, field, path);
 
   const handleMenuItemClick = (operation: Operation) => {
     if (field.kind === 'dimension' || field.kind === 'measure') {
+      const segment = view.getOrAddDefaultSegment();
       const currentSegment = withEmptyNest
         ? segment
             ?.addEmptyNest(getNestName(segment))
@@ -46,7 +45,7 @@ export function OperationDropdownMenuItems({
       } else if (operation === 'aggregate' && isAggregateAllowed) {
         currentSegment?.addAggregate(field.name, path);
       } else if (operation === 'filter' && isFilterAllowed) {
-        openFilterModal({fieldInfo: field, path});
+        openFilterModal({view, fieldInfo: field, path});
       } else if (operation === 'orderBy' && isOrderByAllowed) {
         currentSegment?.addOrderBy(field.name, 'asc');
       }

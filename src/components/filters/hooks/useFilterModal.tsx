@@ -6,32 +6,31 @@
  */
 
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as Dialog from '@radix-ui/react-dialog';
 import stylex from '@stylexjs/stylex';
 import {FilterDialog} from '../FilterDialog';
 import {ParsedFilter} from '@malloydata/malloy-query-builder';
+import {ViewParent} from '../../utils/fields';
+import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 
 export interface OpenFilterModalParams {
+  view: ViewParent;
   fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure;
   path: string[];
   filter?: ParsedFilter;
 }
 
 export type OpenFilterModalCallback = ({
+  view,
   fieldInfo,
   path,
   filter,
 }: OpenFilterModalParams) => void;
 
-export function useFilterModal(
-  setFilter: (
-    field: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure,
-    path: string[],
-    filter: ParsedFilter
-  ) => void
-) {
+export function useFilterModal() {
+  const {setQuery, rootQuery} = useContext(QueryEditorContext);
   const [open, setOpen] = useState(false);
   const [current, openFilterModal] = useState<
     OpenFilterModalParams | undefined
@@ -48,33 +47,41 @@ export function useFilterModal(
     };
   }
 
-  const {fieldInfo, path} = current;
+  const {view, fieldInfo, path} = current;
   const filter = current.filter ?? getDefaultFilter(current.fieldInfo);
 
-  const FilterModal = () => {
-    return (
-      <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay {...stylex.props(styles.overlay)}>
-            <Dialog.Content>
-              <Dialog.Title {...stylex.props(styles.displayNone)}>
-                Add filter
-              </Dialog.Title>
-              <Dialog.Description {...stylex.props(styles.displayNone)}>
-                Add {filter.kind} filter
-              </Dialog.Description>
-              <FilterDialog
-                fieldInfo={fieldInfo}
-                filter={filter}
-                setFilter={filter => setFilter(fieldInfo, path, filter)}
-                setOpen={setOpen}
-              />
-            </Dialog.Content>
-          </Dialog.Overlay>
-        </Dialog.Portal>
-      </Dialog.Root>
-    );
+  const setFilter = (filter: ParsedFilter) => {
+    const segment = view.getOrAddDefaultSegment();
+    if (fieldInfo.kind === 'dimension') {
+      segment.addWhere(fieldInfo.name, path, filter);
+    } else {
+      segment.addHaving(fieldInfo.name, path, filter);
+    }
+    setQuery?.(rootQuery?.build());
   };
+
+  const FilterModal = () => (
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Portal>
+        <Dialog.Overlay {...stylex.props(styles.overlay)}>
+          <Dialog.Content {...stylex.props(styles.content)}>
+            <Dialog.Title {...stylex.props(styles.displayNone)}>
+              Add filter
+            </Dialog.Title>
+            <Dialog.Description {...stylex.props(styles.displayNone)}>
+              Add {filter.kind} filter
+            </Dialog.Description>
+            <FilterDialog
+              fieldInfo={fieldInfo}
+              filter={filter}
+              setFilter={filter => setFilter(filter)}
+              setOpen={setOpen}
+            />
+          </Dialog.Content>
+        </Dialog.Overlay>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
 
   return {
     openFilterModal,
@@ -119,4 +126,5 @@ const styles = stylex.create({
     placeItems: 'center',
     zIndex: 100,
   },
+  content: {},
 });

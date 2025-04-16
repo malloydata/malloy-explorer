@@ -5,24 +5,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as QueryBuilder from '@malloydata/malloy-query-builder';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 import {flattenFieldsTree} from '../utils';
-import {segmentHasOrderBy} from '../../utils/segment';
+import {getSegmentIfPresent, segmentHasOrderBy} from '../../utils/segment';
+import {
+  getInputSchemaFromViewParent,
+  ViewParent,
+  viewParentHasField,
+} from '../../utils/fields';
 
 export function useOperations(
-  segment: QueryBuilder.ASTSegmentViewDefinition | undefined,
+  view: ViewParent,
   field: Malloy.FieldInfo,
   path: string[]
 ) {
   const isGroupByAllowed = useMemo(() => {
-    if (!segment) {
+    if (!view) {
       return false;
     }
 
     const fieldName = field.name;
-    const inputSchemaFields = segment.getInputSchema().fields;
+    const inputSchemaFields = getInputSchemaFromViewParent(view).fields;
     const filteredFieldItems = flattenFieldsTree(inputSchemaFields).filter(
       item => item.field.kind === 'dimension'
     );
@@ -32,17 +36,17 @@ export function useOperations(
         item =>
           item.field.name === fieldName &&
           item.path.join('.') === path.join('.')
-      ) && !segment.hasField(field.name, path)
+      ) && !viewParentHasField(view, field, path)
     );
-  }, [segment, field, path]);
+  }, [view, field, path]);
 
   const isAggregateAllowed = useMemo(() => {
-    if (!segment) {
+    if (!view) {
       return false;
     }
 
     const fieldName = field.name;
-    const inputSchemaFields = segment.getInputSchema().fields;
+    const inputSchemaFields = getInputSchemaFromViewParent(view).fields;
     const filteredFieldItems = flattenFieldsTree(inputSchemaFields).filter(
       item => item.field.kind === 'measure'
     );
@@ -52,37 +56,38 @@ export function useOperations(
         item =>
           item.field.name === fieldName &&
           item.path.join('.') === path.join('.')
-      ) && !segment.hasField(field.name, path)
+      ) && !viewParentHasField(view, field, path)
     );
-  }, [segment, field, path]);
+  }, [view, field, path]);
 
   const isFilterAllowed = useMemo(() => {
-    if (!segment) {
+    if (!view) {
       return false;
     }
     const fieldName = field.name;
-    const inputSchemaFields = segment.getInputSchema().fields;
+    const inputSchemaFields = getInputSchemaFromViewParent(view).fields;
 
     return inputSchemaFields
       .filter(field => field.kind === 'dimension' || field.kind === 'measure')
       .filter(field => FILTERABLE_TYPES.includes(field.type.kind))
       .some(field => field.name === fieldName);
-  }, [segment, field]);
+  }, [view, field]);
 
   const isOrderByAllowed = useMemo(() => {
-    if (!segment) {
+    if (!view) {
       return false;
     }
 
     const fieldName = field.name;
-    const outputSchemaFields = segment.getOutputSchema().fields;
+    const outputSchemaFields = view.getOutputSchema().fields;
+    const segment = getSegmentIfPresent(view);
 
     return outputSchemaFields
       .filter(field => field.kind === 'dimension')
       .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
-      .filter(field => !segmentHasOrderBy(segment, field.name))
+      .filter(field => !segment || !segmentHasOrderBy(segment, field.name))
       .some(field => field.name === fieldName);
-  }, [segment, field]);
+  }, [view, field]);
 
   return {
     isGroupByAllowed,

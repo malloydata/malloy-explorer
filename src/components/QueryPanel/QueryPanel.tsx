@@ -13,32 +13,18 @@ import {QueryEditor} from './QueryEditor';
 import {ScrollableArea} from '../primitives';
 
 interface QueryPanelProps {
-  source: Malloy.SourceInfo;
-  query?: Malloy.Query;
-  showSource?: boolean;
-  setQuery: (query: Malloy.Query | undefined) => void;
   runQuery: (source: Malloy.SourceInfo, query: Malloy.Query) => void;
 }
 
-export default function QueryPanel({
-  source,
-  query,
-  setQuery,
-  runQuery,
-}: QueryPanelProps) {
+export default function QueryPanel({runQuery}: QueryPanelProps) {
   return (
     <div {...stylex.props(styles.main)}>
       <div {...stylex.props(styles.header)}>
-        <QueryActionBar
-          source={source}
-          query={query}
-          clearQuery={() => setQuery(undefined)}
-          runQuery={runQuery}
-        />
+        <QueryActionBar runQuery={runQuery} />
       </div>
       <ScrollableArea>
         <div {...stylex.props(styles.content)}>
-          <QueryEditor source={source} query={query} setQuery={setQuery} />
+          <QueryEditor />
         </div>
       </ScrollableArea>
     </div>

@@ -1,5 +1,4 @@
-import React from 'react';
-import {ASTSegmentViewDefinition} from '@malloydata/malloy-query-builder';
+import React, {useContext} from 'react';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {NestOperation, useNestOperations} from './hooks/useNestOperations';
@@ -11,10 +10,10 @@ import {
   DropdownSubMenuItem,
 } from '../primitives';
 import {getNestName} from './utils';
-import {useFilterModal} from '../filters/hooks/useFilterModal';
+import {ViewParent} from '../utils/fields';
 
 interface NestFieldDropdownMenuProps {
-  segment?: ASTSegmentViewDefinition;
+  view: ViewParent;
   field: FieldInfo;
   path: string[];
   trigger: React.ReactElement;
@@ -22,23 +21,13 @@ interface NestFieldDropdownMenuProps {
 }
 
 export function NestFieldDropdownMenu({
-  segment,
+  view,
   field,
   path,
   trigger,
   onOpenChange,
 }: NestFieldDropdownMenuProps) {
-  const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
-  const {FilterModal, openFilterModal} = useFilterModal(
-    (field, path: string[], filter) => {
-      if (field.kind === 'dimension') {
-        segment?.addWhere(field.name, path, filter);
-      } else {
-        segment?.addHaving(field.name, path, filter);
-      }
-      setQuery?.(rootQuery?.build());
-    }
-  );
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   const nestOperations = useNestOperations(rootQuery);
 
@@ -49,49 +38,42 @@ export function NestFieldDropdownMenu({
   };
 
   return (
-    <>
-      <DropdownMenu trigger={trigger} onOpenChange={onOpenChange}>
-        {nestOperations.length === 0 ? (
-          <>
-            <DropdownMenuLabel label={'Add to new nested query as...'} />
-            <OperationDropdownMenuItems
-              segment={segment}
-              field={field}
-              path={path}
-              withEmptyNest={true}
-              openFilterModal={openFilterModal}
-            />
-          </>
-        ) : (
-          <>
-            <DropdownMenuLabel label={'Add to nested query...'} />
-            {nestOperations.map((operation, index) => {
-              return field.kind === 'view' ? (
-                <DropdownMenuItem
-                  key={index}
-                  label={operation.name}
-                  onClick={() => nestViewWithinNestQuery(operation)}
+    <DropdownMenu trigger={trigger} onOpenChange={onOpenChange}>
+      {nestOperations.length === 0 ? (
+        <>
+          <DropdownMenuLabel label={'Add to new nested query as...'} />
+          <OperationDropdownMenuItems
+            view={view}
+            field={field}
+            path={path}
+            withEmptyNest={true}
+          />
+        </>
+      ) : (
+        <>
+          <DropdownMenuLabel label={'Add to nested query...'} />
+          {nestOperations.map((operation, index) => {
+            return field.kind === 'view' ? (
+              <DropdownMenuItem
+                key={index}
+                label={operation.name}
+                onClick={() => nestViewWithinNestQuery(operation)}
+              />
+            ) : (
+              <DropdownSubMenuItem key={index} label={operation.name}>
+                <DropdownMenuLabel
+                  label={`Add to ${operation.name} query as...`}
                 />
-              ) : (
-                <DropdownSubMenuItem key={index} label={operation.name}>
-                  <>
-                    <DropdownMenuLabel
-                      label={`Add to ${operation.name} query as...`}
-                    />
-                    <OperationDropdownMenuItems
-                      segment={operation.view.getOrAddDefaultSegment()}
-                      field={field}
-                      path={path}
-                      openFilterModal={openFilterModal}
-                    />
-                  </>
-                </DropdownSubMenuItem>
-              );
-            })}
-          </>
-        )}
-      </DropdownMenu>
-      <FilterModal />
-    </>
+                <OperationDropdownMenuItems
+                  view={operation.view.parent.as.View()}
+                  field={field}
+                  path={path}
+                />
+              </DropdownSubMenuItem>
+            );
+          })}
+        </>
+      )}
+    </DropdownMenu>
   );
 }

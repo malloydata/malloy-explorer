@@ -68,7 +68,7 @@ export const NumberFilterCore: React.FC<NumberFilterCoreProps> = ({
   filter ??= {operator: '=', values: []};
   // Maintain the text content of the input inside this component, and only
   // update the parent when the content passes validation.
-  const [innerValues, setInnerValues] = useState<string[]>([]);
+  const [innerValues, setInnerValues] = useState<string[]>(['0']);
   const [errorMessage, setErrorMessage] = useState('');
 
   const changeType = (type: string) => {
@@ -98,7 +98,7 @@ export const NumberFilterCore: React.FC<NumberFilterCoreProps> = ({
       }
       setInnerValues(values);
     } else {
-      setInnerValues([]);
+      setInnerValues(['0']);
     }
   }, [filter]);
 

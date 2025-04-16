@@ -6,17 +6,12 @@
  */
 
 import * as React from 'react';
-import * as Malloy from '@malloydata/malloy-interfaces';
-import {useQueryBuilder} from '../../src/hooks/useQueryBuilder';
+import {useContext} from 'react';
 import {CodeBlock} from '../../src/components/primitives';
+import {QueryEditorContext} from '../../src/contexts/QueryEditorContext';
 
-export interface MalloyPreviewProps {
-  source: Malloy.SourceInfo;
-  query?: Malloy.Query;
-}
-
-export function MalloyPreview({source, query}: MalloyPreviewProps) {
-  const rootQuery = useQueryBuilder(source, query);
+export function MalloyPreview() {
+  const {rootQuery} = useContext(QueryEditorContext);
   if (!rootQuery) {
     return null;
   }
