@@ -16,10 +16,12 @@ import {useMemo} from 'react';
 export interface FieldListProps {
   search: string;
   onClick: (value: SearchIndexResult) => void;
+  fieldPath?: string;
+  ref?: React.RefObject<HTMLDivElement | null>;
 }
 
-export function ValueList({onClick, search}: FieldListProps) {
-  const {searchResults} = useSearch(search);
+export function ValueList({onClick, search, fieldPath, ref}: FieldListProps) {
+  const {searchResults} = useSearch(search, fieldPath);
   const stringSearchResults = useMemo(
     () =>
       searchResults &&
@@ -31,7 +33,7 @@ export function ValueList({onClick, search}: FieldListProps) {
   );
 
   return (
-    <div>
+    <div ref={ref}>
       {stringSearchResults?.length ? (
         stringSearchResults.map(value => (
           <div
@@ -45,11 +47,11 @@ export function ValueList({onClick, search}: FieldListProps) {
             <div {...stylex.props(styles.field)}>{value.fieldName}</div>
           </div>
         ))
-      ) : (
+      ) : search ? (
         <div {...stylex.props(addMenuStyles.item)} data-disabled="true">
           No matching values
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

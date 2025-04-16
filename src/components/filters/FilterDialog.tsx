@@ -26,6 +26,7 @@ import {fontStyles} from '../primitives/styles';
 
 export interface FilterDialogProps {
   fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure;
+  path: string[];
   filter: ParsedFilter;
   setFilter: (filter: ParsedFilter) => void;
   setOpen: (open: boolean) => void;
@@ -33,6 +34,7 @@ export interface FilterDialogProps {
 
 export function FilterDialog({
   fieldInfo,
+  path,
   filter,
   setFilter,
   setOpen,
@@ -84,6 +86,8 @@ export function FilterDialog({
           filter={
             (currentFilter.parsed as BasicStringFilter) ?? {operator: 'null'}
           }
+          field={fieldInfo}
+          path={path}
         />
       )}
       {currentFilter.kind === 'number' && (
