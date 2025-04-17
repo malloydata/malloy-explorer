@@ -21,6 +21,7 @@ import {
 } from '../src';
 import {modelInfo} from './sample_models/example_model';
 import {exampleResult} from './sample_models/example_result';
+import {topValues} from './sample_models/example_top_values';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
@@ -32,7 +33,12 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <MalloyExplorerProvider source={source} query={query} setQuery={setQuery}>
+      <MalloyExplorerProvider
+        source={source}
+        query={query}
+        setQuery={setQuery}
+        topValues={topValues}
+      >
         <ExplorerPanelsContext.Provider
           value={{
             isSourcePanelOpen,
@@ -46,11 +52,7 @@ const App = () => {
                   {...stylex.props(styles.panel)}
                   style={{width: `${sourcePanelWidth}px`}}
                 >
-                  <SourcePanel
-                    source={source}
-                    query={query}
-                    setQuery={setQuery}
-                  />
+                  <SourcePanel />
                   <ResizeBar
                     minWidth={180}
                     width={sourcePanelWidth}
@@ -64,14 +66,10 @@ const App = () => {
                 style={{width: `${queryPanelWidth}px`}}
               >
                 <QueryPanel
-                  source={source}
-                  query={query}
-                  setQuery={setQuery}
                   runQuery={(source, query) => {
                     const qb = new QueryBuilder.ASTQuery({source, query});
                     window.alert(qb.toMalloy());
                   }}
-                  showSource={false}
                 />
                 <ResizeBar
                   minWidth={230}
