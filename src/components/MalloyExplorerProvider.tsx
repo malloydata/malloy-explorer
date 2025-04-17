@@ -32,7 +32,7 @@ export function MalloyExplorerProvider({
   topValues,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
-  const {openFilterModal, FilterModal} = useFilterModal();
+  const {openFilterModal, FilterModal} = useFilterModal({rootQuery, setQuery});
 
   return (
     <TooltipProvider>

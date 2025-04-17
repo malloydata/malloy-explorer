@@ -6,14 +6,13 @@
  */
 
 import * as React from 'react';
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as Dialog from '@radix-ui/react-dialog';
 import stylex from '@stylexjs/stylex';
 import {FilterDialog} from '../FilterDialog';
-import {ParsedFilter} from '@malloydata/malloy-query-builder';
+import {ASTQuery, ParsedFilter} from '@malloydata/malloy-query-builder';
 import {ViewParent} from '../../utils/fields';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {TemporalLiteral} from '@malloydata/malloy-filter';
 import moment from 'moment';
 
@@ -33,8 +32,12 @@ export type OpenFilterModalCallback = ({
   filter,
 }: OpenFilterModalParams) => void;
 
-export function useFilterModal() {
-  const {setQuery, rootQuery} = useContext(QueryEditorContext);
+export interface UseFilterModelProps {
+  setQuery: ((rootQuery: Malloy.Query | undefined) => void) | undefined;
+  rootQuery: ASTQuery | undefined;
+}
+
+export function useFilterModal({setQuery, rootQuery}: UseFilterModelProps) {
   const [open, setOpen] = useState(false);
   const [current, openFilterModal] = useState<
     OpenFilterModalParams | undefined
