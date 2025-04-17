@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import {useEffect, useState} from 'react';
+import {flip, offset, useFloating} from '@floating-ui/react-dom';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as Dialog from '@radix-ui/react-dialog';
 import stylex from '@stylexjs/stylex';
@@ -67,15 +68,30 @@ export function useFilterModal({setQuery, rootQuery}: UseFilterModelProps) {
     setQuery?.(rootQuery?.build());
   };
 
-  // TODO fix x and y to window
+  const FilterModal = () => {
+    const {refs, floatingStyles} = useFloating({
+      placement: 'right-start',
+      strategy: 'fixed',
+      open,
+      middleware: [
+        offset({mainAxis: 3, crossAxis: 3}),
+        flip({boundary: document.body}),
+      ],
+    });
 
-  const FilterModal = () => (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Portal>
-        <Dialog.Overlay {...stylex.props(styles.overlay)}>
+    return (
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay {...stylex.props(styles.overlay)}>
+            <div
+              style={{position: 'fixed', left: x, top: y}}
+              ref={refs.setReference}
+            />
+          </Dialog.Overlay>
           <Dialog.Content
             {...stylex.props(styles.content)}
-            style={x && y ? {position: 'fixed', top: y, left: x} : {}}
+            style={floatingStyles}
+            ref={refs.setFloating}
           >
             <Dialog.Title {...stylex.props(styles.displayNone)}>
               Add filter
@@ -91,10 +107,10 @@ export function useFilterModal({setQuery, rootQuery}: UseFilterModelProps) {
               setOpen={setOpen}
             />
           </Dialog.Content>
-        </Dialog.Overlay>
-      </Dialog.Portal>
-    </Dialog.Root>
-  );
+        </Dialog.Portal>
+      </Dialog.Root>
+    );
+  };
 
   return {
     openFilterModal,
@@ -146,5 +162,7 @@ const styles = stylex.create({
     placeItems: 'center',
     zIndex: 100,
   },
-  content: {},
+  content: {
+    zIndex: 100,
+  },
 });
