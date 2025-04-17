@@ -23,6 +23,7 @@ import {
 } from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../../primitives/styles';
 import {ViewParent} from '../../utils/fields';
+import {colors} from './colors.stylex';
 
 export interface AddGroupByProps {
   label: string;
@@ -56,7 +57,11 @@ export function AddFieldItem({
     <div
       role="menuitem"
       tabIndex={-1}
-      {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
+      {...stylex.props(
+        addMenuStyles.item,
+        addMenuStyles.clickable,
+        open ? styles.open : null
+      )}
       data-disabled={disabled ? 'true' : undefined}
     >
       <div {...stylex.props(addMenuStyles.label)}>
@@ -108,3 +113,9 @@ export function AddFieldItem({
     </Popover.Root>
   );
 }
+
+const styles = stylex.create({
+  open: {
+    background: colors.hover,
+  },
+});
