@@ -45,15 +45,16 @@ export default function CollapsiblePanel({
   return (
     <div {...stylex.props(styles.container)}>
       <div {...stylex.props(styles.topBar)}>
-        {icon && <Icon name={icon} customStyle={styles.icon} />}
-        <div {...stylex.props(styles.title)}>{title}</div>
+        <div {...stylex.props(styles.topBarStartSection)}>
+          {icon && <Icon name={icon} customStyle={styles.icon} />}
+          <div {...stylex.props(styles.title)}>{title}</div>
+        </div>
         <div {...stylex.props(styles.topBarRightSection)}>
           {isExpanded ? (
             <div {...stylex.props(styles.controls)}>{controls}</div>
           ) : (
             <div {...stylex.props(styles.controls)}>{collapsedControls}</div>
           )}
-
           <Button
             variant="flat"
             size="compact"
@@ -75,20 +76,30 @@ const styles = stylex.create({
     padding: 0,
   },
   topBar: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridTemplateColumns: '1fr auto',
+    justifyContent: 'start',
     padding: '4px',
     gap: '8px',
     alignItems: 'center',
+  },
+  topBarStartSection: {
+    display: 'grid',
+    gridAutoFlow: 'column',
+    justifyContent: 'start',
+    alignItems: 'center',
+    gap: '8px',
   },
   topBarRightSection: {
     display: 'flex',
   },
   title: {
     whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     padding: '0 4px',
     margin: 0,
-    flexGrow: 1,
   },
   icon: {},
   content: {
