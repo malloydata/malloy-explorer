@@ -95,6 +95,7 @@ const App = () => {
                       }
                     : undefined
                 }
+                options={{showRawQuery: true}}
               />
             </div>
           </div>
