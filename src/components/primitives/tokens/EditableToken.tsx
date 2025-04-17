@@ -134,6 +134,7 @@ export default function EditableToken({
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            size={1}
           />
         </span>
         {onRemove && isFocused && (
@@ -170,23 +171,23 @@ const styles = stylex.create({
   },
   inputWrapper: {
     display: 'inline-grid',
-    width: 'min-content',
   },
   placeholder: {
     background: 'transparent',
     color: 'transparent',
     gridArea: '1 / 1',
     whiteSpace: 'nowrap',
+    minWidth: '1px',
   },
   input: {
     color: labelVars.color,
     gridArea: '1 / 1',
-    minWidth: '13.5px',
     padding: '0px',
     background: 'transparent',
     borderStyle: 'none',
     outline: 'none',
     whiteSpace: 'nowrap',
+    minWidth: '1px',
   },
   actionButton: {
     display: 'inline-flex',
