@@ -86,11 +86,7 @@ export function AddFieldItem({
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger
-        asChild
-        disabled={disabled}
-        onMouseEnter={() => setOpen(true)}
-      >
+      <Popover.Trigger asChild disabled={disabled}>
         {trigger}
       </Popover.Trigger>
       <Popover.Portal>
