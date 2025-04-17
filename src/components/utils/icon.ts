@@ -6,10 +6,12 @@
  */
 
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {AtomicTypeType} from '@malloydata/malloy-interfaces';
+import {AtomicTypeType, ParameterTypeType} from '@malloydata/malloy-interfaces';
 import {IconType} from '../primitives';
 
-export function atomicTypeToIcon(type: AtomicTypeType): IconType {
+export function atomicTypeToIcon(
+  type: AtomicTypeType | ParameterTypeType
+): IconType {
   return atomicTypeMap[type];
 }
 
@@ -42,7 +44,7 @@ export function relationshipToIcon(
   return relationshipMap[relationship];
 }
 
-const atomicTypeMap: Record<AtomicTypeType, IconType> = {
+const atomicTypeMap: Record<AtomicTypeType | ParameterTypeType, IconType> = {
   array_type: 'array',
   string_type: 'string',
   date_type: 'date',
@@ -52,6 +54,7 @@ const atomicTypeMap: Record<AtomicTypeType, IconType> = {
   record_type: 'json',
   sql_native_type: 'sql_native',
   timestamp_type: 'date',
+  filter_expression_type: 'filter',
 } as const;
 
 const fieldKindMap = {
