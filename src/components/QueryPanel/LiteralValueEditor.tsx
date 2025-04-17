@@ -84,5 +84,13 @@ export function LiteralValueEditor({
           }
         />
       );
+    case 'filter_expression_literal':
+      return (
+        <EditableToken
+          value={value.filter_expression_value}
+          onChange={value => setValue(value)}
+          customStyle={customStyle}
+        />
+      );
   }
 }
