@@ -19,6 +19,7 @@ import {RefObject, useRef, useState} from 'react';
 import {filterStyles} from './styles';
 import {SelectDropdown} from '../primitives/SelectDropdown';
 import {ValueList} from '../QueryPanel/AddMenu/ValueList';
+import stylex from '@stylexjs/stylex';
 
 export type BasicStringFilter =
   | StringCondition
@@ -162,6 +163,7 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
                 setSearchValue('');
               }
             }}
+            customStyle={styles.valueList}
           />
         </>
       ) : currentFilter.operator === '~' ? (
@@ -253,3 +255,10 @@ export function stringFilterChangeType(
       } as BasicStringFilter;
   }
 }
+
+const styles = stylex.create({
+  valueList: {
+    maxHeight: 200,
+    overflow: 'auto',
+  },
+});
