@@ -18,7 +18,6 @@ import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {Token} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
-import {atomicTypeToIcon} from '../../utils/icon';
 import {ClearButton} from './ClearButton';
 import {ErrorElement} from '../../ErrorElement';
 import {useFilterPopup} from '../../filters/hooks/useFilterPopup';
