@@ -1,6 +1,6 @@
 {
   "name": "@malloydata/malloy-explorer",
-  "version": "0.0.257",
+  "version": "0.0.264",
   "description": "Malloy visual query builder",
   "main": "dist/cjs/index.cjs",
   "types": "dist/types/index.d.ts",
@@ -25,8 +25,8 @@
     "dev": "vite",
     "preview": "vite preview",
     "lint": "tsc --noEmit && eslint .",
-    "malloy-update-next": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.ts next)",
-    "malloy-update": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.ts latest)",
+    "malloy-update-next": "npm install --no-fund --no-audit $(./scripts/malloy-packages.ts next)",
+    "malloy-update": "npm install --no-fund --no-audit $(./scripts/malloy-packages.ts latest)",
     "malloy-link": "npm --no-fund --no-audit link $(./scripts/malloy-packages.ts)",
     "malloy-unlink": "npm --no-fund --no-save --no-audit unlink $(./scripts/malloy-packages.ts) && npm --no-fund --no-audit install --force",
     "malloy-build-and-link": "cd ../malloy && npm run -ws build --workspace=@malloydata/malloy-query-builder --workspace=@malloydata/malloy-filter --workspace=@malloydata/malloy-interfaces --workspace=@malloydata/malloy-tag && npm link -ws",
@@ -98,11 +98,11 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "peerDependencies": {
-    "@malloydata/malloy-filter": "0.0.261",
-    "@malloydata/malloy-interfaces": "0.0.261",
-    "@malloydata/malloy-query-builder": "0.0.261",
-    "@malloydata/malloy-tag": "0.0.261",
-    "@malloydata/render": "0.0.261",
+    "@malloydata/malloy-filter": ">=0.0.264",
+    "@malloydata/malloy-interfaces": ">=0.0.264",
+    "@malloydata/malloy-query-builder": ">=0.0.264",
+    "@malloydata/malloy-tag": ">=0.0.264",
+    "@malloydata/render": ">=0.0.264",
     "react": ">= 19.0.0",
     "react-dom": ">= 19.0.0"
   }
