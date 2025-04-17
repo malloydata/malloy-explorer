@@ -18,7 +18,6 @@ import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {Token} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
-import {atomicTypeToIcon} from '../../utils/icon';
 import {ClearButton} from './ClearButton';
 import {ErrorElement} from '../../ErrorElement';
 import {useFilterPopup} from '../../filters/hooks/useFilterPopup';
@@ -97,15 +96,15 @@ function SingleFilterOperation({
     setFilter
   );
 
-  const icon = atomicTypeToIcon(fieldInfo.type.kind);
-
   const {op, value} = parsedToLabels(filter, filterString);
 
   const label = `${fieldInfo.name} ${op} ${value}`;
 
   return (
     <div {...stylex.props(hoverStyles.main)}>
-      <FilterPopup trigger={<Token icon={icon} color="cyan" label={label} />} />
+      <FilterPopup
+        trigger={<Token icon="filter" color="cyan" label={label} />}
+      />
       <div {...stylex.props(hoverStyles.hoverActions)}>
         <ClearButton
           onClick={() => {
@@ -144,23 +143,23 @@ const parsedToLabels = (
         switch (operator) {
           case '~':
             op = 'is like';
-            value = stringClause.escaped_values.join(',');
+            value = stringClause.escaped_values.join(', ');
             break;
           case '=':
             op = 'is';
-            value = stringClause.values.join(',');
+            value = stringClause.values.join(', ');
             break;
           case 'contains':
             op = 'contains';
-            value = stringClause.values.join(',');
+            value = stringClause.values.join(', ');
             break;
           case 'starts':
             op = 'starts with';
-            value = stringClause.values.join(',');
+            value = stringClause.values.join(', ');
             break;
           case 'ends':
             op = 'is like';
-            value = stringClause.values.join(',');
+            value = stringClause.values.join(', ');
             break;
           case 'empty':
             op = 'is empty';
@@ -185,7 +184,7 @@ const parsedToLabels = (
           case '<':
           case '>':
             op = operator;
-            value = numberClause.values.join(',');
+            value = numberClause.values.join(', ');
             break;
           case 'range':
             op = 'in between';
