@@ -140,6 +140,7 @@ const styles = stylex.create({
   input: {
     flexGrow: 1,
     height: '20px',
+    minWidth: '1px',
     padding: '0px',
     background: 'transparent',
     borderStyle: 'none',
