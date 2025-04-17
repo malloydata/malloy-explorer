@@ -43,7 +43,7 @@ export function Parameters({rootQuery}: ParametersProps) {
       <CollapsiblePanel title="Source parameters">
         <div {...stylex.props(styles.content)}>
           {sourceParameters.map(parameter => (
-            <TokenGroup key={parameter.name}>
+            <TokenGroup key={parameter.name} customStyle={styles.tokenGroup}>
               <Token
                 icon={atomicTypeToIcon(parameter.type.kind)}
                 label={parameter.name}
@@ -71,7 +71,10 @@ const styles = stylex.create({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px',
+    gap: 4,
     paddingLeft: '16px',
+  },
+  tokenGroup: {
+    display: 'flex',
   },
 });
