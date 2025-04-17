@@ -17,6 +17,7 @@ export const filterStyles = stylex.create({
     borderRadius: 8,
     padding: 8,
     minWidth: 200,
+    maxWidth: 400,
     gap: 8,
   },
   filterDialogHeader: {

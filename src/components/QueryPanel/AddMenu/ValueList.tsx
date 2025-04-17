@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import stylex from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
 import {Token} from '../../primitives';
 import {SearchIndexResult, useSearch} from './hooks/useSearch';
@@ -18,9 +18,16 @@ export interface FieldListProps {
   onClick: (value: SearchIndexResult) => void;
   fieldPath?: string;
   ref?: React.RefObject<HTMLDivElement | null>;
+  customStyle?: StyleXStyles;
 }
 
-export function ValueList({onClick, search, fieldPath, ref}: FieldListProps) {
+export function ValueList({
+  onClick,
+  search,
+  fieldPath,
+  ref,
+  customStyle,
+}: FieldListProps) {
   const {searchResults} = useSearch(search, fieldPath);
   const stringSearchResults = useMemo(
     () =>
@@ -33,7 +40,7 @@ export function ValueList({onClick, search, fieldPath, ref}: FieldListProps) {
   );
 
   return (
-    <div ref={ref}>
+    <div ref={ref} {...stylex.props(customStyle)}>
       {stringSearchResults?.length ? (
         stringSearchResults.map(value => (
           <div

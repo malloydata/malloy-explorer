@@ -239,7 +239,7 @@ const styles = stylex.create({
     display: 'flex',
     overflow: 'hidden',
     gap: 3,
-    flexWrap: 'nowrap',
+    flexWrap: 'wrap',
     borderColor: {
       default: 'none',
       ':focus': '#4285F4',
@@ -269,6 +269,7 @@ const styles = stylex.create({
     textTransform: 'none',
     cursor: 'pointer',
     height: 20,
+    whiteSpace: 'nowrap',
   },
 
   remove: {
