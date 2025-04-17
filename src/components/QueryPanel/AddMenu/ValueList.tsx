@@ -68,7 +68,14 @@ export interface ValueProps {
 }
 
 export function Value({value}: ValueProps) {
-  return <Token label={value.fieldValue ?? '∅'} icon="filter" color="purple" />;
+  return (
+    <Token
+      label={value.fieldValue ?? '∅'}
+      icon="filter"
+      color="purple"
+      customStyle={styles.token}
+    />
+  );
 }
 
 const styles = stylex.create({
@@ -78,8 +85,12 @@ const styles = stylex.create({
     paddingBottom: 8,
     display: 'flex',
     justifyContent: 'space-between',
+    cursor: 'pointer',
   },
   field: {
     color: colors.disabledText,
+  },
+  token: {
+    cursor: 'pointer',
   },
 });
