@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {flip, offset, useFloating} from '@floating-ui/react-dom';
+import {autoUpdate, offset, shift, useFloating} from '@floating-ui/react-dom';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as Dialog from '@radix-ui/react-dialog';
 import stylex from '@stylexjs/stylex';
@@ -73,8 +73,9 @@ export function useFilterModal({setQuery, rootQuery}: UseFilterModelProps) {
       open,
       middleware: [
         offset({mainAxis: 3, crossAxis: 3}),
-        flip({boundary: document.body}),
+        shift({boundary: document.body}),
       ],
+      whileElementsMounted: autoUpdate,
     });
 
     return (
