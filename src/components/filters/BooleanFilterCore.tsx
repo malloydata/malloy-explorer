@@ -10,32 +10,20 @@ import {BooleanFilter} from '@malloydata/malloy-filter';
 import {SelectDropdown} from '../primitives/SelectDropdown';
 import {filterStyles} from './styles';
 
-const BooleanFilterFragments: Record<BooleanFilterType, BooleanFilter> = {
-  is_true: {operator: 'true'},
-  is_false: {operator: 'false'},
-  is_null: {operator: 'null'},
-  is_not_null: {operator: 'null', not: true},
-  is_false_or_null: {operator: 'false_or_null'},
-} as const;
+type BooleanFilterOperator = BooleanFilter['operator'];
 
-export type BooleanFilterType =
-  | 'is_true'
-  | 'is_false'
-  | 'is_null'
-  | 'is_not_null'
-  | 'is_false_or_null';
+type BooleanFilterType = BooleanFilterOperator | '-null';
+
+interface BooleanFilterOption {
+  value: BooleanFilterType;
+  label: string;
+}
 
 function typeFromFilter(filter: BooleanFilter): BooleanFilterType {
-  for (const key in BooleanFilterFragments) {
-    const type = key as BooleanFilterType;
-    const value = BooleanFilterFragments[type];
-    const filterNot = filter.not ?? false;
-    const valueNot = value.not ?? false;
-    if (value.operator === filter.operator && valueNot === filterNot) {
-      return type;
-    }
+  if (filter.operator === 'null' && filter.not) {
+    return '-null';
   }
-  throw new Error(`Unhandled boolean filter type ${filter.operator}`);
+  return filter.operator;
 }
 
 export interface BooleanFilterDialogProps {
@@ -49,7 +37,11 @@ export function BooleanFilterCore({
 }: BooleanFilterDialogProps) {
   const type = typeFromFilter(filter);
   const onChangeType = (type: BooleanFilterType) => {
-    setFilter(BooleanFilterFragments[type]);
+    const filter =
+      type === '-null'
+        ? {operator: 'null' as BooleanFilterOperator, not: true}
+        : {operator: type};
+    setFilter(filter);
   };
 
   return (
@@ -59,12 +51,12 @@ export function BooleanFilterCore({
         onChange={onChangeType}
         options={
           [
-            {value: 'is_true', label: 'is true'},
-            {value: 'is_false', label: 'is false'},
-            {value: 'is_null', label: 'is null'},
-            {value: 'is_not_null', label: 'is not null'},
-            {value: 'is_false_or_null', label: 'is false or null'},
-          ] as {value: BooleanFilterType; label: string}[]
+            {value: 'true', label: 'is true'},
+            {value: 'false', label: 'is false'},
+            {value: 'null', label: 'is null'},
+            {value: '-null', label: 'is not null'},
+            {value: 'false_or_null', label: 'is false or null'},
+          ] as BooleanFilterOption[]
         }
         customStyle={filterStyles.filterTypeDropdown}
       />
