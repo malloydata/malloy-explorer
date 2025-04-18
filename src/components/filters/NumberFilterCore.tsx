@@ -6,12 +6,21 @@
  */
 
 import * as React from 'react';
-import {Null, NumberCondition, NumberFilter} from '@malloydata/malloy-filter';
+import {
+  Null,
+  NumberCondition,
+  NumberFilter,
+  NumberRange,
+} from '@malloydata/malloy-filter';
 import {PillInput} from './PillInput';
 import {useEffect, useState} from 'react';
 import ErrorIcon from '../primitives/ErrorIcon';
 import {SelectDropdown} from '../primitives/SelectDropdown';
 import stylex from '@stylexjs/stylex';
+
+const isRangeOperator = (operator: string): boolean => {
+  return operator === 'range';
+};
 
 type NumberFilterType =
   | 'is_equal_to'
@@ -20,14 +29,16 @@ type NumberFilterType =
   | 'is_greater_than_or_equal_to'
   | 'is_less_than_or_equal_to'
   | 'is_null'
-  // TODO: Figure out how to type this correctly as a NumberOperation
-  // | 'is_between'
+  | 'is_between'
   | 'is_not_equal_to'
   | 'is_not_null';
 
-type BasicNumberFilterFragments = Omit<NumberCondition, 'values'> | Null;
+type BasicNumberFilterFragments =
+  | Omit<NumberCondition, 'values'>
+  | Omit<NumberRange, 'startValue' | 'endValue'>
+  | Null;
 
-type BasicNumberFilter = NumberCondition | Null;
+type BasicNumberFilter = NumberCondition | NumberRange | Null;
 
 const NumberFilterFragments: Record<
   NumberFilterType,
@@ -39,7 +50,7 @@ const NumberFilterFragments: Record<
   is_less_than: {operator: '<'},
   is_greater_than_or_equal_to: {operator: '>='},
   is_less_than_or_equal_to: {operator: '<='},
-  // is_between: {operator: 'to'},
+  is_between: {operator: 'range', startOperator: '>=', endOperator: '<='},
   is_null: {operator: 'null'},
   is_not_null: {operator: 'null', not: true},
 } as const;
@@ -69,7 +80,9 @@ export const NumberFilterCore: React.FC<NumberFilterCoreProps> = ({
   filter ??= {operator: '=', values: []};
   // Maintain the text content of the input inside this component, and only
   // update the parent when the content passes validation.
-  const [innerValues, setInnerValues] = useState<string[]>(['0']);
+  const [innerValues, setInnerValues] = useState<string[]>(
+    isRangeOperator(filter.operator) ? ['0', '0'] : ['0']
+  );
   const [errorMessage, setErrorMessage] = useState('');
 
   const changeType = (type: string) => {
@@ -91,21 +104,24 @@ export const NumberFilterCore: React.FC<NumberFilterCoreProps> = ({
   useEffect(() => {
     // If a new value comes in from the parent, reset our own error message.
     setErrorMessage('');
-    const maybeNumberCondition = filter as NumberCondition;
-    if (maybeNumberCondition.values) {
-      let values = maybeNumberCondition.values;
-      if (!values || values.length === 0) {
-        values = ['0'];
-      }
-      setInnerValues(values);
+    if (isRangeOperator(filter.operator)) {
+      const numberRange = filter as NumberRange;
+      setInnerValues([numberRange.startValue, numberRange.endValue]);
     } else {
-      setInnerValues(['0']);
+      const maybeNumberCondition = filter as NumberCondition;
+      if (maybeNumberCondition.values) {
+        let values = maybeNumberCondition.values;
+        if (!values || values.length === 0) {
+          values = ['0'];
+        }
+        setInnerValues(values);
+      } else {
+        setInnerValues(['0']);
+      }
     }
   }, [filter]);
 
   const validateAndUpdateValues = (values: string[]) => {
-    const numberCondition = filter as NumberCondition;
-
     setInnerValues(values);
     const hasInvalidValues = values.some(v => {
       return isNaN(parseFloat(v));
@@ -116,10 +132,22 @@ export const NumberFilterCore: React.FC<NumberFilterCoreProps> = ({
       setErrorMessage('Requires at least one numeric value.');
     } else {
       setErrorMessage('');
-      setFilter({
-        ...numberCondition,
-        values,
-      });
+      if (filter.operator === 'range') {
+        const numberCondition = filter as NumberRange;
+        setFilter({
+          ...numberCondition,
+          startOperator: '>=',
+          startValue: values[0],
+          endOperator: '<=',
+          endValue: values[1],
+        });
+      } else {
+        const numberCondition = filter as NumberCondition;
+        setFilter({
+          ...numberCondition,
+          values,
+        });
+      }
     }
   };
 
@@ -141,6 +169,7 @@ export const NumberFilterCore: React.FC<NumberFilterCoreProps> = ({
             value: 'is_less_than_or_equal_to',
             label: 'is less than or equal to',
           },
+          {value: 'is_between', label: 'between'},
           {value: 'is_null', label: 'is null'},
           {value: 'is_not_null', label: 'is not null'},
         ]}
@@ -176,6 +205,22 @@ function getEditor(
           setValue={value => validateAndUpdateValues([value])}
           type="number"
         />
+      );
+    case 'range':
+      return (
+        <div {...stylex.props(styles.numberRange)}>
+          <SingleNumberEditor
+            value={innerValues[0]}
+            setValue={value => validateAndUpdateValues([value, innerValues[1]])}
+            type="number"
+          />
+          <span>to</span>
+          <SingleNumberEditor
+            value={innerValues[1]}
+            setValue={value => validateAndUpdateValues([innerValues[0], value])}
+            type="number"
+          />
+        </div>
       );
   }
   return null;
@@ -233,6 +278,12 @@ export function makeFilterWithNewType(
     case 'is_null':
     case 'is_not_null':
       return {...NumberFilterFragments[type]} as BasicNumberFilter;
+    case 'is_between':
+      return {
+        ...NumberFilterFragments[type],
+        startValue: values.length > 0 ? values[0] : '0',
+        endValue: values.length > 1 ? values[1] : '0',
+      } as BasicNumberFilter;
   }
 }
 
@@ -242,5 +293,11 @@ const styles = stylex.create({
     borderRadius: 4,
     color: 'rgb(95, 99, 104)',
     padding: '3px 3px 3px 10px',
+  },
+  numberRange: {
+    display: 'grid',
+    gridTemplateColumns: '100px auto 100px',
+    gap: '8px',
+    alignItems: 'end',
   },
 });
