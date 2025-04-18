@@ -14,8 +14,6 @@ import stylex from '@stylexjs/stylex';
 import {FilterDialog} from '../FilterDialog';
 import {ASTQuery, ParsedFilter} from '@malloydata/malloy-query-builder';
 import {ViewParent} from '../../utils/fields';
-import {TemporalLiteral} from '@malloydata/malloy-filter';
-import moment from 'moment';
 
 export interface OpenFilterModalParams {
   view: ViewParent;
@@ -130,21 +128,14 @@ function getDefaultFilter(
   } else if (fieldInfo.type.kind === 'date_type') {
     return {
       kind: 'date',
-      parsed: {operator: 'after', after: createTemporalDefault()},
+      parsed: {operator: 'last', n: '7', units: 'day'},
     };
   } else {
     return {
       kind: 'timestamp',
-      parsed: {operator: 'after', after: createTemporalDefault()},
+      parsed: {operator: 'last', n: '7', units: 'day'},
     };
   }
-}
-
-function createTemporalDefault(): TemporalLiteral {
-  return {
-    moment: 'literal',
-    literal: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.0'),
-  };
 }
 
 const styles = stylex.create({
