@@ -13,7 +13,7 @@ export type {
   EXECUTION_STATES,
   QueryExecutionState,
   QueryResponse,
-  RunStats,
+  RunInfo,
   SubmittedQuery,
 } from './components/ResultPanel/SubmittedQuery';
 export {SourcePanel} from './components/SourcePanel';
