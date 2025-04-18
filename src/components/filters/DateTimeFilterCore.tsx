@@ -9,71 +9,34 @@ import * as React from 'react';
 import {
   TemporalFilter,
   Moment,
-  NowMoment,
+  TemporalUnit,
+  JustUnits,
+  After,
+  Before,
   TemporalLiteral,
+  To,
 } from '@malloydata/malloy-filter';
 import {useState} from 'react';
-import DatePicker from '../primitives/DatePicker';
+//import DatePicker from '../primitives/DatePicker';
 import moment from 'moment';
-import {useClickOutside} from '../hooks/useClickOutside';
 import {SelectDropdown} from '../primitives/SelectDropdown';
-import ErrorIcon from '../primitives/ErrorIcon';
+import stylex from '@stylexjs/stylex';
+import {DateInput, formats} from '../DateInput';
 
-type DateTimeFilterType =
-  | 'is_equal_to'
-  | 'is_before'
-  | 'is_after'
-  | 'is_between'
-  | 'is_null'
-  | 'is_not_null';
+type TemporalFilterOperator = TemporalFilter['operator'];
+type TemporalFilterType = TemporalFilterOperator | '-null';
+
+type TypeOption = {
+  value: TemporalFilterType;
+  label: string;
+};
 
 // Helper function to determine the filter type from a TemporalFilter
-function typeFromFilter(filter: TemporalFilter): DateTimeFilterType {
-  if (filter.operator === 'null') {
-    return filter.not ? 'is_not_null' : 'is_null';
-  } else if (filter.operator === 'in') {
-    return 'is_equal_to';
-  } else if (filter.operator === 'before') {
-    return 'is_before';
-  } else if (filter.operator === 'after') {
-    return 'is_after';
-  } else if (filter.operator === 'to') {
-    return 'is_between';
+function typeFromFilter(filter: TemporalFilter): TemporalFilterType | '-null' {
+  if (filter.operator === 'null' && filter.not) {
+    return '-null';
   }
-
-  // Default to is_equal_to if we can't determine the type
-  return 'is_equal_to';
-}
-
-// Helper function to create a temporal literal from a Date
-function createTemporalLiteral(date: Date): TemporalLiteral {
-  return {
-    moment: 'literal',
-    literal: moment(date).format('YYYY-MM-DD HH:mm:ss.0'),
-  };
-}
-
-// Helper function to create a now moment
-function createNowMoment(): NowMoment {
-  return {
-    moment: 'now',
-  };
-}
-
-// Helper function to extract a Date from a Moment
-function extractDateFromMoment(momentObj?: Moment): Date {
-  if (!momentObj) {
-    return new Date();
-  }
-
-  if (momentObj.moment === 'literal') {
-    return new Date(momentObj.literal);
-  } else if (momentObj.moment === 'now') {
-    return new Date();
-  }
-
-  // For other moment types, default to now
-  return new Date();
+  return filter.operator;
 }
 
 export interface DateTimeFilterCoreProps {
@@ -87,19 +50,19 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
   setFilter,
   isDateTime,
 }) => {
+  const [units, setUnits] = useState<TemporalUnit>('day');
   // Default filter if none provided
   filter ??= {
-    operator: 'in',
-    in: createNowMoment(),
+    operator: 'last',
+    n: '7',
+    units: 'day',
   };
 
   // Keep a copy of the filter locally
   const [currentFilter, setCurrentFilter] = useState<TemporalFilter>(filter);
 
-  const changeType = (type: string) => {
-    updateFilter(
-      dateTimeFilterChangeType(currentFilter, type as DateTimeFilterType)
-    );
+  const changeType = (type: TemporalFilterType) => {
+    updateFilter(dateTimeFilterChangeType(currentFilter, type, units));
   };
 
   const updateFilter = (newFilter: TemporalFilter) => {
@@ -107,342 +70,366 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
     setFilter(newFilter);
   };
 
+  const maxLevel = isDateTime ? 'second' : 'day';
   const type = typeFromFilter(currentFilter);
 
-  const maxLevel = isDateTime ? 'second' : 'day';
-
   return (
-    <>
-      <SelectDropdown
-        value={type}
-        onChange={changeType}
-        options={[
-          {value: 'is_equal_to', label: 'is'},
-          {value: 'is_before', label: 'is before'},
-          {value: 'is_after', label: 'is after'},
-          {value: 'is_between', label: 'is between'},
-          {value: 'is_null', label: 'is null'},
-          {value: 'is_not_null', label: 'is not null'},
-        ]}
-      />
-      {getEditor(currentFilter, updateFilter, maxLevel)}
-    </>
+    <div {...stylex.props(styles.editor)}>
+      <div {...stylex.props(styles.editorRow)}>
+        <SelectDropdown
+          value={type}
+          onChange={changeType}
+          options={
+            [
+              {value: 'last', label: 'last'},
+              {value: 'next', label: 'next'},
+              {value: 'after', label: 'after'},
+              {value: 'before', label: 'before'},
+              {value: 'to', label: 'between'},
+              {value: 'null', label: 'null'},
+              {value: '-null', label: 'not null'},
+            ] as TypeOption[]
+          }
+          customStyle={styles.editorCell}
+        />
+        {getTopEditorRow(
+          currentFilter,
+          updateFilter,
+          units,
+          setUnits,
+          maxLevel
+        )}
+      </div>
+      <div {...stylex.props(styles.editorRow)}>
+        {getMiddleEditorRow(
+          currentFilter,
+          updateFilter,
+          units,
+          setUnits,
+          maxLevel
+        )}
+      </div>
+    </div>
   );
 };
 
-// Variables for case blocks
-let inDate: Date;
-let beforeDate: Date;
-let afterDate: Date;
-let fromDate: Date;
-let toDate: Date;
-
-function getEditor(
+function getTopEditorRow(
   currentFilter: TemporalFilter,
   updateFilter: (filter: TemporalFilter) => void,
+  units: TemporalUnit,
+  setUnits: (unit: TemporalUnit) => void,
   maxLevel: 'day' | 'second'
 ) {
   switch (currentFilter.operator) {
-    case 'in': {
-      const inMoment = currentFilter;
-      inDate = extractDateFromMoment(inMoment.in);
+    case 'last':
+    case 'next':
       return (
-        <DateTimeEditor
-          value={inDate}
-          setValue={newDate => {
-            updateFilter({
-              ...currentFilter,
-              in: createTemporalLiteral(newDate),
-            });
-          }}
+        <NUnitFilter
+          currentFilter={currentFilter}
           maxLevel={maxLevel}
+          updateFilter={updateFilter}
+          units={units}
+          setUnits={setUnits}
         />
       );
-    }
-    case 'before': {
-      const beforeMoment = currentFilter;
-      beforeDate = extractDateFromMoment(beforeMoment.before);
+    case 'after':
+    case 'before':
+    case 'to':
       return (
-        <DateTimeEditor
-          value={beforeDate}
-          setValue={newDate => {
-            updateFilter({
-              ...currentFilter,
-              before: createTemporalLiteral(newDate),
-            });
-          }}
+        <UnitFilter
+          currentFilter={currentFilter}
           maxLevel={maxLevel}
+          updateFilter={updateFilter}
+          units={units}
+          setUnits={setUnits}
         />
       );
-    }
-    case 'after': {
-      const afterMoment = currentFilter;
-      afterDate = extractDateFromMoment(afterMoment.after);
-      return (
-        <DateTimeEditor
-          value={afterDate}
-          setValue={newDate => {
-            updateFilter({
-              ...currentFilter,
-              after: createTemporalLiteral(newDate),
-            });
-          }}
-          maxLevel={maxLevel}
-        />
-      );
-    }
-    case 'to': {
-      const toMoment = currentFilter;
-      fromDate = extractDateFromMoment(toMoment.fromMoment);
-      toDate = extractDateFromMoment(toMoment.toMoment);
-      return (
-        <DateTimeRangeEditor
-          fromValue={fromDate}
-          toValue={toDate}
-          setFromValue={newFromDate => {
-            updateFilter({
-              ...currentFilter,
-              fromMoment: createTemporalLiteral(newFromDate),
-            });
-          }}
-          setToValue={newToDate => {
-            updateFilter({
-              ...currentFilter,
-              toMoment: createTemporalLiteral(newToDate),
-            });
-          }}
-          maxLevel={maxLevel as 'day' | 'second'}
-        />
-      );
-    }
   }
+
   return null;
 }
 
-interface ClickableDateTokenProps {
-  value: Date;
-  setValue(value: Date): void;
-  maxLevel: 'day' | 'second';
-  label?: string;
-}
-
-// Format the date based on the maxLevel
-const formatDate = (date: Date, maxLevel: 'day' | 'second'): string => {
-  if (maxLevel === 'day') {
-    return moment(date).format('YYYY-MM-DD');
-  } else {
-    return moment(date).format('YYYY-MM-DD hh:mm:ss');
-  }
-};
-
-function ClickableDateToken({
-  value,
-  setValue,
-  maxLevel,
-  label,
-}: ClickableDateTokenProps) {
-  // Inner value used to allow editing of date even when intermediate values
-  // may not parse into a correct Date.
-  const [innerValue, setInnerValue] = useState(formatDate(value, maxLevel));
-
-  const [errorMessage, setErrorMessage] = useState('');
-
-  // Whenever the input value changes, we will update the text to match.
-  React.useEffect(() => {
-    setInnerValue(formatDate(value, maxLevel));
-  }, [maxLevel, value]);
-
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
-
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  const checkForErrorsOrCommit = (date: Date) => {
-    if (date && !isNaN(date.getTime()) && date.getFullYear() < 10000) {
-      setErrorMessage('');
-      setValue(date);
-    } else {
-      setErrorMessage(
-        `Date must be in YYYY-MM-DD${maxLevel !== 'day' && ' hh:mm:ss'} format.`
-      );
-    }
-  };
-
-  useClickOutside(ref, () => {
-    if (isPickerOpen) {
-      setIsPickerOpen(false);
-      checkForErrorsOrCommit(new Date(innerValue));
-    }
-  });
-
-  // Returns the date parsed from the text box only if it is a valid date.
-  const getDateForDatePicker = () => {
-    try {
-      const parsedDate = new Date(innerValue);
-      if (!isNaN(parsedDate.getTime())) {
-        return parsedDate;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (ex) {
-      // ignored.
-    }
-    return value;
-  };
-
-  return (
-    <div
-      ref={ref}
-      style={{position: 'relative', color: 'rgb(95, 99, 104)'}}
-      onFocus={() => setIsPickerOpen(true)}
-      onBlur={e => {
-        if (
-          e.relatedTarget &&
-          ref.current &&
-          !ref.current.contains(e.relatedTarget)
-        ) {
-          setIsPickerOpen(false);
-          checkForErrorsOrCommit(new Date(innerValue));
-        }
-      }}
-    >
-      <div style={{display: 'flex'}}>
-        <input
-          value={label ? `${label}: ${innerValue}` : innerValue}
-          onChange={event => {
-            setInnerValue(event.target.value);
-          }}
-          style={{
-            border: '1px solid #e0e0e0',
-            color: 'rgb(95, 99, 104)',
-            padding: '4px 8px 4px 8px',
-            borderRadius: 5,
-          }}
+function getMiddleEditorRow(
+  currentFilter: TemporalFilter,
+  updateFilter: (filter: TemporalFilter) => void,
+  units: TemporalUnit,
+  setUnits: (unit: TemporalUnit) => void,
+  maxLevel: 'day' | 'second'
+) {
+  switch (currentFilter.operator) {
+    case 'after':
+    case 'before':
+      return (
+        <SingleDateFilter
+          currentFilter={currentFilter}
+          maxLevel={maxLevel}
+          updateFilter={updateFilter}
+          units={units}
+          setUnits={setUnits}
         />
-        {errorMessage && <ErrorIcon errorMessage={errorMessage} />}
-      </div>
-      {isPickerOpen && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            zIndex: 1000,
-            marginTop: '5px',
-            padding: '10px',
-            backgroundColor: 'white',
-            borderRadius: '5px',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #e0e0e0',
-          }}
-        >
-          <DatePicker
-            value={getDateForDatePicker()}
-            setValue={newValue => {
-              checkForErrorsOrCommit(newValue);
-            }}
-            maxLevel={maxLevel}
-          />
-        </div>
-      )}
-    </div>
-  );
+      );
+    case 'to':
+      return (
+        <DoubleDateFilter
+          currentFilter={currentFilter}
+          maxLevel={maxLevel}
+          updateFilter={updateFilter}
+          units={units}
+          setUnits={setUnits}
+        />
+      );
+  }
+
+  return null;
 }
 
-interface DateTimeEditorProps {
-  value: Date;
-  setValue(value: Date): void;
+interface TemporalUnitOption {
+  value: TemporalUnit;
+  label: string;
+}
+
+const DateUnits: TemporalUnitOption[] = [
+  {value: 'year', label: 'years'},
+  {value: 'quarter', label: 'quarters'},
+  {value: 'month', label: 'months'},
+  {value: 'week', label: 'weeks'},
+  {value: 'day', label: 'days'},
+];
+
+const TimeUnits: TemporalUnitOption[] = [
+  {value: 'hour', label: 'hours'},
+  {value: 'minute', label: 'minutes'},
+  {value: 'second', label: 'seconds'},
+];
+
+interface NUnitFilterProps {
+  currentFilter: JustUnits;
+  updateFilter: (filter: TemporalFilter) => void;
+  units: TemporalUnit;
+  setUnits: (units: TemporalUnit) => void;
   maxLevel: 'day' | 'second';
 }
 
-function DateTimeEditor({value, setValue, maxLevel}: DateTimeEditorProps) {
-  return (
-    <ClickableDateToken value={value} setValue={setValue} maxLevel={maxLevel} />
-  );
-}
-
-interface DateTimeRangeEditorProps {
-  fromValue: Date;
-  toValue: Date;
-  setFromValue(value: Date): void;
-  setToValue(value: Date): void;
-  maxLevel: 'day' | 'second';
-}
-
-function DateTimeRangeEditor({
-  fromValue,
-  toValue,
-  setFromValue,
-  setToValue,
+function NUnitFilter({
+  currentFilter,
+  updateFilter,
+  setUnits,
   maxLevel,
-}: DateTimeRangeEditorProps) {
+}: NUnitFilterProps) {
+  const {n, units} = currentFilter;
+  const options = maxLevel === 'day' ? DateUnits : [...DateUnits, ...TimeUnits];
+
+  const updateN = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const n = event.target.value;
+    updateFilter({...currentFilter, n});
+  };
+
+  const updateUnits = (units: TemporalUnit) => {
+    setUnits(units);
+    updateFilter({...currentFilter, units});
+  };
+
   return (
-    <div style={{display: 'flex', gap: '10px'}}>
-      <ClickableDateToken
-        value={fromValue}
-        setValue={setFromValue}
-        maxLevel={maxLevel}
+    <>
+      <input
+        type="number"
+        value={n}
+        {...stylex.props(styles.input, styles.editorCell)}
+        onChange={updateN}
       />
-      <ClickableDateToken
-        value={toValue}
-        setValue={setToValue}
-        maxLevel={maxLevel}
+      <SelectDropdown
+        options={options}
+        value={units}
+        onChange={updateUnits}
+        customStyle={styles.editorCell}
       />
-    </div>
+    </>
   );
+}
+
+interface UnitFilterProps {
+  currentFilter: TemporalFilter;
+  updateFilter: (filter: TemporalFilter) => void;
+  units: TemporalUnit;
+  setUnits: (units: TemporalUnit) => void;
+  maxLevel: 'day' | 'second';
+}
+
+function UnitFilter({units, setUnits, maxLevel}: UnitFilterProps) {
+  const options = maxLevel === 'day' ? DateUnits : [...DateUnits, ...TimeUnits];
+
+  return <SelectDropdown options={options} value={units} onChange={setUnits} />;
+}
+interface SingleDateFilterProps {
+  currentFilter: Before | After;
+  updateFilter: (filter: TemporalFilter) => void;
+  units: TemporalUnit;
+  setUnits: (units: TemporalUnit) => void;
+  maxLevel: 'day' | 'second';
+}
+
+function SingleDateFilter({
+  currentFilter,
+  updateFilter,
+  units,
+}: SingleDateFilterProps) {
+  const moment =
+    currentFilter.operator === 'after'
+      ? currentFilter.after
+      : currentFilter.before;
+  const date = extractDateFromMoment(moment);
+
+  const updateDate = (date: Date) => {
+    updateFilter({
+      ...currentFilter,
+      [currentFilter.operator]: createTemporalLiteral(date, units),
+    });
+  };
+
+  return (
+    <DateInput
+      value={date}
+      setValue={updateDate}
+      units={units}
+      customStyle={{...styles.input, ...styles.editorCell}}
+    />
+  );
+}
+
+interface DateFilterProps {
+  currentFilter: To;
+  updateFilter: (filter: TemporalFilter) => void;
+  units: TemporalUnit;
+  setUnits: (units: TemporalUnit) => void;
+  maxLevel: 'day' | 'second';
+}
+
+function DoubleDateFilter({
+  currentFilter,
+  updateFilter,
+  units,
+}: DateFilterProps) {
+  const {fromMoment, toMoment} = currentFilter;
+  const fromDate = extractDateFromMoment(fromMoment);
+  const toDate = extractDateFromMoment(toMoment);
+
+  const updateFromDate = (date: Date) => {
+    updateFilter({
+      ...currentFilter,
+      fromMoment: createTemporalLiteral(date, units),
+    });
+  };
+
+  const updateToDate = (date: Date) => {
+    updateFilter({
+      ...currentFilter,
+      fromMoment: createTemporalLiteral(date, units),
+    });
+  };
+
+  return (
+    <>
+      <DateInput
+        value={fromDate}
+        setValue={updateFromDate}
+        units={units}
+        customStyle={{...styles.input, ...styles.editorCell}}
+      />
+      <DateInput
+        value={toDate}
+        setValue={updateToDate}
+        units={units}
+        customStyle={{...styles.input, ...styles.editorCell}}
+      />
+    </>
+  );
+}
+
+function createTemporalLiteral(
+  date: Date,
+  units: TemporalUnit
+): TemporalLiteral {
+  return {
+    moment: 'literal',
+    literal: moment(date).format(formats[units]),
+  };
+}
+
+function extractDateFromMoment(momentObj?: Moment): Date {
+  if (momentObj && momentObj.moment === 'literal') {
+    return moment(momentObj.literal).toDate();
+  }
+
+  // For other moment types, default to now
+  return new Date();
 }
 
 // Helper function to change the filter type
 export function dateTimeFilterChangeType(
   filter: TemporalFilter,
-  type: DateTimeFilterType
+  type: TemporalFilterType,
+  units: TemporalUnit
 ): TemporalFilter {
-  // Get the current date value from the filter if possible
-  let currentDate = new Date();
-  let endDate = moment(currentDate).add(1, 'day').toDate();
+  let n = '7';
+  let fromMoment: Moment = createTemporalLiteral(new Date(), units);
+  let toMoment: Moment = createTemporalLiteral(new Date(), units);
 
-  if (filter.operator === 'in') {
-    currentDate = extractDateFromMoment(filter.in);
-  } else if (filter.operator === 'before') {
-    currentDate = extractDateFromMoment(filter.before);
-  } else if (filter.operator === 'after') {
-    currentDate = extractDateFromMoment(filter.after);
-  } else if (filter.operator === 'to') {
-    currentDate = extractDateFromMoment(filter.fromMoment);
-    endDate = extractDateFromMoment(filter.toMoment);
+  switch (filter.operator) {
+    case 'last':
+    case 'next':
+      n = filter.n;
+      units = filter.units;
+      break;
+    case 'after':
+      fromMoment = filter.after;
+      toMoment = filter.after;
+      break;
+    case 'before':
+      fromMoment = filter.before;
+      toMoment = filter.before;
+      break;
+    case 'to':
+      fromMoment = filter.fromMoment;
+      toMoment = filter.toMoment;
+      break;
   }
 
-  // Create a new filter based on the type
   switch (type) {
-    case 'is_equal_to':
-      return {
-        operator: 'in',
-        in: createTemporalLiteral(currentDate),
-      };
-    case 'is_before':
-      return {
-        operator: 'before',
-        before: createTemporalLiteral(currentDate),
-      };
-    case 'is_after':
-      return {
-        operator: 'after',
-        after: createTemporalLiteral(currentDate),
-      };
-    case 'is_between':
-      return {
-        operator: 'to',
-        fromMoment: createTemporalLiteral(currentDate),
-        toMoment: createTemporalLiteral(endDate),
-      };
-    case 'is_null':
-      return {
-        operator: 'null',
-      };
-    case 'is_not_null':
-      return {
-        operator: 'null',
-        not: true,
-      };
-    default:
-      return filter;
+    case 'last':
+    case 'next':
+      return {operator: type, n, units};
+    case 'after':
+      return {operator: type, after: fromMoment};
+    case 'before':
+      return {operator: type, before: fromMoment};
+    case 'to':
+      return {operator: type, fromMoment, toMoment};
+    case 'null':
+      return {operator: 'null'};
+    case '-null':
+      return {operator: 'null', not: true};
   }
+  return filter;
 }
+
+const styles = stylex.create({
+  editor: {
+    width: 350,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  editorRow: {
+    display: 'flex',
+    gap: 8,
+  },
+  editorCell: {
+    flexGrow: 1,
+  },
+  input: {
+    border: '1px solid #e0e0e0',
+    color: 'rgb(95, 99, 104)',
+    padding: '4px 8px 4px 8px',
+    borderRadius: 5,
+  },
+});
