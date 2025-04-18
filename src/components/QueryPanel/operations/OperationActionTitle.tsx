@@ -33,11 +33,17 @@ export function OperationActionTitle({
   types,
   onClick,
 }: OperationActionTitleProps) {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
     <div {...stylex.props(commonStyles.title, hoverStyles.main)}>
       <div>{title}</div>
-      <div {...stylex.props(hoverStyles.hoverActions)}>
-        <Popover.Root>
+      <div
+        {...stylex.props(
+          hoverStyles.hoverActions,
+          isMenuOpen ? hoverStyles.hoverOpen : undefined
+        )}
+      >
+        <Popover.Root onOpenChange={setIsMenuOpen}>
           <Popover.Trigger asChild>
             <div {...stylex.props(styles.action)}>{actionTitle}</div>
           </Popover.Trigger>
