@@ -9,6 +9,7 @@ import {FieldInfo} from '@malloydata/malloy-interfaces';
 
 import Badge from './Badge';
 import stylex from '@stylexjs/stylex';
+import {fieldToIcon} from '../utils/icon';
 
 interface BadgeForFieldProps {
   field: FieldInfo;
@@ -28,7 +29,7 @@ export default function BadgeForField({field}: BadgeForFieldProps) {
     return (
       <Badge
         label="dimension"
-        icon="dimension"
+        icon={fieldToIcon(field)}
         color="cyan"
         customStyle={styles.noBackground}
       />
@@ -38,17 +39,16 @@ export default function BadgeForField({field}: BadgeForFieldProps) {
     return (
       <Badge
         label="measure"
-        icon="measure"
+        icon={fieldToIcon(field)}
         color="green"
         customStyle={styles.noBackground}
       />
     );
   } else if (field.kind === 'join') {
-    // TODO: should we use different icons for different types of joins?
     return (
       <Badge
         label="join"
-        icon="many_to_one"
+        icon={fieldToIcon(field)}
         color="gray"
         customStyle={styles.noBackground}
       />
