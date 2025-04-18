@@ -61,7 +61,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
                     ) {
                       rootQuery.definition.view.convertToNest('Nest');
                     }
-                    // TODO: actually nest the query.
+
                     setQuery?.(rootQuery.build());
                   }}
                   disabled={rootQuery.isEmpty()}
