@@ -40,12 +40,18 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
   return (
     <div {...stylex.props(styles.tokenContainer)}>
       {nests.map(nest => {
+        // New blank nested queries should default to their open mode to make
+        // it simpler to add content into.
+        const defaultOpen =
+          nest.view.definition.node.kind === 'segment' &&
+          nest.view.definition.node.operations.length === 0;
+
         return (
           <div key={nest.name} {...stylex.props(viewStyles.indent)}>
             <CollapsiblePanel
               title={nest.name}
               icon="nest"
-              defaultOpen={false}
+              defaultOpen={defaultOpen}
               controls={
                 <>
                   <DropdownMenu
