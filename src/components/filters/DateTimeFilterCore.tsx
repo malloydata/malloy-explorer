@@ -24,6 +24,7 @@ import {SelectDropdown} from '../primitives/SelectDropdown';
 import stylex from '@stylexjs/stylex';
 import {DateInput, formats, guessUnits} from '../DateInput';
 import {DatePicker} from '../primitives';
+import {filterStyles} from './styles';
 
 type TemporalFilterOperator = TemporalFilter['operator'];
 type TemporalFilterType = TemporalFilterOperator | '-null';
@@ -102,8 +103,8 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
   // TODO "for" | "in_last"
 
   return (
-    <div {...stylex.props(styles.editor)}>
-      <div {...stylex.props(styles.editorRow)}>
+    <div {...stylex.props(filterStyles.editor)}>
+      <div {...stylex.props(filterStyles.editorRow)}>
         <SelectDropdown
           value={type}
           onChange={changeType}
@@ -119,7 +120,7 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
               {value: '-null', label: 'not null'},
             ] as TypeOption[]
           }
-          customStyle={styles.editorCell}
+          customStyle={filterStyles.editorCell}
         />
         {getTopEditorRow(
           currentFilter,
@@ -263,14 +264,14 @@ function NUnitFilter({
       <input
         type="number"
         value={n}
-        {...stylex.props(styles.input, styles.editorCell)}
+        {...stylex.props(filterStyles.input, filterStyles.editorCell)}
         onChange={updateN}
       />
       <SelectDropdown
         options={options}
         value={units}
         onChange={updateUnits}
-        customStyle={styles.editorCell}
+        customStyle={filterStyles.editorCell}
       />
     </>
   );
@@ -292,7 +293,7 @@ function UnitFilter({units, setUnits, maxLevel}: UnitFilterProps) {
       options={options}
       value={units}
       onChange={setUnits}
-      customStyle={styles.editorCell}
+      customStyle={filterStyles.editorCell}
     />
   );
 }
@@ -327,21 +328,21 @@ function SingleDateFilter({
 
   return (
     <>
-      <div {...stylex.props(styles.editorRow)}>
+      <div {...stylex.props(filterStyles.editorRow)}>
         <DateInput
           value={date}
           setValue={updateDate}
           units={units}
-          customStyle={{...styles.input, ...styles.editorCell}}
+          customStyle={{...filterStyles.input, ...filterStyles.editorCell}}
         />
       </div>
-      <div {...stylex.props(styles.editorRow)}>
+      <div {...stylex.props(filterStyles.editorRow)}>
         <DatePicker
           value={date}
           setValue={updateDate}
           units={units}
           maxLevel={maxLevel}
-          customStyle={styles.editorCell}
+          customStyle={filterStyles.editorCell}
         />
       </div>
     </>
@@ -404,12 +405,12 @@ function DoubleDateFilter({
 
   return (
     <>
-      <div {...stylex.props(styles.editorRow)}>
+      <div {...stylex.props(filterStyles.editorRow)}>
         <DateInput
           value={fromDate}
           setValue={updateFromDate}
           units={units}
-          customStyle={{...styles.input, ...styles.editorCell}}
+          customStyle={{...filterStyles.input, ...filterStyles.editorCell}}
           onFocus={() => updateFocusedDate('from')}
           isActive={focusedDate === 'from'}
         />
@@ -417,18 +418,18 @@ function DoubleDateFilter({
           value={toDate}
           setValue={updateToDate}
           units={units}
-          customStyle={{...styles.input, ...styles.editorCell}}
+          customStyle={{...filterStyles.input, ...filterStyles.editorCell}}
           onFocus={() => updateFocusedDate('to')}
           isActive={focusedDate === 'to'}
         />
       </div>
-      <div {...stylex.props(styles.editorRow)}>
+      <div {...stylex.props(filterStyles.editorRow)}>
         <DatePicker
           value={date}
           setValue={updateDate}
           units={units}
           maxLevel={maxLevel}
-          customStyle={styles.editorCell}
+          customStyle={filterStyles.editorCell}
         />
       </div>
     </>
@@ -501,25 +502,3 @@ export function dateTimeFilterChangeType(
   }
   return filter;
 }
-
-const styles = stylex.create({
-  editor: {
-    width: 350,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-  },
-  editorRow: {
-    display: 'flex',
-    gap: 8,
-  },
-  editorCell: {
-    flexGrow: 1,
-  },
-  input: {
-    border: '1px solid #e0e0e0',
-    color: 'rgb(95, 99, 104)',
-    padding: '4px 8px 4px 8px',
-    borderRadius: 5,
-  },
-});

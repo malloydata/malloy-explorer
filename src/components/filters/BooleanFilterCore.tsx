@@ -9,6 +9,7 @@ import * as React from 'react';
 import {BooleanFilter} from '@malloydata/malloy-filter';
 import {SelectDropdown} from '../primitives/SelectDropdown';
 import {filterStyles} from './styles';
+import stylex from '@stylexjs/stylex';
 
 type BooleanFilterOperator = BooleanFilter['operator'];
 
@@ -45,7 +46,7 @@ export function BooleanFilterCore({
   };
 
   return (
-    <>
+    <div {...stylex.props(filterStyles.editor)}>
       <SelectDropdown
         value={type}
         onChange={onChangeType}
@@ -60,6 +61,6 @@ export function BooleanFilterCore({
         }
         customStyle={filterStyles.filterTypeDropdown}
       />
-    </>
+    </div>
   );
 }
