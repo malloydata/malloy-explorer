@@ -42,14 +42,12 @@ export default function FieldToken({
         hoverActionsVisible && styles.showHoverActions
       )}
     >
-      <div style={{display: 'inline-grid'}}>
-        <Token
-          label={field.name}
-          color={fieldKindToColor(field.kind)}
-          icon={fieldToIcon(field)}
-          {...props}
-        />
-      </div>
+      <Token
+        label={field.name}
+        color={fieldKindToColor(field.kind)}
+        icon={fieldToIcon(field)}
+        {...props}
+      />
       {hoverActions && (
         <div {...stylex.props(styles.hoverActions)}>{hoverActions}</div>
       )}

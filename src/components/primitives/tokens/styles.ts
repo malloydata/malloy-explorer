@@ -4,7 +4,8 @@ import {iconVars, labelVars} from './token.stylex';
 
 export const tokenStyles = stylex.create({
   main: {
-    display: 'flex',
+    display: 'inline-grid',
+    gridAutoFlow: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '8px',
@@ -26,6 +27,7 @@ export const tokenStyles = stylex.create({
     color: labelVars.color,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
 });
 
