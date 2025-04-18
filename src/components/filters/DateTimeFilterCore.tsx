@@ -22,7 +22,7 @@ import {useState} from 'react';
 import moment from 'moment';
 import {SelectDropdown} from '../primitives/SelectDropdown';
 import stylex from '@stylexjs/stylex';
-import {DateInput, formats} from '../DateInput';
+import {DateInput, formats, guessUnits} from '../DateInput';
 import {DatePicker} from '../primitives';
 
 type TemporalFilterOperator = TemporalFilter['operator'];
@@ -41,6 +41,27 @@ function typeFromFilter(filter: TemporalFilter): TemporalFilterType | '-null' {
   return filter.operator;
 }
 
+function unitsFromFilter(
+  filter: TemporalFilter,
+  isDateTime: boolean
+): TemporalUnit {
+  if (filter.operator === 'last' || filter.operator === 'next') {
+    return filter.units;
+  } else if (filter.operator === 'to') {
+    return guessUnits(filter.fromMoment, isDateTime);
+  } else if (
+    filter.operator === 'before' &&
+    filter.before.moment === 'literal'
+  ) {
+    return guessUnits(filter.before, isDateTime);
+  } else if (filter.operator === 'after') {
+    return guessUnits(filter.after, isDateTime);
+  } else if (filter.operator === 'in') {
+    return guessUnits(filter.in, isDateTime);
+  }
+  return isDateTime ? 'second' : 'day';
+}
+
 export interface DateTimeFilterCoreProps {
   filter: TemporalFilter | null;
   setFilter: (filter: TemporalFilter) => void;
@@ -52,13 +73,16 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
   setFilter,
   isDateTime,
 }) => {
-  const [units, setUnits] = useState<TemporalUnit>('day');
   // Default filter if none provided
   filter ??= {
     operator: 'last',
     n: '7',
     units: 'day',
   };
+
+  const [units, setUnits] = useState<TemporalUnit>(
+    unitsFromFilter(filter, isDateTime)
+  );
 
   // Keep a copy of the filter locally
   const [currentFilter, setCurrentFilter] = useState<TemporalFilter>(filter);
