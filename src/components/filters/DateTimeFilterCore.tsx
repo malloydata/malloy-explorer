@@ -15,6 +15,7 @@ import {
   Before,
   TemporalLiteral,
   To,
+  InMoment,
 } from '@malloydata/malloy-filter';
 import {useState} from 'react';
 //import DatePicker from '../primitives/DatePicker';
@@ -85,6 +86,7 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
               {value: 'next', label: 'next'},
               {value: 'after', label: 'after'},
               {value: 'before', label: 'before'},
+              {value: 'in', label: 'is'},
               {value: 'to', label: 'between'},
               {value: 'null', label: 'null'},
               {value: '-null', label: 'not null'},
@@ -135,6 +137,7 @@ function getTopEditorRow(
     case 'after':
     case 'before':
     case 'to':
+    case 'in':
       return (
         <UnitFilter
           currentFilter={currentFilter}
@@ -159,6 +162,7 @@ function getMiddleEditorRow(
   switch (currentFilter.operator) {
     case 'after':
     case 'before':
+    case 'in':
       return (
         <SingleDateFilter
           currentFilter={currentFilter}
@@ -261,7 +265,7 @@ function UnitFilter({units, setUnits, maxLevel}: UnitFilterProps) {
   return <SelectDropdown options={options} value={units} onChange={setUnits} />;
 }
 interface SingleDateFilterProps {
-  currentFilter: Before | After;
+  currentFilter: Before | After | InMoment;
   updateFilter: (filter: TemporalFilter) => void;
   units: TemporalUnit;
   setUnits: (units: TemporalUnit) => void;
@@ -276,7 +280,9 @@ function SingleDateFilter({
   const moment =
     currentFilter.operator === 'after'
       ? currentFilter.after
-      : currentFilter.before;
+      : currentFilter.operator === 'before'
+        ? currentFilter.before
+        : currentFilter.in;
   const date = extractDateFromMoment(moment);
 
   const updateDate = (date: Date) => {
