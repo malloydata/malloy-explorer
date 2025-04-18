@@ -73,7 +73,7 @@ export function useFilterModal({setQuery, rootQuery}: UseFilterModelProps) {
       open,
       middleware: [
         offset({mainAxis: 3, crossAxis: 3}),
-        shift({boundary: document.body}),
+        shift({boundary: document.body, crossAxis: true, padding: 10}),
       ],
       whileElementsMounted: autoUpdate,
     });

@@ -114,7 +114,7 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
   };
 
   return (
-    <>
+    <div {...stylex.props(filterStyles.editor)}>
       <SelectDropdown
         key="type"
         value={type}
@@ -178,7 +178,7 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
           setSearchValue={setSearchValue}
         />
       ) : null}
-    </>
+    </div>
   );
 };
 
