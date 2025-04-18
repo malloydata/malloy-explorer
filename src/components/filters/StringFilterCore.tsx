@@ -164,6 +164,7 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
               }
             }}
             customStyle={styles.valueList}
+            filter={value => !currentFilter.values.includes(value)}
           />
         </>
       ) : currentFilter.operator === '~' ? (
