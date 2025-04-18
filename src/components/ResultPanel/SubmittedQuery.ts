@@ -17,12 +17,19 @@ export type SubmittedQuery = {
   response?: QueryResponse;
 };
 
-export type RunStats = {
-  compileTime: number;
-  runTime: number;
-  rowsProcessed: number;
-  peakMemory: number;
-  queryId: string;
+export type RunInfo = {
+  queryLink?: {
+    linkText: string;
+    href: string;
+  };
+  /**
+   * Logical, named groupings of performance aspects.
+   */
+  performanceAspects?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
 };
 
 export type QueryResponse = {
@@ -31,7 +38,7 @@ export type QueryResponse = {
    */
   error?: Message;
   result?: Malloy.Result;
-  runStats?: RunStats;
+  runInfo?: RunInfo;
   messages?: Array<Message>;
 };
 

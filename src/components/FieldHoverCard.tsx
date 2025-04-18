@@ -16,6 +16,7 @@ import {QueryEditorContext} from '../contexts/QueryEditorContext';
 import {TopValuesTable} from './TopValuesTable';
 import {getDescriptionAnnotation} from './utils/annotations';
 import {HoverText} from './primitives/HoverText';
+import {HoverCard} from './primitives/HoverCard';
 
 interface FieldHoverCardProps {
   /**
@@ -52,7 +53,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
   }
 
   return (
-    <div {...stylex.props(styles.container, fontStyles.body)}>
+    <HoverCard customStyle={styles.container}>
       <div>
         <div {...stylex.props(styles.badge)}>
           <BadgeForField field={field} />
@@ -64,7 +65,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
         {description && <HoverText text={description} />}
       </div>
       {details && <div {...stylex.props(styles.detailsSection)}>{details}</div>}
-    </div>
+    </HoverCard>
   );
 }
 
@@ -72,16 +73,6 @@ const styles = stylex.create({
   container: {
     width: '323px',
     maxHeight: '248px',
-
-    boxShadow:
-      '0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 2px 12px 0 rgba(0, 0, 0, 0.1)',
-    backgroundColor: 'white',
-    borderRadius: '12px',
-    padding: '12px',
-
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
   },
   badge: {
     marginBottom: '4px',

@@ -27,6 +27,23 @@ const App = () => {
         onCancel: () => {},
         response: {
           result: result,
+          messages: [{title: 'this is a warning message', severity: 'INFO'}],
+          runInfo: {
+            queryLink: {
+              linkText: 'here is a link to the query you just ran',
+              href: '#',
+            },
+            performanceAspects: {
+              time: {
+                'compile time': '100s',
+                'run time': '10s',
+                'total time': '110s',
+              },
+              memory: {
+                processed: '7m rows (150.08MB)',
+              },
+            },
+          },
         },
       }
     : undefined;
