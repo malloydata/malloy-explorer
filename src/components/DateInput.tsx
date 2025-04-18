@@ -9,7 +9,7 @@ import * as React from 'react';
 import moment from 'moment';
 import {useEffect, useState} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
-import {TemporalUnit} from '@malloydata/malloy-filter';
+import {Moment, TemporalUnit} from '@malloydata/malloy-filter';
 
 interface DateInputProps {
   value: Date;
@@ -54,6 +54,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   units,
   onFocus,
   onBlur,
+  isActive,
   customStyle,
 }) => {
   const format = formats[units];
@@ -65,7 +66,7 @@ export const DateInput: React.FC<DateInputProps> = ({
 
   return (
     <input
-      {...stylex.props(customStyle)}
+      {...stylex.props(customStyle, isActive ? styles.active : null)}
       type="text"
       placeholder={placeholder || format}
       value={tempValue}
@@ -86,3 +87,23 @@ export const DateInput: React.FC<DateInputProps> = ({
     />
   );
 };
+
+export function guessUnits(moment: Moment, isDateTime: boolean): TemporalUnit {
+  if (moment.moment === 'literal') {
+    const {literal} = moment;
+    for (const unit in regexps) {
+      const temporalUnit = unit as TemporalUnit;
+      if (literal.match(regexps[temporalUnit])) {
+        return temporalUnit;
+      }
+    }
+  }
+  // TODO - handle other Moment types
+  return isDateTime ? 'second' : 'day';
+}
+
+const styles = stylex.create({
+  active: {
+    backgroundColor: 'rgb(240, 246, 255)',
+  },
+});

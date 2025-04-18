@@ -8,6 +8,7 @@
 import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {TemporalUnit} from '@malloydata/malloy-filter';
 import {SelectDropdown} from './SelectDropdown';
 import {textColors} from './colors.stylex';
 import NumberInput from './NumberInput';
@@ -16,39 +17,9 @@ import Button from './Button';
 interface DatePickerProps {
   value: Date;
   setValue: (value: Date) => void;
-  maxLevel:
-    | 'year'
-    | 'month'
-    | 'day'
-    | 'quarter'
-    | 'week'
-    | 'hour'
-    | 'minute'
-    | 'second';
-  style?: StyleXStyles;
-}
-
-function granularityIndex(
-  granularity:
-    | 'year'
-    | 'month'
-    | 'day'
-    | 'quarter'
-    | 'week'
-    | 'hour'
-    | 'minute'
-    | 'second'
-) {
-  return [
-    'year',
-    'quarter',
-    'month',
-    'week',
-    'day',
-    'hour',
-    'minute',
-    'second',
-  ].indexOf(granularity);
+  units: TemporalUnit;
+  maxLevel: TemporalUnit;
+  customStyle?: StyleXStyles;
 }
 
 function monthName(month: number) {
@@ -71,25 +42,16 @@ function monthName(month: number) {
 export default function DatePicker({
   value,
   setValue,
+  units,
   maxLevel,
-  style,
+  customStyle,
 }: DatePickerProps) {
   const [date, setDate] = useState(value);
   const calendar = getCalendar(date);
   const [pickLevel, setPickLevel] = useState<
     'day' | 'month' | 'year' | 'quarter' | 'week' | 'hour' | 'minute' | 'second'
-  >(maxLevel);
+  >(units);
   const yearBucket = Math.floor(moment(date).year() / 10) * 10;
-
-  useEffect(() => {
-    if (granularityIndex(maxLevel) < granularityIndex(pickLevel)) {
-      setPickLevel(maxLevel);
-    } else if (pickLevel === 'quarter' && maxLevel !== 'quarter') {
-      setPickLevel(maxLevel);
-    } else if (pickLevel === 'week' && maxLevel !== 'week') {
-      setPickLevel(maxLevel);
-    }
-  }, [maxLevel, pickLevel]);
 
   useEffect(() => {
     setDate(value);
@@ -99,13 +61,6 @@ export default function DatePicker({
     const newDate = moment(date).year(year).toDate();
     setDate(newDate);
     setValue(newDate);
-    if (maxLevel !== 'year') {
-      if (maxLevel === 'quarter') {
-        setPickLevel('quarter');
-      } else {
-        setPickLevel('month');
-      }
-    }
   };
 
   const yearButton = (offset: number) => {
@@ -137,29 +92,16 @@ export default function DatePicker({
     const newDate = moment(date).month(month).toDate();
     setDate(newDate);
     setValue(newDate);
-    if (maxLevel !== 'month') {
-      if (maxLevel === 'week') {
-        setPickLevel('week');
-      } else {
-        setPickLevel('day');
-      }
-    }
   };
 
   const setDay = (day: Date) => {
     setDate(day);
     setValue(day);
-    if (maxLevel !== 'day') {
-      setPickLevel(maxLevel);
-    }
   };
 
   const setWeekByDay = (dateOfFirstDayOfWeek: Date) => {
     setDate(dateOfFirstDayOfWeek);
     setValue(dateOfFirstDayOfWeek);
-    if (maxLevel !== 'week') {
-      setPickLevel('day');
-    }
   };
 
   const setQuarter = (quarter: number) => {
@@ -201,7 +143,7 @@ export default function DatePicker({
   };
 
   return (
-    <div {...stylex.props(styles.outer, style)}>
+    <div {...stylex.props(styles.outer, customStyle)}>
       <div {...stylex.props(styles.controlRow)}>
         <div {...stylex.props(styles.arrowButton)}>
           <Button
@@ -234,6 +176,8 @@ export default function DatePicker({
               pickLevel === 'second'
             ) {
               setPickLevel('day');
+            } else {
+              setPickLevel(maxLevel);
             }
           }}
         >
@@ -420,7 +364,7 @@ export default function DatePicker({
               }}
               width="40px"
             />
-            {(maxLevel === 'minute' || maxLevel === 'second') && (
+            {(units === 'minute' || units === 'second') && (
               <NumberInput
                 label="Minutes"
                 value={moment(date).minutes()}
@@ -430,7 +374,7 @@ export default function DatePicker({
                 width="40px"
               />
             )}
-            {maxLevel === 'second' && (
+            {units === 'second' && (
               <NumberInput
                 label="Seconds"
                 value={moment(date).seconds()}
