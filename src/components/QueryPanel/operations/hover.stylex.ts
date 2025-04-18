@@ -21,4 +21,7 @@ export const hoverStyles = stylex.create({
     display: hoverActionsVars.display,
     flexShrink: 0,
   },
+  hoverOpen: {
+    display: 'inline-flex',
+  },
 });
