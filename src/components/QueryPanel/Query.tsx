@@ -43,14 +43,30 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
             }
           >
             {setQuery ? (
-              <DropdownMenuItem
-                icon="clear"
-                label="Clear query"
-                onClick={() => {
-                  setQuery?.(undefined);
-                }}
-                disabled={rootQuery.isEmpty()}
-              />
+              <>
+                <DropdownMenuItem
+                  icon="clear"
+                  label="Clear query"
+                  onClick={() => {
+                    setQuery?.(undefined);
+                  }}
+                  disabled={rootQuery.isEmpty()}
+                />
+                <DropdownMenuItem
+                  icon="nest"
+                  label="Nest query"
+                  onClick={() => {
+                    if (
+                      rootQuery.definition instanceof ASTArrowQueryDefinition
+                    ) {
+                      rootQuery.definition.view.convertToNest('Nest');
+                    }
+                    // TODO: actually nest the query.
+                    setQuery?.(rootQuery.build());
+                  }}
+                  disabled={rootQuery.isEmpty()}
+                />
+              </>
             ) : (
               <></>
             )}
