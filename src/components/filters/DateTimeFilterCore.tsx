@@ -23,6 +23,7 @@ import moment from 'moment';
 import {SelectDropdown} from '../primitives/SelectDropdown';
 import stylex from '@stylexjs/stylex';
 import {DateInput, formats} from '../DateInput';
+import {DatePicker} from '../primitives';
 
 type TemporalFilterOperator = TemporalFilter['operator'];
 type TemporalFilterType = TemporalFilterOperator | '-null';
@@ -74,6 +75,8 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
   const maxLevel = isDateTime ? 'second' : 'day';
   const type = typeFromFilter(currentFilter);
 
+  // TODO "for" | "in_last"
+
   return (
     <div {...stylex.props(styles.editor)}>
       <div {...stylex.props(styles.editorRow)}>
@@ -102,15 +105,13 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
           maxLevel
         )}
       </div>
-      <div {...stylex.props(styles.editorRow)}>
-        {getMiddleEditorRow(
-          currentFilter,
-          updateFilter,
-          units,
-          setUnits,
-          maxLevel
-        )}
-      </div>
+      {getBottomEditorRow(
+        currentFilter,
+        updateFilter,
+        units,
+        setUnits,
+        maxLevel
+      )}
     </div>
   );
 };
@@ -152,7 +153,7 @@ function getTopEditorRow(
   return null;
 }
 
-function getMiddleEditorRow(
+function getBottomEditorRow(
   currentFilter: TemporalFilter,
   updateFilter: (filter: TemporalFilter) => void,
   units: TemporalUnit,
@@ -262,7 +263,14 @@ interface UnitFilterProps {
 function UnitFilter({units, setUnits, maxLevel}: UnitFilterProps) {
   const options = maxLevel === 'day' ? DateUnits : [...DateUnits, ...TimeUnits];
 
-  return <SelectDropdown options={options} value={units} onChange={setUnits} />;
+  return (
+    <SelectDropdown
+      options={options}
+      value={units}
+      onChange={setUnits}
+      customStyle={styles.editorCell}
+    />
+  );
 }
 interface SingleDateFilterProps {
   currentFilter: Before | After | InMoment;
@@ -276,6 +284,7 @@ function SingleDateFilter({
   currentFilter,
   updateFilter,
   units,
+  maxLevel,
 }: SingleDateFilterProps) {
   const moment =
     currentFilter.operator === 'after'
@@ -293,16 +302,29 @@ function SingleDateFilter({
   };
 
   return (
-    <DateInput
-      value={date}
-      setValue={updateDate}
-      units={units}
-      customStyle={{...styles.input, ...styles.editorCell}}
-    />
+    <>
+      <div {...stylex.props(styles.editorRow)}>
+        <DateInput
+          value={date}
+          setValue={updateDate}
+          units={units}
+          customStyle={{...styles.input, ...styles.editorCell}}
+        />
+      </div>
+      <div {...stylex.props(styles.editorRow)}>
+        <DatePicker
+          value={date}
+          setValue={updateDate}
+          units={units}
+          maxLevel={maxLevel}
+          customStyle={styles.editorCell}
+        />
+      </div>
+    </>
   );
 }
 
-interface DateFilterProps {
+interface DoubleDateFilterProps {
   currentFilter: To;
   updateFilter: (filter: TemporalFilter) => void;
   units: TemporalUnit;
@@ -314,10 +336,13 @@ function DoubleDateFilter({
   currentFilter,
   updateFilter,
   units,
-}: DateFilterProps) {
+  maxLevel,
+}: DoubleDateFilterProps) {
   const {fromMoment, toMoment} = currentFilter;
   const fromDate = extractDateFromMoment(fromMoment);
   const toDate = extractDateFromMoment(toMoment);
+  const [date, setDate] = useState(fromDate);
+  const [focusedDate, setFocusedDate] = useState<'from' | 'to'>('from');
 
   const updateFromDate = (date: Date) => {
     updateFilter({
@@ -329,24 +354,59 @@ function DoubleDateFilter({
   const updateToDate = (date: Date) => {
     updateFilter({
       ...currentFilter,
-      fromMoment: createTemporalLiteral(date, units),
+      toMoment: createTemporalLiteral(date, units),
     });
+  };
+
+  const updateDate = (date: Date) => {
+    if (focusedDate === 'from') {
+      updateFromDate(date);
+    } else {
+      updateToDate(date);
+    }
+    setDate(date);
+  };
+
+  const updateFocusedDate = (focusedDate: 'from' | 'to') => {
+    setFocusedDate(focusedDate);
+    if (focusedDate === 'from') {
+      const fromDate = extractDateFromMoment(fromMoment);
+      setDate(fromDate);
+    } else {
+      const toDate = extractDateFromMoment(toMoment);
+      setDate(toDate);
+    }
   };
 
   return (
     <>
-      <DateInput
-        value={fromDate}
-        setValue={updateFromDate}
-        units={units}
-        customStyle={{...styles.input, ...styles.editorCell}}
-      />
-      <DateInput
-        value={toDate}
-        setValue={updateToDate}
-        units={units}
-        customStyle={{...styles.input, ...styles.editorCell}}
-      />
+      <div {...stylex.props(styles.editorRow)}>
+        <DateInput
+          value={fromDate}
+          setValue={updateFromDate}
+          units={units}
+          customStyle={{...styles.input, ...styles.editorCell}}
+          onFocus={() => updateFocusedDate('from')}
+          isActive={focusedDate === 'from'}
+        />
+        <DateInput
+          value={toDate}
+          setValue={updateToDate}
+          units={units}
+          customStyle={{...styles.input, ...styles.editorCell}}
+          onFocus={() => updateFocusedDate('to')}
+          isActive={focusedDate === 'to'}
+        />
+      </div>
+      <div {...stylex.props(styles.editorRow)}>
+        <DatePicker
+          value={date}
+          setValue={updateDate}
+          units={units}
+          maxLevel={maxLevel}
+          customStyle={styles.editorCell}
+        />
+      </div>
     </>
   );
 }

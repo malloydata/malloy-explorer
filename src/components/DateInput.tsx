@@ -54,6 +54,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   units,
   onFocus,
   onBlur,
+  isActive,
   customStyle,
 }) => {
   const format = formats[units];
@@ -65,7 +66,7 @@ export const DateInput: React.FC<DateInputProps> = ({
 
   return (
     <input
-      {...stylex.props(customStyle)}
+      {...stylex.props(customStyle, isActive ? styles.active : null)}
       type="text"
       placeholder={placeholder || format}
       value={tempValue}
@@ -86,3 +87,9 @@ export const DateInput: React.FC<DateInputProps> = ({
     />
   );
 };
+
+const styles = stylex.create({
+  active: {
+    backgroundColor: 'rgb(240, 246, 255)',
+  },
+});
