@@ -129,7 +129,7 @@ export const PillInput: React.FC<PillInputProps> = ({
   };
 
   const commitValue = () => {
-    if (value.length > 0) {
+    if (value.length > 0 && !values.includes(value)) {
       setValues([...values, value]);
       setValue('');
     }
