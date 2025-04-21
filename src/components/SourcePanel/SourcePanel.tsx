@@ -105,7 +105,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
               onClick={() => setSubpanelType(null)}
             />
           )}
-          <div>
+          <div {...stylex.props(styles.headerEndContent)}>
             <Button
               icon="refresh"
               tooltip="Refresh the source"
@@ -219,5 +219,8 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     padding: '8px',
+  },
+  headerEndContent: {
+    display: 'flex',
   },
 });
