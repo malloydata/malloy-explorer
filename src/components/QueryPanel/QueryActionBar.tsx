@@ -37,9 +37,9 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
     }
   };
   return (
-    <div {...stylex.props(actionBarStyles.root)}>
-      <div {...stylex.props(actionBarStyles.title)}>Query</div>
-      <div {...stylex.props(actionBarStyles.buttons)}>
+    <div {...stylex.props(styles.root)}>
+      <div {...stylex.props(fontStyles.largeBody, styles.title)}>Query</div>
+      <div {...stylex.props(styles.buttons)}>
         <Button
           onClick={() => setQuery?.(undefined)}
           isDisabled={!rootQuery || rootQuery?.isEmpty()}
@@ -75,17 +75,15 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
   );
 }
 
-const actionBarStyles = stylex.create({
+const styles = stylex.create({
   root: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    zIndex: 1,
+    padding: '8px 12px',
   },
   title: {
-    fontFamily: 'sans-serif',
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontWeight: '700',
   },
   buttons: {
     display: 'flex',

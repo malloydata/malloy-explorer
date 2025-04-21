@@ -19,13 +19,9 @@ interface QueryPanelProps {
 export default function QueryPanel({runQuery}: QueryPanelProps) {
   return (
     <div {...stylex.props(styles.main)}>
-      <div {...stylex.props(styles.header)}>
-        <QueryActionBar runQuery={runQuery} />
-      </div>
+      <QueryActionBar runQuery={runQuery} />
       <ScrollableArea>
-        <div {...stylex.props(styles.content)}>
-          <QueryEditor />
-        </div>
+        <QueryEditor />
       </ScrollableArea>
     </div>
   );
@@ -40,16 +36,5 @@ const styles = stylex.create({
     height: '100%',
     background: 'rgba(255, 255, 255, 1)',
     borderRight: '1px solid rgba(204, 211, 219, 1)',
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '8px 12px',
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '4px 12px 12px 12px',
-    gap: '8px',
   },
 });
