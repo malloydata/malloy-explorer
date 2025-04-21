@@ -41,6 +41,7 @@ import Warning from '../../../assets/ui/warning.svg?react';
 import CheckCircle from '../../../assets/ui/check_circle.svg?react';
 import Info from '../../../assets/ui/info.svg?react';
 import Error from '../../../assets/ui/error.svg?react';
+import Refresh from '../../../assets/ui/refresh.svg?react';
 
 import VizBarChar from '../../../assets/visualizations/viz_bar_chart.svg?react';
 import VizBoolean from '../../../assets/visualizations/viz_boolean.svg?react';
@@ -81,6 +82,7 @@ export const ICON_MAP = {
   check_circle: CheckCircle,
   info: Info,
   error: Error,
+  refresh: Refresh,
 
   // Operations
   aggregate: AggregateIcon,

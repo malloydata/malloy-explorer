@@ -34,7 +34,11 @@ import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 type SubpanelType = 'view' | 'dimension' | 'measure' | null;
 
-export function SourcePanel() {
+export interface SourcePanelProps {
+  onRefresh: () => void;
+}
+
+export function SourcePanel({onRefresh}: SourcePanelProps) {
   const {source} = React.useContext(QueryEditorContext);
   const [subpanelType, setSubpanelType] = React.useState<SubpanelType>(null);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
@@ -101,16 +105,24 @@ export function SourcePanel() {
               onClick={() => setSubpanelType(null)}
             />
           )}
-          {setIsSourcePanelOpen && (
-            <div>
+          <div>
+            <Button
+              icon="refresh"
+              tooltip="Refresh the source"
+              onClick={onRefresh}
+              size="compact"
+              variant="flat"
+            />
+            {setIsSourcePanelOpen && (
               <Button
                 icon="chevronLeft"
                 tooltip="Close the source panel"
                 onClick={() => setIsSourcePanelOpen(false)}
                 size="compact"
+                variant="flat"
               />
-            </div>
-          )}
+            )}
+          </div>
         </div>
         <TextInput
           value={searchQuery}
