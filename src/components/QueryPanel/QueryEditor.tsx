@@ -8,26 +8,16 @@
 import * as React from 'react';
 import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
-import * as Malloy from '@malloydata/malloy-interfaces';
 
 import {Query} from './Query';
 import {Source} from './Source';
 import {Parameters} from './Parameters';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-
-export interface QueryEditorProps {
-  source: Malloy.SourceInfo;
-  query?: Malloy.Query;
-  setQuery?: (query: Malloy.Query | undefined) => void;
-}
+import {ScrollableArea} from '../primitives';
+import {fontStyles} from '../primitives/styles';
 
 /**
- * The Query Viewing and Editing panel. Takes a `SourceInfo` object
- * and an optional `Query` object.
- *
- * @param source The source object to be used for query building.
- * @param query A query to be edited. Omit for a new query.
- * @returns
+ * The Query Viewing and Editing panel.
  */
 export function QueryEditor() {
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
@@ -38,21 +28,21 @@ export function QueryEditor() {
   }
 
   return (
-    <div {...stylex.props(queryExplorerStyles.main)}>
-      <Source rootQuery={rootQuery} />
-      <Parameters rootQuery={rootQuery} />
-      <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
-    </div>
+    <ScrollableArea>
+      <div {...stylex.props(fontStyles.body, styles.main)}>
+        <Source rootQuery={rootQuery} />
+        <Parameters rootQuery={rootQuery} />
+        <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
+      </div>
+    </ScrollableArea>
   );
 }
 
-const queryExplorerStyles = stylex.create({
+const styles = stylex.create({
   main: {
-    fontFamily: 'sans-serif',
-    fontSize: 14,
-    lineHeight: 1.8,
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
+    padding: '4px 12px 12px 12px',
   },
 });
