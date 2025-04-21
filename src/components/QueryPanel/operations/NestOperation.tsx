@@ -15,7 +15,7 @@ import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {useContext} from 'react';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 import {AddMenu} from '../AddMenu/AddMenu';
-import {VisualizationIcon} from '../VisualizationIcon';
+import {viewToVisualizationIcon} from '../../utils/icon';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -37,6 +37,31 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
     return null;
   }
 
+  const getControls = (nest: ASTNestViewOperation) => (
+    <>
+      <DropdownMenu
+        trigger={
+          <Button
+            variant="flat"
+            icon="meatballs"
+            size="compact"
+            tooltip="More Actions"
+          />
+        }
+      >
+        <DropdownMenuItem
+          icon="clear"
+          label="Delete Query"
+          onClick={() => {
+            nest.delete();
+            setQuery?.(rootQuery.build());
+          }}
+        />
+      </DropdownMenu>
+      <AddMenu rootQuery={rootQuery} view={nest.view} />
+    </>
+  );
+
   return (
     <div {...stylex.props(styles.tokenContainer)}>
       {nests.map(nest => {
@@ -50,33 +75,10 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
           <div key={nest.name} {...stylex.props(viewStyles.indent)}>
             <CollapsiblePanel
               title={nest.name}
-              icon="nest"
+              icon={viewToVisualizationIcon(nest.view)}
               defaultOpen={defaultOpen}
-              controls={
-                <>
-                  <DropdownMenu
-                    trigger={
-                      <Button
-                        variant="flat"
-                        icon="meatballs"
-                        size="compact"
-                        tooltip="More Actions"
-                      />
-                    }
-                  >
-                    <DropdownMenuItem
-                      icon="clear"
-                      label="Delete Query"
-                      onClick={() => {
-                        nest.delete();
-                        setQuery?.(rootQuery.build());
-                      }}
-                    />
-                  </DropdownMenu>
-                  <AddMenu rootQuery={rootQuery} view={nest.view} />
-                </>
-              }
-              collapsedControls={<VisualizationIcon view={nest.view} />}
+              controls={getControls(nest)}
+              collapsedControls={getControls(nest)}
             >
               <View rootQuery={rootQuery} view={nest.view} />
             </CollapsiblePanel>
