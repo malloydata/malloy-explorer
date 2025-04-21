@@ -115,7 +115,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
             />
             {setIsSourcePanelOpen && (
               <Button
-                icon="chevronLeft"
+                icon="sidebarCollapse"
                 tooltip="Close the source panel"
                 onClick={() => setIsSourcePanelOpen(false)}
                 size="compact"
