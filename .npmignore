@@ -4,3 +4,4 @@ coverage/
 *.tgz
 docs/
 dist/tsconfig.tsbuildinfo
+tsconfig.json
