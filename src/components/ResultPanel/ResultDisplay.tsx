@@ -22,6 +22,7 @@ import DOMElement from '../primitives/DOMElement';
 
 import '@malloydata/render/webcomponent';
 import {Variant} from '../primitives/Banner';
+import RunInfoHover from './RunInfoHover';
 
 export interface ResultDisplayProps {
   query: SubmittedQuery;
@@ -85,6 +86,7 @@ function ResponseDisplay({response}: ResponseProps) {
 
   return (
     <div>
+      {response?.runInfo && <RunInfoHover runInfo={response.runInfo} />}
       {messageComponent}
       {response?.result && <RenderedResult result={response.result} />}
     </div>
