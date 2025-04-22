@@ -12,13 +12,14 @@ import {Content, List, Root, Trigger} from '@radix-ui/react-tabs';
 import stylex from '@stylexjs/stylex';
 import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
-import {Button, CodeBlock, Icon} from '../primitives';
+import {CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
-import {useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {colors} from '../QueryPanel/AddMenu/colors.stylex';
 import DebugPane, {DebugOptions} from './DebugPane';
+import CopyToClipboard from './CopyToClipboard';
 
 enum Tab {
   RESULTS = 'Results',
@@ -47,7 +48,7 @@ export default function ResultPanel({
   submittedQuery,
   options,
 }: ResultPanelProps) {
-  const [tab, setTab] = React.useState<Tab>(Tab.MALLOY);
+  const [tab, setTab] = useState<Tab>(Tab.MALLOY);
   const malloyText = useQueryBuilder(source, draftQuery)?.toMalloy();
   const views = source.schema.fields.filter(f => f.kind === 'view');
   const submittedQueryExists = submittedQuery !== undefined;
@@ -59,6 +60,17 @@ export default function ResultPanel({
   useEffect(() => {
     setTab(Tab.RESULTS);
   }, [submittedQuery]);
+
+  const clipboardText = (() => {
+    if (tab === Tab.MALLOY && malloyText) {
+      return malloyText;
+    } else if (tab === Tab.SQL && submittedQuery?.response?.result?.sql) {
+      return submittedQuery.response.result.sql;
+    } else if (tab === Tab.RAW_QUERY) {
+      return JSON.stringify(draftQuery);
+    }
+    return null;
+  })();
 
   return draftQuery || submittedQuery ? (
     <Root
@@ -115,27 +127,8 @@ export default function ResultPanel({
             </Trigger>
           )}
         </List>
-        {tab !== Tab.RESULTS && (
-          <Button
-            variant="flat"
-            size="compact"
-            label="Copy Code"
-            icon="copy"
-            onClick={() => {
-              if (tab === Tab.MALLOY && malloyText) {
-                navigator.clipboard.writeText(malloyText);
-              } else if (
-                tab === Tab.SQL &&
-                submittedQuery?.response?.result?.sql
-              ) {
-                navigator.clipboard.writeText(
-                  submittedQuery.response.result.sql
-                );
-              } else if (tab === Tab.RAW_QUERY) {
-                navigator.clipboard.writeText(JSON.stringify(draftQuery));
-              }
-            }}
-          />
+        {tab !== Tab.RESULTS && clipboardText && (
+          <CopyToClipboard text={clipboardText} label="Copy Code" />
         )}
       </div>
       <div {...stylex.props(styles.contentContainer)}>
