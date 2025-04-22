@@ -177,7 +177,12 @@ function RenderedResult({result}: RenderedResultProps) {
   return (
     <ScrollableArea>
       {rendering ? (
-        <Spinner size="large" />
+        <div {...stylex.props(styles.renderingSpinnerContainer)}>
+          <div {...stylex.props(styles.renderingSpinner)}>
+            <Spinner size="large" />
+            <div {...stylex.props(fontStyles.emphasized)}>Rendering...</div>
+          </div>
+        </div>
       ) : (
         <div {...stylex.props(styles.resultContainer)}>
           {html && <DOMElement element={html} />}
@@ -251,6 +256,18 @@ const styles = stylex.create({
   },
   spinner: {
     marginBottom: '8px',
+  },
+  renderingSpinnerContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  renderingSpinner: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '8px',
   },
   resultContainer: {
     zIndex: '0',
