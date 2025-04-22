@@ -163,6 +163,7 @@ const styles = stylex.create({
   },
   label: {
     color: labelVars.color,
+    whiteSpace: 'nowrap',
   },
   disabledOverlay: {
     position: 'absolute',

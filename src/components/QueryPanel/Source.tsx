@@ -32,7 +32,7 @@ export function Source({rootQuery}: SourceProps) {
     rootQuery.definition instanceof ASTArrowQueryDefinition
   ) {
     return (
-      <div {...stylex.props(componentStyles.queryCard, styles.flex)}>
+      <div {...stylex.props(componentStyles.queryCard, styles.content)}>
         <div {...stylex.props(componentStyles.labelWithIcon)}>
           <Icon name="database" />
           {
@@ -55,8 +55,10 @@ export function Source({rootQuery}: SourceProps) {
 }
 
 const styles = stylex.create({
-  flex: {
-    display: 'flex',
-    justifyContent: 'space-between',
+  content: {
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridTemplateColumns: '1fr auto',
+    gap: '4px',
   },
 });
