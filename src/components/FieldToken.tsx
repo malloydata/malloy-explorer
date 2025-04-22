@@ -61,7 +61,6 @@ const styles = stylex.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: '4px',
-    cursor: 'pointer',
     [hoverActionsVars.display]: {
       default: 'none',
       ':hover': 'block',
