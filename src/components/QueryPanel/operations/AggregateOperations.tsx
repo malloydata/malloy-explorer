@@ -15,12 +15,11 @@ import {
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 import {OperationActionTitle} from './OperationActionTitle';
-import {FieldHover} from '../FieldHover';
 import FieldToken from '../../FieldToken';
 import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
+import {FieldHoverCard} from '../../FieldHoverCard';
 
 export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
@@ -60,25 +59,27 @@ export function AggregateOperations({
           const fieldInfo = aggregate.getFieldInfo();
           const path = aggregate.field.getReference().path ?? [];
           return (
-            <FieldHover
+            <FieldToken
               key={[...path, fieldInfo.name].join('.')}
               field={fieldInfo}
-              path={path}
-              side="right"
-              align="start"
-            >
-              <div {...stylex.props(hoverStyles.main)}>
-                <FieldToken field={fieldInfo} color="green" />
-                <div {...stylex.props(hoverStyles.hoverActions)}>
+              color="green"
+              hoverActions={
+                <>
                   <ClearButton
                     onClick={() => {
                       aggregate.delete();
                       setQuery?.(rootQuery.build());
                     }}
                   />
-                </div>
-              </div>
-            </FieldHover>
+                </>
+              }
+              tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
+              tooltipProps={{
+                side: 'right',
+                align: 'start',
+                alignOffset: 28,
+              }}
+            />
           );
         })}
       </div>

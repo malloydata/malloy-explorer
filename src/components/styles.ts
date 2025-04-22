@@ -54,7 +54,6 @@ export const styles = stylex.create({
   tokenContainer: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'start',
     gap: 8,
   },
   token: {

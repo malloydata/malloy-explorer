@@ -15,13 +15,12 @@ import {
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 import {addGroupBy} from '../../utils/segment';
 import {OperationActionTitle} from './OperationActionTitle';
-import {FieldHover} from '../FieldHover';
 import FieldToken from '../../FieldToken';
 import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
+import {FieldHoverCard} from '../../FieldHoverCard';
 
 export interface GroupByOperationsProps {
   rootQuery: ASTQuery;
@@ -60,25 +59,26 @@ export function GroupByOperations({
           const fieldInfo = groupBy.getFieldInfo();
           const path = groupBy.field.getReference().path ?? [];
           return (
-            <FieldHover
+            <FieldToken
               key={[...path, fieldInfo.name].join('.')}
               field={fieldInfo}
-              path={path}
-              side="right"
-              align="start"
-            >
-              <div {...stylex.props(hoverStyles.main)}>
-                <FieldToken field={fieldInfo} />
-                <div {...stylex.props(hoverStyles.hoverActions)}>
+              hoverActions={
+                <>
                   <ClearButton
                     onClick={() => {
                       groupBy.delete();
                       setQuery?.(rootQuery.build());
                     }}
                   />
-                </div>
-              </div>
-            </FieldHover>
+                </>
+              }
+              tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
+              tooltipProps={{
+                side: 'right',
+                align: 'start',
+                alignOffset: 28,
+              }}
+            />
           );
         })}
       </div>
