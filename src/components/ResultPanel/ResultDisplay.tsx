@@ -177,7 +177,9 @@ function RenderedResult({result}: RenderedResultProps) {
       {rendering ? (
         <Spinner size="large" />
       ) : (
-        <div>{html && <DOMElement element={html} />}</div>
+        <div {...stylex.props(styles.resultContainer)}>
+          {html && <DOMElement element={html} />}
+        </div>
       )}
     </ScrollableArea>
   );
@@ -247,5 +249,9 @@ const styles = stylex.create({
   },
   spinner: {
     marginBottom: '8px',
+  },
+  resultContainer: {
+    zIndex: '0',
+    position: 'relative',
   },
 });
