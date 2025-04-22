@@ -29,7 +29,7 @@ export default function RunInfoHover({runInfo}: RunInfoHoverProps) {
             {...stylex.props(styles.triggerContentContainer, fontStyles.body)}
           >
             <Icon name="info" color="disabled" />
-            &nspb;Query run details
+            &nbsp;Query run details
           </div>
         }
       </Tooltip.Trigger>
