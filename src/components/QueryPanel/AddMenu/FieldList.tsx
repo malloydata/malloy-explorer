@@ -24,14 +24,6 @@ interface Group {
   >;
 }
 
-const isArrayOrRecord = (
-  field: Malloy.FieldInfo
-): field is Malloy.FieldInfoWithDimension =>
-  field.kind === 'dimension' &&
-  ((field.type.kind === 'array_type' &&
-    field.type.element_type.kind === 'record_type') ||
-    field.type.kind === 'record_type');
-
 export interface FieldListProps {
   view: ViewParent;
   fields: Malloy.FieldInfo[];
@@ -68,14 +60,12 @@ export function FieldList({
     ) => {
       const filteredFields = sortFieldInfos(fields)
         .filter(field => field.kind !== 'join')
-        .filter(field => !isArrayOrRecord(field))
         .filter(
           field => field.name.includes(search) && types.includes(field.kind)
         )
         .filter(field => (filter ? filter(view, field, path) : true));
 
       const joins = fields.filter(field => field.kind === 'join');
-      const arraysAndRecords = fields.filter(isArrayOrRecord);
 
       if (filteredFields.length) {
         groups.push({
@@ -83,33 +73,6 @@ export function FieldList({
           name: path.length ? path.join(' > ') : name,
           fields: filteredFields,
         });
-      }
-
-      for (const array of arraysAndRecords) {
-        if (
-          array.type.kind === 'array_type' &&
-          array.type.element_type.kind === 'record_type'
-        ) {
-          buildGroups(
-            types,
-            [...path, array.name],
-            array.name,
-            array.type.element_type.fields.map(dimension => ({
-              kind: 'dimension',
-              ...dimension,
-            }))
-          );
-        } else if (array.type.kind === 'record_type') {
-          buildGroups(
-            types,
-            [...path, array.name],
-            array.name,
-            array.type.fields.map(dimension => ({
-              kind: 'dimension',
-              ...dimension,
-            }))
-          );
-        }
       }
 
       for (const join of joins) {
