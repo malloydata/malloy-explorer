@@ -57,10 +57,6 @@ export default function ResultPanel({
   }
 
   useEffect(() => {
-    setTab(Tab.MALLOY);
-  }, [draftQuery]);
-
-  useEffect(() => {
     setTab(Tab.RESULTS);
   }, [submittedQuery]);
 
