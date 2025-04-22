@@ -10,6 +10,7 @@ import {useState, JSX} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {Popover} from './Popover';
 import Icon from './Icon';
+import ScrollableArea from './ScrollableArea';
 
 interface SelectDropdownProps<T> {
   autoFocus?: boolean;
@@ -55,14 +56,14 @@ const styles = stylex.create({
     backgroundColor: 'var(--malloy-composer-form-disabledBackground, #f6f6f6)',
   },
   optionDiv: {
-    padding: '0px 10px',
-    height: '30px',
+    padding: '4px 8px',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflow: 'hidden',
     color: 'var(--malloy-composer-form-foreground, #5f6368)',
-    display: 'flex',
+    display: 'grid',
+    gridAutoFlow: 'column',
+    justifyContent: 'start',
     alignItems: 'center',
   },
   optionDivHover: {
@@ -70,6 +71,9 @@ const styles = stylex.create({
   },
   optionSpan: {
     marginLeft: '8px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    lineHeight: '20px',
   },
   checkIcon: {
     verticalAlign: 'text-top',
@@ -93,8 +97,9 @@ const styles = stylex.create({
     fontWeight: 'normal',
     width: '100%',
     padding: '10px 0',
-    overflowY: 'auto',
     maxHeight: '400px',
+    display: 'flex',
+    flexDirection: 'column',
   },
   optionDivider: {
     borderTop: '1px solid var(--malloy-composer-form-border, #ececec)',
@@ -188,46 +193,48 @@ export function SelectList<T>({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div {...stylex.props(styles.selectListDiv, customStyle)}>
-      {options.reduce<JSX.Element[]>((result, option, index) => {
-        const isSelected =
-          value !== undefined && valueEqual(value, option.value);
-        if (option.divider) {
+    <ScrollableArea>
+      <div {...stylex.props(styles.selectListDiv, customStyle)}>
+        {options.reduce<JSX.Element[]>((result, option, index) => {
+          const isSelected =
+            value !== undefined && valueEqual(value, option.value);
+          if (option.divider) {
+            result.push(
+              <div
+                {...stylex.props(styles.optionDivider)}
+                key={'divider' + index}
+              />
+            );
+          }
           result.push(
-            <div
-              {...stylex.props(styles.optionDivider)}
-              key={'divider' + index}
-            />
+            <label
+              key={index}
+              {...stylex.props(
+                styles.optionDiv,
+                hoveredIndex === index ? styles.optionDivHover : null
+              )}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => onChange(option.value)}
+            >
+              <input
+                {...stylex.props(styles.optionRadio)}
+                type="radio"
+                defaultChecked={isSelected}
+              />
+              <Icon
+                name="checkmark"
+                customStyle={{
+                  ...styles.checkIcon,
+                  ...(isSelected ? styles.checkIconSelected : undefined),
+                }}
+              />
+              <span {...stylex.props(styles.optionSpan)}>{option.label}</span>
+            </label>
           );
-        }
-        result.push(
-          <label
-            key={index}
-            {...stylex.props(
-              styles.optionDiv,
-              hoveredIndex === index ? styles.optionDivHover : null
-            )}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            onClick={() => onChange(option.value)}
-          >
-            <input
-              {...stylex.props(styles.optionRadio)}
-              type="radio"
-              defaultChecked={isSelected}
-            />
-            <Icon
-              name="checkmark"
-              customStyle={{
-                ...styles.checkIcon,
-                ...(isSelected ? styles.checkIconSelected : undefined),
-              }}
-            />
-            <span {...stylex.props(styles.optionSpan)}>{option.label}</span>
-          </label>
-        );
-        return result;
-      }, [])}
-    </div>
+          return result;
+        }, [])}
+      </div>
+    </ScrollableArea>
   );
 }
