@@ -37,7 +37,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
   const descriptionAnnotation = getDescriptionAnnotation(
     field.annotations ?? []
   );
-  const description = descriptionAnnotation ?? 'This is a ' + field.kind + '.';
+  const description = descriptionAnnotation ?? '';
 
   let details = null;
   if (field.kind === 'view') {
