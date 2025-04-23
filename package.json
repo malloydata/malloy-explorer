@@ -99,11 +99,11 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "peerDependencies": {
-    "@malloydata/malloy-filter": ">=0.0.266",
-    "@malloydata/malloy-interfaces": ">=0.0.266",
-    "@malloydata/malloy-query-builder": ">=0.0.266",
-    "@malloydata/malloy-tag": ">=0.0.266",
-    "@malloydata/render": ">=0.0.266",
+    "@malloydata/malloy-filter": "^0.0.268",
+    "@malloydata/malloy-interfaces": "^0.0.268",
+    "@malloydata/malloy-query-builder": "^0.0.268",
+    "@malloydata/malloy-tag": "^0.0.268",
+    "@malloydata/render": "^0.0.268",
     "react": ">= 19.0.0",
     "react-dom": ">= 19.0.0"
   }

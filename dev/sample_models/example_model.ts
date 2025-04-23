@@ -2392,3 +2392,91 @@ ORDER BY 1 asc NULLS LAST
     ],
   },
 };
+
+export const modelInfo2: Malloy.ModelInfo = {
+  entries: [
+    {
+      kind: 'source',
+      name: 'biff',
+      parameters: [
+        {
+          name: 'Date',
+          type: {kind: 'date_type'},
+          default_value: {
+            kind: 'date_literal',
+            date_value: '1971-05-19',
+          },
+        },
+      ],
+      schema: {
+        fields: [
+          {
+            kind: 'dimension',
+            name: 'order_id',
+            type: {
+              kind: 'number_type',
+              subtype: 'integer',
+            },
+          },
+          {
+            kind: 'dimension',
+            name: 'order_date',
+            type: {
+              kind: 'date_type',
+            },
+          },
+          {
+            kind: 'dimension',
+            name: 'shipping_cost',
+            type: {
+              kind: 'number_type',
+              subtype: 'integer',
+            },
+          },
+          {
+            kind: 'dimension',
+            name: 'user_id',
+            type: {
+              kind: 'number_type',
+              subtype: 'integer',
+            },
+          },
+          {
+            kind: 'dimension',
+            name: 'items',
+            type: {
+              kind: 'array_type',
+              element_type: {
+                kind: 'record_type',
+                fields: [
+                  {
+                    name: 'item_id',
+                    type: {
+                      kind: 'number_type',
+                      subtype: 'integer',
+                    },
+                  },
+                  {
+                    name: 'item',
+                    type: {
+                      kind: 'string_type',
+                    },
+                  },
+                  {
+                    name: 'price',
+                    type: {
+                      kind: 'number_type',
+                      subtype: 'integer',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      annotations: [],
+    },
+  ],
+  anonymous_queries: [],
+};
