@@ -9,7 +9,8 @@ import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {RawLiteralValue} from '@malloydata/malloy-query-builder';
 import {EditableToken, SelectorToken, Token} from '../primitives';
-import {StyleXStyles} from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import ErrorIcon from '../primitives/ErrorIcon';
 
 export interface LiteralValueEditorProps {
   value: Malloy.LiteralValue | undefined;
@@ -22,6 +23,7 @@ export function LiteralValueEditor({
   setValue,
   customStyle,
 }: LiteralValueEditorProps) {
+  const [errorMessage, setErrorMessage] = React.useState('');
   if (!value) {
     return null;
   }
@@ -41,16 +43,24 @@ export function LiteralValueEditor({
       );
     case 'date_literal':
       return (
-        <input
-          value={value.date_value}
-          type="date"
-          onChange={event =>
-            setValue({
-              date: event.target.valueAsDate ?? new Date(),
-              granularity: 'day',
-            })
-          }
-        />
+        <div {...stylex.props(styles.row)}>
+          <input
+            value={value.date_value.split(' ')[0]}
+            type="date"
+            onChange={event => {
+              if (event.target.valueAsDate) {
+                setErrorMessage('');
+                setValue({
+                  date: event.target.valueAsDate,
+                  granularity: 'day',
+                });
+              } else {
+                setErrorMessage('Invalid date');
+              }
+            }}
+          />
+          {errorMessage && <ErrorIcon errorMessage={errorMessage} />}
+        </div>
       );
     case 'null_literal':
       return <Token label="∅" />;
@@ -73,16 +83,24 @@ export function LiteralValueEditor({
       );
     case 'timestamp_literal':
       return (
-        <input
-          value={value.timestamp_value}
-          type="date"
-          onChange={event =>
-            setValue({
-              date: event.target.valueAsDate ?? new Date(),
-              granularity: 'second',
-            })
-          }
-        />
+        <div {...stylex.props(styles.row)}>
+          <input
+            value={value.timestamp_value}
+            type="date"
+            onChange={event => {
+              if (event.target.valueAsDate) {
+                setErrorMessage('');
+                setValue({
+                  date: event.target.valueAsDate,
+                  granularity: 'second',
+                });
+              } else {
+                setErrorMessage('Invalid date');
+              }
+            }}
+          />
+          {errorMessage && <ErrorIcon errorMessage={errorMessage} />}
+        </div>
       );
     case 'filter_expression_literal':
       return (
@@ -94,3 +112,9 @@ export function LiteralValueEditor({
       );
   }
 }
+
+const styles = stylex.create({
+  row: {
+    display: 'flex',
+  },
+});
