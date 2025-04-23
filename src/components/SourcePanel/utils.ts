@@ -33,7 +33,6 @@ export function flattenFieldsTree(
           return [{path, field}];
         }
       case 'measure':
-        return [{path, field}];
       case 'dimension':
         if (
           field.type.kind === 'array_type' &&
@@ -41,7 +40,7 @@ export function flattenFieldsTree(
         ) {
           return flattenFieldsTree(
             field.type.element_type.fields.map(dimension => ({
-              kind: 'dimension',
+              kind: field.kind,
               ...dimension,
             })),
             [...path, field.name]
@@ -49,7 +48,7 @@ export function flattenFieldsTree(
         } else if (field.type.kind === 'record_type') {
           return flattenFieldsTree(
             field.type.fields.map(dimension => ({
-              kind: 'dimension',
+              kind: field.kind,
               ...dimension,
             })),
             [...path, field.name]

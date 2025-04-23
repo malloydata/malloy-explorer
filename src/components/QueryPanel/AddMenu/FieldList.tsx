@@ -26,8 +26,8 @@ interface Group {
 
 const isArrayOrRecord = (
   field: Malloy.FieldInfo
-): field is Malloy.FieldInfoWithDimension =>
-  field.kind === 'dimension' &&
+): field is Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure =>
+  (field.kind === 'dimension' || field.kind === 'measure') &&
   ((field.type.kind === 'array_type' &&
     field.type.element_type.kind === 'record_type') ||
     field.type.kind === 'record_type');
@@ -94,9 +94,9 @@ export function FieldList({
             types,
             [...path, array.name],
             array.name,
-            array.type.element_type.fields.map(dimension => ({
-              kind: 'dimension',
-              ...dimension,
+            array.type.element_type.fields.map(field => ({
+              kind: array.kind,
+              ...field,
             }))
           );
         } else if (array.type.kind === 'record_type') {
@@ -104,9 +104,9 @@ export function FieldList({
             types,
             [...path, array.name],
             array.name,
-            array.type.fields.map(dimension => ({
-              kind: 'dimension',
-              ...dimension,
+            array.type.fields.map(field => ({
+              kind: array.kind,
+              ...field,
             }))
           );
         }
