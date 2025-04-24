@@ -10,6 +10,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {BookmarkedView} from './BookmarkedView';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
+import {hasExplorerFilterFieldAnnotation} from '../utils/annotations';
 
 export interface EmptyQueryDisplay {
   views: Array<Malloy.ViewInfo>;
@@ -27,15 +28,18 @@ export default function EmptyQueryDisplay({
           Start with a Bookmarked View
         </div>
         <div {...stylex.props(styles.viewContainer)}>
-          {views.slice(0, 3).map(v => (
-            <BookmarkedView
-              key={v.name}
-              viewInfo={v}
-              onClick={() => {
-                onSelectView(v);
-              }}
-            />
-          ))}
+          {views
+            .filter(v => !hasExplorerFilterFieldAnnotation(v.annotations ?? []))
+            .slice(0, 3)
+            .map(v => (
+              <BookmarkedView
+                key={v.name}
+                viewInfo={v}
+                onClick={() => {
+                  onSelectView(v);
+                }}
+              />
+            ))}
         </div>
       </div>
     </div>

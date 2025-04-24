@@ -31,6 +31,7 @@ import FieldGroupList from './FieldGroupList';
 import {useContext} from 'react';
 import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {hasExplorerFilterFieldAnnotation} from '../utils/annotations';
 
 type SubpanelType = 'view' | 'dimension' | 'measure' | null;
 
@@ -48,7 +49,9 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
 
   const fieldItems = React.useMemo(() => {
     if (source) {
-      return sourceToFieldItems(source);
+      return sourceToFieldItems(source).filter(
+        fi => !hasExplorerFilterFieldAnnotation(fi.field.annotations ?? [])
+      );
     }
     return [];
   }, [source]);

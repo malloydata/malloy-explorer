@@ -26,7 +26,7 @@ import {ViewParent} from '../../utils/fields';
 import {colors} from './colors.stylex';
 import {ParsedFilter} from '@malloydata/malloy-query-builder';
 
-export interface AddGroupByProps {
+export interface AddFieldItemProps {
   label: string;
   icon: IconType;
   view: ViewParent;
@@ -52,7 +52,7 @@ export function AddFieldItem({
   filter,
   disabledMessage,
   isFilterOperation,
-}: AddGroupByProps) {
+}: AddFieldItemProps) {
   const disabled = fields.length === 0;
   const [open, setOpen] = useState(false);
 

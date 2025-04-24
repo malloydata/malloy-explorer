@@ -14,6 +14,7 @@ import {
   getInputSchemaFromViewParent,
   viewParentDoesNotHaveField,
   ViewParent,
+  isNotFilteredField,
 } from '../../utils/fields';
 
 export interface AddAggregateProps {
@@ -32,7 +33,10 @@ export function AddAggregate({rootQuery, view}: AddAggregateProps) {
       view={view}
       fields={fields}
       types={['measure']}
-      filter={viewParentDoesNotHaveField}
+      filter={(parent, field, path) =>
+        viewParentDoesNotHaveField(parent, field, path) &&
+        isNotFilteredField(field)
+      }
       onAddOperation={(field, path) => {
         const segment = view.getOrAddDefaultSegment();
         segment.addAggregate(field.name, path);

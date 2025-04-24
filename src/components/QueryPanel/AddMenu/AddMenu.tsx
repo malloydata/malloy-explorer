@@ -25,7 +25,11 @@ import {FieldList} from './FieldList';
 import {segmentNestNo} from '../../utils/segment';
 import {ValueList} from './ValueList';
 import {SearchIndexResult} from './hooks/useSearch';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
+import {
+  getInputSchemaFromViewParent,
+  isNotFilteredField,
+  ViewParent,
+} from '../../utils/fields';
 
 export interface AddMenuProps {
   rootQuery: ASTQuery;
@@ -78,6 +82,7 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
               <FieldList
                 view={view}
                 fields={getInputSchemaFromViewParent(view).fields}
+                filter={(_, field) => isNotFilteredField(field)}
                 types={['dimension', 'measure', 'view']}
                 onAddOperation={function (
                   field: FieldInfo,
