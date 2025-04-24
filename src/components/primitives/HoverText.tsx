@@ -92,9 +92,10 @@ export function HoverText({
 
 const styles = stylex.create({
   text: {
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
     overflow: 'hidden',
+    display: '-webkit-box',
+    '-webkit-line-clamp': '3',
+    '-webkit-box-orient': 'vertical',
   },
   hoverText: {
     maxWidth: '230px',
