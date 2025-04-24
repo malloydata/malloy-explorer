@@ -34,7 +34,7 @@ export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
       fields={fields}
       types={['dimension']}
       filter={viewParentDoesNotHaveField}
-      onClick={(field, path) => {
+      onAddOperation={(field, path) => {
         const segment = view.getOrAddDefaultSegment();
         addGroupBy(rootQuery, segment, field, path, setQuery);
       }}

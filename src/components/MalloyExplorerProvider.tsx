@@ -14,7 +14,6 @@ import {
   SearchValueMapResult,
 } from '../contexts/QueryEditorContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
-import {useFilterModal} from './filters/hooks/useFilterModal';
 
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;
@@ -32,15 +31,13 @@ export function MalloyExplorerProvider({
   topValues,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
-  const {openFilterModal, FilterModal} = useFilterModal({rootQuery, setQuery});
 
   return (
     <TooltipProvider>
       <QueryEditorContext.Provider
-        value={{source, rootQuery, setQuery, topValues, openFilterModal}}
+        value={{source, rootQuery, setQuery, topValues}}
       >
         {children}
-        <FilterModal />
       </QueryEditorContext.Provider>
     </TooltipProvider>
   );

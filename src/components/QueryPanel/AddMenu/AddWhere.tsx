@@ -6,7 +6,6 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {AddFieldItem} from './AddFieldItem';
 import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
@@ -18,7 +17,8 @@ export interface AddWhereProps {
 }
 
 export function AddWhere({view}: AddWhereProps) {
-  const {openFilterModal} = useContext(QueryEditorContext);
+  const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
+
   const {fields} = getInputSchemaFromViewParent(view);
 
   return (
@@ -33,13 +33,21 @@ export function AddWhere({view}: AddWhereProps) {
           (field.kind === 'dimension' || field.kind === 'measure') &&
           FILTERABLE_TYPES.has(field.type.kind)
         }
-        onClick={(fieldInfo, path, event) => {
-          const x = event.clientX;
-          const y = event.clientY;
-          if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
-            openFilterModal({view, fieldInfo, path, x, y});
+        onAddOperation={(field, path, filter) => {
+          if (
+            filter &&
+            (field.kind === 'dimension' || field.kind === 'measure')
+          ) {
+            const segment = view.getOrAddDefaultSegment();
+            if (field.kind === 'dimension') {
+              segment.addWhere(field.name, path, filter);
+            } else {
+              segment.addHaving(field.name, path, filter);
+            }
+            setQuery?.(rootQuery?.build());
           }
         }}
+        isFilterOperation={true}
       />
     </>
   );

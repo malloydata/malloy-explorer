@@ -139,6 +139,8 @@ interface DropdownSubMenuItemProps {
   sublabel?: string;
   disabled?: boolean;
   children: DropdownMenuChild | DropdownMenuChild[];
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function DropdownSubMenuItem({
@@ -147,12 +149,17 @@ export function DropdownSubMenuItem({
   sublabel,
   disabled,
   children,
+  open,
+  onOpenChange,
 }: DropdownSubMenuItemProps) {
+  const isControlled = open !== undefined && onOpenChange !== undefined;
+
   return (
-    <PrimitiveDropdownMenu.Sub>
+    <PrimitiveDropdownMenu.Sub {...(isControlled && {open})}>
       <PrimitiveDropdownMenu.SubTrigger
         {...stylex.props(styles.item)}
         disabled={disabled}
+        {...(isControlled && {onClick: () => onOpenChange(!open)})}
       >
         {icon && <Icon name={icon} customStyle={styles.icon} />}
         <div {...stylex.props(styles.center)}>
@@ -163,7 +170,9 @@ export function DropdownSubMenuItem({
             </span>
           )}
         </div>
-        <Icon name="chevronRight" customStyle={styles.icon} />
+        {!isControlled && (
+          <Icon name="chevronRight" customStyle={styles.icon} />
+        )}
       </PrimitiveDropdownMenu.SubTrigger>
       <PrimitiveDropdownMenu.SubContent
         {...stylex.props(styles.content)}

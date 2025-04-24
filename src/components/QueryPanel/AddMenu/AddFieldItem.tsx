@@ -24,13 +24,14 @@ import {
 import {fontStyles, tooltipStyles} from '../../primitives/styles';
 import {ViewParent} from '../../utils/fields';
 import {colors} from './colors.stylex';
+import {ParsedFilter} from '@malloydata/malloy-query-builder';
 
 export interface AddGroupByProps {
   label: string;
   icon: IconType;
   view: ViewParent;
   fields: FieldInfo[];
-  onClick(field: FieldInfo, path: string[], event: React.MouseEvent): void;
+  onAddOperation(field: FieldInfo, path: string[], filter?: ParsedFilter): void;
   types: Array<'dimension' | 'measure' | 'view'>;
   filter?: (
     view: ViewParent,
@@ -38,6 +39,7 @@ export interface AddGroupByProps {
     path: string[]
   ) => boolean;
   disabledMessage?: string;
+  isFilterOperation?: boolean;
 }
 
 export function AddFieldItem({
@@ -45,10 +47,11 @@ export function AddFieldItem({
   fields,
   icon,
   label,
-  onClick,
+  onAddOperation,
   types,
   filter,
   disabledMessage,
+  isFilterOperation,
 }: AddGroupByProps) {
   const disabled = fields.length === 0;
   const [open, setOpen] = useState(false);
@@ -95,14 +98,20 @@ export function AddFieldItem({
         {trigger}
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content side="right" align="start" alignOffset={-16}>
+        <Popover.Content
+          side="right"
+          align="start"
+          alignOffset={-8}
+          sideOffset={-6}
+        >
           <Popover.Arrow width={0} height={0} />
           <FieldMenu
             types={types}
             filter={filter}
             view={view}
             fields={fields}
-            onClick={onClick}
+            onAddOperation={onAddOperation}
+            isFilterOperation={isFilterOperation}
           />
         </Popover.Content>
       </Popover.Portal>

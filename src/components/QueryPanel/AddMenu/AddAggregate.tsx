@@ -33,7 +33,7 @@ export function AddAggregate({rootQuery, view}: AddAggregateProps) {
       fields={fields}
       types={['measure']}
       filter={viewParentDoesNotHaveField}
-      onClick={(field, path) => {
+      onAddOperation={(field, path) => {
         const segment = view.getOrAddDefaultSegment();
         segment.addAggregate(field.name, path);
         setQuery?.(rootQuery.build());

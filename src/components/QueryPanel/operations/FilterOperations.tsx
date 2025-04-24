@@ -20,7 +20,7 @@ import {Token} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 import {ErrorElement} from '../../ErrorElement';
-import {useFilterPopup} from '../../filters/hooks/useFilterPopup';
+import {FilterPopover} from '../../filters/FilterPopover';
 import {Moment} from '@malloydata/malloy-filter';
 
 export interface FilterOperationsProps {
@@ -89,12 +89,6 @@ function SingleFilterOperation({
     },
     [filterOperation.filter, rootQuery, setQuery]
   );
-  const {FilterPopup} = useFilterPopup(
-    fieldInfo,
-    fieldReference.path ?? [],
-    filter,
-    setFilter
-  );
 
   const {op, value} = parsedToLabels(filter, filterString);
 
@@ -102,8 +96,13 @@ function SingleFilterOperation({
 
   return (
     <div {...stylex.props(hoverStyles.main)}>
-      <FilterPopup
+      <FilterPopover
+        fieldInfo={fieldInfo}
+        path={fieldReference.path ?? []}
+        filter={filter}
+        setFilter={setFilter}
         trigger={<Token icon="filter" color="cyan" label={label} />}
+        layoutProps={{align: 'start', side: 'bottom', sideOffset: 1}}
       />
       <div {...stylex.props(hoverStyles.hoverActions)}>
         <ClearButton
