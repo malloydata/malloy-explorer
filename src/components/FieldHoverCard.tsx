@@ -72,7 +72,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
 const styles = stylex.create({
   container: {
     width: '323px',
-    maxHeight: '248px',
+    maxHeight: '280px',
   },
   badge: {
     marginBottom: '4px',
