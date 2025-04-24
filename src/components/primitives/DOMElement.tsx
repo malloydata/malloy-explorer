@@ -9,9 +9,15 @@ import * as React from 'react';
 
 interface DOMElementProps {
   element: HTMLElement;
+  className?: string;
+  style?: Record<string, string | number>;
 }
 
-export default function DOMElement({element}: DOMElementProps) {
+export default function DOMElement({
+  element,
+  className,
+  style,
+}: DOMElementProps) {
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -21,5 +27,5 @@ export default function DOMElement({element}: DOMElementProps) {
     }
   }, [element]);
 
-  return <div ref={ref}></div>;
+  return <div ref={ref} className={className} style={style}></div>;
 }

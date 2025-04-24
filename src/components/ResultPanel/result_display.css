@@ -1,0 +1,8 @@
+.malloy-render_result-wrapper malloy-render::part(table-container) {
+    width: 100%;   
+}
+
+.malloy-render_result-wrapper {
+    height: 100%;
+    overflow: hidden;
+}
