@@ -11,6 +11,7 @@ export {QueryActionBar, QueryEditor, QueryPanel} from './components/QueryPanel';
 export {ResultPanel} from './components/ResultPanel';
 export type {
   EXECUTION_STATES,
+  Message,
   QueryExecutionState,
   QueryResponse,
   RunInfo,
