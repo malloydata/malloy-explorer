@@ -27,7 +27,7 @@ import {ValueList} from './ValueList';
 import {SearchIndexResult} from './hooks/useSearch';
 import {
   getInputSchemaFromViewParent,
-  isNotFilteredField,
+  isNotAnnotatedFilteredField,
   ViewParent,
 } from '../../utils/fields';
 
@@ -82,7 +82,7 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
               <FieldList
                 view={view}
                 fields={getInputSchemaFromViewParent(view).fields}
-                filter={(_, field) => isNotFilteredField(field)}
+                filter={(_, field) => isNotAnnotatedFilteredField(field)}
                 types={['dimension', 'measure', 'view']}
                 onAddOperation={function (
                   field: FieldInfo,

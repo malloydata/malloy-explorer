@@ -92,6 +92,6 @@ export function viewParentDoesNotHaveField(
   return !viewParentHasField(parent, field, path);
 }
 
-export function isNotFilteredField(field: Malloy.FieldInfo) {
+export function isNotAnnotatedFilteredField(field: Malloy.FieldInfo) {
   return !hasExplorerFilterFieldAnnotation(field.annotations ?? []);
 }

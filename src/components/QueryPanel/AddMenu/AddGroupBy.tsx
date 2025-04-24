@@ -15,7 +15,7 @@ import {
   viewParentDoesNotHaveField,
   ViewParent,
   getInputSchemaFromViewParent,
-  isNotFilteredField,
+  isNotAnnotatedFilteredField,
 } from '../../utils/fields';
 
 export interface AddGroupByProps {
@@ -36,7 +36,7 @@ export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
       types={['dimension']}
       filter={(parent, field, path) =>
         viewParentDoesNotHaveField(parent, field, path) &&
-        isNotFilteredField(field)
+        isNotAnnotatedFilteredField(field)
       }
       onAddOperation={(field, path) => {
         const segment = view.getOrAddDefaultSegment();
