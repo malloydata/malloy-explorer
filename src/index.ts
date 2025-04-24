@@ -15,6 +15,7 @@ export type {
   QueryExecutionState,
   QueryResponse,
   RunInfo,
+  SeverityLevel,
   SubmittedQuery,
 } from './components/ResultPanel/SubmittedQuery';
 export {SourcePanel} from './components/SourcePanel';
