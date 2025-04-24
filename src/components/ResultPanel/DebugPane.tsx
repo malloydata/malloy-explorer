@@ -24,11 +24,13 @@ interface DebugPaneProps {
 }
 
 export default function DebugPane({query, debug}: DebugPaneProps) {
-  const [selectedDebugger, setSelectedDebugger] = useState<string>();
+  const [selectedDebugger, setSelectedDebugger] = useState<string | undefined>(
+    debug?.debuggers?.at(0)
+  );
 
   return (
     <div>
-      {debug && (
+      {!!debug?.debuggers.length && (
         <div {...stylex.props(styles.debugDisplay)}>
           <div {...stylex.props(fontStyles.largeBody)}>Debug with:</div>
           <SelectDropdown
