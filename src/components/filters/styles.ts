@@ -11,10 +11,6 @@ export const filterStyles = stylex.create({
   filterDialog: {
     display: 'flex',
     flexDirection: 'column',
-    boxShadow:
-      '0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 2px 12px 0 rgba(0, 0, 0, 0.1)',
-    backgroundColor: 'white',
-    borderRadius: 8,
     padding: 8,
     minWidth: 200,
     maxWidth: 400,
@@ -31,7 +27,6 @@ export const filterStyles = stylex.create({
     gap: 8,
   },
   editor: {
-    width: 350,
     display: 'flex',
     flexDirection: 'column',
     gap: 8,

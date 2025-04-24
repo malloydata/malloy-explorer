@@ -27,26 +27,28 @@ import {fontStyles} from '../primitives/styles';
 export interface FilterDialogProps {
   fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure;
   path: string[];
-  filter: ParsedFilter;
-  setFilter: (filter: ParsedFilter) => void;
-  setOpen: (open: boolean) => void;
+  filter?: ParsedFilter;
+  onFilterApply: (filter: ParsedFilter) => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 export function FilterDialog({
   fieldInfo,
   path,
   filter,
-  setFilter,
-  setOpen,
+  onFilterApply,
+  onOpenChange,
 }: FilterDialogProps) {
-  const [currentFilter, setCurrentFilter] = useState(filter);
+  const [currentFilter, setCurrentFilter] = useState(
+    filter ?? getDefaultFilter(fieldInfo)
+  );
   const onCancel = () => {
-    setOpen(false);
+    onOpenChange(false);
   };
 
   const onApply = () => {
-    setFilter(currentFilter);
-    setOpen(false);
+    onFilterApply(currentFilter);
+    onOpenChange(false);
   };
 
   const updateBooleanFilter = (parsed: BooleanFilter) => {
@@ -126,4 +128,26 @@ export function FilterDialog({
       </div>
     </div>
   );
+}
+
+function getDefaultFilter(
+  fieldInfo: Malloy.FieldInfoWithDimension | Malloy.FieldInfoWithMeasure
+): ParsedFilter {
+  if (fieldInfo.type.kind === 'string_type') {
+    return {kind: 'string', parsed: {operator: '=', values: []}};
+  } else if (fieldInfo.type.kind === 'boolean_type') {
+    return {kind: 'boolean', parsed: {operator: 'true'}};
+  } else if (fieldInfo.type.kind === 'number_type') {
+    return {kind: 'number', parsed: {operator: '>', values: ['0']}};
+  } else if (fieldInfo.type.kind === 'date_type') {
+    return {
+      kind: 'date',
+      parsed: {operator: 'last', n: '7', units: 'day'},
+    };
+  } else {
+    return {
+      kind: 'timestamp',
+      parsed: {operator: 'last', n: '7', units: 'day'},
+    };
+  }
 }

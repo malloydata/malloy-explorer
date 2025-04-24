@@ -38,7 +38,7 @@ export function AddView({rootQuery, view}: AddViewProps) {
       view={view}
       fields={fields}
       types={['view']}
-      onClick={field => {
+      onAddOperation={field => {
         if (rootQuery.isEmpty()) {
           rootQuery.setView(field.name);
         } else {

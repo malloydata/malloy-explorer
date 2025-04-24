@@ -79,7 +79,10 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                 view={view}
                 fields={getInputSchemaFromViewParent(view).fields}
                 types={['dimension', 'measure', 'view']}
-                onClick={function (field: FieldInfo, path: string[]): void {
+                onAddOperation={function (
+                  field: FieldInfo,
+                  path: string[]
+                ): void {
                   const segment = view.getOrAddDefaultSegment();
                   if (field.kind === 'dimension') {
                     segment.addGroupBy(field.name, path);

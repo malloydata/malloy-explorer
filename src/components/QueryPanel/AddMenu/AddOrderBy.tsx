@@ -42,7 +42,7 @@ export function AddOrderBy({rootQuery, view}: AddEmptyNestProps) {
       view={view}
       fields={fields}
       types={['dimension']}
-      onClick={field => {
+      onAddOperation={field => {
         const segment = view.getOrAddDefaultSegment();
         segment.addOrderBy(field.name, 'asc');
         setQuery?.(rootQuery.build());

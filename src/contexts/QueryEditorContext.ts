@@ -8,7 +8,6 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
-import {OpenFilterModalCallback} from '../components/filters/hooks/useFilterModal';
 
 // TODO switch to stable API when available
 export interface SearchValueMapResult {
@@ -28,14 +27,12 @@ export interface QueryEditorContextProps {
   /** Provide to allow editing of the query */
   setQuery?: (rootQuery: Malloy.Query | undefined) => void;
   topValues?: SearchValueMapResult[];
-  openFilterModal: OpenFilterModalCallback;
 }
 
 /**
  * QueryEditorContext enables query editing by providing the setQuery
  * callback.
  */
-
-export const QueryEditorContext = React.createContext<QueryEditorContextProps>({
-  openFilterModal: () => {},
-});
+export const QueryEditorContext = React.createContext<QueryEditorContextProps>(
+  {}
+);

@@ -13,6 +13,9 @@ import {addMenuStyles} from './styles';
 import {sortFieldInfos, ViewParent} from '../../utils/fields';
 import FieldToken from '../../FieldToken';
 import {FieldHoverCard} from '../../FieldHoverCard';
+import {FilterPopover} from '../../filters/FilterPopover';
+import {ParsedFilter} from '@malloydata/malloy-query-builder';
+import {PopoverTrigger} from '@radix-ui/react-popover';
 
 interface Group {
   name: string;
@@ -36,10 +39,10 @@ export interface FieldListProps {
   view: ViewParent;
   fields: Malloy.FieldInfo[];
   search: string;
-  onClick: (
+  onAddOperation: (
     field: Malloy.FieldInfo,
     path: string[],
-    event: React.MouseEvent
+    filter?: ParsedFilter
   ) => void;
   types: Array<'dimension' | 'measure' | 'view'>;
   filter?: (
@@ -47,15 +50,17 @@ export interface FieldListProps {
     field: Malloy.FieldInfo,
     path: string[]
   ) => boolean;
+  isFilterOperation?: boolean;
 }
 
 export function FieldList({
   view,
   fields,
-  onClick,
+  onAddOperation,
   search,
   types,
   filter,
+  isFilterOperation,
 }: FieldListProps) {
   const groups = useMemo(() => {
     const groups: Group[] = [];
@@ -128,7 +133,7 @@ export function FieldList({
   }, [fields, filter, search, view, types]);
 
   return (
-    <div>
+    <div {...stylex.props(styles.content)}>
       {groups.length ? (
         groups.map(group => (
           <div key={group.name}>
@@ -140,26 +145,66 @@ export function FieldList({
                 {group.name}
               </div>
             </div>
-            {group.fields.map(field => (
-              <div
-                key={group.name + ':' + field.name}
-                role="menuitem"
-                tabIndex={-1}
-                {...stylex.props(addMenuStyles.item, styles.fieldItem)}
-              >
-                <FieldToken
-                  field={field}
-                  onClick={event => onClick(field, group.path, event)}
-                  tooltip={<FieldHoverCard field={field} path={group.path} />}
-                  tooltipProps={{
-                    side: 'right',
+            {group.fields.map(field =>
+              isFilterOperation &&
+              (field.kind === 'dimension' || field.kind === 'measure') ? (
+                <FilterPopover
+                  key={group.name + ':' + field.name}
+                  fieldInfo={field}
+                  path={group.path}
+                  setFilter={filter =>
+                    onAddOperation(field, group.path, filter)
+                  }
+                  anchor={
+                    <div
+                      role="menuitem"
+                      tabIndex={-1}
+                      {...stylex.props(addMenuStyles.item, styles.fieldItem)}
+                    >
+                      <PopoverTrigger asChild>
+                        <FieldToken
+                          field={field}
+                          tooltip={
+                            <FieldHoverCard field={field} path={group.path} />
+                          }
+                          tooltipProps={{
+                            side: 'right',
+                            align: 'start',
+                            sideOffset: 4,
+                            alignOffset: 24,
+                          }}
+                        />
+                      </PopoverTrigger>
+                    </div>
+                  }
+                  layoutProps={{
                     align: 'start',
-                    sideOffset: 4,
-                    alignOffset: 24,
+                    side: 'right',
+                    sideOffset: 2,
+                    alignOffset: 4,
                   }}
                 />
-              </div>
-            ))}
+              ) : (
+                <div
+                  key={group.name + ':' + field.name}
+                  role="menuitem"
+                  tabIndex={-1}
+                  {...stylex.props(addMenuStyles.item, styles.fieldItem)}
+                >
+                  <FieldToken
+                    field={field}
+                    onClick={() => onAddOperation(field, group.path)}
+                    tooltip={<FieldHoverCard field={field} path={group.path} />}
+                    tooltipProps={{
+                      side: 'right',
+                      align: 'start',
+                      sideOffset: 4,
+                      alignOffset: 24,
+                    }}
+                  />
+                </div>
+              )
+            )}
           </div>
         ))
       ) : (
@@ -172,6 +217,9 @@ export function FieldList({
 }
 
 const styles = stylex.create({
+  content: {
+    maxHeight: '50vh',
+  },
   fieldItem: {
     height: 20,
     paddingTop: 8,

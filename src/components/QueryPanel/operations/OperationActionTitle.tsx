@@ -58,7 +58,7 @@ export function OperationActionTitle({
                 fields={fields}
                 types={types}
                 filter={viewParentDoesNotHaveField}
-                onClick={onClick}
+                onAddOperation={onClick}
               />
             </Popover.PopoverContent>
           </Popover.Portal>
