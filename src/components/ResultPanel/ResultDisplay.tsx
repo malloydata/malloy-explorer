@@ -19,6 +19,8 @@ import {
 } from './SubmittedQuery';
 import * as render from '@malloydata/render';
 import DOMElement from '../primitives/DOMElement';
+// CSS file needed because stylex doesn't support ::part selector
+import './result_display.css';
 
 import '@malloydata/render/webcomponent';
 import {Variant} from '../primitives/Banner';
@@ -85,7 +87,7 @@ function ResponseDisplay({response}: ResponseProps) {
   }
 
   return (
-    <div>
+    <div {...stylex.props(styles.resultContainer)}>
       {response?.runInfo && <RunInfoHover runInfo={response.runInfo} />}
       {messageComponent}
       {response?.result && <RenderedResult result={response.result} />}
@@ -174,20 +176,21 @@ function RenderedResult({result}: RenderedResultProps) {
     };
   }, [result]);
 
+  if (!rendering)
+    return (
+      html && (
+        <DOMElement className="malloy-render_result-wrapper" element={html} />
+      )
+    );
+
   return (
     <ScrollableArea>
-      {rendering ? (
-        <div {...stylex.props(styles.renderingSpinnerContainer)}>
-          <div {...stylex.props(styles.renderingSpinner)}>
-            <Spinner size="large" />
-            <div {...stylex.props(fontStyles.emphasized)}>Rendering...</div>
-          </div>
+      <div {...stylex.props(styles.renderingSpinnerContainer)}>
+        <div {...stylex.props(styles.renderingSpinner)}>
+          <Spinner size="large" />
+          <div {...stylex.props(fontStyles.emphasized)}>Rendering...</div>
         </div>
-      ) : (
-        <div {...stylex.props(styles.resultContainer)}>
-          {html && <DOMElement element={html} />}
-        </div>
-      )}
+      </div>
     </ScrollableArea>
   );
 }
@@ -270,7 +273,7 @@ const styles = stylex.create({
     gap: '8px',
   },
   resultContainer: {
-    zIndex: '0',
-    position: 'relative',
+    display: 'grid',
+    height: '100%',
   },
 });
