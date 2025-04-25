@@ -1,13 +1,19 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTLimitViewOperation,
   ASTNestViewOperation,
   ASTOrderByViewOperation,
-  ASTQuery,
   ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
-import {ViewParent, getViewDefinition} from './fields';
+import {ViewParent, findUniqueFieldName, getViewDefinition} from './fields';
 
 export function segmentHasLimit(segment: ASTSegmentViewDefinition) {
   return (
@@ -50,14 +56,31 @@ export function segmentNestNo(
 }
 
 export function addGroupBy(
-  rootQuery: ASTQuery,
-  segment: ASTSegmentViewDefinition,
+  view: ViewParent,
   field: Malloy.FieldInfo,
-  path: string[],
-  setQuery?: (query: Malloy.Query) => void
-): void {
-  segment.addGroupBy(field.name, path);
-  setQuery?.(rootQuery.build());
+  path: string[]
+) {
+  const segment = view.getOrAddDefaultSegment();
+  const {fields} = view.getOutputSchema();
+  let rename: string | undefined;
+  if (fields.find(f => f.name === field.name)) {
+    rename = findUniqueFieldName(fields, field.name);
+  }
+  segment.addGroupBy(field.name, path, rename);
+}
+
+export function addAggregate(
+  view: ViewParent,
+  field: Malloy.FieldInfo,
+  path: string[]
+) {
+  const segment = view.getOrAddDefaultSegment();
+  const {fields} = view.getOutputSchema();
+  let rename: string | undefined;
+  if (fields.find(f => f.name === field.name)) {
+    rename = findUniqueFieldName(fields, field.name);
+  }
+  segment.addAggregate(field.name, path, rename);
 }
 
 export function getSegmentIfPresent(

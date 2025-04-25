@@ -72,26 +72,17 @@ export function getInputSchemaFromViewParent(
   return definition.getInputSchema();
 }
 
-export function viewParentHasField(
-  parent: ViewParent,
-  field: Malloy.FieldInfo,
-  path: string[]
-) {
-  const definition = getViewDefinition(parent);
-  if (definition instanceof ASTSegmentViewDefinition) {
-    return definition.hasField(field.name, path);
-  }
-  return false;
-}
-
-export function viewParentDoesNotHaveField(
-  parent: ViewParent,
-  field: Malloy.FieldInfo,
-  path: string[]
-) {
-  return !viewParentHasField(parent, field, path);
-}
-
 export function isNotAnnotatedFilteredField(field: Malloy.FieldInfo) {
   return !hasExplorerFilterFieldAnnotation(field.annotations ?? []);
+}
+
+export function findUniqueFieldName(
+  fields: Malloy.FieldInfo[],
+  rename: string
+) {
+  let idx = 2;
+  while (fields.find(field => field.name === `${rename} ${idx}`)) {
+    idx++;
+  }
+  return `${rename} ${idx}`;
 }

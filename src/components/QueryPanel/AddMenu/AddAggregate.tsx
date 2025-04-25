@@ -7,15 +7,16 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {AddFieldItem} from './AddFieldItem';
 import {
   getInputSchemaFromViewParent,
-  viewParentDoesNotHaveField,
   ViewParent,
   isNotAnnotatedFilteredField,
 } from '../../utils/fields';
+import {addAggregate} from '../../utils/segment';
 
 export interface AddAggregateProps {
   rootQuery: ASTQuery;
@@ -26,6 +27,14 @@ export function AddAggregate({rootQuery, view}: AddAggregateProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
 
+  const filter = (
+    _parent: ViewParent,
+    field: Malloy.FieldInfo,
+    _path: string[]
+  ) => {
+    return isNotAnnotatedFilteredField(field);
+  };
+
   return (
     <AddFieldItem
       label="Add aggregate"
@@ -33,13 +42,9 @@ export function AddAggregate({rootQuery, view}: AddAggregateProps) {
       view={view}
       fields={fields}
       types={['measure']}
-      filter={(parent, field, path) =>
-        viewParentDoesNotHaveField(parent, field, path) &&
-        isNotAnnotatedFilteredField(field)
-      }
+      filter={filter}
       onAddOperation={(field, path) => {
-        const segment = view.getOrAddDefaultSegment();
-        segment.addAggregate(field.name, path);
+        addAggregate(view, field, path);
         setQuery?.(rootQuery.build());
       }}
     />

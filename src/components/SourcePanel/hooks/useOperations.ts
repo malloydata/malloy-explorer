@@ -9,11 +9,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 import {flattenFieldsTree} from '../utils';
 import {getSegmentIfPresent, segmentHasOrderBy} from '../../utils/segment';
-import {
-  getInputSchemaFromViewParent,
-  ViewParent,
-  viewParentHasField,
-} from '../../utils/fields';
+import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 
 export function useOperations(
   view: ViewParent,
@@ -31,12 +27,9 @@ export function useOperations(
       item => item.field.kind === 'dimension'
     );
 
-    return (
-      filteredFieldItems.some(
-        item =>
-          item.field.name === fieldName &&
-          item.path.join('.') === path.join('.')
-      ) && !viewParentHasField(view, field, path)
+    return filteredFieldItems.some(
+      item =>
+        item.field.name === fieldName && item.path.join('.') === path.join('.')
     );
   }, [view, field, path]);
 
@@ -51,12 +44,9 @@ export function useOperations(
       item => item.field.kind === 'measure'
     );
 
-    return (
-      filteredFieldItems.some(
-        item =>
-          item.field.name === fieldName &&
-          item.path.join('.') === path.join('.')
-      ) && !viewParentHasField(view, field, path)
+    return filteredFieldItems.some(
+      item =>
+        item.field.name === fieldName && item.path.join('.') === path.join('.')
     );
   }, [view, field, path]);
 

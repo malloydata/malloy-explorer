@@ -22,7 +22,7 @@ import {AddView} from './AddView';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {FieldList} from './FieldList';
-import {segmentNestNo} from '../../utils/segment';
+import {addAggregate, addGroupBy, segmentNestNo} from '../../utils/segment';
 import {ValueList} from './ValueList';
 import {SearchIndexResult} from './hooks/useSearch';
 import {
@@ -88,12 +88,12 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                   field: FieldInfo,
                   path: string[]
                 ): void {
-                  const segment = view.getOrAddDefaultSegment();
                   if (field.kind === 'dimension') {
-                    segment.addGroupBy(field.name, path);
+                    addGroupBy(view, field, path);
                   } else if (field.kind === 'measure') {
-                    segment.addAggregate(field.name, path);
+                    addAggregate(view, field, path);
                   } else {
+                    const segment = view.getOrAddDefaultSegment();
                     const nestNo = segmentNestNo(segment, field.name);
                     segment.addNest(
                       field.name,

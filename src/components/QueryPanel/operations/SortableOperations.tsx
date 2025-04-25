@@ -29,13 +29,17 @@ import {
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {ClearButton} from './ClearButton';
-import {addGroupBy} from '../../utils/segment';
 import {OperationActionTitle} from './OperationActionTitle';
 import FieldToken from '../../FieldToken';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
+import {
+  findUniqueFieldName,
+  getInputSchemaFromViewParent,
+  ViewParent,
+} from '../../utils/fields';
 import {FieldHoverCard} from '../../FieldHoverCard';
-import {DropdownMenu, DropdownMenuItem, Icon} from '../../primitives';
+import {Button, DropdownMenu, DropdownMenuItem} from '../../primitives';
 import {RenameDialog} from './RenameDialog';
+import {addAggregate, addGroupBy} from '../../utils/segment';
 
 export interface SortableOperationsProps {
   rootQuery: ASTQuery;
@@ -57,7 +61,7 @@ export function SortableOperations({
 
   const items = useMemo(() => {
     return operations.map(operation => ({
-      id: operation.field.name,
+      id: operation.name,
       operation,
     }));
   }, [operations]);
@@ -93,7 +97,8 @@ export function SortableOperations({
           types: ['dimension'] as 'dimension'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
             const segment = view.getOrAddDefaultSegment();
-            addGroupBy(rootQuery, segment, field, path, setQuery);
+            addGroupBy(view, segment, field, path);
+            setQuery?.(rootQuery.build());
           },
         }
       : {
@@ -102,7 +107,7 @@ export function SortableOperations({
           types: ['measure'] as 'measure'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
             const segment = view.getOrAddDefaultSegment();
-            segment.addAggregate(field.name, path);
+            addAggregate(view, segment, field, path);
             setQuery?.(rootQuery.build());
           },
         };
@@ -153,6 +158,7 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
   const [renameTarget, setRenameTarget] = useState<
     ASTGroupByViewOperation | ASTAggregateViewOperation
   >();
+  const [hoverActionsVisible, setHoverActionsVisible] = useState(false);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -164,17 +170,20 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
       <FieldToken
         field={fieldInfo}
         color={color}
+        hoverActionsVisible={hoverActionsVisible}
         hoverActions={
           <>
-            <ClearButton
-              onClick={() => {
-                operation.delete();
-                setQuery?.(rootQuery?.build());
-              }}
-            />
             <DropdownMenu
               key={[...path, fieldInfo.name].join('.')}
-              trigger={<Icon name="meatballs" />}
+              trigger={
+                <Button
+                  variant="flat"
+                  icon="meatballs"
+                  size="compact"
+                  tooltip="More Actions"
+                />
+              }
+              onOpenChange={setHoverActionsVisible}
             >
               <DropdownMenuItem
                 label="Rename"
@@ -184,6 +193,12 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
                 }}
               />
             </DropdownMenu>
+            <ClearButton
+              onClick={() => {
+                operation.delete();
+                setQuery?.(rootQuery?.build());
+              }}
+            />
           </>
         }
         tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
