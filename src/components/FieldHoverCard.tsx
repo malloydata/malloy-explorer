@@ -61,10 +61,12 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
         <div {...stylex.props(fontStyles.supporting, styles.path)}>
           {pathString}
         </div>
-        <div {...stylex.props(fontStyles.emphasized)}>{field.name}</div>
+        <div {...stylex.props(fontStyles.emphasized, styles.title)}>
+          {field.name}
+        </div>
         {description && <HoverText text={description} />}
       </div>
-      {details && <div {...stylex.props(styles.detailsSection)}>{details}</div>}
+      {details && <div>{details}</div>}
     </HoverCard>
   );
 }
@@ -80,12 +82,15 @@ const styles = stylex.create({
   path: {
     color: textColors.secondary,
   },
-  detailsSection: {},
   viewPreview: {
     maxHeight: '136px',
     overflow: 'auto',
   },
   viewAttributeTable: {
     height: '136px',
+  },
+  title: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 });
