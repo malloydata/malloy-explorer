@@ -76,11 +76,13 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
     <div {...stylex.props(operationStyles.indent)}>
       <GroupByOperations
         rootQuery={rootQuery}
+        segment={segment}
         view={view}
         groupBys={groupBys}
       />
       <AggregateOperations
         rootQuery={rootQuery}
+        segment={segment}
         view={view}
         aggregates={aggregates}
       />

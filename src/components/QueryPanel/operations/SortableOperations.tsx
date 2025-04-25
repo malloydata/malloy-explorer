@@ -24,6 +24,7 @@ import {
   ASTAggregateViewOperation,
   ASTGroupByViewOperation,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {ClearButton} from './ClearButton';
@@ -35,6 +36,7 @@ import {FieldHoverCard} from '../../FieldHoverCard';
 
 export interface SortableOperationsProps {
   rootQuery: ASTQuery;
+  segment: ASTSegmentViewDefinition;
   view: ViewParent;
   operations: Array<ASTAggregateViewOperation | ASTGroupByViewOperation>;
   kind: 'aggregate' | 'group_by';
@@ -42,6 +44,7 @@ export interface SortableOperationsProps {
 
 export function SortableOperations({
   rootQuery,
+  segment,
   view,
   operations,
   kind,
@@ -61,14 +64,17 @@ export function SortableOperations({
   }
 
   function handleDragEnd(event: DragEndEvent) {
-    const names = view
-      .getOutputSchema()
-      .fields.map(fieldInfo => fieldInfo.name);
+    const operations = segment.operations.items.filter(
+      operation =>
+        operation instanceof ASTAggregateViewOperation ||
+        operation instanceof ASTGroupByViewOperation
+    );
+    const names = operations.map(operation => operation.name);
     const {active, over} = event;
     if (over && active.id !== over.id) {
       const oldIndex = names.indexOf(active.id as string);
       const newIndex = names.indexOf(over.id as string);
-      view.reorderFields(arrayMove(names, oldIndex, newIndex));
+      segment.reorderFields(arrayMove(names, oldIndex, newIndex));
       setQuery?.(rootQuery.build());
     }
   }
@@ -146,7 +152,7 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
   };
 
   return (
-    <div id={id} ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div id={id} ref={setNodeRef} style={style}>
       <FieldToken
         field={fieldInfo}
         color={color}
@@ -164,6 +170,7 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
           align: 'start',
           alignOffset: 28,
         }}
+        dragProps={{attributes, listeners}}
       />
     </div>
   );
