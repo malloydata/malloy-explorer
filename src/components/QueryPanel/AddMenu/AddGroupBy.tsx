@@ -7,16 +7,16 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {addGroupBy} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
 import {
-  viewParentDoesNotHaveField,
   ViewParent,
   getInputSchemaFromViewParent,
   isNotAnnotatedFilteredField,
 } from '../../utils/fields';
+import {addGroupBy, getSegmentIfPresent} from '../../utils/segment';
 
 export interface AddGroupByProps {
   rootQuery: ASTQuery;
@@ -26,6 +26,17 @@ export interface AddGroupByProps {
 export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
+  const segment = getSegmentIfPresent(view);
+
+  const filter = (
+    _parent: ViewParent,
+    field: Malloy.FieldInfo,
+    path: string[]
+  ) => {
+    return (
+      !segment?.hasField(field.name, path) && isNotAnnotatedFilteredField(field)
+    );
+  };
 
   return (
     <AddFieldItem
@@ -34,13 +45,10 @@ export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
       view={view}
       fields={fields}
       types={['dimension']}
-      filter={(parent, field, path) =>
-        viewParentDoesNotHaveField(parent, field, path) &&
-        isNotAnnotatedFilteredField(field)
-      }
+      filter={filter}
       onAddOperation={(field, path) => {
-        const segment = view.getOrAddDefaultSegment();
-        addGroupBy(rootQuery, segment, field, path, setQuery);
+        addGroupBy(view, field, path);
+        setQuery?.(rootQuery.build());
       }}
     />
   );

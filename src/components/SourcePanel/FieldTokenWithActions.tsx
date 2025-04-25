@@ -3,12 +3,12 @@ import FieldToken from '../FieldToken';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {Button} from '../primitives';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import {getNestName} from './utils';
 import {NestFieldDropdownMenu} from './NestFieldDropdownMenu';
 import {useNestOperations} from './hooks/useNestOperations';
 import {AddFieldDropdownMenu} from './AddFieldDropdownMenu';
 import {FieldHoverCard} from '../FieldHoverCard';
 import {ASTArrowQueryDefinition} from '@malloydata/malloy-query-builder';
+import {addNest} from '../utils/segment';
 
 interface FieldTokenWithActionsProps {
   field: Malloy.FieldInfo;
@@ -45,12 +45,11 @@ export function FieldTokenWithActions({
     (field.kind === 'view' && nestViews.length > 0);
 
   const addViewToMainQuery = () => {
-    const segment = rootQuery?.getOrAddDefaultSegment();
     if (field.kind === 'view') {
       if (rootQuery?.isEmpty()) {
         rootQuery?.setView(field.name);
       } else {
-        segment?.addNest(field.name, getNestName(segment, field.name));
+        addNest(viewDef, field);
       }
       setQuery?.(rootQuery?.build());
     }
@@ -58,8 +57,7 @@ export function FieldTokenWithActions({
 
   const nestViewWithinMainQuery = () => {
     if (field.kind === 'view') {
-      const segment = rootQuery?.getOrAddDefaultSegment();
-      segment?.addNest(field.name, getNestName(segment, field.name));
+      addNest(viewDef, field);
       setQuery?.(rootQuery?.build());
     }
   };

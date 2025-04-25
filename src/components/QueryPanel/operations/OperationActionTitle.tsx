@@ -13,7 +13,8 @@ import {hoverStyles} from './hover.stylex';
 import {styles as commonStyles} from '../../styles';
 import {FieldMenu} from '../AddMenu/FieldMenu';
 import stylex from '@stylexjs/stylex';
-import {viewParentDoesNotHaveField, ViewParent} from '../../utils/fields';
+import {isNotAnnotatedFilteredField, ViewParent} from '../../utils/fields';
+import {getSegmentIfPresent} from '../../utils/segment';
 
 export interface OperationActionTitleProps {
   rootQuery: ASTQuery;
@@ -34,6 +35,16 @@ export function OperationActionTitle({
   onClick,
 }: OperationActionTitleProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const segment = getSegmentIfPresent(view);
+  const filter = (
+    _parent: ViewParent,
+    field: Malloy.FieldInfo,
+    path: string[]
+  ) => {
+    return (
+      !segment?.hasField(field.name, path) && isNotAnnotatedFilteredField(field)
+    );
+  };
   return (
     <div {...stylex.props(commonStyles.title, hoverStyles.main)}>
       <div>{title}</div>
@@ -57,7 +68,7 @@ export function OperationActionTitle({
                 view={view}
                 fields={fields}
                 types={types}
-                filter={viewParentDoesNotHaveField}
+                filter={filter}
                 onAddOperation={onClick}
               />
             </Popover.PopoverContent>

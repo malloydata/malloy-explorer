@@ -6,19 +6,22 @@
  */
 
 import * as React from 'react';
+import {useContext, useState} from 'react';
 import {ASTNestViewOperation, ASTQuery} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
 import {Button, DropdownMenu, DropdownMenuItem} from '../../primitives';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {useContext} from 'react';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 import {AddMenu} from '../AddMenu/AddMenu';
 import {viewToVisualizationIcon} from '../../utils/icon';
+import {RenameDialog} from './RenameDialog';
+import {ViewParent} from '../../utils/fields';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
+  view: ViewParent;
   nests: ASTNestViewOperation[];
 }
 
@@ -31,8 +34,9 @@ const viewStyles = stylex.create({
   },
 });
 
-export function NestOperations({rootQuery, nests}: NestOperationsProps) {
+export function NestOperations({rootQuery, view, nests}: NestOperationsProps) {
   const {setQuery} = useContext(QueryEditorContext);
+  const [renameOpen, setRenameOpen] = useState(false);
   if (nests.length === 0) {
     return null;
   }
@@ -55,6 +59,12 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
           onClick={() => {
             nest.delete();
             setQuery?.(rootQuery.build());
+          }}
+        />
+        <DropdownMenuItem
+          label="Rename"
+          onClick={() => {
+            setRenameOpen(true);
           }}
         />
       </DropdownMenu>
@@ -82,6 +92,13 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
             >
               <View rootQuery={rootQuery} view={nest.view} />
             </CollapsiblePanel>
+            <RenameDialog
+              rootQuery={rootQuery}
+              view={view}
+              target={nest}
+              open={renameOpen}
+              setOpen={setRenameOpen}
+            />
           </div>
         );
       })}

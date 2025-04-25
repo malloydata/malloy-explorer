@@ -9,7 +9,7 @@ import * as React from 'react';
 import {useContext, useMemo} from 'react';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {segmentNestNo} from '../../utils/segment';
+import {addNest} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
 import {
   getInputSchemaFromViewParent,
@@ -44,13 +44,7 @@ export function AddView({rootQuery, view}: AddViewProps) {
         if (rootQuery.isEmpty()) {
           rootQuery.setView(field.name);
         } else {
-          const segment = view.getOrAddDefaultSegment();
-          const nestNo = segmentNestNo(segment, field.name);
-
-          segment.addNest(
-            field.name,
-            nestNo > 1 ? `${field.name} ${nestNo}` : undefined
-          );
+          addNest(view, field);
         }
         setQuery?.(rootQuery.build());
       }}

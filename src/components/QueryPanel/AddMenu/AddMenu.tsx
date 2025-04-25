@@ -22,7 +22,12 @@ import {AddView} from './AddView';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {FieldList} from './FieldList';
-import {segmentNestNo} from '../../utils/segment';
+import {
+  addAggregate,
+  addGroupBy,
+  addNest,
+  getSegmentIfPresent,
+} from '../../utils/segment';
 import {ValueList} from './ValueList';
 import {SearchIndexResult} from './hooks/useSearch';
 import {
@@ -40,6 +45,7 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
   const [open, setOpen] = useState(false);
   const {setQuery} = useContext(QueryEditorContext);
   const [search, setSearch] = useState('');
+  const segment = getSegmentIfPresent(view);
 
   return (
     <Popover.Root
@@ -82,23 +88,21 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
               <FieldList
                 view={view}
                 fields={getInputSchemaFromViewParent(view).fields}
-                filter={(_, field) => isNotAnnotatedFilteredField(field)}
+                filter={(_, field, path) =>
+                  !segment?.hasField(field.name, path) &&
+                  isNotAnnotatedFilteredField(field)
+                }
                 types={['dimension', 'measure', 'view']}
                 onAddOperation={function (
                   field: FieldInfo,
                   path: string[]
                 ): void {
-                  const segment = view.getOrAddDefaultSegment();
                   if (field.kind === 'dimension') {
-                    segment.addGroupBy(field.name, path);
+                    addGroupBy(view, field, path);
                   } else if (field.kind === 'measure') {
-                    segment.addAggregate(field.name, path);
+                    addAggregate(view, field, path);
                   } else {
-                    const nestNo = segmentNestNo(segment, field.name);
-                    segment.addNest(
-                      field.name,
-                      nestNo > 1 ? `${field.name} ${nestNo}` : undefined
-                    );
+                    addNest(view, field);
                   }
                   setQuery?.(rootQuery.build());
                 }}

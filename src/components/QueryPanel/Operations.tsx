@@ -88,7 +88,7 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
       />
       <FilterOperations rootQuery={rootQuery} filters={filters} />
       <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
-      <NestOperations rootQuery={rootQuery} nests={nests} />
+      <NestOperations rootQuery={rootQuery} view={view} nests={nests} />
       <LimitOperation rootQuery={rootQuery} limit={limit} />
     </div>
   );
