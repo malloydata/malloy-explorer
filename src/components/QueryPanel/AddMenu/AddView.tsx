@@ -14,6 +14,7 @@ import {AddFieldItem} from './AddFieldItem';
 import {
   getInputSchemaFromViewParent,
   isIndexView,
+  isNotAnnotatedFilteredField,
   ViewParent,
 } from '../../utils/fields';
 
@@ -38,6 +39,7 @@ export function AddView({rootQuery, view}: AddViewProps) {
       view={view}
       fields={fields}
       types={['view']}
+      filter={(_, field) => isNotAnnotatedFilteredField(field)}
       onAddOperation={field => {
         if (rootQuery.isEmpty()) {
           rootQuery.setView(field.name);

@@ -15,3 +15,15 @@ export const getDescriptionAnnotation = (
 
   return descriptions.join('\n');
 };
+
+const EXPLORER_FILTER_FIELD_PREFIX: string = '#NO_UI';
+
+export const hasExplorerFilterFieldAnnotation = (
+  annotations: Array<Malloy.Annotation>
+): boolean => {
+  const filter_field_annotation = annotations.find(a =>
+    a.value.startsWith(EXPLORER_FILTER_FIELD_PREFIX)
+  );
+
+  return !!filter_field_annotation;
+};

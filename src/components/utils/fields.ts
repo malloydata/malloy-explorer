@@ -11,6 +11,7 @@ import {
   ASTSegmentViewDefinition,
   ASTView,
 } from '@malloydata/malloy-query-builder';
+import {hasExplorerFilterFieldAnnotation} from './annotations';
 
 export type ViewParent = ASTArrowQueryDefinition | ASTView;
 
@@ -89,4 +90,8 @@ export function viewParentDoesNotHaveField(
   path: string[]
 ) {
   return !viewParentHasField(parent, field, path);
+}
+
+export function isNotAnnotatedFilteredField(field: Malloy.FieldInfo) {
+  return !hasExplorerFilterFieldAnnotation(field.annotations ?? []);
 }

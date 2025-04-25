@@ -8,7 +8,11 @@
 import * as React from 'react';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {AddFieldItem} from './AddFieldItem';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
+import {
+  getInputSchemaFromViewParent,
+  isNotAnnotatedFilteredField,
+  ViewParent,
+} from '../../utils/fields';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 
 export interface AddWhereProps {
@@ -31,7 +35,8 @@ export function AddWhere({view}: AddWhereProps) {
         types={['measure', 'dimension']}
         filter={(_segment, field) =>
           (field.kind === 'dimension' || field.kind === 'measure') &&
-          FILTERABLE_TYPES.has(field.type.kind)
+          FILTERABLE_TYPES.has(field.type.kind) &&
+          isNotAnnotatedFilteredField(field)
         }
         onAddOperation={(field, path, filter) => {
           if (
