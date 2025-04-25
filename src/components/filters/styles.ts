@@ -12,9 +12,10 @@ export const filterStyles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     padding: 8,
-    minWidth: 200,
-    maxWidth: 400,
+    width: 224,
     gap: 8,
+    minHeight: 0,
+    maxHeight: '50vh',
   },
   filterDialogHeader: {
     fontWeight: 'bold',
@@ -30,6 +31,7 @@ export const filterStyles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
+    minHeight: 0,
   },
   editorRow: {
     display: 'flex',
