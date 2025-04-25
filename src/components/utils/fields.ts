@@ -8,7 +8,6 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
-  ASTSegmentViewDefinition,
   ASTView,
 } from '@malloydata/malloy-query-builder';
 import {hasExplorerFilterFieldAnnotation} from './annotations';
