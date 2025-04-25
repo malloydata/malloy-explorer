@@ -19,6 +19,8 @@ import {
   TokenSize,
 } from './types';
 import {backgroundColors} from '../colors.stylex';
+import {DraggableAttributes} from '@dnd-kit/core';
+import {SyntheticListenerMap} from '@dnd-kit/core/dist/hooks/utilities';
 
 export interface TokenProps extends React.ComponentProps<'button'> {
   /**
@@ -68,6 +70,11 @@ export interface TokenProps extends React.ComponentProps<'button'> {
     sideOffset?: number;
   };
 
+  dragProps?: {
+    attributes: DraggableAttributes;
+    listeners?: SyntheticListenerMap;
+  };
+
   /**
    * Custom styles for the token.
    */
@@ -85,6 +92,7 @@ export default function Token({
   tooltip,
   tooltipProps,
   customStyle,
+  dragProps,
   ...props
 }: TokenProps) {
   const isInteractive = onClick !== undefined || asButtonTrigger;
@@ -98,6 +106,8 @@ export default function Token({
         !isInteractive && styles.nonInteractive,
         customStyle
       )}
+      {...dragProps?.attributes}
+      {...dragProps?.listeners}
     >
       {icon && <Icon name={icon} customStyle={tokenStyles.icon} />}
       {isInteractive && (
