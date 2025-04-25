@@ -31,11 +31,7 @@ import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {ClearButton} from './ClearButton';
 import {OperationActionTitle} from './OperationActionTitle';
 import FieldToken from '../../FieldToken';
-import {
-  findUniqueFieldName,
-  getInputSchemaFromViewParent,
-  ViewParent,
-} from '../../utils/fields';
+import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 import {FieldHoverCard} from '../../FieldHoverCard';
 import {Button, DropdownMenu, DropdownMenuItem} from '../../primitives';
 import {RenameDialog} from './RenameDialog';
@@ -96,8 +92,7 @@ export function SortableOperations({
           actionTitle: 'Add group by',
           types: ['dimension'] as 'dimension'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
-            const segment = view.getOrAddDefaultSegment();
-            addGroupBy(view, segment, field, path);
+            addGroupBy(view, field, path);
             setQuery?.(rootQuery.build());
           },
         }
@@ -106,8 +101,7 @@ export function SortableOperations({
           actionTitle: 'Add aggregate',
           types: ['measure'] as 'measure'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
-            const segment = view.getOrAddDefaultSegment();
-            addAggregate(view, segment, field, path);
+            addAggregate(view, field, path);
             setQuery?.(rootQuery.build());
           },
         };

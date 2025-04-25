@@ -9,8 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownSubMenuItem,
 } from '../primitives';
-import {getNestName} from './utils';
-import {ViewParent} from '../utils/fields';
+import {findUniqueFieldName, ViewParent} from '../utils/fields';
 
 interface NestFieldDropdownMenuProps {
   view: ViewParent;
@@ -33,7 +32,12 @@ export function NestFieldDropdownMenu({
 
   const nestViewWithinNestQuery = (operation: NestOperation) => {
     const segment = operation.view.getOrAddDefaultSegment();
-    segment.addNest(field.name, getNestName(segment, field.name));
+    const {fields} = operation.view.getOutputSchema();
+    let rename: string | undefined;
+    if (fields.find(f => f.name === field.name)) {
+      rename = findUniqueFieldName(fields, field.name);
+    }
+    segment.addNest(field.name, rename);
     setQuery?.(rootQuery?.build());
   };
 

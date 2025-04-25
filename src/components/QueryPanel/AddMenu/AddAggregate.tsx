@@ -16,7 +16,7 @@ import {
   ViewParent,
   isNotAnnotatedFilteredField,
 } from '../../utils/fields';
-import {addAggregate} from '../../utils/segment';
+import {addAggregate, getSegmentIfPresent} from '../../utils/segment';
 
 export interface AddAggregateProps {
   rootQuery: ASTQuery;
@@ -26,13 +26,16 @@ export interface AddAggregateProps {
 export function AddAggregate({rootQuery, view}: AddAggregateProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
+  const segment = getSegmentIfPresent(view);
 
   const filter = (
     _parent: ViewParent,
     field: Malloy.FieldInfo,
-    _path: string[]
+    path: string[]
   ) => {
-    return isNotAnnotatedFilteredField(field);
+    return (
+      !segment?.hasField(field.name, path) && isNotAnnotatedFilteredField(field)
+    );
   };
 
   return (

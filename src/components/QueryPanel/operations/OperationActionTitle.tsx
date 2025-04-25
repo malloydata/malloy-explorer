@@ -14,6 +14,7 @@ import {styles as commonStyles} from '../../styles';
 import {FieldMenu} from '../AddMenu/FieldMenu';
 import stylex from '@stylexjs/stylex';
 import {isNotAnnotatedFilteredField, ViewParent} from '../../utils/fields';
+import {getSegmentIfPresent} from '../../utils/segment';
 
 export interface OperationActionTitleProps {
   rootQuery: ASTQuery;
@@ -34,12 +35,15 @@ export function OperationActionTitle({
   onClick,
 }: OperationActionTitleProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const segment = getSegmentIfPresent(view);
   const filter = (
     _parent: ViewParent,
     field: Malloy.FieldInfo,
-    _path: string[]
+    path: string[]
   ) => {
-    return isNotAnnotatedFilteredField(field);
+    return (
+      !segment?.hasField(field.name, path) && isNotAnnotatedFilteredField(field)
+    );
   };
   return (
     <div {...stylex.props(commonStyles.title, hoverStyles.main)}>

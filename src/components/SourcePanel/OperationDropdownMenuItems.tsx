@@ -11,6 +11,7 @@ import {DropdownMenuItem, DropdownSubMenuItem} from '../primitives';
 import {ViewParent} from '../utils/fields';
 import {FilterDialog} from '../filters/FilterDialog';
 import {ParsedFilter} from '@malloydata/malloy-query-builder';
+import {addAggregate, addGroupBy} from '../utils/segment';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
@@ -42,18 +43,16 @@ export function OperationDropdownMenuItems({
   ) => {
     if (field.kind === 'dimension' || field.kind === 'measure') {
       const segment = view.getOrAddDefaultSegment();
-      const currentSegment = withEmptyNest
-        ? segment
-            ?.addEmptyNest(getNestName(segment))
-            .view.definition.getOrAddDefaultSegment()
-        : segment;
-
+      const currentView = withEmptyNest
+        ? segment.addEmptyNest(getNestName(segment)).view
+        : view;
+      const currentSegment = currentView.getOrAddDefaultSegment();
       if (operation === 'groupBy' && isGroupByAllowed) {
-        currentSegment?.addGroupBy(field.name, path);
+        addGroupBy(currentView, field, path);
       } else if (operation === 'aggregate' && isAggregateAllowed) {
-        currentSegment?.addAggregate(field.name, path);
+        addAggregate(currentView, field, path);
       } else if (operation === 'orderBy' && isOrderByAllowed) {
-        currentSegment?.addOrderBy(field.name, 'asc');
+        currentSegment.addOrderBy(field.name, 'asc');
       }
       setQuery?.(rootQuery?.build());
     }

@@ -16,7 +16,7 @@ import {
   getInputSchemaFromViewParent,
   isNotAnnotatedFilteredField,
 } from '../../utils/fields';
-import {addGroupBy} from '../../utils/segment';
+import {addGroupBy, getSegmentIfPresent} from '../../utils/segment';
 
 export interface AddGroupByProps {
   rootQuery: ASTQuery;
@@ -26,13 +26,16 @@ export interface AddGroupByProps {
 export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
+  const segment = getSegmentIfPresent(view);
 
   const filter = (
     _parent: ViewParent,
     field: Malloy.FieldInfo,
-    _path: string[]
+    path: string[]
   ) => {
-    return isNotAnnotatedFilteredField(field);
+    return (
+      !segment?.hasField(field.name, path) && isNotAnnotatedFilteredField(field)
+    );
   };
 
   return (

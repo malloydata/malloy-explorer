@@ -83,6 +83,16 @@ export function addAggregate(
   segment.addAggregate(field.name, path, rename);
 }
 
+export function addNest(view: ViewParent, field: Malloy.FieldInfo) {
+  const segment = view.getOrAddDefaultSegment();
+  const {fields} = view.getOutputSchema();
+  let rename: string | undefined;
+  if (fields.find(f => f.name === field.name)) {
+    rename = findUniqueFieldName(fields, field.name);
+  }
+  segment.addNest(field.name, rename);
+}
+
 export function getSegmentIfPresent(
   parent: ViewParent
 ): ASTSegmentViewDefinition | undefined {
