@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext, useMemo} from 'react';
+import {useContext, useMemo, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -34,6 +34,8 @@ import {OperationActionTitle} from './OperationActionTitle';
 import FieldToken from '../../FieldToken';
 import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 import {FieldHoverCard} from '../../FieldHoverCard';
+import {DropdownMenu, DropdownMenuItem, Icon} from '../../primitives';
+import {RenameDialog} from './RenameDialog';
 
 export interface SortableOperationsProps {
   rootQuery: ASTQuery;
@@ -147,6 +149,10 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
   const path = operation.field.getReference().path ?? [];
   const {attributes, listeners, setNodeRef, transform, transition} =
     useSortable({id, data: {name: fieldInfo.name}});
+  const [renameOpen, setRenameOpen] = useState(false);
+  const [renameTarget, setRenameTarget] = useState<
+    ASTGroupByViewOperation | ASTAggregateViewOperation
+  >();
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -159,12 +165,26 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
         field={fieldInfo}
         color={color}
         hoverActions={
-          <ClearButton
-            onClick={() => {
-              operation.delete();
-              setQuery?.(rootQuery?.build());
-            }}
-          />
+          <>
+            <ClearButton
+              onClick={() => {
+                operation.delete();
+                setQuery?.(rootQuery?.build());
+              }}
+            />
+            <DropdownMenu
+              key={[...path, fieldInfo.name].join('.')}
+              trigger={<Icon name="meatballs" />}
+            >
+              <DropdownMenuItem
+                label="Rename"
+                onClick={() => {
+                  setRenameTarget(operation);
+                  setRenameOpen(true);
+                }}
+              />
+            </DropdownMenu>
+          </>
         }
         tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
         tooltipProps={{
@@ -173,6 +193,12 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
           alignOffset: 28,
         }}
         dragProps={{attributes, listeners}}
+      />
+      <RenameDialog
+        rootQuery={rootQuery}
+        target={renameTarget}
+        open={renameOpen}
+        setOpen={setRenameOpen}
       />
     </div>
   );

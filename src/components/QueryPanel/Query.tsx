@@ -64,7 +64,10 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
 
                     setQuery?.(rootQuery.build());
                   }}
-                  disabled={rootQuery.isEmpty()}
+                  disabled={
+                    rootQuery.isEmpty() ||
+                    !(rootQuery.definition instanceof ASTArrowQueryDefinition)
+                  }
                 />
               </>
             ) : (
