@@ -273,7 +273,9 @@ const styles = stylex.create({
     gap: '8px',
   },
   resultContainer: {
-    display: 'grid',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
     height: '100%',
   },
 });
