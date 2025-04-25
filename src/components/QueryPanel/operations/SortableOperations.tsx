@@ -126,6 +126,7 @@ export function SortableOperations({
                 key={item.id}
                 id={item.id}
                 color={kind === 'group_by' ? 'cyan' : 'green'}
+                view={view}
                 operation={item.operation}
               />
             ))}
@@ -138,11 +139,17 @@ export function SortableOperations({
 
 interface SortableOperationProps {
   id: string;
+  view: ViewParent;
   operation: ASTAggregateViewOperation | ASTGroupByViewOperation;
   color: 'green' | 'cyan';
 }
 
-function SortableOperation({id, operation, color}: SortableOperationProps) {
+function SortableOperation({
+  id,
+  view,
+  operation,
+  color,
+}: SortableOperationProps) {
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const fieldInfo = operation.getFieldInfo();
   const path = operation.field.getReference().path ?? [];
@@ -205,6 +212,7 @@ function SortableOperation({id, operation, color}: SortableOperationProps) {
       />
       <RenameDialog
         rootQuery={rootQuery}
+        view={view}
         target={renameTarget}
         open={renameOpen}
         setOpen={setRenameOpen}

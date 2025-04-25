@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
-import {tooltipStyles} from './styles';
+import {fontStyles, tooltipStyles} from './styles';
 import Icon from './Icon';
 
 interface ErrorIconProps {
@@ -33,7 +33,9 @@ export default function ErrorIcon({errorMessage}: ErrorIconProps) {
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent>
-          <div {...stylex.props(tooltipStyles.default)}>{errorMessage}</div>
+          <div {...stylex.props(fontStyles.body, tooltipStyles.default)}>
+            {errorMessage}
+          </div>
         </TooltipContent>
       </TooltipPortal>
     </Tooltip>

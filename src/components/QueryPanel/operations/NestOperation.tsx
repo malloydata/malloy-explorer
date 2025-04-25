@@ -17,9 +17,11 @@ import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 import {AddMenu} from '../AddMenu/AddMenu';
 import {viewToVisualizationIcon} from '../../utils/icon';
 import {RenameDialog} from './RenameDialog';
+import {ViewParent} from '../../utils/fields';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
+  view: ViewParent;
   nests: ASTNestViewOperation[];
 }
 
@@ -32,7 +34,7 @@ const viewStyles = stylex.create({
   },
 });
 
-export function NestOperations({rootQuery, nests}: NestOperationsProps) {
+export function NestOperations({rootQuery, view, nests}: NestOperationsProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const [renameOpen, setRenameOpen] = useState(false);
   if (nests.length === 0) {
@@ -92,6 +94,7 @@ export function NestOperations({rootQuery, nests}: NestOperationsProps) {
             </CollapsiblePanel>
             <RenameDialog
               rootQuery={rootQuery}
+              view={view}
               target={nest}
               open={renameOpen}
               setOpen={setRenameOpen}

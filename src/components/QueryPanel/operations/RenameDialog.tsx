@@ -18,9 +18,12 @@ import {
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {Button} from '../../primitives';
 import {fontStyles} from '../../primitives/styles';
+import {ViewParent} from '../../utils/fields';
+import ErrorIcon from '../../primitives/ErrorIcon';
 
 export interface RenameDialogProps {
   rootQuery: ASTQuery | undefined;
+  view: ViewParent;
   target:
     | ASTGroupByViewOperation
     | ASTAggregateViewOperation
@@ -32,6 +35,7 @@ export interface RenameDialogProps {
 
 export function RenameDialog({
   rootQuery,
+  view,
   target,
   open,
   setOpen,
@@ -55,6 +59,10 @@ export function RenameDialog({
     setOpen(false);
   };
 
+  const {fields} = view.getOutputSchema();
+  const badName =
+    name !== target.name && fields.some(field => field.name === name);
+
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
@@ -63,10 +71,10 @@ export function RenameDialog({
             {...stylex.props(dialogStyles.content, fontStyles.body)}
           >
             <Dialog.Description {...stylex.props(dialogStyles.displayNone)}>
-              Rename Nest
+              Rename {target.name}
             </Dialog.Description>
             <Dialog.Title {...stylex.props(dialogStyles.title)}>
-              Rename Nest
+              Rename {target.name}
             </Dialog.Title>
             <div {...stylex.props(dialogStyles.editor)}>
               <div {...stylex.props(dialogStyles.editorRow)}>
@@ -78,6 +86,7 @@ export function RenameDialog({
                     ...dialogStyles.input,
                   })}
                 />
+                {badName && <ErrorIcon errorMessage="Name already in use" />}
               </div>
               <div {...stylex.props(dialogStyles.editorRow)}>
                 <Button
@@ -90,6 +99,7 @@ export function RenameDialog({
                   label="Rename"
                   onClick={onRename}
                   customStyle={dialogStyles.editorCell}
+                  disabled={badName}
                 />
               </div>
             </div>
@@ -127,12 +137,12 @@ const dialogStyles = stylex.create({
     backgroundColor: 'white',
     borderRadius: 8,
     padding: 8,
-    minWidth: 200,
-    maxWidth: 400,
+    minWidth: 240,
+    maxWidth: 280,
     gap: 8,
   },
   editor: {
-    width: 350,
+    width: 250,
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
