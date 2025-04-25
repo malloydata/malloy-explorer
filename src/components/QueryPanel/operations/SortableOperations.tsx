@@ -23,6 +23,7 @@ import {CSS} from '@dnd-kit/utilities';
 import {
   ASTAggregateViewOperation,
   ASTGroupByViewOperation,
+  ASTNestViewOperation,
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
@@ -67,7 +68,8 @@ export function SortableOperations({
     const operations = segment.operations.items.filter(
       operation =>
         operation instanceof ASTAggregateViewOperation ||
-        operation instanceof ASTGroupByViewOperation
+        operation instanceof ASTGroupByViewOperation ||
+        operation instanceof ASTNestViewOperation
     );
     const names = operations.map(operation => operation.name);
     const {active, over} = event;
