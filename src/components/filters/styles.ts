@@ -34,7 +34,8 @@ export const filterStyles = stylex.create({
     minHeight: 0,
   },
   editorRow: {
-    display: 'flex',
+    display: 'grid',
+    gridAutoFlow: 'column',
     gap: 8,
   },
   editorCell: {
@@ -45,5 +46,6 @@ export const filterStyles = stylex.create({
     color: 'rgb(95, 99, 104)',
     padding: '4px 8px 4px 8px',
     borderRadius: 5,
+    minWidth: '1px',
   },
 });
