@@ -20,7 +20,6 @@ import {filterStyles} from './styles';
 import {SelectDropdown} from '../primitives/SelectDropdown';
 import {ValueList} from '../QueryPanel/AddMenu/ValueList';
 import stylex from '@stylexjs/stylex';
-import {ScrollableArea} from '../primitives';
 
 export type BasicStringFilter =
   | StringCondition
@@ -152,23 +151,21 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
             focusElement={valueListRef}
           />
           <div style={{minHeight: 0, display: 'grid'}}>
-            <ScrollableArea>
-              <ValueList
-                ref={valueListRef}
-                search={searchValue}
-                fieldPath={[...path, field.name].join('.')}
-                onClick={value => {
-                  if (value.fieldValue) {
-                    updateFilter({
-                      ...currentFilter,
-                      values: [...currentFilter.values, value.fieldValue],
-                    });
-                    setSearchValue('');
-                  }
-                }}
-                customStyle={styles.valueList}
-              />
-            </ScrollableArea>
+            <ValueList
+              ref={valueListRef}
+              search={searchValue}
+              fieldPath={[...path, field.name].join('.')}
+              onClick={value => {
+                if (value.fieldValue) {
+                  updateFilter({
+                    ...currentFilter,
+                    values: [...currentFilter.values, value.fieldValue],
+                  });
+                  setSearchValue('');
+                }
+              }}
+              customStyle={styles.valueList}
+            />
           </div>
         </>
       ) : currentFilter.operator === '~' ? (
@@ -263,6 +260,8 @@ export function stringFilterChangeType(
 
 const styles = stylex.create({
   valueList: {
-    // maxHeight: 200,
+    maxHeight: '50vh',
+    width: 260,
+    overflow: 'auto',
   },
 });

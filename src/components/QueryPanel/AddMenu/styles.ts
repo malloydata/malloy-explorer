@@ -9,6 +9,7 @@ export const addMenuStyles = stylex.create({
     boxShadow: `0px 2px 12px 0px ${colors.shadowElevation}`,
     fontFamily: 'sans-serif',
     margin: 8,
+    maxHeight: '50vh',
     display: 'flex',
     flexDirection: 'column',
   },
