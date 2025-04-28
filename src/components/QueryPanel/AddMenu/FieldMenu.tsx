@@ -9,7 +9,7 @@ import * as React from 'react';
 import {useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {Divider, ScrollableArea, TextInput} from '../../primitives';
+import {Divider, TextInput} from '../../primitives';
 import {addMenuStyles} from './styles';
 import {FieldList} from './FieldList';
 import {ViewParent} from '../../utils/fields';
@@ -52,7 +52,7 @@ export function FieldMenu({
         />
       </div>
       <Divider />
-      <ScrollableArea>
+      <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
         <FieldList
           view={view}
           fields={fields}
@@ -62,7 +62,7 @@ export function FieldMenu({
           onAddOperation={onAddOperation}
           isFilterOperation={isFilterOperation}
         />
-      </ScrollableArea>
+      </div>
     </div>
   );
 }

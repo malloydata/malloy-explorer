@@ -133,7 +133,7 @@ export function FieldList({
   }, [fields, filter, search, view, types]);
 
   return (
-    <div {...stylex.props(styles.content)}>
+    <div>
       {groups.length ? (
         groups.map(group => (
           <div key={group.name}>
@@ -217,9 +217,6 @@ export function FieldList({
 }
 
 const styles = stylex.create({
-  content: {
-    maxHeight: '50vh',
-  },
   fieldItem: {
     height: 20,
     paddingTop: 8,
