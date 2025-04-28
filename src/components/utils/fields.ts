@@ -77,8 +77,22 @@ export function isNotAnnotatedFilteredField(field: Malloy.FieldInfo) {
 
 export function findUniqueFieldName(
   fields: Malloy.FieldInfo[],
-  rename: string
+  rename: string,
+  path: string[] = []
 ) {
+  if (!fields.find(field => field.name === rename)) {
+    return rename;
+  }
+  if (path.length) {
+    const parts = [...path];
+    while (parts.length) {
+      const part = parts.pop();
+      rename = `${part} ${rename}`;
+      if (!fields.find(field => field.name === rename)) {
+        return rename;
+      }
+    }
+  }
   let idx = 2;
   while (fields.find(field => field.name === `${rename} ${idx}`)) {
     idx++;

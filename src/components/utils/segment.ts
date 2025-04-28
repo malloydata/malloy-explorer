@@ -64,7 +64,7 @@ export function addGroupBy(
   const {fields} = view.getOutputSchema();
   let rename: string | undefined;
   if (fields.find(f => f.name === field.name)) {
-    rename = findUniqueFieldName(fields, field.name);
+    rename = findUniqueFieldName(fields, field.name, path);
   }
   segment.addGroupBy(field.name, path, rename);
 }
@@ -78,7 +78,7 @@ export function addAggregate(
   const {fields} = view.getOutputSchema();
   let rename: string | undefined;
   if (fields.find(f => f.name === field.name)) {
-    rename = findUniqueFieldName(fields, field.name);
+    rename = findUniqueFieldName(fields, field.name, path);
   }
   segment.addAggregate(field.name, path, rename);
 }
