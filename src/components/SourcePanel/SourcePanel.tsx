@@ -62,7 +62,10 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
 
   const searchResultItems = React.useMemo(() => {
     if (searchQuery) {
-      return fieldItems.filter(item => item.field.name.includes(searchQuery));
+      const lcSearch = searchQuery.toLocaleLowerCase();
+      return fieldItems.filter(item =>
+        item.field.name.toLocaleLowerCase().includes(lcSearch)
+      );
     }
     return [];
   }, [fieldItems, searchQuery]);
