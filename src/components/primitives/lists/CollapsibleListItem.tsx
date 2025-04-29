@@ -7,9 +7,9 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {fontStyles} from './styles';
-import Icon from './Icon';
-import {textColors} from './colors.stylex';
+import {fontStyles} from '../styles';
+import Icon from '../Icon';
+import {textColors} from '../colors.stylex';
 
 export interface CollapsibleListItemProps {
   /**

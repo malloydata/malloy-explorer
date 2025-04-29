@@ -7,7 +7,7 @@
 
 import stylex from '@stylexjs/stylex';
 import * as React from 'react';
-import {fontStyles} from './styles';
+import {fontStyles} from '../styles';
 
 export interface ListItemProps {
   /**

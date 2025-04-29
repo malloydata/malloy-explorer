@@ -78,6 +78,7 @@ const styles = stylex.create({
     alignItems: 'flex-start',
     gap: '16px',
     padding: '8px',
+    backgroundColor: 'rgba(241, 244, 247, 1)',
   },
   heading: {
     fontWeight: 700,

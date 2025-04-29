@@ -8,8 +8,7 @@
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
 import {CollapsibleListItem, List} from '../primitives';
-import {fontStyles} from '../primitives/styles';
-import {FieldGroupByPath} from './utils';
+import {FieldItem, groupFieldItemsByKind, groupFieldItemsByPath} from './utils';
 import {FieldTokenWithActions} from './FieldTokenWithActions';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
 
@@ -25,18 +24,34 @@ const getSublabelFromPath = (source: SourceInfo, path: string[]) => {
 
 interface FieldGroupListProps {
   source: SourceInfo;
-  title: string;
-  items: FieldGroupByPath[];
+  fieldItems: FieldItem[];
+  fieldGroupType: 'view' | 'measure' | 'dimension';
 }
 
 export default function FieldGroupList({
   source,
-  title,
-  items,
+  fieldItems,
+  fieldGroupType,
 }: FieldGroupListProps): React.ReactNode {
+  const fieldGroupsByKindByPath = React.useMemo(() => {
+    if (source) {
+      return groupFieldItemsByKind(fieldItems).map(group => ({
+        ...group,
+        items: groupFieldItemsByPath(source, group.items),
+      }));
+    }
+    return [];
+  }, [source, fieldItems]);
+
+  const items = React.useMemo(() => {
+    return (
+      fieldGroupsByKindByPath.find(({group}) => group === fieldGroupType)
+        ?.items ?? []
+    );
+  }, [fieldGroupsByKindByPath, fieldGroupType]);
+
   return (
     <div {...stylex.props(styles.main)}>
-      <div {...stylex.props(fontStyles.body, styles.title)}>{title}</div>
       <List>
         {items.map((item, index) => (
           <CollapsibleListItem
