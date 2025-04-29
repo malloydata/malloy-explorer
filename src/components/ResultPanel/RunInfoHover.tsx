@@ -37,6 +37,7 @@ export default function RunInfoHover({runInfo}: RunInfoHoverProps) {
         <Tooltip.Content side={HOVER_SIDE} align={HOVER_ALIGN}>
           <HoverCard customStyle={styles.card}>
             <>
+              {runInfo.customContent}
               {runInfo?.performanceAspects &&
                 Object.entries(runInfo.performanceAspects).map(
                   ([aspect, properties]) => {
@@ -57,6 +58,8 @@ export default function RunInfoHover({runInfo}: RunInfoHoverProps) {
               {runInfo.queryLink && (
                 <a
                   href={runInfo.queryLink.href}
+                  target="_blank"
+                  rel="noreferrer"
                   {...stylex.props(styles.link, fontStyles.link)}
                 >
                   {runInfo.queryLink.linkText}

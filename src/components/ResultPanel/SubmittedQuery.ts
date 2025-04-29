@@ -18,6 +18,8 @@ export type SubmittedQuery = {
 };
 
 export type RunInfo = {
+  customContent?: React.ReactNode;
+
   queryLink?: {
     linkText: string;
     href: string;
