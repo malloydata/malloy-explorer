@@ -11,21 +11,15 @@ import stylex from '@stylexjs/stylex';
 import {
   Badge,
   Icon,
-  List,
-  ListItem,
   Divider,
-  ScrollableArea,
   Button,
   TextInput,
+  AccordionList,
+  AccordionListItem,
 } from '../primitives';
 import {textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
-import {
-  FIELD_KIND_TO_TITLE,
-  groupFieldItemsByKind,
-  groupFieldItemsByPath,
-  sourceToFieldItems,
-} from './utils';
+import {sourceToFieldItems} from './utils';
 import SearchResultList from './SearchResultList';
 import FieldGroupList from './FieldGroupList';
 import {useContext} from 'react';
@@ -33,15 +27,12 @@ import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {hasExplorerFilterFieldAnnotation} from '../utils/annotations';
 
-type SubpanelType = 'view' | 'dimension' | 'measure' | null;
-
 export interface SourcePanelProps {
   onRefresh: () => void;
 }
 
 export function SourcePanel({onRefresh}: SourcePanelProps) {
   const {source} = React.useContext(QueryEditorContext);
-  const [subpanelType, setSubpanelType] = React.useState<SubpanelType>(null);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const {isSourcePanelOpen, setIsSourcePanelOpen} = useContext(
     ExplorerPanelsContext
@@ -70,23 +61,6 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
     return [];
   }, [fieldItems, searchQuery]);
 
-  const fieldGroupsByKindByPath = React.useMemo(() => {
-    if (source) {
-      return groupFieldItemsByKind(fieldItems).map(group => ({
-        ...group,
-        items: groupFieldItemsByPath(source, group.items),
-      }));
-    }
-    return [];
-  }, [source, fieldItems]);
-
-  const fieldGroupList = React.useMemo(() => {
-    return (
-      fieldGroupsByKindByPath.find(({group}) => group === subpanelType)
-        ?.items ?? []
-    );
-  }, [fieldGroupsByKindByPath, subpanelType]);
-
   const isSearchActive = !!searchQuery;
 
   if (!isSourcePanelOpen || !source) {
@@ -97,20 +71,10 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
     <div {...stylex.props(styles.main)}>
       <div {...stylex.props(fontStyles.body, styles.header)}>
         <div {...stylex.props(styles.headerTopRow)}>
-          {subpanelType == null ? (
-            <div {...stylex.props(styles.heading)}>
-              <Icon name="database" color="gray" />
-              <div {...stylex.props(styles.title)}>{source.name}</div>
-            </div>
-          ) : (
-            <Button
-              icon="chevronLeft"
-              label="Back"
-              variant="flat"
-              size="compact"
-              onClick={() => setSubpanelType(null)}
-            />
-          )}
+          <div {...stylex.props(styles.heading)}>
+            <Icon name="database" color="gray" />
+            <div {...stylex.props(styles.title)}>{source.name}</div>
+          </div>
           <div {...stylex.props(styles.headerEndContent)}>
             <Button
               icon="refresh"
@@ -140,50 +104,55 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
         />
       </div>
       <Divider />
-      <ScrollableArea>
-        <div {...stylex.props(styles.content)}>
-          {isSearchActive ? (
-            <SearchResultList source={source} items={searchResultItems} />
-          ) : subpanelType == null ? (
-            <List>
-              <ListItem
-                key="views"
-                label="Views"
-                startIcon={<Icon name="view" color="purple" />}
-                badge={<Badge label={views.length.toString()} color="purple" />}
-                endIcon={<Icon name="chevronRight" color="secondary" />}
-                onClick={() => setSubpanelType('view')}
+      <div {...stylex.props(styles.content)}>
+        {isSearchActive ? (
+          <SearchResultList source={source} items={searchResultItems} />
+        ) : (
+          <AccordionList defaultExpandedItemId="views">
+            <AccordionListItem
+              id="dimensions"
+              key="dimensions"
+              label="Dimensions"
+              startIcon={<Icon name="dimension" color="cyan" />}
+              badge={
+                <Badge label={dimensions.length.toString()} color="cyan" />
+              }
+            >
+              <FieldGroupList
+                source={source}
+                fieldItems={fieldItems}
+                fieldGroupType="dimension"
               />
-              <ListItem
-                key="dimensions"
-                label="Dimensions"
-                startIcon={<Icon name="dimension" color="cyan" />}
-                badge={
-                  <Badge label={dimensions.length.toString()} color="cyan" />
-                }
-                endIcon={<Icon name="chevronRight" color="secondary" />}
-                onClick={() => setSubpanelType('dimension')}
+            </AccordionListItem>
+            <AccordionListItem
+              id="measures"
+              key="measures"
+              label="Measures"
+              startIcon={<Icon name="measure" color="green" />}
+              badge={<Badge label={measures.length.toString()} color="green" />}
+            >
+              <FieldGroupList
+                source={source}
+                fieldItems={fieldItems}
+                fieldGroupType="measure"
               />
-              <ListItem
-                key="measures"
-                label="Measures"
-                startIcon={<Icon name="measure" color="green" />}
-                badge={
-                  <Badge label={measures.length.toString()} color="green" />
-                }
-                endIcon={<Icon name="chevronRight" color="secondary" />}
-                onClick={() => setSubpanelType('measure')}
+            </AccordionListItem>
+            <AccordionListItem
+              id="views"
+              key="views"
+              label="Views"
+              startIcon={<Icon name="view" color="purple" />}
+              badge={<Badge label={views.length.toString()} color="purple" />}
+            >
+              <FieldGroupList
+                source={source}
+                fieldItems={fieldItems}
+                fieldGroupType="view"
               />
-            </List>
-          ) : (
-            <FieldGroupList
-              source={source}
-              title={FIELD_KIND_TO_TITLE[subpanelType]}
-              items={fieldGroupList}
-            />
-          )}
-        </div>
-      </ScrollableArea>
+            </AccordionListItem>
+          </AccordionList>
+        )}
+      </div>
     </div>
   );
 }
@@ -192,11 +161,9 @@ const styles = stylex.create({
   main: {
     display: 'flex',
     flexDirection: 'column',
-    flexShrink: 0,
-    width: '100%',
     height: '100%',
-    backgroundColor: '#F1F4F7',
-    boxShadow: '-1px 0px 0px 0px #C8CCD2 inset',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRight: '1px solid #C8CCD2',
   },
   header: {
     display: 'flex',
@@ -224,7 +191,8 @@ const styles = stylex.create({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '8px',
+    overflow: 'auto',
+    flexGrow: 1,
   },
   headerEndContent: {
     display: 'flex',

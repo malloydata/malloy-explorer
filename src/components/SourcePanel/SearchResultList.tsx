@@ -16,7 +16,7 @@ interface SearchResultListProps {
   items: FieldItem[];
 }
 
-const FIELD_KIND_ORDER = ['view', 'dimension', 'measure'] as const;
+const FIELD_KIND_ORDER = ['dimension', 'measure', 'view'] as const;
 
 export default function SearchResultList({
   source,
@@ -78,6 +78,7 @@ const styles = stylex.create({
     alignItems: 'flex-start',
     gap: '16px',
     padding: '8px',
+    backgroundColor: 'rgba(241, 244, 247, 1)',
   },
   heading: {
     fontWeight: 700,
