@@ -69,8 +69,8 @@ export default function AccordionListItem({
             </span>
           )}
         </div>
-        {badge && <>{badge}</>}
-        {endIcon && <>{endIcon}</>}
+        {badge && badge}
+        {endIcon && endIcon}
       </div>
       {id === expandedItemId && (
         <div {...stylex.props(styles.content)}>
