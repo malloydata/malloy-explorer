@@ -25,21 +25,40 @@ export interface NestOperationsProps {
   nests: ASTNestViewOperation[];
 }
 
-const viewStyles = stylex.create({
-  indent: {
-    marginLeft: 0,
-    marginRight: 0,
-    marginTop: 8,
-    width: '100%',
-  },
-});
-
 export function NestOperations({rootQuery, view, nests}: NestOperationsProps) {
-  const {setQuery} = useContext(QueryEditorContext);
-  const [renameOpen, setRenameOpen] = useState(false);
   if (nests.length === 0) {
     return null;
   }
+
+  return (
+    <div {...stylex.props(styles.tokenContainer)}>
+      {nests.map(nest => (
+        <NestOperation
+          key={nest.name}
+          rootQuery={rootQuery}
+          view={view}
+          nest={nest}
+        />
+      ))}
+    </div>
+  );
+}
+
+export interface NestOperationProps {
+  rootQuery: ASTQuery;
+  view: ViewParent;
+  nest: ASTNestViewOperation;
+}
+
+export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
+  const {setQuery} = useContext(QueryEditorContext);
+  const [renameOpen, setRenameOpen] = useState(false);
+
+  // New blank nested queries should default to their open mode to make
+  // it simpler to add content into.
+  const defaultOpen =
+    nest.view.definition.node.kind === 'segment' &&
+    nest.view.definition.node.operations.length === 0;
 
   const getControls = (nest: ASTNestViewOperation) => (
     <>
@@ -73,35 +92,32 @@ export function NestOperations({rootQuery, view, nests}: NestOperationsProps) {
   );
 
   return (
-    <div {...stylex.props(styles.tokenContainer)}>
-      {nests.map(nest => {
-        // New blank nested queries should default to their open mode to make
-        // it simpler to add content into.
-        const defaultOpen =
-          nest.view.definition.node.kind === 'segment' &&
-          nest.view.definition.node.operations.length === 0;
-
-        return (
-          <div key={nest.name} {...stylex.props(viewStyles.indent)}>
-            <CollapsiblePanel
-              title={nest.name}
-              icon={viewToVisualizationIcon(nest.view)}
-              defaultOpen={defaultOpen}
-              controls={getControls(nest)}
-              collapsedControls={getControls(nest)}
-            >
-              <View rootQuery={rootQuery} view={nest.view} />
-            </CollapsiblePanel>
-            <RenameDialog
-              rootQuery={rootQuery}
-              view={view}
-              target={nest}
-              open={renameOpen}
-              setOpen={setRenameOpen}
-            />
-          </div>
-        );
-      })}
+    <div key={nest.name} {...stylex.props(viewStyles.indent)}>
+      <CollapsiblePanel
+        title={nest.name}
+        icon={viewToVisualizationIcon(nest.view)}
+        defaultOpen={defaultOpen}
+        controls={getControls(nest)}
+        collapsedControls={getControls(nest)}
+      >
+        <View rootQuery={rootQuery} view={nest.view} />
+      </CollapsiblePanel>
+      <RenameDialog
+        rootQuery={rootQuery}
+        view={view}
+        target={nest}
+        open={renameOpen}
+        setOpen={setRenameOpen}
+      />
     </div>
   );
 }
+
+const viewStyles = stylex.create({
+  indent: {
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 8,
+    width: '100%',
+  },
+});
