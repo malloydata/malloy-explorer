@@ -29,6 +29,11 @@ const App = () => {
           result: result,
           messages: [{title: 'this is a warning message', severity: 'INFO'}],
           runInfo: {
+            customContent: (
+              <div>
+                hello, press this <button>button</button>
+              </div>
+            ),
             queryLink: {
               linkText: 'here is a link to the query you just ran',
               href: '#',
