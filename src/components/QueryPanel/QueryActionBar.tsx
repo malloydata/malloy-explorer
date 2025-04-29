@@ -8,7 +8,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {Button} from '../primitives';
+import {Button, Icon} from '../primitives';
 import {
   Tooltip,
   TooltipContent,
@@ -18,6 +18,7 @@ import {
 import {fontStyles, tooltipStyles} from '../primitives/styles';
 import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
 
 /**
  * Source
@@ -28,6 +29,7 @@ export interface QueryActionBarProps {
 
 export function QueryActionBar({runQuery}: QueryActionBarProps) {
   const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
+  const {setIsQueryPanelOpen} = useContext(ExplorerPanelsContext);
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
   const isRunEnabled = rootQuery?.isRunnable();
@@ -38,7 +40,10 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
   };
   return (
     <div {...stylex.props(styles.root)}>
-      <div {...stylex.props(fontStyles.largeBody, styles.title)}>Query</div>
+      <div {...stylex.props(styles.startContent)}>
+        <Icon name="filterSliders" />
+        <div {...stylex.props(fontStyles.largeBody, styles.title)}>Query</div>
+      </div>
       <div {...stylex.props(styles.buttons)}>
         <Button
           onClick={() => setQuery?.(undefined)}
@@ -70,6 +75,15 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
             </TooltipContent>
           </TooltipPortal>
         </Tooltip>
+        {setIsQueryPanelOpen && (
+          <Button
+            icon="sidebarCollapse"
+            tooltip="Close the source panel"
+            onClick={() => setIsQueryPanelOpen(false)}
+            size="compact"
+            variant="flat"
+          />
+        )}
       </div>
     </div>
   );
@@ -80,7 +94,13 @@ const styles = stylex.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '8px 12px',
+    padding: '8px',
+  },
+  startContent: {
+    display: 'flex',
+    gap: 8,
+    alignItems: 'center',
+    padding: '4px 8px',
   },
   title: {
     fontWeight: '700',

@@ -21,3 +21,4 @@ export type {
 export {SourcePanel} from './components/SourcePanel';
 export {ResizeBar} from './components/primitives';
 export {ExplorerPanelsContext} from './contexts/ExplorerPanelsContext';
+export {CollapsedPagePanel} from './components/CollapsedPagePanel';

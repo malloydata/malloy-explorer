@@ -18,6 +18,7 @@ import {
   MalloyExplorerProvider,
   ResultPanel,
   SourcePanel,
+  CollapsedPagePanel,
 } from '../src';
 import {modelInfo} from './sample_models/example_model';
 import {exampleResult} from './sample_models/example_result';
@@ -28,6 +29,7 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
   const [isSourcePanelOpen, setIsSourcePanelOpen] = useState(true);
+  const [isQueryPanelOpen, setIsQueryPanelOpen] = useState(true);
   const [sourcePanelWidth, setSourcePanelWidth] = useState(280);
   const [queryPanelWidth, setQueryPanelWidth] = useState(360);
 
@@ -41,43 +43,55 @@ const App = () => {
       >
         <ExplorerPanelsContext.Provider
           value={{
-            isSourcePanelOpen,
             setIsSourcePanelOpen,
+            setIsQueryPanelOpen,
           }}
         >
           <div {...stylex.props(styles.page)}>
             <div {...stylex.props(styles.content)}>
-              {isSourcePanelOpen && (
+              {isSourcePanelOpen ? (
                 <div
                   {...stylex.props(styles.panel)}
                   style={{width: `${sourcePanelWidth}px`}}
                 >
-                  <SourcePanel />
+                  <SourcePanel onRefresh={() => {}} />
                   <ResizeBar
                     minWidth={180}
                     width={sourcePanelWidth}
                     onWidthChange={setSourcePanelWidth}
                   />
                 </div>
+              ) : (
+                <CollapsedPagePanel
+                  icon="database"
+                  title={source.name}
+                  onExpand={() => setIsSourcePanelOpen(true)}
+                />
               )}
-
-              <div
-                {...stylex.props(styles.panel)}
-                style={{width: `${queryPanelWidth}px`}}
-              >
-                <QueryPanel
-                  runQuery={(source, query) => {
-                    const qb = new QueryBuilder.ASTQuery({source, query});
-                    window.alert(qb.toMalloy());
-                  }}
+              {isQueryPanelOpen ? (
+                <div
+                  {...stylex.props(styles.panel)}
+                  style={{width: `${queryPanelWidth}px`}}
+                >
+                  <QueryPanel
+                    runQuery={(source, query) => {
+                      const qb = new QueryBuilder.ASTQuery({source, query});
+                      window.alert(qb.toMalloy());
+                    }}
+                  />
+                  <ResizeBar
+                    minWidth={280}
+                    width={queryPanelWidth}
+                    onWidthChange={setQueryPanelWidth}
+                  />
+                </div>
+              ) : (
+                <CollapsedPagePanel
+                  icon="filterSliders"
+                  title="Query"
+                  onExpand={() => setIsQueryPanelOpen(true)}
                 />
-                <ResizeBar
-                  minWidth={230}
-                  width={queryPanelWidth}
-                  onWidthChange={setQueryPanelWidth}
-                />
-              </div>
-
+              )}
               <ResultPanel
                 source={source}
                 draftQuery={query}

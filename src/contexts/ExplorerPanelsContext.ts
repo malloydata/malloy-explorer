@@ -8,18 +8,13 @@
 import * as React from 'react';
 
 export interface ExplorerPanelsContextProps {
-  /** Manages the state of the source panel UI.  */
-  isSourcePanelOpen: boolean;
   setIsSourcePanelOpen?: (isOpen: boolean) => void;
+  setIsQueryPanelOpen?: (isOpen: boolean) => void;
 }
 
 /**
  * QueryEditorContext contains state that is shared across the different
  * panels of the Malloy Explorer.
  */
-
 export const ExplorerPanelsContext =
-  React.createContext<ExplorerPanelsContextProps>({
-    isSourcePanelOpen: true,
-    setIsSourcePanelOpen: undefined,
-  });
+  React.createContext<ExplorerPanelsContextProps>({});
