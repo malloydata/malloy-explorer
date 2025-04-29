@@ -17,9 +17,10 @@ import {ViewParent} from '../../utils/fields';
 export interface AddEmptyNestProps {
   rootQuery: ASTQuery;
   view: ViewParent;
+  search: string;
 }
 
-export function AddOrderBy({rootQuery, view}: AddEmptyNestProps) {
+export function AddOrderBy({rootQuery, view, search}: AddEmptyNestProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const outputSchemaFields = view.getOutputSchema().fields;
   const segment = getSegmentIfPresent(view);
@@ -48,6 +49,7 @@ export function AddOrderBy({rootQuery, view}: AddEmptyNestProps) {
         setQuery?.(rootQuery.build());
       }}
       disabledMessage="There must be at least one field in the output to order by."
+      search={search}
     />
   );
 }

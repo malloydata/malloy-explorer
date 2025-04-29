@@ -21,9 +21,10 @@ import {addGroupBy, getSegmentIfPresent} from '../../utils/segment';
 export interface AddGroupByProps {
   rootQuery: ASTQuery;
   view: ViewParent;
+  search: string;
 }
 
-export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
+export function AddGroupBy({rootQuery, view, search}: AddGroupByProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
   const segment = getSegmentIfPresent(view);
@@ -50,6 +51,7 @@ export function AddGroupBy({rootQuery, view}: AddGroupByProps) {
         addGroupBy(view, field, path);
         setQuery?.(rootQuery.build());
       }}
+      search={search}
     />
   );
 }

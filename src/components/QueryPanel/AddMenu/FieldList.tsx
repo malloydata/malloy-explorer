@@ -8,7 +8,7 @@
 import * as React from 'react';
 import {useMemo} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import stylex from '@stylexjs/stylex';
+import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
 import {sortFieldInfos, ViewParent} from '../../utils/fields';
 import FieldToken from '../../FieldToken';
@@ -38,7 +38,7 @@ const isArrayOrRecord = (
 export interface FieldListProps {
   view: ViewParent;
   fields: Malloy.FieldInfo[];
-  search: string;
+  search?: string;
   onAddOperation: (
     field: Malloy.FieldInfo,
     path: string[],
@@ -51,16 +51,18 @@ export interface FieldListProps {
     path: string[]
   ) => boolean;
   isFilterOperation?: boolean;
+  customStyle?: StyleXStyles;
 }
 
 export function FieldList({
   view,
   fields,
   onAddOperation,
-  search,
+  search = '',
   types,
   filter,
   isFilterOperation,
+  customStyle,
 }: FieldListProps) {
   const groups = useMemo(() => {
     const groups: Group[] = [];
@@ -136,17 +138,15 @@ export function FieldList({
   }, [fields, filter, search, view, types]);
 
   return (
-    <div>
+    <div {...stylex.props(customStyle)}>
       {groups.length ? (
         groups.map(group => (
           <div key={group.name}>
-            <div>
-              <div
-                {...stylex.props(addMenuStyles.item, styles.fieldItem)}
-                data-disabled="true"
-              >
-                {group.name}
-              </div>
+            <div
+              {...stylex.props(addMenuStyles.item, styles.fieldItem)}
+              data-disabled="true"
+            >
+              {group.name}
             </div>
             {group.fields.map(field =>
               isFilterOperation &&

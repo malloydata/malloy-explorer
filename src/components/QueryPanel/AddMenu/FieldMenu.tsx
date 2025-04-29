@@ -42,7 +42,7 @@ export function FieldMenu({
   const [search, setSearch] = useState('');
 
   return (
-    <div {...stylex.props(addMenuStyles.content)} role="menu">
+    <div {...stylex.props(addMenuStyles.content, styles.content)} role="menu">
       <div {...stylex.props(addMenuStyles.item)}>
         <TextInput
           icon="search"
@@ -52,7 +52,7 @@ export function FieldMenu({
         />
       </div>
       <Divider />
-      <div style={{overflow: 'auto', overflowY: 'scroll', flex: 1}}>
+      <div {...stylex.props(styles.scrollArea)}>
         <FieldList
           view={view}
           fields={fields}
@@ -66,3 +66,12 @@ export function FieldMenu({
     </div>
   );
 }
+
+const styles = stylex.create({
+  content: {
+    maxHeight: '50vh',
+  },
+  scrollArea: {
+    overflowY: 'auto',
+  },
+});

@@ -21,9 +21,10 @@ import {addAggregate, getSegmentIfPresent} from '../../utils/segment';
 export interface AddAggregateProps {
   rootQuery: ASTQuery;
   view: ViewParent;
+  search: string;
 }
 
-export function AddAggregate({rootQuery, view}: AddAggregateProps) {
+export function AddAggregate({rootQuery, view, search}: AddAggregateProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
   const segment = getSegmentIfPresent(view);
@@ -50,6 +51,7 @@ export function AddAggregate({rootQuery, view}: AddAggregateProps) {
         addAggregate(view, field, path);
         setQuery?.(rootQuery.build());
       }}
+      search={search}
     />
   );
 }
