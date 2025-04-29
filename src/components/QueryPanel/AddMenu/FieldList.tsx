@@ -64,6 +64,7 @@ export function FieldList({
 }: FieldListProps) {
   const groups = useMemo(() => {
     const groups: Group[] = [];
+    const lcSearch = search.toLocaleLowerCase();
 
     const buildGroups = (
       types: Array<'dimension' | 'measure' | 'view'>,
@@ -75,7 +76,9 @@ export function FieldList({
         .filter(field => field.kind !== 'join')
         .filter(field => !isArrayOrRecord(field))
         .filter(
-          field => field.name.includes(search) && types.includes(field.kind)
+          field =>
+            field.name.toLocaleLowerCase().includes(lcSearch) &&
+            types.includes(field.kind)
         )
         .filter(field => (filter ? filter(view, field, path) : true));
 
