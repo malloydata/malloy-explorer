@@ -13,7 +13,6 @@ import {Query} from './Query';
 import {Source} from './Source';
 import {Parameters} from './Parameters';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import {ScrollableArea} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 
 /**
@@ -28,13 +27,11 @@ export function QueryEditor() {
   }
 
   return (
-    <ScrollableArea>
-      <div {...stylex.props(fontStyles.body, styles.main)}>
-        <Source rootQuery={rootQuery} />
-        <Parameters rootQuery={rootQuery} />
-        <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
-      </div>
-    </ScrollableArea>
+    <div {...stylex.props(fontStyles.body, styles.main)}>
+      <Source rootQuery={rootQuery} />
+      <Parameters rootQuery={rootQuery} />
+      <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
+    </div>
   );
 }
 
@@ -42,6 +39,7 @@ const styles = stylex.create({
   main: {
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'auto',
     gap: 8,
     padding: '4px 12px 12px 12px',
   },
