@@ -12,9 +12,7 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles as componentStyles} from '../styles';
-import {Button, Icon} from '../primitives';
-import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
-import {useContext} from 'react';
+import {Icon} from '../primitives';
 
 /**
  * Source
@@ -24,30 +22,19 @@ export interface SourceProps {
 }
 
 export function Source({rootQuery}: SourceProps) {
-  const {isSourcePanelOpen, setIsSourcePanelOpen} = useContext(
-    ExplorerPanelsContext
-  );
-  if (
-    !(isSourcePanelOpen && setIsSourcePanelOpen) &&
-    rootQuery.definition instanceof ASTArrowQueryDefinition
-  ) {
+  if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
     return (
       <div {...stylex.props(componentStyles.queryCard, styles.content)}>
         <div {...stylex.props(componentStyles.labelWithIcon)}>
           <Icon name="database" />
-          {
-            rootQuery.definition.as
-              .ArrowQueryDefinition()
-              .source.as.ReferenceQueryArrowSource().name
-          }
+          <div {...stylex.props(styles.label)}>
+            {
+              rootQuery.definition.as
+                .ArrowQueryDefinition()
+                .source.as.ReferenceQueryArrowSource().name
+            }
+          </div>
         </div>
-        {setIsSourcePanelOpen && (
-          <Button
-            variant="flat"
-            onClick={() => setIsSourcePanelOpen(true)}
-            label="Open data panel"
-          />
-        )}
       </div>
     );
   }
@@ -58,7 +45,11 @@ const styles = stylex.create({
   content: {
     display: 'grid',
     gridAutoFlow: 'column',
-    gridTemplateColumns: '1fr auto',
+    gridTemplateColumns: 'auto',
     gap: '4px',
+  },
+  label: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 });

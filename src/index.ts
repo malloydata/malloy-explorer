@@ -20,4 +20,4 @@ export type {
 } from './components/ResultPanel/SubmittedQuery';
 export {SourcePanel} from './components/SourcePanel';
 export {ResizeBar} from './components/primitives';
-export {ExplorerPanelsContext} from './contexts/ExplorerPanelsContext';
+export {ResizableCollapsiblePanel} from './components/ResizableCollapsiblePanel';

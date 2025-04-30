@@ -20,6 +20,7 @@ export const styles = stylex.create({
     alignItems: 'center',
     whiteSpace: 'nowrap',
     gap: 8,
+    overflow: 'hidden',
   },
 
   label: {},

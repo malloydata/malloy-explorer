@@ -12,12 +12,11 @@ import stylex from '@stylexjs/stylex';
 import {useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {
-  ExplorerPanelsContext,
   QueryPanel,
-  ResizeBar,
   MalloyExplorerProvider,
   ResultPanel,
   SourcePanel,
+  ResizableCollapsiblePanel,
 } from '../src';
 import {modelInfo} from './sample_models/example_model';
 import {exampleResult} from './sample_models/example_result';
@@ -27,9 +26,6 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
-  const [isSourcePanelOpen, setIsSourcePanelOpen] = useState(true);
-  const [sourcePanelWidth, setSourcePanelWidth] = useState(280);
-  const [queryPanelWidth, setQueryPanelWidth] = useState(360);
 
   return (
     <React.StrictMode>
@@ -39,67 +35,52 @@ const App = () => {
         setQuery={setQuery}
         topValues={topValues}
       >
-        <ExplorerPanelsContext.Provider
-          value={{
-            isSourcePanelOpen,
-            setIsSourcePanelOpen,
-          }}
-        >
-          <div {...stylex.props(styles.page)}>
-            <div {...stylex.props(styles.content)}>
-              {isSourcePanelOpen && (
-                <div
-                  {...stylex.props(styles.panel)}
-                  style={{width: `${sourcePanelWidth}px`}}
-                >
-                  <SourcePanel />
-                  <ResizeBar
-                    minWidth={180}
-                    width={sourcePanelWidth}
-                    onWidthChange={setSourcePanelWidth}
-                  />
-                </div>
-              )}
-
-              <div
-                {...stylex.props(styles.panel)}
-                style={{width: `${queryPanelWidth}px`}}
-              >
-                <QueryPanel
-                  runQuery={(source, query) => {
-                    const qb = new QueryBuilder.ASTQuery({source, query});
-                    window.alert(qb.toMalloy());
-                  }}
-                />
-                <ResizeBar
-                  minWidth={230}
-                  width={queryPanelWidth}
-                  onWidthChange={setQueryPanelWidth}
-                />
-              </div>
-
-              <ResultPanel
-                source={source}
-                draftQuery={query}
-                setDraftQuery={setQuery}
-                submittedQuery={
-                  query
-                    ? {
-                        executionState: 'finished',
-                        response: {
-                          result: exampleResult,
-                        },
-                        query,
-                        queryResolutionStartMillis: Date.now(),
-                        onCancel: () => {},
-                      }
-                    : undefined
-                }
-                options={{showRawQuery: true}}
+        <div {...stylex.props(styles.page)}>
+          <div {...stylex.props(styles.content)}>
+            <ResizableCollapsiblePanel
+              isInitiallyExpanded={true}
+              initialWidth={280}
+              minWidth={180}
+              icon="database"
+              title={source.name}
+            >
+              <SourcePanel onRefresh={() => {}} />
+            </ResizableCollapsiblePanel>
+            <ResizableCollapsiblePanel
+              isInitiallyExpanded={true}
+              initialWidth={360}
+              minWidth={280}
+              icon="filterSliders"
+              title="Query"
+            >
+              <QueryPanel
+                runQuery={(source, query) => {
+                  const qb = new QueryBuilder.ASTQuery({source, query});
+                  window.alert(qb.toMalloy());
+                }}
               />
-            </div>
+            </ResizableCollapsiblePanel>
+            <ResultPanel
+              source={source}
+              draftQuery={query}
+              setDraftQuery={setQuery}
+              submittedQuery={
+                query
+                  ? {
+                      executionState: 'finished',
+                      response: {
+                        result: exampleResult,
+                      },
+                      query,
+                      queryResolutionStartMillis: Date.now(),
+                      onCancel: () => {},
+                    }
+                  : undefined
+              }
+              options={{showRawQuery: true}}
+            />
           </div>
-        </ExplorerPanelsContext.Provider>
+        </div>
       </MalloyExplorerProvider>
     </React.StrictMode>
   );

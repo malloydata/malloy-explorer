@@ -23,9 +23,9 @@ import {sourceToFieldItems} from './utils';
 import SearchResultList from './SearchResultList';
 import FieldGroupList from './FieldGroupList';
 import {useContext} from 'react';
-import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {hasExplorerFilterFieldAnnotation} from '../utils/annotations';
+import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
 
 export interface SourcePanelProps {
   onRefresh: () => void;
@@ -34,9 +34,7 @@ export interface SourcePanelProps {
 export function SourcePanel({onRefresh}: SourcePanelProps) {
   const {source} = React.useContext(QueryEditorContext);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
-  const {isSourcePanelOpen, setIsSourcePanelOpen} = useContext(
-    ExplorerPanelsContext
-  );
+  const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
   const fieldItems = React.useMemo(() => {
     if (source) {
@@ -63,7 +61,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
 
   const isSearchActive = !!searchQuery;
 
-  if (!isSourcePanelOpen || !source) {
+  if (!source) {
     return null;
   }
 
@@ -73,7 +71,9 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
         <div {...stylex.props(styles.headerTopRow)}>
           <div {...stylex.props(styles.heading)}>
             <Icon name="database" color="gray" />
-            <div {...stylex.props(styles.title)}>{source.name}</div>
+            <div {...stylex.props(fontStyles.largeBody, styles.title)}>
+              {source.name}
+            </div>
           </div>
           <div {...stylex.props(styles.headerEndContent)}>
             <Button
@@ -83,11 +83,11 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
               size="compact"
               variant="flat"
             />
-            {setIsSourcePanelOpen && (
+            {onCollapse && (
               <Button
                 icon="sidebarCollapse"
                 tooltip="Close the source panel"
-                onClick={() => setIsSourcePanelOpen(false)}
+                onClick={onCollapse}
                 size="compact"
                 variant="flat"
               />
@@ -169,8 +169,6 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     padding: '8px',
-    color: textColors.primary,
-    fontWeight: 700,
     gap: '8px',
   },
   headerTopRow: {
@@ -187,6 +185,8 @@ const styles = stylex.create({
   title: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    fontWeight: 700,
+    color: textColors.primary,
   },
   content: {
     display: 'flex',
