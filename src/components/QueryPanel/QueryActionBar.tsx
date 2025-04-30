@@ -18,7 +18,7 @@ import {
 import {fontStyles, tooltipStyles} from '../primitives/styles';
 import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
+import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
 
 /**
  * Source
@@ -29,7 +29,7 @@ export interface QueryActionBarProps {
 
 export function QueryActionBar({runQuery}: QueryActionBarProps) {
   const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
-  const {setIsQueryPanelOpen} = useContext(ExplorerPanelsContext);
+  const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
   const isRunEnabled = rootQuery?.isRunnable();
@@ -75,11 +75,11 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
             </TooltipContent>
           </TooltipPortal>
         </Tooltip>
-        {setIsQueryPanelOpen && (
+        {onCollapse && (
           <Button
             icon="sidebarCollapse"
             tooltip="Close the source panel"
-            onClick={() => setIsQueryPanelOpen(false)}
+            onClick={onCollapse}
             size="compact"
             variant="flat"
           />

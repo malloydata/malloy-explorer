@@ -23,9 +23,9 @@ import {sourceToFieldItems} from './utils';
 import SearchResultList from './SearchResultList';
 import FieldGroupList from './FieldGroupList';
 import {useContext} from 'react';
-import {ExplorerPanelsContext} from '../../contexts/ExplorerPanelsContext';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {hasExplorerFilterFieldAnnotation} from '../utils/annotations';
+import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
 
 export interface SourcePanelProps {
   onRefresh: () => void;
@@ -34,7 +34,7 @@ export interface SourcePanelProps {
 export function SourcePanel({onRefresh}: SourcePanelProps) {
   const {source} = React.useContext(QueryEditorContext);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
-  const {setIsSourcePanelOpen} = useContext(ExplorerPanelsContext);
+  const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
   const fieldItems = React.useMemo(() => {
     if (source) {
@@ -83,11 +83,11 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
               size="compact"
               variant="flat"
             />
-            {setIsSourcePanelOpen && (
+            {onCollapse && (
               <Button
                 icon="sidebarCollapse"
                 tooltip="Close the source panel"
-                onClick={() => setIsSourcePanelOpen(false)}
+                onClick={onCollapse}
                 size="compact"
                 variant="flat"
               />

@@ -1,22 +1,29 @@
-import * as React from 'react';
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
+import * as React from 'react';
 import stylex from '@stylexjs/stylex';
 import {Button, IconType} from './primitives';
 import {fontStyles} from './primitives/styles';
+import {ResizableCollapsiblePanelContext} from '../contexts/ResizableCollapsiblePanelContext';
 
 interface CollapsedPagePanelProps {
   title?: string;
   icon?: IconType;
   tooltip?: string;
-  onExpand: () => void;
 }
 
 export function CollapsedPagePanel({
   icon,
   title,
   tooltip,
-  onExpand,
 }: CollapsedPagePanelProps) {
+  const {onExpand} = React.useContext(ResizableCollapsiblePanelContext);
+
   return (
     <div {...stylex.props(styles.main)}>
       <div {...stylex.props(styles.content)}>
