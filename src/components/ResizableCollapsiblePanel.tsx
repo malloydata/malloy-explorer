@@ -63,11 +63,7 @@ export function ResizableCollapsiblePanel({
         style={{width: `${width}px`}}
       >
         {children}
-        <ResizeBar
-          width={initialWidth}
-          minWidth={minWidth}
-          onWidthChange={setWidth}
-        />
+        <ResizeBar width={width} minWidth={minWidth} onWidthChange={setWidth} />
       </div>
       {isCollapsed && <CollapsedPagePanel icon={icon} title={title} />}
     </ResizableCollapsiblePanelContext.Provider>
