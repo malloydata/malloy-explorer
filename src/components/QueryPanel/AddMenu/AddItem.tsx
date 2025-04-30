@@ -10,6 +10,8 @@ import {ReactElement} from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
+import {colors} from './colors.stylex';
+import {Icon} from '../../primitives';
 
 export interface AddItemProps {
   icon?: ReactElement;
@@ -17,42 +19,61 @@ export interface AddItemProps {
   detail?: ReactElement;
   onClick?: () => void;
   disable?: () => boolean;
+  open?: boolean;
 }
 
-export function AddItem({icon, label, detail, disable, onClick}: AddItemProps) {
+export function AddItem({
+  icon,
+  label,
+  detail,
+  disable,
+  onClick,
+  open,
+}: AddItemProps) {
   const disabled = disable?.();
   const doOnClick = () => {
     if (!disable?.()) onClick?.();
   };
 
   return (
-    <div
-      role="menuitem"
-      tabIndex={-1}
-      {...stylex.props(addMenuStyles.item, addMenuStyles.clickable)}
-      onClick={doOnClick}
-      data-disabled={disabled ? 'true' : undefined}
-    >
-      <Tooltip.Root>
-        <Tooltip.Trigger asChild>
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>
+        <div
+          role="menuitem"
+          tabIndex={-1}
+          {...stylex.props(
+            addMenuStyles.item,
+            addMenuStyles.clickable,
+            open ? styles.open : null
+          )}
+          onClick={doOnClick}
+          data-disabled={disabled ? 'true' : undefined}
+        >
           <div {...stylex.props(addMenuStyles.label)}>
             {icon}
             <div>{label}</div>
           </div>
-        </Tooltip.Trigger>
-        {detail ? (
-          <Tooltip.Portal>
-            <Tooltip.Content
-              {...stylex.props(addMenuStyles.tooltip)}
-              side="right"
-              align="start"
-              alignOffset={-16}
-            >
-              {detail}
-            </Tooltip.Content>
-          </Tooltip.Portal>
-        ) : null}
-      </Tooltip.Root>
-    </div>
+          {open !== undefined && <Icon name="chevronRight" color="gray" />}
+        </div>
+      </Tooltip.Trigger>
+      {detail ? (
+        <Tooltip.Portal>
+          <Tooltip.Content
+            {...stylex.props(addMenuStyles.tooltip)}
+            side="right"
+            align="start"
+            alignOffset={-16}
+          >
+            {detail}
+          </Tooltip.Content>
+        </Tooltip.Portal>
+      ) : null}
+    </Tooltip.Root>
   );
 }
+
+const styles = stylex.create({
+  open: {
+    background: colors.accentDeemphasized,
+  },
+});

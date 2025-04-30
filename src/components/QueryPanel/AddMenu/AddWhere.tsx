@@ -18,9 +18,10 @@ import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 export interface AddWhereProps {
   rootQuery: ASTQuery;
   view: ViewParent;
+  search: string;
 }
 
-export function AddWhere({view}: AddWhereProps) {
+export function AddWhere({view, search}: AddWhereProps) {
   const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
 
   const {fields} = getInputSchemaFromViewParent(view);
@@ -53,6 +54,7 @@ export function AddWhere({view}: AddWhereProps) {
           }
         }}
         isFilterOperation={true}
+        search={search}
       />
     </>
   );

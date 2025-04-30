@@ -21,9 +21,10 @@ import {
 export interface AddViewProps {
   rootQuery: ASTQuery;
   view: ViewParent;
+  search: string;
 }
 
-export function AddView({rootQuery, view}: AddViewProps) {
+export function AddView({rootQuery, view, search}: AddViewProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const allFields = getInputSchemaFromViewParent(view).fields;
   const fields = useMemo(
@@ -48,6 +49,7 @@ export function AddView({rootQuery, view}: AddViewProps) {
         }
         setQuery?.(rootQuery.build());
       }}
+      search={search}
     />
   );
 }
