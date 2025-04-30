@@ -8,8 +8,7 @@ const inDir = path.resolve('dist/types');
 const files = [
   'index.d.ts',
   'components/MalloyExplorerProvider.d.ts',
-  'components/QueryPanel/QueryEditor.d.ts',
-  'components/QueryPanel/QueryActionBar.d.ts',
+  'components/QueryPanel/QueryPanel.d.ts',
   'components/ResultPanel/ResultPanel.d.ts',
   'components/ResultPanel/SubmittedQuery.d.ts',
   'components/SourcePanel/SourcePanel.d.ts',
