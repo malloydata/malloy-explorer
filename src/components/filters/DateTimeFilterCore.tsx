@@ -16,6 +16,7 @@ import {
   TemporalLiteral,
   To,
   InMoment,
+  in_last,
 } from '@malloydata/malloy-filter';
 import {useState} from 'react';
 //import DatePicker from '../primitives/DatePicker';
@@ -46,7 +47,11 @@ function unitsFromFilter(
   filter: TemporalFilter,
   isDateTime: boolean
 ): TemporalUnit {
-  if (filter.operator === 'last' || filter.operator === 'next') {
+  if (
+    filter.operator === 'last' ||
+    filter.operator === 'next' ||
+    filter.operator === 'in_last'
+  ) {
     return filter.units;
   } else if (filter.operator === 'to') {
     return guessUnits(filter.fromMoment, isDateTime);
@@ -100,7 +105,7 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
   const maxLevel = isDateTime ? 'second' : 'day';
   const type = typeFromFilter(currentFilter);
 
-  // TODO "for" | "in_last"
+  // TODO "for"
 
   return (
     <div {...stylex.props(filterStyles.editor)}>
@@ -110,8 +115,9 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
           onChange={changeType}
           options={
             [
-              {value: 'last', label: 'last'},
-              {value: 'next', label: 'next'},
+              {value: 'in_last', label: 'last'},
+              {value: 'last', label: 'last complete'},
+              {value: 'next', label: 'next complete'},
               {value: 'after', label: 'after'},
               {value: 'before', label: 'before'},
               {value: 'in', label: 'is'},
@@ -149,6 +155,7 @@ function getTopEditorRow(
   maxLevel: 'day' | 'second'
 ) {
   switch (currentFilter.operator) {
+    case 'in_last':
     case 'last':
     case 'next':
       return (
@@ -233,7 +240,7 @@ const TimeUnits: TemporalUnitOption[] = [
 ];
 
 interface NUnitFilterProps {
-  currentFilter: JustUnits;
+  currentFilter: JustUnits | in_last;
   updateFilter: (filter: TemporalFilter) => void;
   units: TemporalUnit;
   setUnits: (units: TemporalUnit) => void;
@@ -466,6 +473,7 @@ export function dateTimeFilterChangeType(
   let toMoment: Moment = createTemporalLiteral(new Date(), units);
 
   switch (filter.operator) {
+    case 'in_last':
     case 'last':
     case 'next':
       n = filter.n;
@@ -486,6 +494,7 @@ export function dateTimeFilterChangeType(
   }
 
   switch (type) {
+    case 'in_last':
     case 'last':
     case 'next':
       return {operator: type, n, units};
