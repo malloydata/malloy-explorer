@@ -38,21 +38,27 @@ export function flattenFieldsTree(
           field.type.kind === 'array_type' &&
           field.type.element_type.kind === 'record_type'
         ) {
-          return flattenFieldsTree(
-            field.type.element_type.fields.map(dimension => ({
-              kind: field.kind,
-              ...dimension,
-            })),
-            [...path, field.name]
-          );
+          return [
+            {path, field},
+            ...flattenFieldsTree(
+              field.type.element_type.fields.map(dimension => ({
+                kind: field.kind,
+                ...dimension,
+              })),
+              [...path, field.name]
+            ),
+          ];
         } else if (field.type.kind === 'record_type') {
-          return flattenFieldsTree(
-            field.type.fields.map(dimension => ({
-              kind: field.kind,
-              ...dimension,
-            })),
-            [...path, field.name]
-          );
+          return [
+            {path, field},
+            ...flattenFieldsTree(
+              field.type.fields.map(dimension => ({
+                kind: field.kind,
+                ...dimension,
+              })),
+              [...path, field.name]
+            ),
+          ];
         }
         return [{path, field}];
       case 'join':

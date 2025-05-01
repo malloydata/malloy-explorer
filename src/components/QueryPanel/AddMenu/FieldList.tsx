@@ -76,7 +76,6 @@ export function FieldList({
     ) => {
       const filteredFields = sortFieldInfos(fields)
         .filter(field => field.kind !== 'join')
-        .filter(field => !isArrayOrRecord(field))
         .filter(
           field =>
             field.name.toLocaleLowerCase().includes(lcSearch) &&
