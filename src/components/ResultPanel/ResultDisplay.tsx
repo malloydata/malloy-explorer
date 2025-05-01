@@ -6,9 +6,10 @@
  */
 
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
-import {Banner, Button, ScrollableArea, Spinner} from '../primitives';
+import {Banner, Button, Spinner} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {
   EXECUTION_STATES,
@@ -17,14 +18,21 @@ import {
   QueryResponse,
   SubmittedQuery,
 } from './SubmittedQuery';
-import * as render from '@malloydata/render';
-import DOMElement from '../primitives/DOMElement';
 // CSS file needed because stylex doesn't support ::part selector
 import './result_display.css';
 
+import type {MalloyRenderProps} from '@malloydata/render';
 import '@malloydata/render/webcomponent';
 import {Variant} from '../primitives/Banner';
 import RunInfoHover from './RunInfoHover';
+import DOMElement from '../primitives/DOMElement';
+
+// TODO: Figure out how to make this part of @malloydata/render/webcomponent export
+declare global {
+  interface HTMLElementTagNameMap {
+    'malloy-render': HTMLElement & MalloyRenderProps;
+  }
+}
 
 export interface ResultDisplayProps {
   query: SubmittedQuery;
@@ -147,52 +155,30 @@ interface RenderedResultProps {
 }
 
 function RenderedResult({result}: RenderedResultProps) {
-  const [html, setHTML] = React.useState<HTMLElement>();
-  const [rendering, setRendering] = React.useState<boolean>(true);
+  const [renderer, setRenderer] = useState<HTMLElement>();
 
-  React.useEffect(() => {
-    let canceled = false;
-    setRendering(true);
-
-    const updateResults = async () => {
-      const renderer = new render.HTMLView(document);
-
-      const html = await renderer.render(result, {
-        dataStyles: {},
-        isDrillingEnabled: true,
-      });
-      if (canceled) {
-        return;
-      }
-
-      setRendering(false);
-      setHTML(html);
-    };
-
-    updateResults();
-
-    return () => {
-      canceled = true;
-    };
+  useEffect(() => {
+    const renderer = document.createElement('malloy-render');
+    renderer.malloyResult = result;
+    setRenderer(renderer);
   }, [result]);
 
-  if (!rendering)
+  if (renderer) {
     return (
-      html && (
-        <DOMElement className="malloy-render_result-wrapper" element={html} />
-      )
+      <div style={{overflow: 'auto'}}>
+        <DOMElement element={renderer} />
+      </div>
     );
-
-  return (
-    <ScrollableArea>
+  } else {
+    return (
       <div {...stylex.props(styles.renderingSpinnerContainer)}>
         <div {...stylex.props(styles.renderingSpinner)}>
           <Spinner size="large" />
           <div {...stylex.props(fontStyles.emphasized)}>Rendering...</div>
         </div>
       </div>
-    </ScrollableArea>
-  );
+    );
+  }
 }
 
 interface LoadingDisplayProps {

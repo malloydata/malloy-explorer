@@ -14,7 +14,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {MalloyPreview} from './components/MalloyPreview';
 import {RawPreview} from './components/RawPreview';
 import {
-  modelInfo,
+  modelInfo2 as modelInfo,
   queries as exampleQueries,
 } from './sample_models/example_model';
 import {topValues} from './sample_models/example_top_values';
