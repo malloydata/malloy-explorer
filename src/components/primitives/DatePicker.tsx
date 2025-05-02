@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {RefObject, useEffect, useState} from 'react';
 import moment from 'moment';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {TemporalUnit} from '@malloydata/malloy-filter';
@@ -20,6 +20,7 @@ interface DatePickerProps {
   units: TemporalUnit;
   maxLevel: TemporalUnit;
   customStyle?: StyleXStyles;
+  forwardRef?: RefObject<HTMLDivElement | null>;
 }
 
 function monthName(month: number) {
@@ -45,20 +46,21 @@ export default function DatePicker({
   units,
   maxLevel,
   customStyle,
+  forwardRef,
 }: DatePickerProps) {
   const [date, setDate] = useState(value);
   const calendar = getCalendar(date);
   const [pickLevel, setPickLevel] = useState<
     'day' | 'month' | 'year' | 'quarter' | 'week' | 'hour' | 'minute' | 'second'
   >(units);
-  const yearBucket = Math.floor(moment(date).year() / 10) * 10;
+  const yearBucket = Math.floor(moment.utc(date).year() / 10) * 10;
 
   useEffect(() => {
     setDate(value);
   }, [value]);
 
   const setYear = (year: number) => {
-    const newDate = moment(date).year(year).toDate();
+    const newDate = moment.utc(date).year(year).toDate();
     setDate(newDate);
     setValue(newDate);
   };
@@ -80,7 +82,7 @@ export default function DatePicker({
         onClick={click}
         {...stylex.props(
           styles.year,
-          moment(date).year() === yearBucket + offset && styles.yearSelected
+          moment.utc(date).year() === yearBucket + offset && styles.yearSelected
         )}
       >
         {yearBucket + offset}
@@ -89,7 +91,7 @@ export default function DatePicker({
   };
 
   const setMonth = (month: number) => {
-    const newDate = moment(date).month(month).toDate();
+    const newDate = moment.utc(date).month(month).toDate();
     setDate(newDate);
     setValue(newDate);
   };
@@ -105,7 +107,8 @@ export default function DatePicker({
   };
 
   const setQuarter = (quarter: number) => {
-    const newDate = moment(date)
+    const newDate = moment
+      .utc(date)
       .quarter(quarter + 1)
       .toDate();
     setDate(newDate);
@@ -115,8 +118,8 @@ export default function DatePicker({
   const monthButton = (month: number) => {
     const click = () => setMonth(month);
     const isSelected =
-      moment(date).month() === month &&
-      moment(date).year() === moment(value).year();
+      moment.utc(date).month() === month &&
+      moment.utc(date).year() === moment.utc(value).year();
     return (
       <div
         onClick={click}
@@ -130,8 +133,8 @@ export default function DatePicker({
   const quarterButton = (quarter: number) => {
     const click = () => setQuarter(quarter);
     const isSelected =
-      moment(date).quarter() - 1 === quarter &&
-      moment(date).year() === moment(value).year();
+      moment.utc(date).quarter() - 1 === quarter &&
+      moment.utc(date).year() === moment.utc(value).year();
     return (
       <div
         onClick={click}
@@ -143,7 +146,7 @@ export default function DatePicker({
   };
 
   return (
-    <div {...stylex.props(styles.outer, customStyle)}>
+    <div {...stylex.props(styles.outer, customStyle)} ref={forwardRef}>
       <div {...stylex.props(styles.controlRow)}>
         <div {...stylex.props(styles.arrowButton)}>
           <Button
@@ -152,13 +155,13 @@ export default function DatePicker({
             icon="chevronLeft"
             onClick={() => {
               if (pickLevel === 'day' || pickLevel === 'week') {
-                setDate(moment(date).subtract(1, 'month').toDate());
+                setDate(moment.utc(date).subtract(1, 'month').toDate());
               } else if (pickLevel === 'month' || pickLevel === 'quarter') {
-                setDate(moment(date).subtract(1, 'year').toDate());
+                setDate(moment.utc(date).subtract(1, 'year').toDate());
               } else if (pickLevel === 'year') {
-                setDate(moment(date).subtract(10, 'years').toDate());
+                setDate(moment.utc(date).subtract(10, 'years').toDate());
               } else {
-                setDay(moment(date).subtract(1, 'days').toDate());
+                setDay(moment.utc(date).subtract(1, 'days').toDate());
               }
             }}
           />
@@ -182,9 +185,9 @@ export default function DatePicker({
           }}
         >
           {(pickLevel === 'day' || pickLevel === 'week') &&
-            moment(date).format('MMMM YYYY')}
+            moment.utc(date).format('MMMM YYYY')}
           {(pickLevel === 'month' || pickLevel === 'quarter') &&
-            moment(date).format('YYYY')}
+            moment.utc(date).format('YYYY')}
           {pickLevel === 'year' && (
             <>
               {yearBucket}-{yearBucket + 9}
@@ -193,7 +196,7 @@ export default function DatePicker({
           {(pickLevel === 'hour' ||
             pickLevel === 'minute' ||
             pickLevel === 'second') && (
-            <>{moment(date).format('MMMM D, YYYY')}</>
+            <>{moment.utc(date).format('MMMM D, YYYY')}</>
           )}
         </div>
         <div {...stylex.props(styles.arrowButton)}>
@@ -203,13 +206,13 @@ export default function DatePicker({
             icon="chevronRight"
             onClick={() => {
               if (pickLevel === 'day' || pickLevel === 'week') {
-                setDate(moment(date).add(1, 'month').toDate());
+                setDate(moment.utc(date).add(1, 'month').toDate());
               } else if (pickLevel === 'month' || pickLevel === 'quarter') {
-                setDate(moment(date).add(1, 'year').toDate());
+                setDate(moment.utc(date).add(1, 'year').toDate());
               } else if (pickLevel === 'year') {
-                setDate(moment(date).add(10, 'years').toDate());
+                setDate(moment.utc(date).add(10, 'years').toDate());
               } else {
-                setDay(moment(date).add(1, 'days').toDate());
+                setDay(moment.utc(date).add(1, 'days').toDate());
               }
             }}
           />
@@ -354,22 +357,22 @@ export default function DatePicker({
           <div {...stylex.props(styles.timePickerInner)}>
             <NumberInput
               label="Hours"
-              value={parseInt(moment(date).format('hh'))}
+              value={parseInt(moment.utc(date).format('hh'))}
               setValue={hour12 => {
-                const amPm = moment(date).hour() >= 12 ? 'PM' : 'AM';
+                const amPm = moment.utc(date).hour() >= 12 ? 'PM' : 'AM';
                 const newHour24 = parseInt(
-                  moment(`${hour12} ${amPm}`, ['hh A']).format('H')
+                  moment.utc(`${hour12} ${amPm}`, ['hh A']).format('H')
                 );
-                setValue(moment(date).hour(newHour24).toDate());
+                setValue(moment.utc(date).hour(newHour24).toDate());
               }}
               width="40px"
             />
             {(units === 'minute' || units === 'second') && (
               <NumberInput
                 label="Minutes"
-                value={moment(date).minutes()}
+                value={moment.utc(date).minutes()}
                 setValue={minute => {
-                  setValue(moment(date).minute(minute).toDate());
+                  setValue(moment.utc(date).minute(minute).toDate());
                 }}
                 width="40px"
               />
@@ -377,9 +380,9 @@ export default function DatePicker({
             {units === 'second' && (
               <NumberInput
                 label="Seconds"
-                value={moment(date).seconds()}
+                value={moment.utc(date).seconds()}
                 setValue={second => {
-                  setValue(moment(date).second(second).toDate());
+                  setValue(moment.utc(date).second(second).toDate());
                 }}
                 width="40px"
               />
@@ -392,13 +395,13 @@ export default function DatePicker({
               }}
             >
               <SelectDropdown
-                value={moment(date).hour() >= 12 ? 'PM' : 'AM'}
+                value={moment.utc(date).hour() >= 12 ? 'PM' : 'AM'}
                 onChange={(amPm: 'AM' | 'PM') => {
-                  const hour12 = parseInt(moment(date).format('h'));
+                  const hour12 = parseInt(moment.utc(date).format('h'));
                   const newHour24 = parseInt(
-                    moment(`${hour12} ${amPm}`, ['hh A']).format('H')
+                    moment.utc(`${hour12} ${amPm}`, ['hh A']).format('H')
                   );
-                  setValue(moment(date).hour(newHour24).toDate());
+                  setValue(moment.utc(date).hour(newHour24).toDate());
                 }}
                 options={[
                   {value: 'AM', label: 'AM'},
@@ -660,7 +663,7 @@ const styles = stylex.create({
 });
 
 function getCalendar(date: Date) {
-  const firstDayOfMonth = moment(date).date(1);
+  const firstDayOfMonth = moment.utc(date).date(1);
   const dow = firstDayOfMonth.day();
   const daysInMonth = firstDayOfMonth.daysInMonth();
   const daysInPreviousMonth = firstDayOfMonth

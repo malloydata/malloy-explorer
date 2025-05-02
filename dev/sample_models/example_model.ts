@@ -551,6 +551,30 @@ export const modelInfo: Malloy.ModelInfo = {
           type: {kind: 'string_type'},
           default_value: {kind: 'string_literal', string_value: 'AA'},
         },
+        {
+          name: 'Date',
+          type: {kind: 'date_type'},
+          default_value: {
+            kind: 'date_literal',
+            date_value: '1980-05-18',
+          },
+        },
+        {
+          name: 'Timestamp',
+          type: {kind: 'timestamp_type'},
+          default_value: {
+            kind: 'timestamp_literal',
+            timestamp_value: '1980-05-18 15:00:00',
+          },
+        },
+        {
+          name: 'Filter',
+          type: {kind: 'filter_expression_type'},
+          default_value: {
+            kind: 'filter_expression_literal',
+            filter_expression_value: '7 days',
+          },
+        },
       ],
       schema: {
         fields: [
@@ -2404,7 +2428,23 @@ export const modelInfo2: Malloy.ModelInfo = {
           type: {kind: 'date_type'},
           default_value: {
             kind: 'date_literal',
-            date_value: '1971-05-19',
+            date_value: '1980-05-18',
+          },
+        },
+        {
+          name: 'Timestamp',
+          type: {kind: 'timestamp_type'},
+          default_value: {
+            kind: 'timestamp_literal',
+            timestamp_value: '1980-05-18 15:00:00',
+          },
+        },
+        {
+          name: 'Filter',
+          type: {kind: 'filter_expression_type'},
+          default_value: {
+            kind: 'filter_expression_literal',
+            filter_expression_value: '7 days',
           },
         },
       ],
