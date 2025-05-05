@@ -11,6 +11,8 @@ import {CollapsibleListItem, List} from '../primitives';
 import {FieldItem, groupFieldItemsByKind, groupFieldItemsByPath} from './utils';
 import {FieldTokenWithActions} from './FieldTokenWithActions';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
+import {ASTArrowQueryDefinition} from '@malloydata/malloy-query-builder';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 const getLabelFromPath = (source: SourceInfo, path: string[]) => {
   return path.at(-1) ?? source.name;
@@ -50,6 +52,14 @@ export default function FieldGroupList({
     );
   }, [fieldGroupsByKindByPath, fieldGroupType]);
 
+  const {rootQuery} = React.useContext(QueryEditorContext);
+
+  const viewDef = rootQuery?.definition;
+
+  if (!(viewDef instanceof ASTArrowQueryDefinition)) {
+    return null;
+  }
+
   return (
     <div {...stylex.props(styles.main)}>
       <List>
@@ -65,6 +75,7 @@ export default function FieldGroupList({
                 key={[...path, field.name].join('.')}
                 field={field}
                 path={path}
+                viewDef={viewDef}
               />
             ))}
           </CollapsibleListItem>

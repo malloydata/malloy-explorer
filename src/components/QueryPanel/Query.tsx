@@ -19,6 +19,7 @@ import {AddMenu} from './AddMenu/AddMenu';
 import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {viewToVisualizationIcon} from '../utils/icon';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -27,82 +28,97 @@ export interface QueryProps {
 }
 
 export function Query({rootQuery, query, setQuery}: QueryProps) {
-  return (
-    <CollapsiblePanel
-      title="Main query"
-      controls={
-        <>
-          <DropdownMenu
-            trigger={
-              <Button
-                variant="flat"
-                icon="meatballs"
-                size="compact"
-                tooltip="More Actions"
-              />
-            }
-          >
-            {setQuery ? (
-              <>
-                <DropdownMenuItem
-                  icon="clear"
-                  label="Clear query"
-                  onClick={() => {
-                    setQuery?.(undefined);
-                  }}
-                  disabled={rootQuery.isEmpty()}
-                />
-                <DropdownMenuItem
-                  icon="nest"
-                  label="Nest query"
-                  onClick={() => {
-                    if (
-                      rootQuery.definition instanceof ASTArrowQueryDefinition
-                    ) {
-                      rootQuery.definition.view.convertToNest('Nest');
-                    }
+  const {
+    currentNestQueryPanel,
+    onCurrentNestQueryPanelChange,
+    onCurrentNestViewChange,
+  } = React.useContext(QueryEditorContext);
 
-                    setQuery?.(rootQuery.build());
-                  }}
-                  disabled={
-                    rootQuery.isEmpty() ||
-                    !(rootQuery.definition instanceof ASTArrowQueryDefinition)
-                  }
+  const focusMainQueryPanel = () => {
+    onCurrentNestQueryPanelChange?.(null);
+    onCurrentNestViewChange?.(null);
+  };
+
+  return (
+    <div onPointerDownCapture={focusMainQueryPanel}>
+      <CollapsiblePanel
+        title="Main query"
+        isFocused={!currentNestQueryPanel}
+        controls={
+          <>
+            <DropdownMenu
+              trigger={
+                <Button
+                  variant="flat"
+                  icon="meatballs"
+                  size="compact"
+                  tooltip="More Actions"
                 />
-              </>
-            ) : (
-              <></>
+              }
+            >
+              {setQuery ? (
+                <>
+                  <DropdownMenuItem
+                    icon="clear"
+                    label="Clear query"
+                    onClick={() => {
+                      focusMainQueryPanel();
+                      setQuery?.(undefined);
+                    }}
+                    disabled={rootQuery.isEmpty()}
+                  />
+                  <DropdownMenuItem
+                    icon="nest"
+                    label="Nest query"
+                    onClick={() => {
+                      if (
+                        rootQuery.definition instanceof ASTArrowQueryDefinition
+                      ) {
+                        rootQuery.definition.view.convertToNest('Nest');
+                      }
+
+                      setQuery?.(rootQuery.build());
+                    }}
+                    disabled={
+                      rootQuery.isEmpty() ||
+                      !(rootQuery.definition instanceof ASTArrowQueryDefinition)
+                    }
+                  />
+                </>
+              ) : (
+                <></>
+              )}
+            </DropdownMenu>
+            {query.definition instanceof ASTArrowQueryDefinition ? (
+              <AddMenu rootQuery={rootQuery} view={query.definition} />
+            ) : null}
+          </>
+        }
+        collapsedControls={<Icon name={viewToVisualizationIcon(query)} />}
+      >
+        {query.definition instanceof ASTArrowQueryDefinition ? (
+          <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+            {!query.isEmpty() && (
+              <Visualization rootQuery={rootQuery} view={query} />
             )}
-          </DropdownMenu>
-          {query.definition instanceof ASTArrowQueryDefinition ? (
-            <AddMenu rootQuery={rootQuery} view={query.definition} />
-          ) : null}
-        </>
-      }
-      collapsedControls={<Icon name={viewToVisualizationIcon(query)} />}
-    >
-      {query.definition instanceof ASTArrowQueryDefinition ? (
-        <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-          {!query.isEmpty() && (
-            <Visualization rootQuery={rootQuery} view={query} />
-          )}
-          <ViewDefinition
-            rootQuery={rootQuery}
-            view={query.definition}
-            viewDef={query.definition.view}
-          />
-        </div>
-      ) : null}
-      {query.isEmpty() ? (
-        <div {...stylex.props(queryStyles.emptyQuery)}>
-          <div {...stylex.props(queryStyles.cta)}>
-            <div>Click</div>
-            <Icon name="insert" />
-            <div>to get started</div>
+            <ViewDefinition
+              rootQuery={rootQuery}
+              view={query.definition}
+              viewDef={query.definition.view}
+            />
           </div>
-        </div>
-      ) : null}
-    </CollapsiblePanel>
+        ) : null}
+        {query.isEmpty() ? (
+          <div {...stylex.props(queryStyles.emptyQuery)}>
+            <div {...stylex.props(queryStyles.cta)}>
+              <div>Click</div>
+              <Icon name="insert" />
+              <div>to get started</div>
+            </div>
+          </div>
+        ) : null}
+      </CollapsiblePanel>
+    </div>
   );
 }
 

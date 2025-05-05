@@ -10,6 +10,8 @@ import {fontStyles} from '../primitives/styles';
 
 import {FieldTokenWithActions} from './FieldTokenWithActions';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {ASTArrowQueryDefinition} from '@malloydata/malloy-query-builder';
 
 interface SearchResultListProps {
   source: SourceInfo;
@@ -33,6 +35,14 @@ export default function SearchResultList({
         items: groupFieldItemsByPath(source, group.items),
       }));
   }, [source, items]);
+
+  const {rootQuery} = React.useContext(QueryEditorContext);
+
+  const viewDef = rootQuery?.definition;
+
+  if (!(viewDef instanceof ASTArrowQueryDefinition)) {
+    return null;
+  }
 
   return (
     <div {...stylex.props(styles.main)}>
@@ -59,6 +69,7 @@ export default function SearchResultList({
                       key={[...path, field.name].join('.')}
                       field={field}
                       path={path}
+                      viewDef={viewDef}
                     />
                   ))}
                 </div>

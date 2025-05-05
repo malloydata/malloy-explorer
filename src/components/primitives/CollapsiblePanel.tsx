@@ -27,6 +27,8 @@ interface CollapsiblePanelProps {
 
   // Additional controls to display by the collapse button when closed
   collapsedControls?: ReactNode;
+
+  isFocused?: boolean;
 }
 
 /*
@@ -39,11 +41,12 @@ export default function CollapsiblePanel({
   defaultOpen = true,
   controls,
   collapsedControls,
+  isFocused: isFocused = false,
 }: CollapsiblePanelProps) {
   const [isExpanded, setIsExpanded] = useState(defaultOpen);
 
   return (
-    <div {...stylex.props(styles.container)}>
+    <div {...stylex.props(styles.container, isFocused && styles.focused)}>
       <div {...stylex.props(styles.topBar)}>
         <div {...stylex.props(styles.topBarStartSection)}>
           {icon && <Icon name={icon} customStyle={styles.icon} />}
@@ -71,9 +74,12 @@ export default function CollapsiblePanel({
 
 const styles = stylex.create({
   container: {
-    border: '1px solid #CCD3DB',
+    boxShadow: '0 0 0 1px #CCD3DB',
     borderRadius: 5,
     padding: 0,
+  },
+  focused: {
+    boxShadow: '0 0 0 2px rgba(0, 100, 224, 1)',
   },
   topBar: {
     display: 'grid',

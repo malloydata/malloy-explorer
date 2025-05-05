@@ -9,46 +9,62 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 import {flattenFieldsTree} from '../utils';
 import {getSegmentIfPresent, segmentHasOrderBy} from '../../utils/segment';
-import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
+import {
+  getInputSchemaFromViewParent,
+  isNotAnnotatedFilteredField,
+  ViewParent,
+} from '../../utils/fields';
 
 export function useOperations(
   view: ViewParent,
   field: Malloy.FieldInfo,
   path: string[]
 ) {
+  const dimensionFields = useMemo(() => {
+    const {fields} = getInputSchemaFromViewParent(view);
+    return new Set(
+      flattenFieldsTree(fields)
+        .filter(({field}) => field.kind === 'dimension')
+        .map(({field}) => field.name)
+    );
+  }, [view]);
+
+  const measureFields = useMemo(() => {
+    const {fields} = getInputSchemaFromViewParent(view);
+    return new Set(
+      flattenFieldsTree(fields)
+        .filter(({field}) => field.kind === 'measure')
+        .map(({field}) => field.name)
+    );
+  }, [view]);
+
   const isGroupByAllowed = useMemo(() => {
     if (!view) {
       return false;
     }
 
-    const fieldName = field.name;
-    const inputSchemaFields = getInputSchemaFromViewParent(view).fields;
-    const filteredFieldItems = flattenFieldsTree(inputSchemaFields).filter(
-      item => item.field.kind === 'dimension'
-    );
+    const segment = getSegmentIfPresent(view);
 
-    return filteredFieldItems.some(
-      item =>
-        item.field.name === fieldName && item.path.join('.') === path.join('.')
+    return (
+      dimensionFields.has(field.name) &&
+      !segment?.hasField(field.name, path) &&
+      isNotAnnotatedFilteredField(field)
     );
-  }, [view, field, path]);
+  }, [view, field, path, dimensionFields]);
 
   const isAggregateAllowed = useMemo(() => {
     if (!view) {
       return false;
     }
 
-    const fieldName = field.name;
-    const inputSchemaFields = getInputSchemaFromViewParent(view).fields;
-    const filteredFieldItems = flattenFieldsTree(inputSchemaFields).filter(
-      item => item.field.kind === 'measure'
-    );
+    const segment = getSegmentIfPresent(view);
 
-    return filteredFieldItems.some(
-      item =>
-        item.field.name === fieldName && item.path.join('.') === path.join('.')
+    return (
+      measureFields.has(field.name) &&
+      !segment?.hasField(field.name, path) &&
+      isNotAnnotatedFilteredField(field)
     );
-  }, [view, field, path]);
+  }, [view, field, path, measureFields]);
 
   const isFilterAllowed = useMemo(() => {
     if (!view) {

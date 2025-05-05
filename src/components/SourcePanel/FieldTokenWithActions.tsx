@@ -3,147 +3,160 @@ import FieldToken from '../FieldToken';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {Button} from '../primitives';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import {NestFieldDropdownMenu} from './NestFieldDropdownMenu';
-import {useNestOperations} from './hooks/useNestOperations';
-import {AddFieldDropdownMenu} from './AddFieldDropdownMenu';
 import {FieldHoverCard} from '../FieldHoverCard';
-import {ASTArrowQueryDefinition} from '@malloydata/malloy-query-builder';
-import {addNest} from '../utils/segment';
+import {
+  ASTArrowQueryDefinition,
+  ParsedFilter,
+} from '@malloydata/malloy-query-builder';
+import {addAggregate, addGroupBy, addNest} from '../utils/segment';
+import {useOperations} from './hooks/useOperations';
+import {FilterPopover} from '../filters/FilterPopover';
+
+type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
 interface FieldTokenWithActionsProps {
   field: Malloy.FieldInfo;
   path: string[];
+  viewDef: ASTArrowQueryDefinition;
 }
 
 export function FieldTokenWithActions({
   field,
   path,
+  viewDef,
 }: FieldTokenWithActionsProps) {
-  const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
+  const {rootQuery, setQuery, currentNestView} =
+    React.useContext(QueryEditorContext);
 
-  const [isAddFieldMenuOpen, setIsAddFieldMenuOpen] = useState<
+  const view = currentNestView ?? viewDef;
+
+  const {
+    isGroupByAllowed,
+    isAggregateAllowed,
+    isFilterAllowed,
+    isOrderByAllowed,
+  } = useOperations(view, field, path);
+
+  const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState<
     boolean | undefined
   >();
 
-  const [isNestFieldMenuOpen, setIsNestFieldMenuOpen] = useState<
-    boolean | undefined
-  >();
-
-  const nestViews = useNestOperations(rootQuery);
-  const viewDef = rootQuery?.definition;
-
-  if (!(viewDef instanceof ASTArrowQueryDefinition)) {
-    return null;
-  }
-
-  const hasAddFieldMenu =
-    field.kind === 'measure' || field.kind === 'dimension';
-
-  const hasNestFieldMenu =
-    field.kind === 'measure' ||
-    field.kind === 'dimension' ||
-    (field.kind === 'view' && nestViews.length > 0);
-
-  const addViewToMainQuery = () => {
-    if (field.kind === 'view') {
-      if (rootQuery?.isEmpty()) {
-        rootQuery?.setView(field.name);
-      } else {
-        addNest(viewDef, field);
+  const handleAddOperationAction = (
+    operation: Operation,
+    filter?: ParsedFilter
+  ) => {
+    if (field.kind === 'dimension' || field.kind === 'measure') {
+      if (operation === 'groupBy' && isGroupByAllowed) {
+        addGroupBy(view, field, path);
+      } else if (operation === 'aggregate' && isAggregateAllowed) {
+        addAggregate(view, field, path);
+      } else if (operation === 'orderBy' && isOrderByAllowed) {
+        const segment = view.getOrAddDefaultSegment();
+        segment.addOrderBy(field.name, 'asc');
+      } else if (operation === 'filter' && isFilterAllowed && filter) {
+        const segment = view.getOrAddDefaultSegment();
+        if (field.kind === 'dimension') {
+          segment.addWhere(field.name, path, filter);
+        } else {
+          segment.addHaving(field.name, path, filter);
+        }
       }
       setQuery?.(rootQuery?.build());
     }
   };
 
-  const nestViewWithinMainQuery = () => {
-    if (field.kind === 'view') {
-      addNest(viewDef, field);
+  const handleSetView = () => {
+    if (field.kind === 'view' && rootQuery?.isEmpty()) {
+      rootQuery?.setView(field.name);
       setQuery?.(rootQuery?.build());
     }
   };
 
-  const hoverActions = () => {
-    return (
-      <>
-        {hasAddFieldMenu ? (
-          <AddFieldDropdownMenu
-            view={viewDef}
-            field={field}
-            path={path}
-            trigger={
-              <Button
-                variant="flat"
-                size="compact"
-                icon="insert"
-                tooltip="Add to main query"
-              />
-            }
-            onOpenChange={open => setIsAddFieldMenuOpen(open)}
-          />
-        ) : (
-          <Button
-            variant="flat"
-            size="compact"
-            icon="insert"
-            onClick={addViewToMainQuery}
-            tooltip="Add to main query"
-          />
-        )}
-        {hasNestFieldMenu ? (
-          <NestFieldDropdownMenu
-            view={viewDef}
-            field={field}
-            path={path}
-            trigger={
-              <Button
-                variant="flat"
-                size="compact"
-                icon="nest"
-                tooltip="Add to nested query"
-              />
-            }
-            onOpenChange={open => setIsNestFieldMenuOpen(open)}
-          />
-        ) : (
-          <Button
-            variant="flat"
-            size="compact"
-            icon="nest"
-            onClick={nestViewWithinMainQuery}
-            tooltip="Add to nested query"
-          />
-        )}
-      </>
-    );
+  const handleAddView = () => {
+    if (field.kind === 'view') {
+      addNest(view, field);
+      setQuery?.(rootQuery?.build());
+    }
   };
 
-  return hasAddFieldMenu ? (
-    <AddFieldDropdownMenu
-      view={viewDef}
-      field={field}
-      path={path}
-      trigger={
-        <FieldToken
-          field={field}
-          hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
-          hoverActions={hoverActions()}
-          asButtonTrigger
-        />
-      }
-      onOpenChange={open => setIsAddFieldMenuOpen(open)}
-      tooltip={<FieldHoverCard field={field} path={path} />}
-      tooltipProps={{
-        side: 'right',
-        align: 'start',
-        alignOffset: 28,
-      }}
-    />
-  ) : (
+  return (
     <FieldToken
       field={field}
-      onClick={addViewToMainQuery}
-      hoverActions={hoverActions()}
-      hoverActionsVisible={isAddFieldMenuOpen || isNestFieldMenuOpen}
+      hoverActions={
+        field.kind === 'view' ? (
+          <>
+            <ActionButton
+              icon="insert"
+              disabled={!rootQuery?.isEmpty()}
+              onClick={handleSetView}
+              tooltip="Add view"
+            />
+
+            <ActionButton
+              icon="nest"
+              onClick={handleAddView}
+              tooltip="Add as new nested query"
+            />
+          </>
+        ) : field.kind === 'measure' ? (
+          <>
+            <ActionButton
+              icon="aggregate"
+              tooltip="Add as aggregate"
+              disabled={!isAggregateAllowed}
+              onClick={() => handleAddOperationAction('aggregate')}
+            />
+            <FilterPopover
+              fieldInfo={field}
+              path={path}
+              setFilter={filter => handleAddOperationAction('filter', filter)}
+              trigger={
+                <ActionButton
+                  icon="filter"
+                  tooltip="Add as filter"
+                  disabled={!isFilterAllowed}
+                />
+              }
+              onOpenChange={setIsFilterPopoverOpen}
+            />
+            <ActionButton
+              icon="orderBy"
+              tooltip="Add as order by"
+              disabled={!isOrderByAllowed}
+              onClick={() => handleAddOperationAction('orderBy')}
+            />
+          </>
+        ) : field.kind === 'dimension' ? (
+          <>
+            <ActionButton
+              icon="groupBy"
+              tooltip="Add as group by"
+              disabled={!isGroupByAllowed}
+              onClick={() => handleAddOperationAction('groupBy')}
+            />
+            <FilterPopover
+              fieldInfo={field}
+              path={path}
+              setFilter={filter => handleAddOperationAction('filter', filter)}
+              trigger={
+                <ActionButton
+                  icon="filter"
+                  tooltip="Add as filter"
+                  disabled={!isFilterAllowed}
+                />
+              }
+              onOpenChange={setIsFilterPopoverOpen}
+            />
+            <ActionButton
+              icon="orderBy"
+              tooltip="Add as order by"
+              disabled={!isOrderByAllowed}
+              onClick={() => handleAddOperationAction('orderBy')}
+            />
+          </>
+        ) : null
+      }
+      hoverActionsVisible={isFilterPopoverOpen}
       tooltip={<FieldHoverCard field={field} path={path} />}
       tooltipProps={{
         side: 'right',
@@ -152,4 +165,10 @@ export function FieldTokenWithActions({
       }}
     />
   );
+}
+
+type ActionButtonProps = React.ComponentProps<typeof Button>;
+
+function ActionButton(props: ActionButtonProps) {
+  return <Button variant="flat" size="compact" {...props} />;
 }

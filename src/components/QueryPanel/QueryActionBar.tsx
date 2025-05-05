@@ -28,7 +28,13 @@ export interface QueryActionBarProps {
 }
 
 export function QueryActionBar({runQuery}: QueryActionBarProps) {
-  const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
+  const {
+    rootQuery,
+    setQuery,
+    source,
+    onCurrentNestQueryPanelChange,
+    onCurrentNestViewChange,
+  } = useContext(QueryEditorContext);
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
@@ -38,6 +44,12 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
       runQuery(source, rootQuery.build());
     }
   };
+
+  const focusMainQueryPanel = () => {
+    onCurrentNestViewChange?.(null);
+    onCurrentNestQueryPanelChange?.(null);
+  };
+
   return (
     <div {...stylex.props(styles.root)}>
       <div {...stylex.props(styles.startContent)}>
@@ -46,7 +58,10 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
       </div>
       <div {...stylex.props(styles.buttons)}>
         <Button
-          onClick={() => setQuery?.(undefined)}
+          onClick={() => {
+            focusMainQueryPanel();
+            setQuery?.(undefined);
+          }}
           isDisabled={!rootQuery || rootQuery?.isEmpty()}
           label="Clear"
           variant="flat"

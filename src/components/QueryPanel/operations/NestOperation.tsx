@@ -51,8 +51,39 @@ export interface NestOperationProps {
 }
 
 export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+  const {
+    setQuery,
+    currentNestQueryPanel,
+    onCurrentNestQueryPanelChange,
+    onCurrentNestViewChange,
+  } = useContext(QueryEditorContext);
+
   const [renameOpen, setRenameOpen] = useState(false);
+
+  const panelRef = React.useRef<HTMLDivElement>(null);
+
+  const isCurrentNestQueryPanelFocused =
+    currentNestQueryPanel !== null && panelRef.current == currentNestQueryPanel;
+
+  React.useEffect(() => {
+    if (isCurrentNestQueryPanelFocused) {
+      onCurrentNestViewChange?.(nest.view);
+    }
+  }, [nest, isCurrentNestQueryPanelFocused, onCurrentNestViewChange]);
+
+  const focusCurrentNestQueryPanel = () => {
+    onCurrentNestQueryPanelChange?.(panelRef.current);
+    onCurrentNestViewChange?.(nest.view);
+  };
+
+  const focusParentQueryPanel = () => {
+    const currentPanel = panelRef.current;
+    const parent = findParentNestQueryPanel(currentPanel);
+    onCurrentNestQueryPanelChange?.(parent);
+    if (parent === null) {
+      onCurrentNestViewChange?.(null);
+    }
+  };
 
   // New blank nested queries should default to their open mode to make
   // it simpler to add content into.
@@ -76,6 +107,7 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
           icon="clear"
           label="Delete Query"
           onClick={() => {
+            focusParentQueryPanel();
             nest.delete();
             setQuery?.(rootQuery.build());
           }}
@@ -93,22 +125,29 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
 
   return (
     <div key={nest.name} {...stylex.props(viewStyles.indent)}>
-      <CollapsiblePanel
-        title={nest.name}
-        icon={viewToVisualizationIcon(nest.view)}
-        defaultOpen={defaultOpen}
-        controls={getControls(nest)}
-        collapsedControls={getControls(nest)}
+      <div
+        ref={panelRef}
+        onPointerDownCapture={focusCurrentNestQueryPanel}
+        data-nest-panel
       >
-        <View rootQuery={rootQuery} view={nest.view} />
-      </CollapsiblePanel>
-      <RenameDialog
-        rootQuery={rootQuery}
-        view={view}
-        target={nest}
-        open={renameOpen}
-        setOpen={setRenameOpen}
-      />
+        <CollapsiblePanel
+          title={nest.name}
+          icon={viewToVisualizationIcon(nest.view)}
+          defaultOpen={defaultOpen}
+          controls={getControls(nest)}
+          collapsedControls={getControls(nest)}
+          isFocused={isCurrentNestQueryPanelFocused}
+        >
+          <View rootQuery={rootQuery} view={nest.view} />
+        </CollapsiblePanel>
+        <RenameDialog
+          rootQuery={rootQuery}
+          view={view}
+          target={nest}
+          open={renameOpen}
+          setOpen={setRenameOpen}
+        />
+      </div>
     </div>
   );
 }
@@ -121,3 +160,10 @@ const viewStyles = stylex.create({
     width: '100%',
   },
 });
+
+function findParentNestQueryPanel(element: HTMLElement | null) {
+  if (!element || !element.parentElement) return null;
+  const parentElement = element.parentElement;
+  if (parentElement.dataset.nestPanel !== undefined) return parentElement;
+  return findParentNestQueryPanel(parentElement);
+}
