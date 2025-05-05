@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import moment from 'moment';
-import {useEffect, useState} from 'react';
+import {RefObject, useEffect, useState} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {Moment, TemporalUnit} from '@malloydata/malloy-filter';
 
@@ -22,6 +22,7 @@ interface DateInputProps {
   onBlur?: () => void;
   isActive?: boolean;
   customStyle?: StyleXStyles;
+  forwardRef?: RefObject<HTMLInputElement | null>;
 }
 
 export const formats: Record<TemporalUnit, string> = {
@@ -56,12 +57,13 @@ export const DateInput: React.FC<DateInputProps> = ({
   onBlur,
   isActive,
   customStyle,
+  forwardRef,
 }) => {
   const format = formats[units];
-  const [tempValue, setTempValue] = useState(moment(value).format(format));
+  const [tempValue, setTempValue] = useState(moment.utc(value).format(format));
 
   useEffect(() => {
-    setTempValue(moment(value).format(format));
+    setTempValue(moment.utc(value).format(format));
   }, [value, format]);
 
   return (
@@ -77,13 +79,14 @@ export const DateInput: React.FC<DateInputProps> = ({
         setTempValue(raw);
         const regex = regexps[units];
         if (raw.match(regex)) {
-          const m = moment(raw, format);
+          const m = moment.utc(raw, format);
           if (m.isValid()) {
             setValue(m.toDate());
           }
         }
       }}
       autoFocus={autoFocus}
+      ref={forwardRef}
     />
   );
 };

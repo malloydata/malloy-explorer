@@ -18,7 +18,11 @@ const App = () => {
     <React.StrictMode>
       <MalloyExplorerProvider source={source}>
         <div style={{display: 'flex', height: '100%'}}>
-          <SourcePanel source={source} setQuery={() => {}} />
+          <SourcePanel
+            onRefresh={() => {
+              window.alert('Refresh!');
+            }}
+          />
         </div>
       </MalloyExplorerProvider>
     </React.StrictMode>
