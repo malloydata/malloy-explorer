@@ -76,7 +76,6 @@ export default function Button({
   icon,
   label,
   tooltip,
-  onClick,
   isDisabled = false,
   customStyle,
   ...props
@@ -89,12 +88,6 @@ export default function Button({
         sizeVariants[size],
         customStyle
       )}
-      {...(onClick && {
-        onClick: e => {
-          e.preventDefault();
-          onClick(e);
-        },
-      })}
       type="button"
       disabled={isDisabled}
       {...props}

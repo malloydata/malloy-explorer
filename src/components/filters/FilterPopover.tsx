@@ -26,6 +26,7 @@ interface FilterPopoverProps {
     alignOffset?: number;
     sideOffset?: number;
   };
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function FilterPopover({
@@ -36,11 +37,16 @@ export function FilterPopover({
   trigger,
   anchor,
   layoutProps,
+  onOpenChange,
 }: FilterPopoverProps) {
   const [open, setOpen] = useState(false);
 
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open);
+    onOpenChange?.(open);
+  };
   return (
-    <Popover.Root open={open} onOpenChange={setOpen} modal={true}>
+    <Popover.Root open={open} onOpenChange={handleOpenChange} modal={true}>
       {anchor ? (
         <Popover.Anchor asChild>{anchor}</Popover.Anchor>
       ) : (
@@ -53,7 +59,7 @@ export function FilterPopover({
             filter={filter}
             path={path}
             onFilterApply={setFilter}
-            onOpenChange={setOpen}
+            onOpenChange={handleOpenChange}
           />
         </Popover.Content>
       </Popover.Portal>
