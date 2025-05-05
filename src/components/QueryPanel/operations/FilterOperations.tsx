@@ -232,14 +232,14 @@ const parsedToLabels = (
         case 'last':
           {
             const {not} = temporalClause;
-            op = `is${not ? ' not' : ''} last`;
+            op = `is${not ? ' not' : ''} last complete`;
             value = temporalClause.n + ' ' + temporalClause.units;
           }
           break;
         case 'next':
           {
             const {not} = temporalClause;
-            op = `is${not ? ' not' : ''} nest`;
+            op = `is${not ? ' not' : ''} next complete`;
             value = temporalClause.n + ' ' + temporalClause.units;
           }
           break;
