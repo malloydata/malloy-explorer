@@ -11,6 +11,14 @@ import {
 import {addAggregate, addGroupBy, addNest} from '../utils/segment';
 import {useOperations} from './hooks/useOperations';
 import {FilterPopover} from '../filters/FilterPopover';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
+import {fontStyles, tooltipStyles} from '../primitives/styles';
+import stylex from '@stylexjs/stylex';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
@@ -40,6 +48,8 @@ export function FieldTokenWithActions({
   const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState<
     boolean | undefined
   >();
+
+  const [isTooltipOpen, setIsTooltipOpen] = useState<boolean>(false);
 
   const handleAddOperationAction = (
     operation: Operation,
@@ -90,12 +100,14 @@ export function FieldTokenWithActions({
               disabled={!rootQuery?.isEmpty()}
               onClick={handleSetView}
               tooltip="Add view"
+              onTooltipOpenChange={setIsTooltipOpen}
             />
 
             <ActionButton
               icon="nest"
               onClick={handleAddView}
               tooltip="Add as new nested query"
+              onTooltipOpenChange={setIsTooltipOpen}
             />
           </>
         ) : field.kind === 'measure' ? (
@@ -105,6 +117,7 @@ export function FieldTokenWithActions({
               tooltip="Add as aggregate"
               disabled={!isAggregateAllowed}
               onClick={() => handleAddOperationAction('aggregate')}
+              onTooltipOpenChange={setIsTooltipOpen}
             />
             <FilterPopover
               fieldInfo={field}
@@ -115,6 +128,7 @@ export function FieldTokenWithActions({
                   icon="filter"
                   tooltip="Add as filter"
                   disabled={!isFilterAllowed}
+                  onTooltipOpenChange={setIsTooltipOpen}
                 />
               }
               onOpenChange={setIsFilterPopoverOpen}
@@ -124,6 +138,7 @@ export function FieldTokenWithActions({
               tooltip="Add as order by"
               disabled={!isOrderByAllowed}
               onClick={() => handleAddOperationAction('orderBy')}
+              onTooltipOpenChange={setIsTooltipOpen}
             />
           </>
         ) : field.kind === 'dimension' ? (
@@ -133,6 +148,7 @@ export function FieldTokenWithActions({
               tooltip="Add as group by"
               disabled={!isGroupByAllowed}
               onClick={() => handleAddOperationAction('groupBy')}
+              onTooltipOpenChange={setIsTooltipOpen}
             />
             <FilterPopover
               fieldInfo={field}
@@ -143,6 +159,7 @@ export function FieldTokenWithActions({
                   icon="filter"
                   tooltip="Add as filter"
                   disabled={!isFilterAllowed}
+                  onTooltipOpenChange={setIsTooltipOpen}
                 />
               }
               onOpenChange={setIsFilterPopoverOpen}
@@ -152,6 +169,7 @@ export function FieldTokenWithActions({
               tooltip="Add as order by"
               disabled={!isOrderByAllowed}
               onClick={() => handleAddOperationAction('orderBy')}
+              onTooltipOpenChange={setIsTooltipOpen}
             />
           </>
         ) : null
@@ -165,7 +183,7 @@ export function FieldTokenWithActions({
               ? () => handleAddView()
               : undefined
       }
-      hoverActionsVisible={isFilterPopoverOpen}
+      hoverActionsVisible={isFilterPopoverOpen || isTooltipOpen}
       tooltip={<FieldHoverCard field={field} path={path} />}
       tooltipProps={{
         side: 'right',
@@ -176,8 +194,29 @@ export function FieldTokenWithActions({
   );
 }
 
-type ActionButtonProps = React.ComponentProps<typeof Button>;
+interface ActionButtonProps extends React.ComponentProps<typeof Button> {
+  tooltip: string;
+  onTooltipOpenChange: (open: boolean) => void;
+}
 
-function ActionButton(props: ActionButtonProps) {
-  return <Button variant="flat" size="compact" {...props} />;
+function ActionButton({
+  tooltip,
+  onTooltipOpenChange,
+  ...props
+}: ActionButtonProps) {
+  return (
+    <Tooltip delayDuration={300} onOpenChange={onTooltipOpenChange}>
+      <TooltipTrigger asChild>
+        {<Button variant="flat" size="compact" {...props} />}
+      </TooltipTrigger>
+      <TooltipPortal>
+        <TooltipContent
+          sideOffset={8}
+          {...stylex.props(fontStyles.body, tooltipStyles.default)}
+        >
+          {tooltip}
+        </TooltipContent>
+      </TooltipPortal>
+    </Tooltip>
+  );
 }
