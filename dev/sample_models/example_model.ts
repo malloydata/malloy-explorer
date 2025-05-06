@@ -569,7 +569,10 @@ export const modelInfo: Malloy.ModelInfo = {
         },
         {
           name: 'Filter',
-          type: {kind: 'filter_expression_type'},
+          type: {
+            kind: 'filter_expression_type',
+            filter_type: {kind: 'date_type'},
+          },
           default_value: {
             kind: 'filter_expression_literal',
             filter_expression_value: '7 days',
