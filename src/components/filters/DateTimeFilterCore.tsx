@@ -502,6 +502,8 @@ export function dateTimeFilterChangeType(
       return {operator: type, after: fromMoment};
     case 'before':
       return {operator: type, before: fromMoment};
+    case 'in':
+      return {operator: type, in: fromMoment};
     case 'to':
       return {operator: type, fromMoment, toMoment};
     case 'null':
