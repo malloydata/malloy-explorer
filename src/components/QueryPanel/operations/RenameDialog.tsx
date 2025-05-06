@@ -85,6 +85,13 @@ export function RenameDialog({
                     ...dialogStyles.editorCell,
                     ...dialogStyles.input,
                   })}
+                  onKeyDown={event => {
+                    if (event.key === 'Enter') {
+                      onRename();
+                    } else if (event.key === 'Esc') {
+                      setOpen(false);
+                    }
+                  }}
                 />
                 {badName && <ErrorIcon errorMessage="Name already in use" />}
               </div>

@@ -72,7 +72,16 @@ export function FilterDialog({
   };
 
   return (
-    <div {...stylex.props(fontStyles.body, filterStyles.filterDialog)}>
+    <div
+      {...stylex.props(fontStyles.body, filterStyles.filterDialog)}
+      onKeyDown={event => {
+        if (event.key === 'Enter') {
+          onApply();
+        } else if (event.key === 'Esc') {
+          onCancel();
+        }
+      }}
+    >
       <div {...stylex.props(filterStyles.filterDialogHeader)}>
         {fieldInfo.name}
       </div>
