@@ -156,6 +156,15 @@ export function FieldTokenWithActions({
           </>
         ) : null
       }
+      onClick={
+        field.kind === 'dimension' && isGroupByAllowed
+          ? () => handleAddOperationAction('groupBy')
+          : field.kind === 'measure' && isAggregateAllowed
+            ? () => handleAddOperationAction('aggregate')
+            : field.kind === 'view'
+              ? () => handleAddView()
+              : undefined
+      }
       hoverActionsVisible={isFilterPopoverOpen}
       tooltip={<FieldHoverCard field={field} path={path} />}
       tooltipProps={{
