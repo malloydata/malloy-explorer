@@ -13,15 +13,7 @@ import {SelectDropdown} from './SelectDropdown';
 import {textColors} from './colors.stylex';
 import NumberInput from './NumberInput';
 import Button from './Button';
-
-interface DatePickerProps {
-  value: Date;
-  setValue: (value: Date) => void;
-  units: TemporalUnit;
-  maxLevel: TemporalUnit;
-  customStyle?: StyleXStyles;
-  forwardRef?: RefObject<HTMLDivElement | null>;
-}
+import {formats} from '../DateInput';
 
 function monthName(month: number) {
   return [
@@ -40,6 +32,17 @@ function monthName(month: number) {
   ][month];
 }
 
+const ordinal: TemporalUnit[] = Object.keys(formats) as TemporalUnit[];
+
+interface DatePickerProps {
+  value: Date;
+  setValue: (value: Date) => void;
+  units: TemporalUnit;
+  maxLevel: TemporalUnit;
+  customStyle?: StyleXStyles;
+  forwardRef?: RefObject<HTMLDivElement | null>;
+}
+
 export default function DatePicker({
   value,
   setValue,
@@ -54,6 +57,14 @@ export default function DatePicker({
     'day' | 'month' | 'year' | 'quarter' | 'week' | 'hour' | 'minute' | 'second'
   >(units);
   const yearBucket = Math.floor(moment.utc(date).year() / 10) * 10;
+
+  useEffect(() => {
+    const unitOrd = ordinal.findIndex(unit => unit === units);
+    const pickOrd = ordinal.findIndex(unit => unit === pickLevel);
+    if (pickOrd < unitOrd) {
+      setPickLevel(units);
+    }
+  }, [units, pickLevel]);
 
   useEffect(() => {
     setDate(value);

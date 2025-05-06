@@ -450,12 +450,15 @@ function createTemporalLiteral(
   return {
     moment: 'literal',
     literal: moment.utc(date).format(formats[units]),
+    units,
   };
 }
 
 function extractDateFromMoment(momentObj?: Moment): Date {
   if (momentObj && momentObj.moment === 'literal') {
-    return moment.utc(momentObj.literal).toDate();
+    return moment
+      .utc(momentObj.literal, formats[momentObj.units ?? 'second'])
+      .toDate();
   }
 
   // For other moment types, default to now
