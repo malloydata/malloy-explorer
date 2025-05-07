@@ -285,21 +285,59 @@ function NUnitFilter({
 }
 
 interface UnitFilterProps {
-  currentFilter: TemporalFilter;
+  currentFilter: Before | After | To | InMoment;
   updateFilter: (filter: TemporalFilter) => void;
   units: TemporalUnit;
   setUnits: (units: TemporalUnit) => void;
   maxLevel: 'day' | 'second';
 }
 
-function UnitFilter({units, setUnits, maxLevel}: UnitFilterProps) {
+function UnitFilter({
+  currentFilter,
+  updateFilter,
+  units,
+  setUnits,
+  maxLevel,
+}: UnitFilterProps) {
   const options = maxLevel === 'day' ? DateUnits : [...DateUnits, ...TimeUnits];
+
+  const updateUnits = (units: TemporalUnit) => {
+    setUnits(units);
+    switch (currentFilter.operator) {
+      case 'after':
+        updateFilter({
+          ...currentFilter,
+          after: updateMoment(currentFilter.after, units),
+        });
+        return;
+      case 'before':
+        updateFilter({
+          ...currentFilter,
+          before: updateMoment(currentFilter.before, units),
+        });
+        return;
+      case 'to':
+        updateFilter({
+          ...currentFilter,
+          fromMoment: updateMoment(currentFilter.fromMoment, units),
+          toMoment: updateMoment(currentFilter.toMoment, units),
+        });
+        return;
+      case 'in': {
+        updateFilter({
+          ...currentFilter,
+          in: updateMoment(currentFilter.in, units),
+        });
+        return;
+      }
+    }
+  };
 
   return (
     <SelectDropdown
       options={options}
       value={units}
-      onChange={setUnits}
+      onChange={updateUnits}
       customStyle={filterStyles.editorCell}
     />
   );
@@ -463,6 +501,10 @@ function extractDateFromMoment(momentObj?: Moment): Date {
 
   // For other moment types, default to now
   return new Date();
+}
+
+function updateMoment(moment: Moment, units: TemporalUnit) {
+  return createTemporalLiteral(extractDateFromMoment(moment), units);
 }
 
 // Helper function to change the filter type
