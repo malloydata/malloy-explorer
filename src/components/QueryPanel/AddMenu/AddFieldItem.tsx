@@ -56,6 +56,7 @@ export function AddFieldItem({
 
 const styles = stylex.create({
   list: {
-    width: 250,
+    minWidth: 250,
+    maxWidth: 400,
   },
 });
