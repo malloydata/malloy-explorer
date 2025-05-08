@@ -10,6 +10,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
   ASTQuery,
+  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 
 import {ViewDefinition} from './ViewDefinition';
@@ -38,6 +39,8 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
     onCurrentNestQueryPanelChange?.(null);
     onCurrentNestViewChange?.(null);
   };
+
+  const canEditViz = query.definition instanceof ASTSegmentViewDefinition;
 
   return (
     <div onPointerDownCapture={focusMainQueryPanel}>
@@ -98,7 +101,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
       >
         {query.definition instanceof ASTArrowQueryDefinition ? (
           <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-            {!query.isEmpty() && (
+            {!query.isEmpty() && canEditViz && (
               <Visualization rootQuery={rootQuery} view={query} />
             )}
             <ViewDefinition
