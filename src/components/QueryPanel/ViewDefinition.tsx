@@ -65,7 +65,7 @@ interface CollapsingViewProps {
 }
 
 function CollapsingView({viewDef}: CollapsingViewProps) {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   return (
     <div
       {...stylex.props(styles.view, collapsed ? styles.viewCollapsed : null)}

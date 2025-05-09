@@ -8,7 +8,6 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
-import {ScrollableArea} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {Visualization} from './Visualization';
 import FieldToken from '../FieldToken';
@@ -29,29 +28,27 @@ export default function ViewAttributeTable({
 
   return (
     <div {...stylex.props(styles.attributeTableContainer, style)}>
-      <ScrollableArea>
-        <table {...stylex.props(styles.attributeTable)}>
-          <tbody>
-            <ViewAttributeTableRow attribute="chart type">
-              <div {...stylex.props(styles.chartTypeViz)}>
-                <Visualization annotations={viewInfo.annotations || []} />
-              </div>
-            </ViewAttributeTableRow>
-            <ViewAttributeTableRow attribute="output">
-              {dimensions.map(f => (
-                <span key={`${f.kind}::${f.name}`}>
-                  <FieldToken
-                    field={f}
-                    size={isCompact ? 'compact' : 'default'}
-                  />
-                </span>
-              ))}
-            </ViewAttributeTableRow>
-            {/* <ViewAttributeTableRow attribute="order by" />
+      <table {...stylex.props(styles.attributeTable)}>
+        <tbody>
+          <ViewAttributeTableRow attribute="chart type">
+            <div {...stylex.props(styles.chartTypeViz)}>
+              <Visualization annotations={viewInfo.annotations || []} />
+            </div>
+          </ViewAttributeTableRow>
+          <ViewAttributeTableRow attribute="output">
+            {dimensions.map(f => (
+              <span key={`${f.kind}::${f.name}`}>
+                <FieldToken
+                  field={f}
+                  size={isCompact ? 'compact' : 'default'}
+                />
+              </span>
+            ))}
+          </ViewAttributeTableRow>
+          {/* <ViewAttributeTableRow attribute="order by" />
           <ViewAttributeTableRow attribute="limit" /> */}
-          </tbody>
-        </table>
-      </ScrollableArea>
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -93,6 +90,7 @@ const styles = stylex.create({
     boxSizing: 'border-box',
     width: '100%',
     height: '200px',
+    overflow: 'auto',
   },
   chartTypeViz: {
     display: 'inline-block',

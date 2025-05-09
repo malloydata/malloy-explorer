@@ -85,12 +85,6 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
     }
   };
 
-  // New blank nested queries should default to their open mode to make
-  // it simpler to add content into.
-  const defaultOpen =
-    nest.view.definition.node.kind === 'segment' &&
-    nest.view.definition.node.operations.length === 0;
-
   const getControls = (nest: ASTNestViewOperation) => (
     <>
       <DropdownMenu
@@ -133,7 +127,7 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
         <CollapsiblePanel
           title={nest.name}
           icon={viewToVisualizationIcon(nest.view)}
-          defaultOpen={defaultOpen}
+          defaultOpen={true}
           controls={getControls(nest)}
           collapsedControls={getControls(nest)}
           isFocused={isCurrentNestQueryPanelFocused}
