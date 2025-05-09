@@ -15,9 +15,14 @@ import {
 
 import {ViewDefinition} from './ViewDefinition';
 import {Visualization} from './Visualization';
-import CollapsiblePanel from '../primitives/CollapsiblePanel';
 import {AddMenu} from './AddMenu/AddMenu';
-import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
+import {
+  Button,
+  CollapsiblePanel,
+  DropdownMenu,
+  DropdownMenuItem,
+  Icon,
+} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {viewToVisualizationIcon} from '../utils/icon';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';

@@ -11,6 +11,7 @@ export {default as EditableToken} from './tokens/EditableToken';
 export {default as SelectorToken} from './tokens/SelectorToken';
 export {default as Card} from './Card';
 export {default as TextInput} from './TextInput';
+export {default as CollapsiblePanel} from './CollapsiblePanel';
 export {default as CollapsibleListItem} from './lists/CollapsibleListItem';
 export {default as CodeBlock} from './CodeBlock';
 export {default as Spinner} from './Spinner';
