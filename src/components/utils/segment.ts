@@ -12,6 +12,7 @@ import {
   ASTOrderByViewOperation,
   ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
+  ParsedFilter,
 } from '@malloydata/malloy-query-builder';
 import {ViewParent, findUniqueFieldName, getViewDefinition} from './fields';
 
@@ -98,6 +99,29 @@ export function addNest(view: ViewParent, field: Malloy.FieldInfo) {
     rename = findUniqueFieldName(fields, field.name);
   }
   segment.addNest(field.name, rename);
+}
+
+export function addOrderBy(
+  view: ViewParent,
+  field: Malloy.FieldInfo,
+  direction: Malloy.OrderByDirection = 'desc'
+) {
+  const segment = view.getOrAddDefaultSegment();
+  segment.addOrderBy(field.name, direction);
+}
+
+export function addFilter(
+  view: ViewParent,
+  field: Malloy.FieldInfo,
+  path: string[],
+  filter: ParsedFilter
+) {
+  const segment = view.getOrAddDefaultSegment();
+  if (field.kind === 'dimension') {
+    segment.addWhere(field.name, path, filter);
+  } else {
+    segment.addHaving(field.name, path, filter);
+  }
 }
 
 export function getSegmentIfPresent(

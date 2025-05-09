@@ -8,7 +8,13 @@ import {
   ASTArrowQueryDefinition,
   ParsedFilter,
 } from '@malloydata/malloy-query-builder';
-import {addAggregate, addGroupBy, addNest} from '../utils/segment';
+import {
+  addAggregate,
+  addFilter,
+  addGroupBy,
+  addNest,
+  addOrderBy,
+} from '../utils/segment';
 import {useOperations} from './hooks/useOperations';
 import {FilterPopover} from '../filters/FilterPopover';
 import {
@@ -61,15 +67,9 @@ export function FieldTokenWithActions({
       } else if (operation === 'aggregate' && isAggregateAllowed) {
         addAggregate(view, field, path);
       } else if (operation === 'orderBy' && isOrderByAllowed) {
-        const segment = view.getOrAddDefaultSegment();
-        segment.addOrderBy(field.name, 'asc');
+        addOrderBy(view, field);
       } else if (operation === 'filter' && isFilterAllowed && filter) {
-        const segment = view.getOrAddDefaultSegment();
-        if (field.kind === 'dimension') {
-          segment.addWhere(field.name, path, filter);
-        } else {
-          segment.addHaving(field.name, path, filter);
-        }
+        addFilter(view, field, path, filter);
       }
       setQuery?.(rootQuery?.build());
     }
