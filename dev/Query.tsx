@@ -29,6 +29,31 @@ const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>(
     queries[queryIdx]
   );
+  const fromHistory = React.useRef(false);
+
+  useEffect(() => {
+    if (fromHistory.current) {
+      console.info('Skipping', query);
+      fromHistory.current = false;
+      return;
+    }
+    console.info('Pushing', query);
+    window.history.pushState(
+      query,
+      window.document.title,
+      window.document.location.toString()
+    );
+  }, [query]);
+
+  useEffect(() => {
+    const popper = (event: PopStateEvent) => {
+      console.info('Popped', event.state);
+      setQuery(event.state);
+      fromHistory.current = true;
+    };
+    window.addEventListener('popstate', popper);
+    return () => window.removeEventListener('popstate', popper);
+  }, []);
 
   useEffect(() => {
     document.location.hash = `#${queryIdx}`;
