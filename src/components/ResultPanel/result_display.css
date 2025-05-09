@@ -31,7 +31,3 @@
 
   font-size: 12px;
 }
-
-malloy-render::part(table-container) {
-  overflow: visible;
-}
