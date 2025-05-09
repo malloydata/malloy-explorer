@@ -67,7 +67,9 @@ export default function CollapsiblePanel({
           />
         </div>
       </div>
-      {isExpanded && <div {...stylex.props(styles.content)}>{children}</div>}
+      <div {...stylex.props(styles.content, !isExpanded && styles.hidden)}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -116,5 +118,8 @@ const styles = stylex.create({
     display: 'flex',
     alignItems: 'center',
     gap: 4,
+  },
+  hidden: {
+    display: 'none',
   },
 });
