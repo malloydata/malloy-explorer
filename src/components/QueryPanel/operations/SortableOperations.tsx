@@ -26,6 +26,7 @@ import {
   ASTNestViewOperation,
   ASTQuery,
   ASTSegmentViewDefinition,
+  ASTTimeTruncationExpression,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {ClearButton} from './ClearButton';
@@ -33,7 +34,12 @@ import {OperationActionTitle} from './OperationActionTitle';
 import FieldToken from '../../FieldToken';
 import {getInputSchemaFromViewParent, ViewParent} from '../../utils/fields';
 import {FieldHoverCard} from '../../FieldHoverCard';
-import {Button, DropdownMenu, DropdownMenuItem} from '../../primitives';
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+} from '../../primitives';
 import {RenameDialog} from './RenameDialog';
 import {addAggregate, addGroupBy} from '../../utils/segment';
 
@@ -123,6 +129,7 @@ export function SortableOperations({
           <SortableContext items={items}>
             {items.map(item => (
               <SortableOperation
+                rootQuery={rootQuery}
                 key={item.id}
                 id={item.id}
                 color={kind === 'group_by' ? 'cyan' : 'green'}
@@ -138,6 +145,7 @@ export function SortableOperations({
 }
 
 interface SortableOperationProps {
+  rootQuery: ASTQuery;
   id: string;
   view: ViewParent;
   operation: ASTAggregateViewOperation | ASTGroupByViewOperation;
@@ -145,12 +153,13 @@ interface SortableOperationProps {
 }
 
 function SortableOperation({
+  rootQuery,
   id,
   view,
   operation,
   color,
 }: SortableOperationProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const {setQuery} = useContext(QueryEditorContext);
   const fieldInfo = operation.getFieldInfo();
   const path = operation.field.getReference().path ?? [];
   const {attributes, listeners, setNodeRef, transform, transition} =
@@ -186,13 +195,22 @@ function SortableOperation({
               }
               onOpenChange={setHoverActionsVisible}
             >
-              <DropdownMenuItem
-                label="Rename"
-                onClick={() => {
-                  setRenameTarget(operation);
-                  setRenameOpen(true);
-                }}
-              />
+              {[
+                <DropdownMenuItem
+                  key="rename"
+                  label="Rename"
+                  onClick={() => {
+                    setRenameTarget(operation);
+                    setRenameOpen(true);
+                  }}
+                />,
+                ...granularityMenuItems(
+                  rootQuery,
+                  setQuery,
+                  operation,
+                  fieldInfo
+                ),
+              ]}
             </DropdownMenu>
             <ClearButton
               onClick={() => {
@@ -219,4 +237,67 @@ function SortableOperation({
       />
     </div>
   );
+}
+
+function granularityMenuItems(
+  rootQuery: ASTQuery,
+  setQuery: ((query: Malloy.Query) => void) | undefined,
+  operation: ASTAggregateViewOperation | ASTGroupByViewOperation,
+  fieldInfo: Malloy.FieldInfo
+) {
+  if (
+    fieldInfo.kind !== 'dimension' ||
+    !(operation instanceof ASTGroupByViewOperation)
+  ) {
+    return [];
+  }
+  let values: Malloy.TimestampTimeframe[] = [];
+
+  if (fieldInfo.type.kind === 'timestamp_type') {
+    values = [
+      'second',
+      'minute',
+      'hour',
+      'day',
+      'week',
+      'month',
+      'quarter',
+      'year',
+    ];
+  }
+
+  if (fieldInfo.type.kind === 'date_type') {
+    values = [
+      'second',
+      'minute',
+      'hour',
+      'day',
+      'week',
+      'month',
+      'quarter',
+      'year',
+    ];
+  }
+
+  if (values.length) {
+    return [
+      <DropdownMenuLabel key="truncate" label="Truncate to" />,
+      ...values.map(truncation => (
+        <DropdownMenuItem
+          key={truncation}
+          label={truncation}
+          onClick={() => {
+            if (
+              operation.field.expression instanceof ASTTimeTruncationExpression
+            ) {
+              operation.field.expression.truncation = truncation;
+              setQuery?.(rootQuery.build());
+            }
+          }}
+        />
+      )),
+    ];
+  }
+
+  return [];
 }

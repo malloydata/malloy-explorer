@@ -60,13 +60,20 @@ export function addGroupBy(
   field: Malloy.FieldInfo,
   path: string[]
 ) {
+  const type = field.kind === 'dimension' ? field.type.kind : 'string';
   const segment = view.getOrAddDefaultSegment();
   const {fields} = view.getOutputSchema();
   let rename: string | undefined;
   if (fields.find(f => f.name === field.name)) {
     rename = findUniqueFieldName(fields, field.name, path);
   }
-  segment.addGroupBy(field.name, path, rename);
+  if (type === 'date_type') {
+    segment.addDateGroupBy(field.name, path, 'day');
+  } else if (type === 'timestamp_type') {
+    segment.addTimestampGroupBy(field.name, path, 'second');
+  } else {
+    segment.addGroupBy(field.name, path, rename);
+  }
 }
 
 export function addAggregate(

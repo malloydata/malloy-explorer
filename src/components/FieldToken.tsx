@@ -35,6 +35,15 @@ export default function FieldToken({
   hoverActionsVisible,
   ...props
 }: FieldTokenProps) {
+  let label = field.name;
+  if (
+    field.kind === 'dimension' &&
+    (field.type.kind === 'timestamp_type' || field.type.kind === 'date_type')
+  ) {
+    if (field.type.timeframe) {
+      label += `.${field.type.timeframe}`;
+    }
+  }
   return (
     <div
       {...stylex.props(
@@ -43,7 +52,7 @@ export default function FieldToken({
       )}
     >
       <Token
-        label={field.name}
+        label={label}
         color={fieldKindToColor(field.kind)}
         icon={fieldToIcon(field)}
         {...props}
