@@ -26,6 +26,7 @@ import {
 import stylex from '@stylexjs/stylex';
 import {viewToVisualizationIcon} from '../utils/icon';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {textColors} from '../primitives/colors.stylex';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -120,7 +121,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
           <div {...stylex.props(queryStyles.emptyQuery)}>
             <div {...stylex.props(queryStyles.cta)}>
               <div>Click</div>
-              <Icon name="insert" />
+              <Icon name="insert" color="disabled" />
               <div>to get started</div>
             </div>
           </div>
@@ -140,5 +141,6 @@ const queryStyles = stylex.create({
   cta: {
     display: 'flex',
     alignItems: 'center',
+    color: textColors.disabled,
   },
 });

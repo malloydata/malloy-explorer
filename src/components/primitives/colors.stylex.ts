@@ -40,7 +40,7 @@ export const iconColors = stylex.defineVars({
   secondary: 'rgba(78, 96, 111, 1)',
   disabled: 'rgba(164, 176, 188, 1)',
   primaryOnMedia: 'rgba(255, 255, 255, 1)',
-  gray: 'rgba(10, 19, 23, 1)',
+  gray: 'rgba(164, 176, 188, 1)',
   purple: 'rgba(121, 82, 255, 1)',
   green: 'rgba(7, 109, 41, 1)',
   cyan: 'rgba(2, 141, 193, 1)',
