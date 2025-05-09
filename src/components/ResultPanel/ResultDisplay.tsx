@@ -164,7 +164,12 @@ function RenderedResult({result}: RenderedResultProps) {
   }, [result]);
 
   if (renderer) {
-    return <DOMElement element={renderer} style={{overflow: 'hidden'}} />;
+    return (
+      <DOMElement
+        element={renderer}
+        style={{overflow: 'hidden', height: '100%'}}
+      />
+    );
   } else {
     return (
       <div {...stylex.props(styles.renderingSpinnerContainer)}>
