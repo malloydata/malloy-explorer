@@ -22,6 +22,7 @@ import {arrayMove, SortableContext, useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {
   ASTAggregateViewOperation,
+  ASTField,
   ASTGroupByViewOperation,
   ASTNestViewOperation,
   ASTQuery,
@@ -38,9 +39,13 @@ import {
   Button,
   DropdownMenu,
   DropdownMenuItem,
-  DropdownMenuLabel,
+  IconType,
+  SelectorToken,
+  Token,
+  TokenGroup,
 } from '../../primitives';
 import {RenameDialog} from './RenameDialog';
+import {atomicTypeToIcon} from '../../utils/icon';
 import {addAggregate, addGroupBy} from '../../utils/segment';
 
 export interface SortableOperationsProps {
@@ -152,6 +157,8 @@ interface SortableOperationProps {
   color: 'green' | 'cyan';
 }
 
+const NULL_PATH: string[] = [] as const;
+
 function SortableOperation({
   rootQuery,
   id,
@@ -161,7 +168,7 @@ function SortableOperation({
 }: SortableOperationProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const fieldInfo = operation.getFieldInfo();
-  const path = operation.field.getReference().path ?? [];
+  const path = operation.field.getReference().path ?? NULL_PATH;
   const {attributes, listeners, setNodeRef, transform, transition} =
     useSortable({id, data: {name: fieldInfo.name}});
   const [renameOpen, setRenameOpen] = useState(false);
@@ -175,59 +182,87 @@ function SortableOperation({
     transition,
   };
 
+  const hoverActions = useMemo(() => {
+    return (
+      <>
+        <DropdownMenu
+          key={[...path, fieldInfo.name].join('.')}
+          trigger={
+            <Button
+              variant="flat"
+              icon="meatballs"
+              size="compact"
+              tooltip="More Actions"
+            />
+          }
+          onOpenChange={setHoverActionsVisible}
+        >
+          {[
+            <DropdownMenuItem
+              key="rename"
+              label="Rename"
+              onClick={() => {
+                setRenameTarget(operation);
+                setRenameOpen(true);
+              }}
+            />,
+          ]}
+        </DropdownMenu>
+        <ClearButton
+          onClick={() => {
+            operation.delete();
+            setQuery?.(rootQuery?.build());
+          }}
+        />
+      </>
+    );
+  }, [fieldInfo, operation, path, rootQuery, setQuery]);
+
+  const granular = granularityMenuItems(fieldInfo, operation.field);
+  let icon: IconType = 'orderBy';
+  if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
+    icon = atomicTypeToIcon(fieldInfo.type.kind);
+  }
+
   return (
     <div id={id} ref={setNodeRef} style={style}>
-      <FieldToken
-        field={fieldInfo}
-        color={color}
-        hoverActionsVisible={hoverActionsVisible}
-        hoverActions={
-          <>
-            <DropdownMenu
-              key={[...path, fieldInfo.name].join('.')}
-              trigger={
-                <Button
-                  variant="flat"
-                  icon="meatballs"
-                  size="compact"
-                  tooltip="More Actions"
-                />
-              }
-              onOpenChange={setHoverActionsVisible}
-            >
-              {[
-                <DropdownMenuItem
-                  key="rename"
-                  label="Rename"
-                  onClick={() => {
-                    setRenameTarget(operation);
-                    setRenameOpen(true);
-                  }}
-                />,
-                ...granularityMenuItems(
-                  rootQuery,
-                  setQuery,
-                  operation,
-                  fieldInfo
-                ),
-              ]}
-            </DropdownMenu>
-            <ClearButton
-              onClick={() => {
-                operation.delete();
-                setQuery?.(rootQuery?.build());
-              }}
-            />
-          </>
-        }
-        tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
-        tooltipProps={{
-          side: 'right',
-          align: 'start',
-          alignOffset: 28,
-        }}
-        dragProps={{attributes, listeners}}
-      />
+      {granular ? (
+        <TokenGroup customStyle={customStyles.tokenGroup}>
+          <Token
+            color={color}
+            icon={icon}
+            label={fieldInfo.name}
+            dragProps={{attributes, listeners}}
+          />
+          <SelectorToken
+            color={color}
+            value={granular.value}
+            onChange={(granulation: Malloy.TimestampTimeframe) => {
+              if (
+                operation.field.expression instanceof
+                ASTTimeTruncationExpression
+              )
+                operation.field.expression.truncation = granulation;
+              setQuery?.(rootQuery.build());
+            }}
+            items={granular.options}
+          />
+        </TokenGroup>
+      ) : (
+        <FieldToken
+          field={fieldInfo}
+          color={color}
+          hoverActionsVisible={hoverActionsVisible}
+          hoverActions={hoverActions}
+          tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
+          tooltipProps={{
+            side: 'right',
+            align: 'start',
+            alignOffset: 28,
+          }}
+          dragProps={{attributes, listeners}}
+        />
+      )}
       <RenameDialog
         rootQuery={rootQuery}
         view={view}
@@ -239,65 +274,52 @@ function SortableOperation({
   );
 }
 
-function granularityMenuItems(
-  rootQuery: ASTQuery,
-  setQuery: ((query: Malloy.Query) => void) | undefined,
-  operation: ASTAggregateViewOperation | ASTGroupByViewOperation,
-  fieldInfo: Malloy.FieldInfo
-) {
+const DateGranulation: Malloy.TimestampTimeframe[] = [
+  'day',
+  'week',
+  'month',
+  'quarter',
+  'year',
+] as const;
+
+const TimestampGranulation: Malloy.TimestampTimeframe[] = [
+  'second',
+  'minute',
+  'hour',
+  'day',
+  'week',
+  'month',
+  'quarter',
+  'year',
+] as const;
+
+function granularityMenuItems(fieldInfo: Malloy.FieldInfo, field: ASTField) {
   if (
     fieldInfo.kind !== 'dimension' ||
-    !(operation instanceof ASTGroupByViewOperation)
+    !(field.expression instanceof ASTTimeTruncationExpression)
   ) {
-    return [];
+    return null;
   }
-  let values: Malloy.TimestampTimeframe[] = [];
 
   if (fieldInfo.type.kind === 'timestamp_type') {
-    values = [
-      'second',
-      'minute',
-      'hour',
-      'day',
-      'week',
-      'month',
-      'quarter',
-      'year',
-    ];
+    return {
+      value: fieldInfo.type.timeframe ?? 'second',
+      options: TimestampGranulation.map(value => ({label: value, value})),
+    };
   }
 
   if (fieldInfo.type.kind === 'date_type') {
-    values = [
-      'second',
-      'minute',
-      'hour',
-      'day',
-      'week',
-      'month',
-      'quarter',
-      'year',
-    ];
+    return {
+      value: fieldInfo.type.timeframe ?? 'day',
+      options: DateGranulation.map(value => ({label: value, value})),
+    };
   }
 
-  if (values.length) {
-    return [
-      <DropdownMenuLabel key="truncate" label="Truncate to" />,
-      ...values.map(truncation => (
-        <DropdownMenuItem
-          key={truncation}
-          label={truncation}
-          onClick={() => {
-            if (
-              operation.field.expression instanceof ASTTimeTruncationExpression
-            ) {
-              operation.field.expression.truncation = truncation;
-              setQuery?.(rootQuery.build());
-            }
-          }}
-        />
-      )),
-    ];
-  }
-
-  return [];
+  return null;
 }
+
+const customStyles = stylex.create({
+  tokenGroup: {
+    display: 'flex',
+  },
+});
