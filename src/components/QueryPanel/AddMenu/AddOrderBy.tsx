@@ -10,7 +10,11 @@ import {useContext, useMemo} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
-import {getSegmentIfPresent, segmentHasOrderBy} from '../../utils/segment';
+import {
+  addOrderBy,
+  getSegmentIfPresent,
+  segmentHasOrderBy,
+} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
 import {ViewParent} from '../../utils/fields';
 
@@ -44,8 +48,7 @@ export function AddOrderBy({rootQuery, view, search}: AddEmptyNestProps) {
       fields={fields}
       types={['dimension']}
       onAddOperation={field => {
-        const segment = view.getOrAddDefaultSegment();
-        segment.addOrderBy(field.name, 'asc');
+        addOrderBy(view, field);
         setQuery?.(rootQuery.build());
       }}
       disabledMessage="There must be at least one field in the output to order by."

@@ -14,6 +14,7 @@ import {
   ViewParent,
 } from '../../utils/fields';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
+import {addFilter} from '../../utils/segment';
 
 export interface AddWhereProps {
   rootQuery: ASTQuery;
@@ -27,36 +28,29 @@ export function AddWhere({view, search}: AddWhereProps) {
   const {fields} = getInputSchemaFromViewParent(view);
 
   return (
-    <>
-      <AddFieldItem
-        label="Add filter"
-        icon="filter"
-        view={view}
-        fields={fields}
-        types={['measure', 'dimension']}
-        filter={(_segment, field) =>
-          (field.kind === 'dimension' || field.kind === 'measure') &&
-          FILTERABLE_TYPES.has(field.type.kind) &&
-          isNotAnnotatedFilteredField(field)
+    <AddFieldItem
+      label="Add filter"
+      icon="filter"
+      view={view}
+      fields={fields}
+      types={['measure', 'dimension']}
+      filter={(_segment, field) =>
+        (field.kind === 'dimension' || field.kind === 'measure') &&
+        FILTERABLE_TYPES.has(field.type.kind) &&
+        isNotAnnotatedFilteredField(field)
+      }
+      onAddOperation={(field, path, filter) => {
+        if (
+          filter &&
+          (field.kind === 'dimension' || field.kind === 'measure')
+        ) {
+          addFilter(view, field, path, filter);
+          setQuery?.(rootQuery?.build());
         }
-        onAddOperation={(field, path, filter) => {
-          if (
-            filter &&
-            (field.kind === 'dimension' || field.kind === 'measure')
-          ) {
-            const segment = view.getOrAddDefaultSegment();
-            if (field.kind === 'dimension') {
-              segment.addWhere(field.name, path, filter);
-            } else {
-              segment.addHaving(field.name, path, filter);
-            }
-            setQuery?.(rootQuery?.build());
-          }
-        }}
-        isFilterOperation={true}
-        search={search}
-      />
-    </>
+      }}
+      isFilterOperation={true}
+      search={search}
+    />
   );
 }
 
