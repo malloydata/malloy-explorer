@@ -132,10 +132,7 @@ export default function ResultPanel({
         )}
       </div>
       <div {...stylex.props(styles.contentContainer)}>
-        <Content
-          value={Tab.RESULTS}
-          {...stylex.props(styles.content, styles.overflow)}
-        >
+        <Content value={Tab.RESULTS} {...stylex.props(styles.content)}>
           {submittedQuery && (
             <>
               {draftQuery &&
@@ -295,8 +292,5 @@ const styles = stylex.create({
   },
   warningIcon: {
     paddingRight: '8px',
-  },
-  overflow: {
-    overflow: 'auto',
   },
 });
