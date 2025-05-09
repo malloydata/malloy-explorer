@@ -106,6 +106,7 @@ const styles = stylex.create({
     textOverflow: 'ellipsis',
     padding: '0 4px',
     margin: 0,
+    fontWeight: 'bold',
   },
   icon: {},
   content: {

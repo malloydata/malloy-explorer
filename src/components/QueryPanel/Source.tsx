@@ -51,5 +51,6 @@ const styles = stylex.create({
   label: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    fontWeight: 'bold',
   },
 });
