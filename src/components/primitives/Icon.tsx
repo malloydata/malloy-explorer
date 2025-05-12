@@ -7,7 +7,7 @@
 
 import React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
-import {ICON_MAP, IconType, SMALL_ICONS} from './utils/icon';
+import {ICON_MAP, IconType} from './utils/icon';
 import {iconColors} from './colors.stylex';
 
 type Color = keyof typeof colorVariants;
@@ -40,12 +40,7 @@ export default function Icon({
 
   return (
     <IconComponent
-      {...stylex.props(
-        styles.main,
-        colorVariants[color],
-        SMALL_ICONS.includes(name) && styles.scaleUp,
-        customStyle
-      )}
+      {...stylex.props(styles.main, colorVariants[color], customStyle)}
     />
   );
 }
@@ -56,9 +51,6 @@ const styles = stylex.create({
     width: '16px',
     height: '16px',
     overflow: 'visible',
-  },
-  scaleUp: {
-    transform: 'scale(1.33)',
   },
 });
 

@@ -19,6 +19,7 @@ import PillInputs from './components/PillInput';
 import CodeBlocks from './components/CodeBlocks';
 import Banners from './components/Banners';
 import {modelInfo} from './sample_models/example_model';
+import Icons from './components/Icons';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
@@ -34,6 +35,7 @@ const App = () => {
             padding: '16px',
           }}
         >
+          <Icons />
           <Buttons />
           <EditableTokens />
           <SelectorTokens />

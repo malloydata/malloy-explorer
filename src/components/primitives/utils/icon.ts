@@ -148,16 +148,3 @@ export const ICON_MAP = {
 } as const;
 
 export type IconType = keyof typeof ICON_MAP;
-
-export const SMALL_ICONS: IconType[] = [
-  'chevronDown',
-  'chevronLeft',
-  'chevronRight',
-  'database',
-  'date',
-  'dimension',
-  'measure',
-  'number',
-  'string',
-  'view',
-];
