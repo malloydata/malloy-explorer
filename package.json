@@ -15,7 +15,7 @@
       }
     },
     "./package.json": "./package.json",
-    "./styles.css": "./dist/stylex.css"
+    "./styles.css": "./dist/malloy-explorer.css"
   },
   "scripts": {
     "build": "npm run build-bundle && npm run build-types && npm run build-flow",
