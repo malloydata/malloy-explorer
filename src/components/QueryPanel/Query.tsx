@@ -46,7 +46,9 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
     onCurrentNestViewChange?.(null);
   };
 
-  const canEditViz = query.definition instanceof ASTSegmentViewDefinition;
+  const canEditViz =
+    query.definition instanceof ASTArrowQueryDefinition &&
+    query.definition.view instanceof ASTSegmentViewDefinition;
 
   return (
     <div onPointerDownCapture={focusMainQueryPanel}>
