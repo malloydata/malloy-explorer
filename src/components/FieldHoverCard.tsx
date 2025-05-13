@@ -33,6 +33,8 @@ interface FieldHoverCardProps {
 export function FieldHoverCard({field, path}: FieldHoverCardProps) {
   const {source} = React.useContext(QueryEditorContext);
 
+  const ref = React.useRef<HTMLDivElement>(null);
+
   const pathString = [source?.name ?? '', ...path].join(' > ');
   const descriptionAnnotation = getDescriptionAnnotation(
     field.annotations ?? []
@@ -54,7 +56,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
 
   return (
     <HoverCard customStyle={styles.container}>
-      <div>
+      <div ref={ref}>
         <div {...stylex.props(styles.badge)}>
           <BadgeForField field={field} />
         </div>
@@ -64,7 +66,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
         <div {...stylex.props(fontStyles.emphasized, styles.title)}>
           {field.name}
         </div>
-        {description && <HoverText text={description} />}
+        {description && <HoverText text={description} containerRef={ref} />}
       </div>
       {details && <div>{details}</div>}
     </HoverCard>

@@ -7,13 +7,14 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-import {fontStyles} from './styles';
+import {fontStyles, tooltipStyles} from './styles';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import {useEffect, useRef, useState} from 'react';
-import {backgroundColors} from './colors.stylex';
+import {useRef} from 'react';
+import {RichText} from './RichText';
 
 interface HoverTextProps {
   text: string;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
   align?: 'start' | 'center' | 'end';
   side?: 'top' | 'bottom' | 'left' | 'right';
 }
@@ -25,68 +26,48 @@ interface HoverTextProps {
  */
 export function HoverText({
   text,
+  containerRef,
   align = 'center',
   side = 'top',
 }: HoverTextProps) {
-  // hack so that if rendered in a parent with :hover pseudoclass,
-  // :hover is not removed from the parent
-  const rootRef = useRef<HTMLDivElement>(null);
-  const [isMouseInside, setIsMouseInside] = useState(false);
-
   const textRef = useRef<HTMLDivElement>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
 
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (rootRef.current && rootRef.current.contains(event.target as Node)) {
-        setIsMouseInside(true);
-      } else {
-        setIsMouseInside(false);
-      }
-    };
+  const [isTriggeredHovered, setIsTriggerHovered] = React.useState(false);
+  const [isContentHovered, setIsContentHovered] = React.useState(false);
 
-    const checkTruncation = () => {
-      if (textRef.current) {
-        if (textRef.current.scrollWidth > textRef.current.clientWidth) {
-          setIsTruncated(true);
-        } else {
-          setIsTruncated(false);
-        }
-      }
-    };
-    checkTruncation();
-
-    document.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', checkTruncation);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', checkTruncation);
-    };
-  }, []);
+  const isTruncated = () =>
+    (textRef.current &&
+      textRef.current.scrollHeight > textRef.current.clientHeight) ??
+    false;
 
   return (
-    <div ref={rootRef}>
-      <div style={{pointerEvents: 'none'}}>
-        <Tooltip.Root open={isMouseInside && isTruncated}>
-          <Tooltip.Trigger asChild>
-            <div
-              ref={textRef}
-              {...stylex.props(styles.text, fontStyles.supporting)}
-            >
-              {text}
-            </div>
-          </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content side={side} align={align}>
-              <pre {...stylex.props(styles.hoverText, fontStyles.tooltipText)}>
-                {text}
-              </pre>
-            </Tooltip.Content>
-          </Tooltip.Portal>
-        </Tooltip.Root>
-      </div>
-    </div>
+    <Tooltip.Root
+      open={(isTriggeredHovered || isContentHovered) && isTruncated()}
+    >
+      <Tooltip.Trigger asChild>
+        <RichText
+          ref={textRef}
+          onMouseEnter={() => setIsTriggerHovered(true)}
+          onMouseLeave={() => setIsTriggerHovered(false)}
+          onPointerMove={e => e.preventDefault()}
+          customStyle={[fontStyles.supporting, styles.text]}
+        >
+          {text}
+        </RichText>
+      </Tooltip.Trigger>
+      <Tooltip.Portal container={containerRef?.current}>
+        <Tooltip.Content side={side} align={align}>
+          <RichText
+            onMouseEnter={() => setIsContentHovered(true)}
+            onMouseLeave={() => setIsContentHovered(false)}
+            isTooltipContent={true}
+            customStyle={[fontStyles.body, tooltipStyles.default]}
+          >
+            {text}
+          </RichText>
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
   );
 }
 
@@ -96,15 +77,5 @@ const styles = stylex.create({
     display: '-webkit-box',
     '-webkit-line-clamp': '3',
     '-webkit-box-orient': 'vertical',
-  },
-  hoverText: {
-    maxWidth: '230px',
-    overflow: 'hidden',
-    wordBreak: 'break-all',
-    whiteSpace: 'pre-wrap',
-    backgroundColor: backgroundColors.tooltip,
-    borderRadius: '4px',
-    margin: '12px',
-    padding: '4px 8px 4px',
   },
 });
