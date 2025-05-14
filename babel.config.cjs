@@ -7,15 +7,11 @@
  *
  */
 
-import * as process from 'process';
-import * as path from 'path';
-import {fileURLToPath} from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default {
-  presets: [['@babel/preset-react', {runtime: 'automatic'}]],
+module.exports = {
+  presets: [
+    ['@babel/preset-typescript'],
+    ['@babel/preset-react', {runtime: 'automatic'}],
+  ],
   plugins: [
     ['@babel/plugin-syntax-typescript', {isTSX: true}],
     [
@@ -33,4 +29,21 @@ export default {
       },
     ],
   ],
+  env: {
+    test: {
+      presets: ['@babel/preset-env'],
+      plugins: [
+        [
+          '@stylexjs/babel-plugin',
+          {
+            runtimeInjection: false,
+            unstable_moduleResolution: {
+              type: 'commonJS',
+              rootDir: __dirname,
+            },
+          },
+        ],
+      ],
+    },
+  },
 };
