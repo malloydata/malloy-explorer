@@ -82,6 +82,7 @@
     "@stylexjs/eslint-plugin": "^0.11.1",
     "@stylexjs/postcss-plugin": "^0.11.1",
     "@stylexjs/rollup-plugin": "^0.10.1",
+    "@types/jest": "^29.5.14",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
@@ -97,6 +98,7 @@
     "globals": "^16.0.0",
     "jest": "^29.7.0",
     "postcss": "^8.5.3",
+    "ts-jest": "^29.3.2",
     "tsx": "^4.19.3",
     "vite": "^6.1.0",
     "vite-plugin-svgr": "^4.3.0"

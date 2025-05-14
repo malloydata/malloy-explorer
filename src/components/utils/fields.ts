@@ -99,3 +99,43 @@ export function findUniqueFieldName(
   }
   return `${rename} ${idx}`;
 }
+
+export function findField(
+  schema: Malloy.Schema,
+  name: string
+): Malloy.FieldInfo | undefined {
+  return schema.fields.find(field => field.name === name);
+}
+
+export function findDimension(
+  schema: Malloy.Schema,
+  name: string
+): Malloy.FieldInfoWithDimension | undefined {
+  const field = findField(schema, name);
+  if (field?.kind === 'dimension') {
+    return field;
+  }
+  return undefined;
+}
+
+export function findMeasure(
+  schema: Malloy.Schema,
+  name: string
+): Malloy.FieldInfoWithMeasure | undefined {
+  const field = findField(schema, name);
+  if (field?.kind === 'measure') {
+    return field;
+  }
+  return undefined;
+}
+
+export function findView(
+  schema: Malloy.Schema,
+  name: string
+): Malloy.FieldInfoWithView | undefined {
+  const field = findField(schema, name);
+  if (field?.kind === 'view') {
+    return field;
+  }
+  return undefined;
+}
