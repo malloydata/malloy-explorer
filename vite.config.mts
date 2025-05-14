@@ -4,7 +4,7 @@ import {resolve} from 'path';
 import replace from '@rollup/plugin-replace';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
-import babelConfig from './babel.config.mjs';
+import babelConfig from './babel.config.cjs';
 
 export default defineConfig({
   plugins: [
@@ -14,6 +14,7 @@ export default defineConfig({
       'Object.defineProperty(exports, "__esModule", { value: true });':
         'Object.defineProperty(typeof exports !== \'undefined\' ? exports : {}, "__esModule", { value: true });',
       delimiters: ['\n', '\n'],
+      preventAssignment: true,
     }),
   ],
   build: {

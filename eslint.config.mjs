@@ -6,9 +6,8 @@ import prettier from 'eslint-plugin-prettier';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tsParser from '@typescript-eslint/parser';
-import globals from 'globals';
+import globals, {fileURLToPath} from 'node:url';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
 import js from '@eslint/js';
 import {FlatCompat} from '@eslint/eslintrc';
 
@@ -30,6 +29,7 @@ export default [
       '**/dist/',
       '**/build/',
       '**/malloy-samples/',
+      'babel.config.cjs',
     ],
   },
   ...fixupConfigRules(
@@ -139,7 +139,7 @@ export default [
     },
   },
   {
-    files: ['**/*.spec.ts'],
+    files: ['**/*.spec.tsx?'],
 
     languageOptions: {
       globals: {

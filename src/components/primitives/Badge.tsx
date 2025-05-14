@@ -47,7 +47,12 @@ export default function Badge({
   return (
     <div {...stylex.props(styles.main, colorVariants[color], customStyle)}>
       {icon && <Icon color={color} name={icon} />}
-      <div {...stylex.props(fontStyles.badge, styles.label)}>{label}</div>
+      <div
+        data-testid="badge-label"
+        {...stylex.props(fontStyles.badge, styles.label)}
+      >
+        {label}
+      </div>
     </div>
   );
 }

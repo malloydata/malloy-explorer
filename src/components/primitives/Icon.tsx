@@ -41,6 +41,7 @@ export default function Icon({
   return (
     <IconComponent
       {...stylex.props(styles.main, colorVariants[color], customStyle)}
+      data-testid={`icon-${color}-${name}`}
     />
   );
 }

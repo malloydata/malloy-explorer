@@ -7,7 +7,7 @@
  *
  */
 
-import babelConfig from './babel.config.mjs';
+import babelConfig from './babel.config.cjs';
 
 export default {
   plugins: {
