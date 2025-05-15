@@ -11,17 +11,14 @@ import {flattenFieldsTree} from '../utils';
 import {
   getSegmentIfPresent,
   segmentHasFieldInOutputSpace,
-  segmentHasOrderBy,
+  segmentHasOrderBySourceField,
+  toFullName,
 } from '../../utils/segment';
 import {
   getInputSchemaFromViewParent,
   isNotAnnotatedFilteredField,
   ViewParent,
 } from '../../utils/fields';
-
-function toFullName(path: string[] | undefined, name: string): string {
-  return [...(path || []), name].join('.');
-}
 
 export function useOperations(
   view: ViewParent,
@@ -96,7 +93,7 @@ export function useOperations(
       return `Unexpected Error: Could not find a field ${fullName}.`;
     }
     const segment = getSegmentIfPresent(view);
-    if (segment && segmentHasOrderBy(segment, path, field.name)) {
+    if (segment && segmentHasOrderBySourceField(segment, path, field.name)) {
       return 'Query is already ordered by this field.';
     }
     if (!segment || !segmentHasFieldInOutputSpace(segment, path, field.name)) {
