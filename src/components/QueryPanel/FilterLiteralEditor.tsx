@@ -16,11 +16,11 @@ import {
   StringFilterExpression,
   TemporalFilterExpression,
 } from '@malloydata/malloy-filter';
-import {EditableToken, Token} from '../primitives';
+import {Token} from '../primitives';
 import {ParsedFilter} from '@malloydata/malloy-query-builder';
 
 interface FilterLiteralEditorProps {
-  filterType?: Malloy.FilterableTypeType;
+  filterType: Malloy.FilterableTypeType;
   value: Malloy.LiteralValueWithFilterExpressionLiteral;
   setValue: (value: Malloy.LiteralValue) => void;
   customStyle?: StyleXStyles;
@@ -33,63 +33,47 @@ export function FilterLiteralEditor({
 }: FilterLiteralEditorProps) {
   let filter: ParsedFilter | null = null;
 
-  if (filterType) {
-    switch (filterType) {
-      case 'string_type':
-        {
-          const {parsed} = StringFilterExpression.parse(
-            value.filter_expression_value
-          );
-          filter = {kind: 'string', parsed};
-        }
-        break;
-      case 'number_type':
-        {
-          const {parsed} = NumberFilterExpression.parse(
-            value.filter_expression_value
-          );
-          filter = {kind: 'number', parsed};
-        }
-        break;
-      case 'boolean_type':
-        {
-          const {parsed} = BooleanFilterExpression.parse(
-            value.filter_expression_value
-          );
-          filter = {kind: 'boolean', parsed};
-        }
-        break;
-      case 'date_type':
-        {
-          const {parsed} = TemporalFilterExpression.parse(
-            value.filter_expression_value
-          );
-          filter = {kind: 'date', parsed};
-        }
-        break;
-      case 'timestamp_type':
-        {
-          const {parsed} = TemporalFilterExpression.parse(
-            value.filter_expression_value
-          );
-          filter = {kind: 'timestamp', parsed};
-        }
-        break;
-    }
-  }
-
-  if (!filter || !filterType) {
-    return (
-      <EditableToken
-        value={value.filter_expression_value}
-        onChange={value =>
-          setValue({
-            kind: 'filter_expression_literal',
-            filter_expression_value: value,
-          })
-        }
-      />
-    );
+  switch (filterType) {
+    case 'string_type':
+      {
+        const {parsed} = StringFilterExpression.parse(
+          value.filter_expression_value
+        );
+        filter = {kind: 'string', parsed};
+      }
+      break;
+    case 'number_type':
+      {
+        const {parsed} = NumberFilterExpression.parse(
+          value.filter_expression_value
+        );
+        filter = {kind: 'number', parsed};
+      }
+      break;
+    case 'boolean_type':
+      {
+        const {parsed} = BooleanFilterExpression.parse(
+          value.filter_expression_value
+        );
+        filter = {kind: 'boolean', parsed};
+      }
+      break;
+    case 'date_type':
+      {
+        const {parsed} = TemporalFilterExpression.parse(
+          value.filter_expression_value
+        );
+        filter = {kind: 'date', parsed};
+      }
+      break;
+    case 'timestamp_type':
+      {
+        const {parsed} = TemporalFilterExpression.parse(
+          value.filter_expression_value
+        );
+        filter = {kind: 'timestamp', parsed};
+      }
+      break;
   }
 
   const {op, value: filterValue} = parsedToLabels(

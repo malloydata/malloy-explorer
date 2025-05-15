@@ -12,9 +12,9 @@ import {StyleXStyles} from '@stylexjs/stylex';
 import {DateLiteralEditor} from './DateLiteralEditor';
 import {FilterLiteralEditor} from './FilterLiteralEditor';
 
-export interface LiteralValueEditorProps {
+interface LiteralValueEditorProps {
   value: Malloy.LiteralValue | undefined;
-  filterType?: Malloy.FilterableTypeType;
+  filterType: Malloy.FilterableTypeType;
   setValue: (value: Malloy.LiteralValue) => void;
   customStyle?: StyleXStyles;
 }
