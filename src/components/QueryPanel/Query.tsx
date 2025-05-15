@@ -10,7 +10,6 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
   ASTQuery,
-  ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 
 import {ViewDefinition} from './ViewDefinition';
