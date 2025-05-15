@@ -27,17 +27,6 @@ export interface QueryEditorContextProps {
   /** Provide to allow editing of the query */
   setQuery?: (rootQuery: Malloy.Query | undefined) => void;
   topValues?: SearchValueMapResult[];
-  /** Currently focused nest query panel element */
-  currentNestQueryPanel?: HTMLElement | null;
-  /** Callback function for when the current focused nest query panel changes */
-  onCurrentNestQueryPanelChange?: (panel: HTMLElement | null) => void;
-  /** Nest view object corresponding to current focused nest query panel */
-  currentNestView?: ASTView | null;
-  /**
-   * Callback function for when the nest view object
-   * corresponding to current focused nest query panel changes
-   */
-  onCurrentNestViewChange?: (view: ASTView | null) => void;
 }
 
 /**

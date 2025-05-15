@@ -19,6 +19,7 @@ import {fontStyles, tooltipStyles} from '../primitives/styles';
 import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
+import {useActiveQueryPanel} from '../MalloyActiveQueryPanelProvider';
 
 /**
  * Source
@@ -28,14 +29,11 @@ export interface QueryActionBarProps {
 }
 
 export function QueryActionBar({runQuery}: QueryActionBarProps) {
-  const {
-    rootQuery,
-    setQuery,
-    source,
-    onCurrentNestQueryPanelChange,
-    onCurrentNestViewChange,
-  } = useContext(QueryEditorContext);
+  const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
+
+  const {onActiveNestQueryPanelChange, onActiveNestViewChange} =
+    useActiveQueryPanel();
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
   const isRunEnabled = rootQuery?.isRunnable();
@@ -46,8 +44,8 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
   };
 
   const focusMainQueryPanel = () => {
-    onCurrentNestViewChange?.(null);
-    onCurrentNestQueryPanelChange?.(null);
+    onActiveNestViewChange?.(null);
+    onActiveNestQueryPanelChange?.(null);
   };
 
   return (

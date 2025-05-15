@@ -18,6 +18,7 @@ import {AddMenu} from '../AddMenu/AddMenu';
 import {viewToVisualizationIcon} from '../../utils/icon';
 import {RenameDialog} from './RenameDialog';
 import {ViewParent} from '../../utils/fields';
+import {useActiveQueryPanel} from '../../MalloyActiveQueryPanelProvider';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -51,37 +52,38 @@ export interface NestOperationProps {
 }
 
 export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
+  const {setQuery} = useContext(QueryEditorContext);
+
   const {
-    setQuery,
-    currentNestQueryPanel,
-    onCurrentNestQueryPanelChange,
-    onCurrentNestViewChange,
-  } = useContext(QueryEditorContext);
+    activeNestQueryPanel,
+    onActiveNestQueryPanelChange,
+    onActiveNestViewChange,
+  } = useActiveQueryPanel();
 
   const [renameOpen, setRenameOpen] = useState(false);
 
   const panelRef = React.useRef<HTMLDivElement>(null);
 
   const isCurrentNestQueryPanelFocused =
-    currentNestQueryPanel !== null && panelRef.current == currentNestQueryPanel;
+    activeNestQueryPanel !== null && panelRef.current == activeNestQueryPanel;
 
   React.useEffect(() => {
     if (isCurrentNestQueryPanelFocused) {
-      onCurrentNestViewChange?.(nest.view);
+      onActiveNestViewChange?.(nest.view);
     }
-  }, [nest, isCurrentNestQueryPanelFocused, onCurrentNestViewChange]);
+  }, [nest, isCurrentNestQueryPanelFocused, onActiveNestViewChange]);
 
   const focusCurrentNestQueryPanel = () => {
-    onCurrentNestQueryPanelChange?.(panelRef.current);
-    onCurrentNestViewChange?.(nest.view);
+    onActiveNestQueryPanelChange?.(panelRef.current);
+    onActiveNestViewChange?.(nest.view);
   };
 
   const focusParentQueryPanel = () => {
     const currentPanel = panelRef.current;
     const parent = findParentNestQueryPanel(currentPanel);
-    onCurrentNestQueryPanelChange?.(parent);
+    onActiveNestQueryPanelChange?.(parent);
     if (parent === null) {
-      onCurrentNestViewChange?.(null);
+      onActiveNestViewChange?.(null);
     }
   };
 

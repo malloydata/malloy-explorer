@@ -14,7 +14,7 @@ import {
   SearchValueMapResult,
 } from '../contexts/QueryEditorContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
-import {ASTView} from '@malloydata/malloy-query-builder';
+import {MalloyActiveQueryPanelProvider} from './MalloyActiveQueryPanelProvider';
 
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;
@@ -33,29 +33,20 @@ export function MalloyExplorerProvider({
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
 
-  const [currentNestView, setCurrentNestView] = React.useState<ASTView | null>(
-    null
-  );
-
-  const [currentNestQueryPanel, setCurrentNestQueryPanel] =
-    React.useState<HTMLElement | null>(null);
-
   return (
     <TooltipProvider>
+      <MalloyActiveQueryPanelProvider>
       <QueryEditorContext.Provider
         value={{
           source,
           rootQuery,
           setQuery,
           topValues,
-          currentNestQueryPanel,
-          onCurrentNestQueryPanelChange: setCurrentNestQueryPanel,
-          currentNestView,
-          onCurrentNestViewChange: setCurrentNestView,
         }}
       >
         {children}
       </QueryEditorContext.Provider>
+      </MalloyActiveQueryPanelProvider>
     </TooltipProvider>
   );
 }
