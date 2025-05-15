@@ -18,10 +18,6 @@ import {
   isNotAnnotatedFilteredField,
   ViewParent,
 } from '../../utils/fields';
-import {
-  ASTArrowQueryDefinition,
-  ASTSegmentViewDefinition,
-} from '@malloydata/malloy-query-builder';
 
 function toFullName(path: string[] | undefined, name: string): string {
   return [...(path || []), name].join('.');
@@ -33,9 +29,6 @@ export function useOperations(
   path: string[]
 ) {
   const fullName = toFullName(path, field.name);
-  // So if `path` exists, then we need to walk up the path
-  // when computing anything.
-
   const flattenedFields = useMemo(() => {
     const {fields} = getInputSchemaFromViewParent(view);
     const inputPath = path.join('.');
@@ -82,7 +75,7 @@ export function useOperations(
 
   const filterDisabledReason = useMemo(() => {
     if (!matchingFieldItem) {
-      return `Unexpected Error: Could not find a field ${fullName}`;
+      return `Unexpected Error: Could not find a field ${fullName}.`;
     }
     if (!['dimension', 'measure'].includes(matchingFieldItem.field.kind)) {
       return `Filtering is only available for a dimension or measure.`;
@@ -100,7 +93,7 @@ export function useOperations(
 
   const orderByDisabledReason = useMemo(() => {
     if (!matchingFieldItem) {
-      return `Unexpected Error: Could not find a field ${fullName}`;
+      return `Unexpected Error: Could not find a field ${fullName}.`;
     }
     const segment = getSegmentIfPresent(view);
     if (segment && segmentHasOrderBy(segment, path, field.name)) {
@@ -130,7 +123,7 @@ export function useOperations(
     }
 
     return '';
-  }, [matchingFieldItem, view, field.name, fullName]);
+  }, [matchingFieldItem, view, path, field.name, fullName]);
 
   return {
     isGroupByAllowed: !groupByDisabledReason,
