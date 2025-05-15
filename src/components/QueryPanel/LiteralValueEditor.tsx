@@ -10,15 +10,18 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {EditableToken, SelectorToken, Token} from '../primitives';
 import {StyleXStyles} from '@stylexjs/stylex';
 import {DateLiteralEditor} from './DateLiteralEditor';
+import {FilterLiteralEditor} from './FilterLiteralEditor';
 
-export interface LiteralValueEditorProps {
+interface LiteralValueEditorProps {
   value: Malloy.LiteralValue | undefined;
+  filterType: Malloy.FilterableTypeType;
   setValue: (value: Malloy.LiteralValue) => void;
   customStyle?: StyleXStyles;
 }
 
 export function LiteralValueEditor({
   value,
+  filterType,
   setValue,
   customStyle,
 }: LiteralValueEditorProps) {
@@ -75,14 +78,10 @@ export function LiteralValueEditor({
       );
     case 'filter_expression_literal':
       return (
-        <EditableToken
-          value={value.filter_expression_value}
-          onChange={value =>
-            setValue({
-              kind: 'filter_expression_literal',
-              filter_expression_value: value,
-            })
-          }
+        <FilterLiteralEditor
+          value={value}
+          filterType={filterType}
+          setValue={setValue}
           customStyle={customStyle}
         />
       );

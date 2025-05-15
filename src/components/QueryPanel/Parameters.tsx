@@ -49,6 +49,11 @@ export function Parameters({rootQuery}: ParametersProps) {
                 label={parameter.name}
               />
               <LiteralValueEditor
+                filterType={
+                  parameter.type.kind === 'filter_expression_type'
+                    ? parameter.type.filter_type.kind
+                    : 'string_type'
+                }
                 value={
                   source.tryGetParameter(parameter.name)?.parameter.value ??
                   parameter.default_value
