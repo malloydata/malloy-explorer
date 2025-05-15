@@ -8,98 +8,139 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 import {flattenFieldsTree} from '../utils';
-import {getSegmentIfPresent, segmentHasOrderBy} from '../../utils/segment';
+import {
+  getSegmentIfPresent,
+  segmentHasFieldInOutputSpace,
+  segmentHasOrderBy,
+} from '../../utils/segment';
 import {
   getInputSchemaFromViewParent,
   isNotAnnotatedFilteredField,
   ViewParent,
 } from '../../utils/fields';
+import {
+  ASTArrowQueryDefinition,
+  ASTSegmentViewDefinition,
+} from '@malloydata/malloy-query-builder';
+
+function toFullName(path: string[] | undefined, name: string): string {
+  return [...(path || []), name].join('.');
+}
 
 export function useOperations(
   view: ViewParent,
   field: Malloy.FieldInfo,
   path: string[]
 ) {
-  const dimensionFields = useMemo(() => {
-    const {fields} = getInputSchemaFromViewParent(view);
-    return new Set(
-      flattenFieldsTree(fields)
-        .filter(({field}) => field.kind === 'dimension')
-        .map(({field}) => field.name)
-    );
-  }, [view]);
+  const fullName = toFullName(path, field.name);
+  // So if `path` exists, then we need to walk up the path
+  // when computing anything.
 
-  const measureFields = useMemo(() => {
+  const flattenedFields = useMemo(() => {
     const {fields} = getInputSchemaFromViewParent(view);
-    return new Set(
-      flattenFieldsTree(fields)
-        .filter(({field}) => field.kind === 'measure')
-        .map(({field}) => field.name)
-    );
-  }, [view]);
+    const inputPath = path.join('.');
+    return flattenFieldsTree(fields).filter(fieldItem => {
+      return fieldItem.path.join('.') === inputPath;
+    });
+  }, [path, view]);
 
-  const isGroupByAllowed = useMemo(() => {
-    if (!view) {
-      return false;
+  const matchingFieldItem = flattenedFields.find(
+    fieldItem => field.name === fieldItem.field.name
+  );
+
+  const groupByDisabledReason = useMemo(() => {
+    const segment = getSegmentIfPresent(view);
+
+    if (matchingFieldItem?.field.kind !== 'dimension') {
+      return 'Grouping is only available on a dimenion.';
+    }
+    if (segment?.hasField(field.name, path)) {
+      return 'Cannot group by a field already in the view.';
+    }
+    if (!isNotAnnotatedFilteredField(field)) {
+      return 'This field is annotated with #NO_UI.';
+    }
+    return '';
+  }, [view, matchingFieldItem?.field.kind, field, path]);
+
+  const aggregateDisabledReason = useMemo(() => {
+    if (matchingFieldItem?.field.kind !== 'measure') {
+      return 'Aggregation only supports measure fields.';
     }
 
     const segment = getSegmentIfPresent(view);
-
-    return (
-      dimensionFields.has(field.name) &&
-      !segment?.hasField(field.name, path) &&
-      isNotAnnotatedFilteredField(field)
-    );
-  }, [view, field, path, dimensionFields]);
-
-  const isAggregateAllowed = useMemo(() => {
-    if (!view) {
-      return false;
+    if (segment?.hasField(field.name, path)) {
+      return 'This field is already used in the query.';
     }
 
+    if (!isNotAnnotatedFilteredField(field)) {
+      return 'This field is annotated with #NO_UI.';
+    }
+
+    return '';
+  }, [matchingFieldItem?.field.kind, view, field, path]);
+
+  const filterDisabledReason = useMemo(() => {
+    if (!matchingFieldItem) {
+      return `Unexpected Error: Could not find a field ${fullName}`;
+    }
+    if (!['dimension', 'measure'].includes(matchingFieldItem.field.kind)) {
+      return `Filtering is only available for a dimension or measure.`;
+    }
+    if (
+      !FILTERABLE_TYPES.includes(
+        (matchingFieldItem.field as Malloy.DimensionInfo).type.kind
+      )
+    ) {
+      return 'Filtering only supports string, boolean, number, date and time fields.';
+    }
+
+    return '';
+  }, [fullName, matchingFieldItem]);
+
+  const orderByDisabledReason = useMemo(() => {
+    if (!matchingFieldItem) {
+      return `Unexpected Error: Could not find a field ${fullName}`;
+    }
     const segment = getSegmentIfPresent(view);
-
-    return (
-      measureFields.has(field.name) &&
-      !segment?.hasField(field.name, path) &&
-      isNotAnnotatedFilteredField(field)
-    );
-  }, [view, field, path, measureFields]);
-
-  const isFilterAllowed = useMemo(() => {
-    if (!view) {
-      return false;
+    if (segment && segmentHasOrderBy(segment, path, field.name)) {
+      return 'Query is already ordered by this field.';
     }
-    const fieldName = field.name;
-    const inputSchemaFields = getInputSchemaFromViewParent(view).fields;
-
-    return inputSchemaFields
-      .filter(field => field.kind === 'dimension' || field.kind === 'measure')
-      .filter(field => FILTERABLE_TYPES.includes(field.type.kind))
-      .some(field => field.name === fieldName);
-  }, [view, field]);
-
-  const isOrderByAllowed = useMemo(() => {
-    if (!view) {
-      return false;
-    }
-
-    const fieldName = field.name;
     const outputSchemaFields = view.getOutputSchema().fields;
-    const segment = getSegmentIfPresent(view);
 
-    return outputSchemaFields
-      .filter(field => field.kind === 'dimension')
-      .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
-      .filter(field => !segment || !segmentHasOrderBy(segment, field.name))
-      .some(field => field.name === fieldName);
-  }, [view, field]);
+    if (!segment || !segmentHasFieldInOutputSpace(segment, path, field.name)) {
+      return 'Order by is only available for fields in the output.';
+    }
+    if (
+      !outputSchemaFields.some(
+        fieldInfo => matchingFieldItem.field.name === fieldInfo.name
+      )
+    ) {
+      return 'Order By is only available for fields already in the output.';
+    }
+    if (matchingFieldItem.field.kind !== 'dimension') {
+      return 'Order By is only available for dimension fields.';
+    }
+    if (
+      !ORDERABLE_TYPES.includes(
+        (matchingFieldItem.field as Malloy.DimensionInfo).type.kind
+      )
+    ) {
+      return 'Order By only supports string, boolean, number, date and time fields.';
+    }
+
+    return '';
+  }, [matchingFieldItem, view, field.name, fullName]);
 
   return {
-    isGroupByAllowed,
-    isAggregateAllowed,
-    isFilterAllowed,
-    isOrderByAllowed,
+    isGroupByAllowed: !groupByDisabledReason,
+    groupByDisabledReason,
+    isAggregateAllowed: !aggregateDisabledReason,
+    aggregateDisabledReason,
+    isFilterAllowed: !filterDisabledReason,
+    filterDisabledReason,
+    isOrderByAllowed: !orderByDisabledReason,
+    orderByDisabledReason,
   };
 }
 

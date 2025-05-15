@@ -7,6 +7,8 @@
 
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
+  ASTAggregateViewOperation,
+  ASTGroupByViewOperation,
   ASTLimitViewOperation,
   ASTNestViewOperation,
   ASTOrderByViewOperation,
@@ -26,14 +28,56 @@ export function segmentHasLimit(segment: ASTSegmentViewDefinition) {
 
 export function segmentHasOrderBy(
   segment: ASTSegmentViewDefinition,
+  path: string[] | undefined,
   name: string
 ) {
-  return (
-    segment.operations.items.find(
-      operation =>
-        operation instanceof ASTOrderByViewOperation && operation.name === name
-    ) !== undefined
-  );
+  return !!segment.operations.items.find(operation => {
+    if (operation instanceof ASTOrderByViewOperation) {
+      return areReferencesEqual(
+        path,
+        name,
+        operation.fieldReference.path,
+        operation.fieldReference.name
+      );
+    }
+    return false;
+  });
+}
+
+function areReferencesEqual(
+  path1: string[] | undefined,
+  name1: string,
+  path2: string[] | undefined,
+  name2: string
+) {
+  return name1 === name2 && (path1 || []).join('.') === (path2 || []).join('.');
+}
+
+// An item is in the output space if it is part of a group_by, a select or an aggregate
+export function segmentHasFieldInOutputSpace(
+  segment: ASTSegmentViewDefinition,
+  path: string[],
+  name: string
+) {
+  const match = segment.operations.items.find(operation => {
+    if (operation instanceof ASTGroupByViewOperation) {
+      if (operation.field.node.expression.kind === 'field_reference') {
+        const isEqual = areReferencesEqual(
+          path,
+          name,
+          operation.field.node.expression.path,
+          operation.field.node.expression.name
+        );
+
+        return isEqual;
+      }
+    } else if (operation instanceof ASTAggregateViewOperation) {
+      debugger;
+    }
+    return false;
+  });
+
+  return !!match;
 }
 
 export function segmentNestNo(
@@ -127,6 +171,10 @@ export function addFilter(
 export function getSegmentIfPresent(
   parent: ViewParent
 ): ASTSegmentViewDefinition | undefined {
+  if (!parent) {
+    return undefined;
+  }
+
   const definition = getViewDefinition(parent);
   if (definition instanceof ASTSegmentViewDefinition) {
     return definition;

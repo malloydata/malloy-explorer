@@ -34,9 +34,10 @@ export function AddOrderBy({rootQuery, view, search}: AddEmptyNestProps) {
       outputSchemaFields
         .filter(field => field.kind === 'dimension')
         .filter(field => ORDERABLE_TYPES.includes(field.type.kind))
-        .filter(field =>
-          segment ? !segmentHasOrderBy(segment, field.name) : true
-        ),
+        .filter(field => {
+          // In this context, field.name is actually the full name of the field
+          return segment ? !segmentHasOrderBy(segment, [], field.name) : true;
+        }),
     [outputSchemaFields, segment]
   );
 
