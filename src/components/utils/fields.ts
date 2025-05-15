@@ -67,6 +67,9 @@ export function getViewDefinition(parent: ViewParent) {
 export function getInputSchemaFromViewParent(
   parent: ViewParent
 ): Malloy.Schema {
+  if (!parent) {
+    return {fields: []};
+  }
   const definition = getViewDefinition(parent);
   return definition.getInputSchema();
 }

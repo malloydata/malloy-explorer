@@ -46,9 +46,13 @@ export function FieldTokenWithActions({
 
   const {
     isGroupByAllowed,
+    groupByDisabledReason,
     isAggregateAllowed,
+    aggregateDisabledReason,
     isFilterAllowed,
+    filterDisabledReason,
     isOrderByAllowed,
+    orderByDisabledReason,
   } = useOperations(view, field, path);
 
   const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState<
@@ -99,7 +103,11 @@ export function FieldTokenWithActions({
               icon="insert"
               disabled={!rootQuery?.isEmpty()}
               onClick={handleSetView}
-              tooltip="Add view"
+              tooltip={
+                !rootQuery?.isEmpty()
+                  ? 'Can only add a view to an empty query.'
+                  : 'Add view'
+              }
               onTooltipOpenChange={setIsTooltipOpen}
             />
 
@@ -114,7 +122,7 @@ export function FieldTokenWithActions({
           <>
             <ActionButton
               icon="aggregate"
-              tooltip="Add as aggregate"
+              tooltip={aggregateDisabledReason || 'Add as aggregate'}
               disabled={!isAggregateAllowed}
               onClick={() => handleAddOperationAction('aggregate')}
               onTooltipOpenChange={setIsTooltipOpen}
@@ -126,7 +134,7 @@ export function FieldTokenWithActions({
               trigger={
                 <ActionButton
                   icon="filter"
-                  tooltip="Add as filter"
+                  tooltip={filterDisabledReason || 'Add as filter'}
                   disabled={!isFilterAllowed}
                   onTooltipOpenChange={setIsTooltipOpen}
                 />
@@ -135,7 +143,7 @@ export function FieldTokenWithActions({
             />
             <ActionButton
               icon="orderBy"
-              tooltip="Add as order by"
+              tooltip={orderByDisabledReason || 'Add as order by'}
               disabled={!isOrderByAllowed}
               onClick={() => handleAddOperationAction('orderBy')}
               onTooltipOpenChange={setIsTooltipOpen}
@@ -145,7 +153,7 @@ export function FieldTokenWithActions({
           <>
             <ActionButton
               icon="groupBy"
-              tooltip="Add as group by"
+              tooltip={groupByDisabledReason || 'Add as group by'}
               disabled={!isGroupByAllowed}
               onClick={() => handleAddOperationAction('groupBy')}
               onTooltipOpenChange={setIsTooltipOpen}
@@ -157,7 +165,7 @@ export function FieldTokenWithActions({
               trigger={
                 <ActionButton
                   icon="filter"
-                  tooltip="Add as filter"
+                  tooltip={filterDisabledReason || 'Add as filter'}
                   disabled={!isFilterAllowed}
                   onTooltipOpenChange={setIsTooltipOpen}
                 />
@@ -166,7 +174,7 @@ export function FieldTokenWithActions({
             />
             <ActionButton
               icon="orderBy"
-              tooltip="Add as order by"
+              tooltip={orderByDisabledReason || 'Add as order by'}
               disabled={!isOrderByAllowed}
               onClick={() => handleAddOperationAction('orderBy')}
               onTooltipOpenChange={setIsTooltipOpen}
