@@ -50,6 +50,25 @@ export const modelInfo: Malloy.ModelInfo = {
             kind: 'dimension',
             type: {kind: 'timestamp_type'},
           },
+          {
+            name: 'join_a',
+            kind: 'join',
+            relationship: 'one',
+            schema: {
+              fields: [
+                {
+                  name: 'string_dimension',
+                  kind: 'dimension',
+                  type: {kind: 'string_type'},
+                },
+                {
+                  name: 'measure_a',
+                  kind: 'measure',
+                  type: {kind: 'number_type'},
+                },
+              ],
+            },
+          },
         ],
       },
     },

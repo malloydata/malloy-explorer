@@ -16,6 +16,7 @@ import {
   getSegmentIfPresent,
   segmentHasLimit,
   segmentHasOrderBy,
+  segmentHasOrderBySourceField,
   segmentNestNo,
 } from './segment';
 import {modelInfo} from '../../test/model';
@@ -67,37 +68,44 @@ describe('segment utils', () => {
   describe('segmentHasOrderBy', () => {
     it('is false when there are no order_bys', () => {
       const segment = query.getOrAddDefaultSegment();
-      expect(segmentHasOrderBy(segment, [], 'measure_a')).toBe(false);
+      expect(segmentHasOrderBy(segment, 'measure_a')).toBe(false);
     });
 
     it('is false when there is no order_by with a given name', () => {
       const segment = query.getOrAddDefaultSegment();
       segment.addGroupBy('string_dimension');
       segment.addOrderBy('string_dimension');
-      expect(segmentHasOrderBy(segment, [], 'measure_a')).toBe(false);
+      expect(segmentHasOrderBy(segment, 'measure_a')).toBe(false);
     });
 
     it('is true when there is an order_by measure with a given name', () => {
       const segment = query.getOrAddDefaultSegment();
       segment.addAggregate('measure_a');
       segment.addOrderBy('measure_a');
-      expect(segmentHasOrderBy(segment, [], 'measure_a')).toBe(true);
+      expect(segmentHasOrderBy(segment, 'measure_a')).toBe(true);
     });
 
     it('is true when there is an order_by dimension with a given name', () => {
       const segment = query.getOrAddDefaultSegment();
       segment.addGroupBy('string_dimension');
       segment.addOrderBy('string_dimension');
-      expect(segmentHasOrderBy(segment, [], 'string_dimension')).toBe(true);
+      expect(segmentHasOrderBy(segment, 'string_dimension')).toBe(true);
     });
+  });
 
-    it('is false if the parameters have a path but the segment does not', () => {
+  describe('segmentHasOrderBySourceField', () => {
+    it('resolves items when the source field has a path', () => {
       const segment = query.getOrAddDefaultSegment();
       segment.addGroupBy('string_dimension');
-      segment.addOrderBy('string_dimension');
-      expect(segmentHasOrderBy(segment, ['root'], 'string_dimension')).toBe(
-        false
+      segment.addGroupBy(
+        'string_dimension',
+        ['join_a'],
+        'join_a string_dimension'
       );
+      segment.addOrderBy('join_a string_dimension');
+      expect(
+        segmentHasOrderBySourceField(segment, ['join_a'], 'string_dimension')
+      ).toBe(true);
     });
   });
 
