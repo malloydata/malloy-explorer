@@ -38,7 +38,7 @@ export function AddOrderBy({rootQuery, view, search}: AddEmptyNestProps) {
           // In this context, field.name is actually the full name of the field, and
           // the segment fields also include the qualified name, therefore we can
           // provide an empty path value.
-          return segment ? !segmentHasOrderBy(segment, [], field.name) : true;
+          return segment ? !segmentHasOrderBy(segment, field.name) : true;
         }),
     [outputSchemaFields, segment]
   );
