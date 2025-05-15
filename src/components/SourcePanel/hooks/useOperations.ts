@@ -99,20 +99,11 @@ export function useOperations(
     if (segment && segmentHasOrderBy(segment, path, field.name)) {
       return 'Query is already ordered by this field.';
     }
-    const outputSchemaFields = view.getOutputSchema().fields;
-
     if (!segment || !segmentHasFieldInOutputSpace(segment, path, field.name)) {
       return 'Order by is only available for fields in the output.';
     }
-    if (
-      !outputSchemaFields.some(
-        fieldInfo => matchingFieldItem.field.name === fieldInfo.name
-      )
-    ) {
-      return 'Order By is only available for fields already in the output.';
-    }
-    if (matchingFieldItem.field.kind !== 'dimension') {
-      return 'Order By is only available for dimension fields.';
+    if (!['dimension', 'measure'].includes(matchingFieldItem.field.kind)) {
+      return 'Order By is only available for dimension or measure fields.';
     }
     if (
       !ORDERABLE_TYPES.includes(

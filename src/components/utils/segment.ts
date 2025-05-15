@@ -72,7 +72,16 @@ export function segmentHasFieldInOutputSpace(
         return isEqual;
       }
     } else if (operation instanceof ASTAggregateViewOperation) {
-      debugger;
+      if (operation.field.node.expression.kind === 'field_reference') {
+        const isEqual = areReferencesEqual(
+          path,
+          name,
+          operation.field.node.expression.path,
+          operation.field.node.expression.name
+        );
+
+        return isEqual;
+      }
     }
     return false;
   });
