@@ -46,10 +46,6 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
     onCurrentNestViewChange?.(null);
   };
 
-  const canEditViz =
-    query.definition instanceof ASTArrowQueryDefinition &&
-    query.definition.view instanceof ASTSegmentViewDefinition;
-
   return (
     <div onPointerDownCapture={focusMainQueryPanel}>
       <CollapsiblePanel
@@ -109,7 +105,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
       >
         {query.definition instanceof ASTArrowQueryDefinition ? (
           <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-            {!query.isEmpty() && canEditViz && (
+            {!query.isEmpty() && (
               <Visualization rootQuery={rootQuery} view={query} />
             )}
             <ViewDefinition
