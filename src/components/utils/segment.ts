@@ -18,6 +18,10 @@ import {
 } from '@malloydata/malloy-query-builder';
 import {ViewParent, findUniqueFieldName, getViewDefinition} from './fields';
 
+export function toFullName(path: string[] | undefined, name: string): string {
+  return [...(path || []), name].join('.');
+}
+
 export function segmentHasLimit(segment: ASTSegmentViewDefinition) {
   return (
     segment.operations.items.find(
@@ -28,17 +32,64 @@ export function segmentHasLimit(segment: ASTSegmentViewDefinition) {
 
 export function segmentHasOrderBy(
   segment: ASTSegmentViewDefinition,
+  name: string
+) {
+  return (
+    segment.operations.items.find(
+      operation =>
+        operation instanceof ASTOrderByViewOperation && operation.name === name
+    ) !== undefined
+  );
+}
+
+// Collects a mapping from names in the output space to
+// the full name of the fields that are associated with the
+// output names, if that mapping could be computed.
+function getOuputNameToInputNameMap(
+  segment: ASTSegmentViewDefinition
+): Map<string, string> {
+  const nameMap = new Map<string, string>();
+
+  for (const operation of segment.operations.items) {
+    if (operation instanceof ASTGroupByViewOperation) {
+      if (operation.node.field.expression.kind === 'field_reference') {
+        const expression = operation.node.field.expression;
+        nameMap.set(
+          operation.name || expression.name,
+          toFullName(expression.path, expression.name)
+        );
+      }
+    } else if (
+      operation instanceof ASTAggregateViewOperation &&
+      operation.name
+    ) {
+      if (operation.node.field.expression.kind === 'field_reference') {
+        const expression = operation.node.field.expression;
+        nameMap.set(
+          operation.name || expression.name,
+          toFullName(expression.path, expression.name)
+        );
+      }
+    }
+  }
+  return nameMap;
+}
+
+export function segmentHasOrderBySourceField(
+  segment: ASTSegmentViewDefinition,
   path: string[] | undefined,
   name: string
 ) {
+  const nameMap = getOuputNameToInputNameMap(segment);
+
+  const fullInputName = toFullName(path, name);
+
   return !!segment.operations.items.find(operation => {
-    if (operation instanceof ASTOrderByViewOperation) {
-      return areReferencesEqual(
-        path,
-        name,
-        operation.fieldReference.path,
-        operation.fieldReference.name
-      );
+    if (
+      operation instanceof ASTOrderByViewOperation &&
+      nameMap.has(operation.name)
+    ) {
+      return fullInputName === nameMap.get(operation.name);
     }
     return false;
   });
@@ -152,6 +203,31 @@ export function addNest(view: ViewParent, field: Malloy.FieldInfo) {
     rename = findUniqueFieldName(fields, field.name);
   }
   segment.addNest(field.name, rename);
+}
+
+// Uses the full source path to look up the associated output name for the
+// input field, and add it as an order_by clause.
+export function addOrderByFromSource(
+  view: ViewParent,
+  path: string[],
+  name: string,
+  direction: Malloy.OrderByDirection = 'desc'
+) {
+  const fullInputName = toFullName(path, name);
+
+  // Default to name, but override if a better option can be found.
+  let orderByName = name;
+
+  const segment = view.getOrAddDefaultSegment();
+  const nameMap = getOuputNameToInputNameMap(segment);
+  for (const entry of nameMap.entries()) {
+    if (entry[1] === fullInputName) {
+      orderByName = entry[0];
+      break;
+    }
+  }
+
+  segment.addOrderBy(orderByName, direction);
 }
 
 export function addOrderBy(

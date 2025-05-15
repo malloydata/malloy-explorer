@@ -13,7 +13,7 @@ import {
   addFilter,
   addGroupBy,
   addNest,
-  addOrderBy,
+  addOrderByFromSource,
 } from '../utils/segment';
 import {useOperations} from './hooks/useOperations';
 import {FilterPopover} from '../filters/FilterPopover';
@@ -71,7 +71,7 @@ export function FieldTokenWithActions({
       } else if (operation === 'aggregate' && isAggregateAllowed) {
         addAggregate(view, field, path);
       } else if (operation === 'orderBy' && isOrderByAllowed) {
-        addOrderBy(view, field);
+        addOrderByFromSource(view, path, field.name);
       } else if (operation === 'filter' && isFilterAllowed && filter) {
         addFilter(view, field, path, filter);
       }
