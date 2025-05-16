@@ -18,7 +18,7 @@ import {AddMenu} from '../AddMenu/AddMenu';
 import {viewToVisualizationIcon} from '../../utils/icon';
 import {RenameDialog} from './RenameDialog';
 import {ViewParent} from '../../utils/fields';
-import {useQueryFocus} from '../../MalloyActiveNestViewProvider';
+import {useQueryFocus} from '../../MalloyQueryFocusProvider';
 import {NestViewPathContext} from '../../contexts/NestViewPathContext';
 
 export interface NestOperationsProps {

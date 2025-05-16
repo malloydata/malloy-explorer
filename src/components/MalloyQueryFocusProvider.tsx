@@ -19,22 +19,10 @@ import {
 } from '@malloydata/malloy-query-builder';
 
 interface MalloyQueryFocus {
-  // activeNestViewPath?: string[];
-  // /**
-  //  * Callback function for when the nest view object
-  //  * corresponding to current focused nest query panel changes
-  //  */
-  // onActiveNestViewPathChange?: (path: string[]) => void;
-
-  /** Nest view object corresponding to current focused nest query panel */
   focusMainView: () => void;
-
   isMainViewFocused: boolean;
-
   focusNestView: (path: string[]) => void;
-
   isNestViewFocused: (path: string[]) => boolean;
-
   focusedNestView: ASTView | null;
 }
 

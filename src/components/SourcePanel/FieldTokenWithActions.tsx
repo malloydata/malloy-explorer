@@ -25,7 +25,7 @@ import {
 } from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../primitives/styles';
 import stylex from '@stylexjs/stylex';
-import {useQueryFocus} from '../MalloyActiveNestViewProvider';
+import {useQueryFocus} from '../MalloyQueryFocusProvider';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 

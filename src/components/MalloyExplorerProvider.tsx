@@ -14,7 +14,7 @@ import {
   SearchValueMapResult,
 } from '../contexts/QueryEditorContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
-import {MalloyQueryFocusProvider} from './MalloyActiveNestViewProvider';
+import {MalloyQueryFocusProvider} from './MalloyQueryFocusProvider';
 
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;

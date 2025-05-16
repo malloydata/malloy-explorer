@@ -26,7 +26,7 @@ import {
 import stylex from '@stylexjs/stylex';
 import {viewToVisualizationIcon} from '../utils/icon';
 import {textColors} from '../primitives/colors.stylex';
-import {useQueryFocus} from '../MalloyActiveNestViewProvider';
+import {useQueryFocus} from '../MalloyQueryFocusProvider';
 
 export interface QueryProps {
   rootQuery: ASTQuery;

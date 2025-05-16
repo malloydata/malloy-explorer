@@ -19,7 +19,7 @@ import {fontStyles, tooltipStyles} from '../primitives/styles';
 import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
-import {useQueryFocus} from '../MalloyActiveNestViewProvider';
+import {useQueryFocus} from '../MalloyQueryFocusProvider';
 
 /**
  * Source
