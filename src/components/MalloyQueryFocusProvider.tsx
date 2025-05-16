@@ -125,8 +125,8 @@ const findNestView = (
       return currentNestOperation.view;
     } else {
       return findNestView(currentNestOperation.view.definition, remainingPath);
-        }
-      }
+    }
+  }
 
   if (currentView instanceof ASTRefinementViewDefinition) {
     return findNestView(currentView.refinement, remainingPath);
