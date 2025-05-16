@@ -36,17 +36,17 @@ const MalloyQueryFocusContext = React.createContext<MalloyQueryFocus>({
 
 interface MalloyQueryFocusProviderProps {
   rootQuery: ASTQuery | undefined;
+  focusedNestViewPath: string[];
+  onFocusedNestViewPathChange: (path: string[]) => void;
   children: ReactNode | ReactNode[];
 }
 
 export function MalloyQueryFocusProvider({
   rootQuery,
+  focusedNestViewPath,
+  onFocusedNestViewPathChange,
   children,
 }: MalloyQueryFocusProviderProps) {
-  const [focusedNestViewPath, setFocusedNestViewPath] = React.useState<
-    string[]
-  >([]);
-
   const focusedNestView = React.useMemo<ASTView | null>(() => {
     if (focusedNestViewPath.length === 0) {
       return null;
@@ -63,12 +63,15 @@ export function MalloyQueryFocusProvider({
   }, [rootQuery, focusedNestViewPath]);
 
   const focusMainView = React.useCallback(() => {
-    setFocusedNestViewPath([]);
-  }, []);
+    onFocusedNestViewPathChange([]);
+  }, [onFocusedNestViewPathChange]);
 
-  const focusNestView = React.useCallback((path: string[]) => {
-    setFocusedNestViewPath([...path]);
-  }, []);
+  const focusNestView = React.useCallback(
+    (path: string[]) => {
+      onFocusedNestViewPathChange([...path]);
+    },
+    [onFocusedNestViewPathChange]
+  );
 
   const isNestViewFocused = React.useCallback(
     (path: string[]) => {
