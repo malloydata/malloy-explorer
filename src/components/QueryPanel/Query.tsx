@@ -24,8 +24,8 @@ import {
 } from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {viewToVisualizationIcon} from '../utils/icon';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {textColors} from '../primitives/colors.stylex';
+import {useQueryFocus} from '../MalloyQueryFocusProvider';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -34,22 +34,13 @@ export interface QueryProps {
 }
 
 export function Query({rootQuery, query, setQuery}: QueryProps) {
-  const {
-    currentNestQueryPanel,
-    onCurrentNestQueryPanelChange,
-    onCurrentNestViewChange,
-  } = React.useContext(QueryEditorContext);
-
-  const focusMainQueryPanel = () => {
-    onCurrentNestQueryPanelChange?.(null);
-    onCurrentNestViewChange?.(null);
-  };
+  const {focusMainView, isMainViewFocused} = useQueryFocus();
 
   return (
-    <div onPointerDownCapture={focusMainQueryPanel}>
+    <div onPointerDownCapture={focusMainView}>
       <CollapsiblePanel
         title="Main query"
-        isFocused={!currentNestQueryPanel}
+        isFocused={isMainViewFocused}
         controls={
           <>
             <DropdownMenu
@@ -68,7 +59,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
                     icon="clear"
                     label="Clear query"
                     onClick={() => {
-                      focusMainQueryPanel();
+                      focusMainView();
                       setQuery?.(undefined);
                     }}
                     disabled={rootQuery.isEmpty()}
