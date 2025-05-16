@@ -45,13 +45,9 @@ export function FieldTokenWithActions({
   const view = currentNestView ?? viewDef;
 
   const {
-    isGroupByAllowed,
     groupByDisabledReason,
-    isAggregateAllowed,
     aggregateDisabledReason,
-    isFilterAllowed,
     filterDisabledReason,
-    isOrderByAllowed,
     orderByDisabledReason,
   } = useOperations(view, field, path);
 
@@ -66,13 +62,13 @@ export function FieldTokenWithActions({
     filter?: ParsedFilter
   ) => {
     if (field.kind === 'dimension' || field.kind === 'measure') {
-      if (operation === 'groupBy' && isGroupByAllowed) {
+      if (operation === 'groupBy' && !groupByDisabledReason) {
         addGroupBy(view, field, path);
-      } else if (operation === 'aggregate' && isAggregateAllowed) {
+      } else if (operation === 'aggregate' && !aggregateDisabledReason) {
         addAggregate(view, field, path);
-      } else if (operation === 'orderBy' && isOrderByAllowed) {
+      } else if (operation === 'orderBy' && !orderByDisabledReason) {
         addOrderByFromSource(view, path, field.name);
-      } else if (operation === 'filter' && isFilterAllowed && filter) {
+      } else if (operation === 'filter' && !filterDisabledReason && filter) {
         addFilter(view, field, path, filter);
       }
       setQuery?.(rootQuery?.build());
@@ -123,7 +119,7 @@ export function FieldTokenWithActions({
             <ActionButton
               icon="aggregate"
               tooltip={aggregateDisabledReason || 'Add as aggregate'}
-              disabled={!isAggregateAllowed}
+              disabled={!!aggregateDisabledReason}
               onClick={() => handleAddOperationAction('aggregate')}
               onTooltipOpenChange={setIsTooltipOpen}
             />
@@ -135,7 +131,7 @@ export function FieldTokenWithActions({
                 <ActionButton
                   icon="filter"
                   tooltip={filterDisabledReason || 'Add as filter'}
-                  disabled={!isFilterAllowed}
+                  disabled={!!filterDisabledReason}
                   onTooltipOpenChange={setIsTooltipOpen}
                 />
               }
@@ -144,7 +140,7 @@ export function FieldTokenWithActions({
             <ActionButton
               icon="orderBy"
               tooltip={orderByDisabledReason || 'Add as order by'}
-              disabled={!isOrderByAllowed}
+              disabled={!!orderByDisabledReason}
               onClick={() => handleAddOperationAction('orderBy')}
               onTooltipOpenChange={setIsTooltipOpen}
             />
@@ -154,7 +150,7 @@ export function FieldTokenWithActions({
             <ActionButton
               icon="groupBy"
               tooltip={groupByDisabledReason || 'Add as group by'}
-              disabled={!isGroupByAllowed}
+              disabled={!!groupByDisabledReason}
               onClick={() => handleAddOperationAction('groupBy')}
               onTooltipOpenChange={setIsTooltipOpen}
             />
@@ -166,7 +162,7 @@ export function FieldTokenWithActions({
                 <ActionButton
                   icon="filter"
                   tooltip={filterDisabledReason || 'Add as filter'}
-                  disabled={!isFilterAllowed}
+                  disabled={!!filterDisabledReason}
                   onTooltipOpenChange={setIsTooltipOpen}
                 />
               }
@@ -175,7 +171,7 @@ export function FieldTokenWithActions({
             <ActionButton
               icon="orderBy"
               tooltip={orderByDisabledReason || 'Add as order by'}
-              disabled={!isOrderByAllowed}
+              disabled={!!orderByDisabledReason}
               onClick={() => handleAddOperationAction('orderBy')}
               onTooltipOpenChange={setIsTooltipOpen}
             />
@@ -183,9 +179,9 @@ export function FieldTokenWithActions({
         ) : null
       }
       onClick={
-        field.kind === 'dimension' && isGroupByAllowed
+        field.kind === 'dimension' && !groupByDisabledReason
           ? () => handleAddOperationAction('groupBy')
-          : field.kind === 'measure' && isAggregateAllowed
+          : field.kind === 'measure' && !aggregateDisabledReason
             ? () => handleAddOperationAction('aggregate')
             : field.kind === 'view'
               ? () => handleAddView()

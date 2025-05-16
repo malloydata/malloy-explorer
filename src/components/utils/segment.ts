@@ -45,31 +45,18 @@ export function segmentHasOrderBy(
 // Collects a mapping from names in the output space to
 // the full name of the fields that are associated with the
 // output names, if that mapping could be computed.
-function getOuputNameToInputNameMap(
+function getOutputNameToInputNameMap(
   segment: ASTSegmentViewDefinition
 ): Map<string, string> {
   const nameMap = new Map<string, string>();
 
   for (const operation of segment.operations.items) {
-    if (operation instanceof ASTGroupByViewOperation) {
-      if (operation.node.field.expression.kind === 'field_reference') {
-        const expression = operation.node.field.expression;
-        nameMap.set(
-          operation.name || expression.name,
-          toFullName(expression.path, expression.name)
-        );
-      }
-    } else if (
-      operation instanceof ASTAggregateViewOperation &&
-      operation.name
+    if (
+      operation instanceof ASTGroupByViewOperation ||
+      operation instanceof ASTAggregateViewOperation
     ) {
-      if (operation.node.field.expression.kind === 'field_reference') {
-        const expression = operation.node.field.expression;
-        nameMap.set(
-          operation.name || expression.name,
-          toFullName(expression.path, expression.name)
-        );
-      }
+      const reference = operation.field.getReference();
+      nameMap.set(operation.name, toFullName(reference.path, reference.name));
     }
   }
   return nameMap;
@@ -80,7 +67,7 @@ export function segmentHasOrderBySourceField(
   path: string[] | undefined,
   name: string
 ) {
-  const nameMap = getOuputNameToInputNameMap(segment);
+  const nameMap = getOutputNameToInputNameMap(segment);
 
   const fullInputName = toFullName(path, name);
 
@@ -111,28 +98,19 @@ export function segmentHasFieldInOutputSpace(
   name: string
 ) {
   const match = segment.operations.items.find(operation => {
-    if (operation instanceof ASTGroupByViewOperation) {
-      if (operation.field.node.expression.kind === 'field_reference') {
-        const isEqual = areReferencesEqual(
-          path,
-          name,
-          operation.field.node.expression.path,
-          operation.field.node.expression.name
-        );
+    if (
+      operation instanceof ASTGroupByViewOperation ||
+      operation instanceof ASTAggregateViewOperation
+    ) {
+      const reference = operation.field.getReference();
+      const isEqual = areReferencesEqual(
+        path,
+        name,
+        reference.path,
+        reference.name
+      );
 
-        return isEqual;
-      }
-    } else if (operation instanceof ASTAggregateViewOperation) {
-      if (operation.field.node.expression.kind === 'field_reference') {
-        const isEqual = areReferencesEqual(
-          path,
-          name,
-          operation.field.node.expression.path,
-          operation.field.node.expression.name
-        );
-
-        return isEqual;
-      }
+      return isEqual;
     }
     return false;
   });
@@ -219,7 +197,7 @@ export function addOrderByFromSource(
   let orderByName = name;
 
   const segment = view.getOrAddDefaultSegment();
-  const nameMap = getOuputNameToInputNameMap(segment);
+  const nameMap = getOutputNameToInputNameMap(segment);
   for (const entry of nameMap.entries()) {
     if (entry[1] === fullInputName) {
       orderByName = entry[0];
