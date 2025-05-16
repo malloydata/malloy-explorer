@@ -26,7 +26,7 @@ import {
 import stylex from '@stylexjs/stylex';
 import {viewToVisualizationIcon} from '../utils/icon';
 import {textColors} from '../primitives/colors.stylex';
-import {useActiveQueryPanel} from '../MalloyActiveQueryPanelProvider';
+import {useQueryFocus} from '../MalloyActiveNestViewProvider';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -35,26 +35,17 @@ export interface QueryProps {
 }
 
 export function Query({rootQuery, query, setQuery}: QueryProps) {
-  const {
-    activeNestQueryPanel,
-    onActiveNestQueryPanelChange,
-    onActiveNestViewChange,
-  } = useActiveQueryPanel();
-
-  const focusMainQueryPanel = () => {
-    onActiveNestQueryPanelChange?.(null);
-    onActiveNestViewChange?.(null);
-  };
+  const {focusMainView, isMainViewFocused} = useQueryFocus();
 
   const canEditViz =
     query.definition instanceof ASTArrowQueryDefinition &&
     query.definition.view instanceof ASTSegmentViewDefinition;
 
   return (
-    <div onPointerDownCapture={focusMainQueryPanel}>
+    <div onPointerDownCapture={focusMainView}>
       <CollapsiblePanel
         title="Main query"
-        isFocused={!activeNestQueryPanel}
+        isFocused={isMainViewFocused}
         controls={
           <>
             <DropdownMenu
@@ -73,7 +64,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
                     icon="clear"
                     label="Clear query"
                     onClick={() => {
-                      focusMainQueryPanel();
+                      focusMainView();
                       setQuery?.(undefined);
                     }}
                     disabled={rootQuery.isEmpty()}

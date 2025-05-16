@@ -19,7 +19,7 @@ import {fontStyles, tooltipStyles} from '../primitives/styles';
 import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
-import {useActiveQueryPanel} from '../MalloyActiveQueryPanelProvider';
+import {useQueryFocus} from '../MalloyActiveNestViewProvider';
 
 /**
  * Source
@@ -32,8 +32,7 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
   const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
-  const {onActiveNestQueryPanelChange, onActiveNestViewChange} =
-    useActiveQueryPanel();
+  const {focusMainView} = useQueryFocus();
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
   const isRunEnabled = rootQuery?.isRunnable();
@@ -41,11 +40,6 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
     if (source && rootQuery) {
       runQuery(source, rootQuery.build());
     }
-  };
-
-  const focusMainQueryPanel = () => {
-    onActiveNestViewChange?.(null);
-    onActiveNestQueryPanelChange?.(null);
   };
 
   return (
@@ -57,7 +51,7 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
       <div {...stylex.props(styles.buttons)}>
         <Button
           onClick={() => {
-            focusMainQueryPanel();
+            focusMainView();
             setQuery?.(undefined);
           }}
           isDisabled={!rootQuery || rootQuery?.isEmpty()}

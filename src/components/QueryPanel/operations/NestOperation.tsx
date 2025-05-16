@@ -18,7 +18,8 @@ import {AddMenu} from '../AddMenu/AddMenu';
 import {viewToVisualizationIcon} from '../../utils/icon';
 import {RenameDialog} from './RenameDialog';
 import {ViewParent} from '../../utils/fields';
-import {useActiveQueryPanel} from '../../MalloyActiveQueryPanelProvider';
+import {useQueryFocus} from '../../MalloyActiveNestViewProvider';
+import {NestViewPathContext} from '../../contexts/NestViewPathContext';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -54,38 +55,11 @@ export interface NestOperationProps {
 export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
   const {setQuery} = useContext(QueryEditorContext);
 
-  const {
-    activeNestQueryPanel,
-    onActiveNestQueryPanelChange,
-    onActiveNestViewChange,
-  } = useActiveQueryPanel();
-
   const [renameOpen, setRenameOpen] = useState(false);
 
-  const panelRef = React.useRef<HTMLDivElement>(null);
+  const parentNestViewPath = useContext(NestViewPathContext);
 
-  const isCurrentNestQueryPanelFocused =
-    activeNestQueryPanel !== null && panelRef.current == activeNestQueryPanel;
-
-  React.useEffect(() => {
-    if (isCurrentNestQueryPanelFocused) {
-      onActiveNestViewChange?.(nest.view);
-    }
-  }, [nest, isCurrentNestQueryPanelFocused, onActiveNestViewChange]);
-
-  const focusCurrentNestQueryPanel = () => {
-    onActiveNestQueryPanelChange?.(panelRef.current);
-    onActiveNestViewChange?.(nest.view);
-  };
-
-  const focusParentQueryPanel = () => {
-    const currentPanel = panelRef.current;
-    const parent = findParentNestQueryPanel(currentPanel);
-    onActiveNestQueryPanelChange?.(parent);
-    if (parent === null) {
-      onActiveNestViewChange?.(null);
-    }
-  };
+  const {focusNestView, isNestViewFocused} = useQueryFocus();
 
   const getControls = (nest: ASTNestViewOperation) => (
     <>
@@ -103,7 +77,7 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
           icon="clear"
           label="Delete Query"
           onClick={() => {
-            focusParentQueryPanel();
+            focusNestView([...parentNestViewPath]);
             nest.delete();
             setQuery?.(rootQuery.build());
           }}
@@ -120,31 +94,33 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
   );
 
   return (
-    <div key={nest.name} {...stylex.props(viewStyles.indent)}>
-      <div
-        ref={panelRef}
-        onPointerDownCapture={focusCurrentNestQueryPanel}
-        data-nest-panel
-      >
-        <CollapsiblePanel
-          title={nest.name}
-          icon={viewToVisualizationIcon(nest.view)}
-          defaultOpen={true}
-          controls={getControls(nest)}
-          collapsedControls={getControls(nest)}
-          isFocused={isCurrentNestQueryPanelFocused}
+    <NestViewPathContext.Provider value={[...parentNestViewPath, nest.name]}>
+      <div key={nest.name} {...stylex.props(viewStyles.indent)}>
+        <div
+          onPointerDownCapture={() =>
+            focusNestView([...parentNestViewPath, nest.name])
+          }
         >
-          <View rootQuery={rootQuery} view={nest.view} />
-        </CollapsiblePanel>
-        <RenameDialog
-          rootQuery={rootQuery}
-          view={view}
-          target={nest}
-          open={renameOpen}
-          setOpen={setRenameOpen}
-        />
+          <CollapsiblePanel
+            title={nest.name}
+            icon={viewToVisualizationIcon(nest.view)}
+            defaultOpen={true}
+            controls={getControls(nest)}
+            collapsedControls={getControls(nest)}
+            isFocused={isNestViewFocused([...parentNestViewPath, nest.name])}
+          >
+            <View rootQuery={rootQuery} view={nest.view} />
+          </CollapsiblePanel>
+          <RenameDialog
+            rootQuery={rootQuery}
+            view={view}
+            target={nest}
+            open={renameOpen}
+            setOpen={setRenameOpen}
+          />
+        </div>
       </div>
-    </div>
+    </NestViewPathContext.Provider>
   );
 }
 
@@ -156,10 +132,3 @@ const viewStyles = stylex.create({
     width: '100%',
   },
 });
-
-function findParentNestQueryPanel(element: HTMLElement | null) {
-  if (!element || !element.parentElement) return null;
-  const parentElement = element.parentElement;
-  if (parentElement.dataset.nestPanel !== undefined) return parentElement;
-  return findParentNestQueryPanel(parentElement);
-}

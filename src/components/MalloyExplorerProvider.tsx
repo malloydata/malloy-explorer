@@ -14,7 +14,7 @@ import {
   SearchValueMapResult,
 } from '../contexts/QueryEditorContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
-import {MalloyActiveQueryPanelProvider} from './MalloyActiveQueryPanelProvider';
+import {MalloyQueryFocusProvider} from './MalloyActiveNestViewProvider';
 
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;
@@ -35,18 +35,18 @@ export function MalloyExplorerProvider({
 
   return (
     <TooltipProvider>
-      <MalloyActiveQueryPanelProvider>
-      <QueryEditorContext.Provider
-        value={{
-          source,
-          rootQuery,
-          setQuery,
-          topValues,
-        }}
-      >
-        {children}
-      </QueryEditorContext.Provider>
-      </MalloyActiveQueryPanelProvider>
+      <MalloyQueryFocusProvider rootQuery={rootQuery}>
+        <QueryEditorContext.Provider
+          value={{
+            source,
+            rootQuery,
+            setQuery,
+            topValues,
+          }}
+        >
+          {children}
+        </QueryEditorContext.Provider>
+      </MalloyQueryFocusProvider>
     </TooltipProvider>
   );
 }

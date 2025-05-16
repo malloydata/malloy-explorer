@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 
 // TODO switch to stable API when available
 export interface SearchValueMapResult {

@@ -25,7 +25,7 @@ import {
 } from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../primitives/styles';
 import stylex from '@stylexjs/stylex';
-import {useActiveQueryPanel} from '../MalloyActiveQueryPanelProvider';
+import {useQueryFocus} from '../MalloyActiveNestViewProvider';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
@@ -42,9 +42,9 @@ export function FieldTokenWithActions({
 }: FieldTokenWithActionsProps) {
   const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
 
-  const {activeNestView} = useActiveQueryPanel();
+  const {focusedNestView} = useQueryFocus();
 
-  const view = activeNestView ?? viewDef;
+  const view = focusedNestView ?? viewDef;
 
   const {
     isGroupByAllowed,
