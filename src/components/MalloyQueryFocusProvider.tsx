@@ -105,33 +105,29 @@ const findNestView = (
   if (remainingPath.length === 0) {
     return null;
   }
+
   if (currentView instanceof ASTArrowViewDefinition) {
     return findNestView(currentView.view, remainingPath);
   }
+
   if (currentView instanceof ASTSegmentViewDefinition) {
-    const targetNestName = remainingPath.pop() as string;
-    const targetNestViewOperations = currentView.operations.items.filter(
+    const currentNestName = remainingPath.pop() as string;
+    const currentNestOperation = currentView.operations.items.find(
       (operation): operation is ASTNestViewOperation =>
         operation instanceof ASTNestViewOperation &&
-        operation.name === targetNestName
+        operation.name === currentNestName
     );
 
-    if (remainingPath.length === 0) {
-      return targetNestViewOperations[0].view;
-    } else if (targetNestViewOperations.length === 0) {
-      remainingPath.push(targetNestName as string);
+    if (currentNestOperation === undefined) {
+      remainingPath.push(currentNestName);
       return null;
+    } else if (remainingPath.length === 0) {
+      return currentNestOperation.view;
     } else {
-      for (const operation of targetNestViewOperations) {
-        const result = findNestView(operation.view.definition, remainingPath);
-        if (result) {
-          return result;
+      return findNestView(currentNestOperation.view.definition, remainingPath);
         }
       }
-      remainingPath.push(targetNestName);
-      return null;
-    }
-  }
+
   if (currentView instanceof ASTRefinementViewDefinition) {
     return findNestView(currentView.refinement, remainingPath);
   }
