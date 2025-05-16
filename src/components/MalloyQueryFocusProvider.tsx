@@ -109,12 +109,11 @@ const findNestView = (
     return findNestView(currentView.view, remainingPath);
   }
   if (currentView instanceof ASTSegmentViewDefinition) {
-    const nestViewOperations = currentView.operations.items.filter(
-      operation => operation instanceof ASTNestViewOperation
-    );
     const targetNestName = remainingPath.pop() as string;
-    const targetNestViewOperations = nestViewOperations.filter(
-      operation => operation.name === targetNestName
+    const targetNestViewOperations = currentView.operations.items.filter(
+      (operation): operation is ASTNestViewOperation =>
+        operation instanceof ASTNestViewOperation &&
+        operation.name === targetNestName
     );
 
     if (remainingPath.length === 0) {
