@@ -25,7 +25,7 @@ export interface QueryEditorContextProps {
   /** Query object to represent current state at the root level  */
   rootQuery?: ASTQuery;
   /** Provide to allow editing of the query */
-  setQuery?: (rootQuery: Malloy.Query | undefined) => void;
+  setQuery?: (query: Malloy.Query | undefined) => void;
   topValues?: SearchValueMapResult[];
 }
 

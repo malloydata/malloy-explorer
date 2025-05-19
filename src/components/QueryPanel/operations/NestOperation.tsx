@@ -20,6 +20,7 @@ import {RenameDialog} from './RenameDialog';
 import {ViewParent} from '../../utils/fields';
 import {useQueryFocus} from '../../MalloyQueryFocusProvider';
 import {NestViewPathContext} from '../../contexts/NestViewPathContext';
+import {FocusableView} from '../FocusableView';
 
 export interface NestOperationsProps {
   rootQuery: ASTQuery;
@@ -94,33 +95,27 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
   );
 
   return (
-    <NestViewPathContext.Provider value={[...parentNestViewPath, nest.name]}>
+    <FocusableView nest={nest}>
       <div key={nest.name} {...stylex.props(viewStyles.indent)}>
-        <div
-          onPointerDownCapture={() =>
-            focusNestView([...parentNestViewPath, nest.name])
-          }
+        <CollapsiblePanel
+          title={nest.name}
+          icon={viewToVisualizationIcon(nest.view)}
+          defaultOpen={true}
+          controls={getControls(nest)}
+          collapsedControls={getControls(nest)}
+          isFocused={isNestViewFocused([...parentNestViewPath, nest.name])}
         >
-          <CollapsiblePanel
-            title={nest.name}
-            icon={viewToVisualizationIcon(nest.view)}
-            defaultOpen={true}
-            controls={getControls(nest)}
-            collapsedControls={getControls(nest)}
-            isFocused={isNestViewFocused([...parentNestViewPath, nest.name])}
-          >
-            <View rootQuery={rootQuery} view={nest.view} />
-          </CollapsiblePanel>
-          <RenameDialog
-            rootQuery={rootQuery}
-            view={view}
-            target={nest}
-            open={renameOpen}
-            setOpen={setRenameOpen}
-          />
-        </div>
+          <View rootQuery={rootQuery} view={nest.view} />
+        </CollapsiblePanel>
+        <RenameDialog
+          rootQuery={rootQuery}
+          view={view}
+          target={nest}
+          open={renameOpen}
+          setOpen={setRenameOpen}
+        />
       </div>
-    </NestViewPathContext.Provider>
+    </FocusableView>
   );
 }
 

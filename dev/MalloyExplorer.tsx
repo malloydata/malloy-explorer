@@ -26,13 +26,18 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
+  const [focusedNestViewPath, setFocusedNestViewPath] = React.useState<
+    string[]
+  >([]);
 
   return (
     <React.StrictMode>
       <MalloyExplorerProvider
         source={source}
         query={query}
-        setQuery={setQuery}
+        onQueryChange={setQuery}
+        focusedNestViewPath={focusedNestViewPath}
+        onFocusedNestViewPathChange={setFocusedNestViewPath}
         topValues={topValues}
       >
         <div {...stylex.props(styles.page)}>

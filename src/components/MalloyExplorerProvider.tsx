@@ -19,7 +19,9 @@ import {MalloyQueryFocusProvider} from './MalloyQueryFocusProvider';
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;
   query?: Malloy.Query;
-  setQuery?: (query: Malloy.Query | undefined) => void;
+  onQueryChange?: (query: Malloy.Query | undefined) => void;
+  focusedNestViewPath: string[];
+  onFocusedNestViewPathChange: (path: string[]) => void;
   children: ReactNode | ReactNode[];
   topValues?: SearchValueMapResult[];
 }
@@ -27,7 +29,9 @@ export interface MalloyExplorerProviderProps {
 export function MalloyExplorerProvider({
   source,
   query,
-  setQuery,
+  onQueryChange,
+  focusedNestViewPath,
+  onFocusedNestViewPathChange,
   children,
   topValues,
 }: MalloyExplorerProviderProps) {
@@ -35,12 +39,16 @@ export function MalloyExplorerProvider({
 
   return (
     <TooltipProvider>
-      <MalloyQueryFocusProvider rootQuery={rootQuery}>
+      <MalloyQueryFocusProvider
+        rootQuery={rootQuery}
+        focusedNestViewPath={focusedNestViewPath}
+        onFocusedNestViewPathChange={onFocusedNestViewPathChange}
+      >
         <QueryEditorContext.Provider
           value={{
             source,
             rootQuery,
-            setQuery,
+            setQuery: onQueryChange,
             topValues,
           }}
         >
