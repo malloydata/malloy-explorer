@@ -26,6 +26,7 @@ import stylex from '@stylexjs/stylex';
 import {viewToVisualizationIcon} from '../utils/icon';
 import {textColors} from '../primitives/colors.stylex';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
+import {FocusableView} from './FocusableView';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -37,7 +38,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
 
   return (
-    <div onPointerDownCapture={focusMainView}>
+    <FocusableView>
       <CollapsiblePanel
         title="Main query"
         isFocused={isMainViewFocused}
@@ -115,7 +116,7 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
           </div>
         ) : null}
       </CollapsiblePanel>
-    </div>
+    </FocusableView>
   );
 }
 
