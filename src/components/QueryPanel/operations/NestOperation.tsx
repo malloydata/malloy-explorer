@@ -97,9 +97,10 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
     <NestViewPathContext.Provider value={[...parentNestViewPath, nest.name]}>
       <div key={nest.name} {...stylex.props(viewStyles.indent)}>
         <div
-          onPointerDownCapture={() =>
-            focusNestView([...parentNestViewPath, nest.name])
-          }
+          onPointerDown={e => {
+            e.stopPropagation();
+            focusNestView([...parentNestViewPath, nest.name]);
+          }}
         >
           <CollapsiblePanel
             title={nest.name}
