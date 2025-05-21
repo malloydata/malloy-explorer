@@ -37,28 +37,46 @@ export const parsedToLabels = (
             value = stringClause.escaped_values.join(', ');
             break;
           case '=':
-            op = 'is';
-            value = stringClause.values.join(', ');
+            {
+              const {not, values} = stringClause;
+              op = not ? 'is not' : 'is';
+              value = values.join(', ');
+            }
             break;
           case 'contains':
-            op = 'contains';
-            value = stringClause.values.join(', ');
+            {
+              const {not, values} = stringClause;
+              op = not ? 'does not contain' : 'contains';
+              value = values.join(', ');
+            }
             break;
           case 'starts':
-            op = 'starts with';
-            value = stringClause.values.join(', ');
+            {
+              const {not, values} = stringClause;
+              op = not ? 'does not start with' : 'starts with';
+              value = values.join(', ');
+            }
             break;
           case 'ends':
-            op = 'is like';
-            value = stringClause.values.join(', ');
+            {
+              const {not, values} = stringClause;
+              op = not ? 'does not end with' : 'ends with';
+              value = values.join(', ');
+            }
             break;
           case 'empty':
-            op = 'is empty';
-            value = '';
+            {
+              const {not} = stringClause;
+              op = not ? 'is not empty' : 'is empty';
+              value = '';
+            }
             break;
           case 'null':
-            op = stringClause.not ? 'is not' : 'is';
-            value = 'null';
+            {
+              const {not} = stringClause;
+              op = not ? 'is not' : 'is';
+              value = 'null';
+            }
             break;
         }
       }
