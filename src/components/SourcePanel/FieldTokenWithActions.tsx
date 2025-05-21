@@ -186,7 +186,13 @@ export function FieldTokenWithActions({
           : field.kind === 'measure' && !aggregateDisabledReason
             ? () => handleAddOperationAction('aggregate')
             : field.kind === 'view'
-              ? () => handleAddView()
+              ? () => {
+                  if (rootQuery?.isEmpty()) {
+                    handleSetView();
+                  } else {
+                    handleAddView();
+                  }
+                }
               : undefined
       }
       hoverActionsVisible={isFilterPopoverOpen || isTooltipOpen}
