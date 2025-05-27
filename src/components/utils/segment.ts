@@ -56,7 +56,11 @@ function getOutputNameToInputNameMap(
       operation instanceof ASTAggregateViewOperation
     ) {
       const reference = operation.field.getReference();
-      nameMap.set(operation.name, toFullName(reference.path, reference.name));
+      if (reference) {
+        nameMap.set(operation.name, toFullName(reference.path, reference.name));
+      } else {
+        // TODO(whscullin) drilling
+      }
     }
   }
   return nameMap;
@@ -103,14 +107,11 @@ export function segmentHasFieldInOutputSpace(
       operation instanceof ASTAggregateViewOperation
     ) {
       const reference = operation.field.getReference();
-      const isEqual = areReferencesEqual(
-        path,
-        name,
-        reference.path,
-        reference.name
-      );
-
-      return isEqual;
+      if (reference) {
+        return areReferencesEqual(path, name, reference.path, reference.name);
+      } else {
+        return false; // TODO(whscullin) drilling
+      }
     }
     return false;
   });

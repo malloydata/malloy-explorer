@@ -168,7 +168,7 @@ function SortableOperation({
 }: SortableOperationProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const fieldInfo = operation.getFieldInfo();
-  const path = operation.field.getReference().path ?? NULL_PATH;
+  const path = operation.field.getReference()?.path ?? NULL_PATH;
   const {attributes, listeners, setNodeRef, transform, transition} =
     useSortable({id, data: {name: fieldInfo.name}});
   const [renameOpen, setRenameOpen] = useState(false);
