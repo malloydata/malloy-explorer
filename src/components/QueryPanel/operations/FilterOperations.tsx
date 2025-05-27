@@ -12,6 +12,7 @@ import {
   ASTWhereViewOperation,
   ASTHavingViewOperation,
   ParsedFilter,
+  ASTFilterWithFilterString,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -75,20 +76,26 @@ function SingleFilterOperation({
   rootQuery,
   filterOperation,
 }: SingleFilterOperationProps) {
-  const {fieldReference, filterString} = filterOperation.filter;
-  const filter = filterOperation.filter.getFilter();
-  const fieldInfo = fieldReference.getFieldInfo();
   const {setQuery} = useContext(QueryEditorContext);
-  if (fieldInfo.kind !== 'dimension' && fieldInfo.kind !== 'measure') {
-    throw new Error(`Invalid filter field kind: ${fieldInfo.kind}`);
-  }
   const setFilter = useCallback(
     (filter: ParsedFilter) => {
-      filterOperation.filter.setFilter(filter);
+      if (filterOperation.filter instanceof ASTFilterWithFilterString) {
+        filterOperation.filter.setFilter(filter);
+      }
       setQuery?.(rootQuery.build());
     },
     [filterOperation.filter, rootQuery, setQuery]
   );
+
+  if (!(filterOperation.filter instanceof ASTFilterWithFilterString)) {
+    return null; // TODO(whscullin) drilling
+  }
+  const {fieldReference, filterString} = filterOperation.filter;
+  const filter = filterOperation.filter.getFilter();
+  const fieldInfo = fieldReference.getFieldInfo();
+  if (fieldInfo.kind !== 'dimension' && fieldInfo.kind !== 'measure') {
+    throw new Error(`Invalid filter field kind: ${fieldInfo.kind}`);
+  }
 
   const {op, value} = parsedToLabels(filter, filterString);
 

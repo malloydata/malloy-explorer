@@ -17,6 +17,7 @@ import {
   ASTViewDefinition,
   ASTWhereViewOperation,
   ASTHavingViewOperation,
+  ASTDrillViewOperation,
 } from '@malloydata/malloy-query-builder';
 import {GroupByOperations} from './operations/GroupByOperations';
 import {FilterOperations} from './operations/FilterOperations';
@@ -67,6 +68,8 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
       orderBys.push(operation);
     } else if (operation instanceof ASTNestViewOperation) {
       nests.push(operation);
+    } else if (operation instanceof ASTDrillViewOperation) {
+      // TODO(whscullin) drilling
     } else {
       limit = operation;
     }
