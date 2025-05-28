@@ -1,6 +1,6 @@
 {
   "name": "@malloydata/malloy-explorer",
-  "version": "0.0.282",
+  "version": "0.0.284",
   "description": "Malloy visual query builder",
   "main": "dist/cjs/index.cjs",
   "types": "dist/types/index.d.ts",
@@ -113,11 +113,11 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "peerDependencies": {
-    "@malloydata/malloy-filter": ">= 0.0.282",
-    "@malloydata/malloy-interfaces": ">= 0.0.282",
-    "@malloydata/malloy-query-builder": ">= 0.0.282",
-    "@malloydata/malloy-tag": ">= 0.0.282",
-    "@malloydata/render": ">= 0.0.282",
+    "@malloydata/malloy-filter": ">= 0.0.284",
+    "@malloydata/malloy-interfaces": ">= 0.0.284",
+    "@malloydata/malloy-query-builder": ">= 0.0.284",
+    "@malloydata/malloy-tag": ">= 0.0.284",
+    "@malloydata/render": ">= 0.0.284",
     "react": ">= 19.0.0",
     "react-dom": ">= 19.0.0"
   }
