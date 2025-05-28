@@ -15,6 +15,7 @@ import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {LiteralValue} from '../LiteralValue';
 import {Token, TokenGroup} from '../../primitives';
+import FieldToken from '../../FieldToken';
 // import FieldToken from '../../FieldToken';
 
 export interface DrillOperationsProps {
@@ -37,7 +38,7 @@ export function DrillOperations({drills}: DrillOperationsProps) {
             color="cyan"
             customStyle={localStyles.tokenGroup}
           >
-            <Token label={drill.filter.fieldReference.name} icon="filter" />
+            <FieldToken field={drill.filter.fieldReference.getFieldInfo()} />
             <Token label={'='} />
             {drill.filter instanceof ASTFilterWithLiteralEquality ? (
               <LiteralValue value={drill.filter.value.node} />
