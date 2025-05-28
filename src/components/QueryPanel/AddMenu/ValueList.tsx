@@ -19,6 +19,7 @@ export interface FieldListProps {
   fieldPath?: string;
   ref?: React.RefObject<HTMLDivElement | null>;
   customStyle?: StyleXStyles;
+  showPath?: boolean;
 }
 
 export function ValueList({
@@ -27,6 +28,7 @@ export function ValueList({
   fieldPath,
   ref,
   customStyle,
+  showPath = true,
 }: FieldListProps) {
   const {searchResults} = useSearch(search, fieldPath);
   const stringSearchResults = useMemo(
@@ -51,7 +53,9 @@ export function ValueList({
             onClick={() => onClick(value)}
           >
             <Value value={value} />
-            <div {...stylex.props(styles.field)}>{value.fieldName}</div>
+            {showPath ? (
+              <div {...stylex.props(styles.field)}>{value.fieldName}</div>
+            ) : null}
           </div>
         ))
       ) : search ? (

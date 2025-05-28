@@ -165,6 +165,7 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
                 }
               }}
               customStyle={styles.valueList}
+              showPath={false}
             />
           </div>
         </>
