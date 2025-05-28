@@ -19,6 +19,7 @@ import {
   ASTHavingViewOperation,
   ASTDrillViewOperation,
 } from '@malloydata/malloy-query-builder';
+import {DrillOperations} from './operations/DrillOperations';
 import {GroupByOperations} from './operations/GroupByOperations';
 import {FilterOperations} from './operations/FilterOperations';
 import {LimitOperation} from './operations/LimitOperation';
@@ -44,6 +45,7 @@ export interface OperationsProps {
 export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   const groupBys: ASTGroupByViewOperation[] = [];
   const aggregates: ASTAggregateViewOperation[] = [];
+  const drills: ASTDrillViewOperation[] = [];
   const filters: Array<ASTWhereViewOperation | ASTHavingViewOperation> = [];
   const orderBys: ASTOrderByViewOperation[] = [];
   const nests: ASTNestViewOperation[] = [];
@@ -69,7 +71,7 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
     } else if (operation instanceof ASTNestViewOperation) {
       nests.push(operation);
     } else if (operation instanceof ASTDrillViewOperation) {
-      // TODO(whscullin) drilling
+      drills.push(operation);
     } else {
       limit = operation;
     }
@@ -89,6 +91,7 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
         view={view}
         aggregates={aggregates}
       />
+      <DrillOperations rootQuery={rootQuery} drills={drills} />
       <FilterOperations rootQuery={rootQuery} filters={filters} />
       <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
       <NestOperations rootQuery={rootQuery} view={view} nests={nests} />

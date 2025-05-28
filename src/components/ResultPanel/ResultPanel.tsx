@@ -160,7 +160,7 @@ export default function ResultPanel({
                     </div>
                   </div>
                 )}
-              <ResultDisplay query={submittedQuery} />
+              <ResultDisplay source={source} query={submittedQuery} />
             </>
           )}
         </Content>

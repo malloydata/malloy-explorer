@@ -88,8 +88,9 @@ function SingleFilterOperation({
   );
 
   if (!(filterOperation.filter instanceof ASTFilterWithFilterString)) {
-    return null; // TODO(whscullin) drilling
+    return null;
   }
+
   const {fieldReference, filterString} = filterOperation.filter;
   const filter = filterOperation.filter.getFilter();
   const fieldInfo = fieldReference.getFieldInfo();

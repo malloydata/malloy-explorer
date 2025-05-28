@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {Banner, Button, Spinner} from '../primitives';
@@ -20,12 +20,13 @@ import {
 } from './SubmittedQuery';
 // CSS file needed because stylex doesn't support ::part selector
 import './result_display.css';
-
-import type {MalloyRenderProps} from '@malloydata/render';
 import '@malloydata/render/webcomponent';
+import type {MalloyRenderProps} from '@malloydata/render';
 import {Variant} from '../primitives/Banner';
 import RunInfoHover from './RunInfoHover';
 import DOMElement from '../primitives/DOMElement';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 
 // TODO: Figure out how to make this part of @malloydata/render/webcomponent export
 declare global {
@@ -34,11 +35,18 @@ declare global {
   }
 }
 
+// TODO - export from malloy-render
+export interface DrillData {
+  stableQuery: Malloy.Query | undefined;
+  stableDrillClauses: Malloy.DrillOperation[] | undefined;
+}
+
 export interface ResultDisplayProps {
+  source: Malloy.SourceInfo;
   query: SubmittedQuery;
 }
 
-export default function ResultDisplay({query}: ResultDisplayProps) {
+export default function ResultDisplay({source, query}: ResultDisplayProps) {
   let displayComponent;
 
   switch (query.executionState) {
@@ -65,7 +73,9 @@ export default function ResultDisplay({query}: ResultDisplayProps) {
       );
       break;
     case 'finished':
-      displayComponent = <ResponseDisplay response={query.response} />;
+      displayComponent = (
+        <ResponseDisplay source={source} response={query.response} />
+      );
       break;
   }
 
@@ -73,10 +83,11 @@ export default function ResultDisplay({query}: ResultDisplayProps) {
 }
 
 interface ResponseProps {
+  source: Malloy.SourceInfo;
   response: QueryResponse | undefined;
 }
 
-function ResponseDisplay({response}: ResponseProps) {
+function ResponseDisplay({source, response}: ResponseProps) {
   let messageComponent = null;
 
   if (!response) {
@@ -98,7 +109,9 @@ function ResponseDisplay({response}: ResponseProps) {
     <div {...stylex.props(styles.resultContainer)}>
       {response?.runInfo && <RunInfoHover runInfo={response.runInfo} />}
       {messageComponent}
-      {response?.result && <RenderedResult result={response.result} />}
+      {response?.result && (
+        <RenderedResult result={response.result} source={source} />
+      )}
     </div>
   );
 }
@@ -151,17 +164,24 @@ function Banners({messages}: BannersProps) {
 }
 
 interface RenderedResultProps {
+  source: Malloy.SourceInfo;
   result: Malloy.Result;
 }
 
-function RenderedResult({result}: RenderedResultProps) {
+function RenderedResult({result, source}: RenderedResultProps) {
   const [renderer, setRenderer] = useState<HTMLElement>();
+  const {setQuery} = useContext(QueryEditorContext);
 
   useEffect(() => {
     const renderer = document.createElement('malloy-render');
     renderer.malloyResult = result;
+    renderer.onDrill = ({stableQuery}: DrillData) => {
+      const rootQuery = new ASTQuery({query: stableQuery, source});
+      setQuery?.(rootQuery.build());
+    };
+    renderer.tableConfig = {enableDrill: true};
     setRenderer(renderer);
-  }, [result]);
+  }, [result, source, setQuery]);
 
   if (renderer) {
     return (
