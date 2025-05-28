@@ -58,8 +58,6 @@ function getOutputNameToInputNameMap(
       const reference = operation.field.getReference();
       if (reference) {
         nameMap.set(operation.name, toFullName(reference.path, reference.name));
-      } else {
-        // TODO(whscullin) drilling
       }
     }
   }
@@ -110,7 +108,7 @@ export function segmentHasFieldInOutputSpace(
       if (reference) {
         return areReferencesEqual(path, name, reference.path, reference.name);
       } else {
-        return false; // TODO(whscullin) drilling
+        return false;
       }
     }
     return false;
