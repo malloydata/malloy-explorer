@@ -11,7 +11,16 @@ import {Icon, SelectorToken, TokenGroup} from '../primitives';
 import stylex from '@stylexjs/stylex';
 import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import {QUERY_RENDERERS, RendererName, tagToRenderer} from '../utils/renderer';
+import {
+  RENDERER_PREFIX,
+  QueryRendererName,
+  tagToRenderer,
+  VISUALIZATION_OPTIONS,
+  VizName,
+  legacyToViz,
+  VIZ_RENDERERS,
+} from '../utils/renderer';
+import {RendererPopover} from './RendererPopover';
 
 export interface VisualizationProps {
   rootQuery: ASTQuery;
@@ -21,16 +30,19 @@ export interface VisualizationProps {
 export function Visualization({rootQuery, view}: VisualizationProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const currentTag = view.getTag();
+  const rendererTag = view.getTag(RENDERER_PREFIX);
 
-  const currentRenderer: RendererName = tagToRenderer(currentTag) ?? 'table';
+  const currentRenderer: VizName = (rendererTag.tag('viz')?.text() ??
+    legacyToViz(
+      (tagToRenderer(currentTag) as QueryRendererName) ?? 'table'
+    )) as VizName;
 
-  const setRenderer = (renderer: RendererName): void => {
-    view.removeTagProperty([currentRenderer]);
-    view.setTagProperty([renderer]);
+  const setRenderer = (renderer: VizName): void => {
+    view.setTagProperty(['viz'], renderer, RENDERER_PREFIX);
     setQuery?.(rootQuery.build());
   };
 
-  const vizes = QUERY_RENDERERS.map(viz => ({
+  const items = VIZ_RENDERERS.map(viz => ({
     icon: <Icon name={`viz_${viz}`} />,
     label: snakeToTitle(viz),
     value: viz,
@@ -43,22 +55,34 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
       customStyle={styles.first}
       icon={`viz_${currentRenderer}`}
       value={currentRenderer}
-      items={vizes}
+      items={items}
       onChange={viz => setRenderer(viz)}
     />,
   ];
 
-  // TODO - add viz gear menu
+  const options = VISUALIZATION_OPTIONS[currentRenderer];
 
-  return <TokenGroup>{tokens}</TokenGroup>;
+  if (options) {
+    tokens.push(
+      <RendererPopover
+        key="menu"
+        viz={currentRenderer}
+        options={options}
+        view={view}
+        rootQuery={rootQuery}
+      />
+    );
+  }
+
+  return <TokenGroup customStyle={styles.group}>{tokens}</TokenGroup>;
 }
 
 const styles = stylex.create({
   group: {
     width: '100%',
+    gridTemplateColumns: '1fr auto',
   },
   first: {
-    flexGrow: 1,
     justifyContent: 'start',
   },
 });
