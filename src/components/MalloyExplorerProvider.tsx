@@ -24,6 +24,13 @@ export interface MalloyExplorerProviderProps {
   onFocusedNestViewPathChange: (path: string[]) => void;
   children: ReactNode | ReactNode[];
   topValues?: SearchValueMapResult[];
+  onDrill?: ({
+    stableQuery,
+    stableDrillClauses,
+  }: {
+    stableQuery: Malloy.Query | undefined;
+    stableDrillClauses: Malloy.DrillOperation[] | undefined;
+  }) => void;
 }
 
 export function MalloyExplorerProvider({
@@ -34,6 +41,7 @@ export function MalloyExplorerProvider({
   onFocusedNestViewPathChange,
   children,
   topValues,
+  onDrill,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
 
@@ -50,6 +58,7 @@ export function MalloyExplorerProvider({
             rootQuery,
             setQuery: onQueryChange,
             topValues,
+            onDrill,
           }}
         >
           {children}

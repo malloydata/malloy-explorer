@@ -27,6 +27,13 @@ export interface QueryEditorContextProps {
   /** Provide to allow editing of the query */
   setQuery?: (query: Malloy.Query | undefined) => void;
   topValues?: SearchValueMapResult[];
+  onDrill?: ({
+    stableQuery,
+    stableDrillClauses,
+  }: {
+    stableQuery: Malloy.Query | undefined;
+    stableDrillClauses: Malloy.DrillOperation[] | undefined;
+  }) => void;
 }
 
 /**
