@@ -60,13 +60,19 @@ const App = () => {
     setQuery(queries[queryIdx]);
   }, [queryIdx]);
 
+  const [focusedNestViewPath, setFocusedNestViewPath] = React.useState<
+    string[]
+  >([]);
+
   return (
     <React.StrictMode>
       <MalloyExplorerProvider
         source={source}
         query={query}
-        setQuery={setQuery}
+        onQueryChange={setQuery}
         topValues={topValues}
+        onFocusedNestViewPathChange={setFocusedNestViewPath}
+        focusedNestViewPath={focusedNestViewPath}
       >
         <div style={{gap: 8, display: 'flex'}}>
           <div style={{padding: 8, width: 500}}>
