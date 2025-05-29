@@ -170,18 +170,22 @@ interface RenderedResultProps {
 
 function RenderedResult({result, source}: RenderedResultProps) {
   const [renderer, setRenderer] = useState<HTMLElement>();
-  const {setQuery} = useContext(QueryEditorContext);
+  const {onDrill, setQuery} = useContext(QueryEditorContext);
 
   useEffect(() => {
     const renderer = document.createElement('malloy-render');
     renderer.malloyResult = result;
-    renderer.onDrill = ({stableQuery}: DrillData) => {
+    renderer.onDrill = ({stableQuery, stableDrillClauses}: DrillData) => {
+      if (onDrill) {
+        onDrill({stableQuery, stableDrillClauses});
+        return;
+      }
       const rootQuery = new ASTQuery({query: stableQuery, source});
       setQuery?.(rootQuery.build());
     };
     renderer.tableConfig = {enableDrill: true};
     setRenderer(renderer);
-  }, [result, source, setQuery]);
+  }, [onDrill, result, source, setQuery]);
 
   if (renderer) {
     return (

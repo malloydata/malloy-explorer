@@ -39,6 +39,10 @@ const App = () => {
         focusedNestViewPath={focusedNestViewPath}
         onFocusedNestViewPathChange={setFocusedNestViewPath}
         topValues={topValues}
+        onDrill={params => {
+          console.info(params);
+          window.alert('Drill!');
+        }}
       >
         <div {...stylex.props(styles.page)}>
           <div {...stylex.props(styles.content)}>
