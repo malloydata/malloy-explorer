@@ -29,8 +29,9 @@ export function LiteralValue({value, customStyle}: LiteralValueEditorProps) {
         />
       );
     case 'date_literal':
+      return <Token label={value.date_value} customStyle={customStyle} />;
     case 'timestamp_literal':
-      return <Token label={'TODO'} customStyle={customStyle} />;
+      return <Token label={value.timestamp_value} customStyle={customStyle} />;
     case 'null_literal':
       return <Token label="∅" />;
     case 'number_literal':
