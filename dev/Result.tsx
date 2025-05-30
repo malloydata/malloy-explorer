@@ -9,7 +9,8 @@ import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {createRoot} from 'react-dom/client';
 import {MalloyExplorerProvider, ResultPanel} from '../src';
-import {modelInfo, result} from './sample_models/example_model';
+import {modelInfo} from './sample_models/example_model';
+import {exampleResult as result} from './sample_models/example_result2';
 import {SubmittedQuery} from '../src/components/ResultPanel/SubmittedQuery';
 import {Button} from '../src/components/primitives';
 
@@ -58,8 +59,11 @@ const App = () => {
       <MalloyExplorerProvider
         source={source}
         query={draftQuery}
-        setQuery={() => {}}
+        onQueryChange={() => {}}
         topValues={[]}
+        onFocusedNestViewPathChange={() => {}}
+        focusedNestViewPath={[]}
+        onDrill={() => window.alert('drill')}
       >
         <div style={{boxSizing: 'border-box', padding: '8px', height: '100vh'}}>
           <ResultPanel

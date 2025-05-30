@@ -232,6 +232,7 @@ function viewToQuery(viewName: string, sourceName: string): Malloy.Query {
 const styles = stylex.create({
   tabRoot: {
     height: '100%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
   },
