@@ -63,6 +63,7 @@ const App = () => {
         topValues={[]}
         onFocusedNestViewPathChange={() => {}}
         focusedNestViewPath={[]}
+        onDrill={() => window.alert('drill')}
       >
         <div style={{boxSizing: 'border-box', padding: '8px', height: '100vh'}}>
           <ResultPanel
