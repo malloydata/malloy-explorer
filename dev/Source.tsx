@@ -16,7 +16,11 @@ const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 const App = () => {
   return (
     <React.StrictMode>
-      <MalloyExplorerProvider source={source}>
+      <MalloyExplorerProvider
+        source={source}
+        focusedNestViewPath={[]}
+        onFocusedNestViewPathChange={() => {}}
+      >
         <div style={{display: 'flex', height: '100%'}}>
           <SourcePanel
             onRefresh={() => {
