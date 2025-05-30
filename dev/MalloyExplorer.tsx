@@ -19,7 +19,7 @@ import {
   ResizableCollapsiblePanel,
 } from '../src';
 import {modelInfo} from './sample_models/example_model';
-import {exampleResult} from './sample_models/example_result';
+import {exampleResult} from './sample_models/example_result2';
 import {topValues} from './sample_models/example_top_values';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
