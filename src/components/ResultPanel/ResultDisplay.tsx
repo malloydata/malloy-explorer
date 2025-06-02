@@ -190,6 +190,7 @@ function RenderedResult({result, source}: RenderedResultProps) {
   if (renderer) {
     return (
       <DOMElement
+        className="malloy-render_result-wrapper"
         element={renderer}
         style={{overflow: 'hidden', height: '100%'}}
       />
