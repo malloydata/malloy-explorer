@@ -28,7 +28,7 @@ import {DatePicker} from '../primitives';
 import {filterStyles} from './styles';
 
 type TemporalFilterOperator = TemporalFilter['operator'];
-type TemporalFilterType = TemporalFilterOperator | '-null';
+type TemporalFilterType = TemporalFilterOperator | '-null' | 'not_before';
 
 type TypeOption = {
   value: TemporalFilterType;
@@ -36,9 +36,12 @@ type TypeOption = {
 };
 
 // Helper function to determine the filter type from a TemporalFilter
-function typeFromFilter(filter: TemporalFilter): TemporalFilterType | '-null' {
+function typeFromFilter(filter: TemporalFilter): TemporalFilterType {
   if (filter.operator === 'null' && filter.not) {
     return '-null';
+  }
+  if (filter.operator === 'before' && filter.not) {
+    return 'not_before';
   }
   return filter.operator;
 }
@@ -118,6 +121,7 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
               {value: 'in_last', label: 'last'},
               {value: 'last', label: 'last complete'},
               {value: 'next', label: 'next complete'},
+              {value: 'not_before', label: 'on or after'},
               {value: 'after', label: 'after'},
               {value: 'before', label: 'before'},
               {value: 'in', label: 'is'},
@@ -547,6 +551,8 @@ export function dateTimeFilterChangeType(
       return {operator: type, after: fromMoment};
     case 'before':
       return {operator: type, before: fromMoment};
+    case 'not_before':
+      return {operator: 'before', before: fromMoment, not: true};
     case 'in':
       return {operator: type, in: fromMoment};
     case 'to':
