@@ -121,7 +121,7 @@ export const parsedToLabels = (
         case 'before':
           {
             const {not} = temporalClause;
-            op = `is${not ? ' not' : ''} before`;
+            op = not ? 'is on or after' : 'is before';
             value = displayTimeFromMoment(temporalClause.before);
           }
           break;
