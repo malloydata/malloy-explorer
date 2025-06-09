@@ -26,7 +26,7 @@ type Variant = keyof typeof colorVariants;
 
 type Size = keyof typeof sizeVariants;
 
-interface ButtonProps extends React.ComponentProps<'button'> {
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   /**
    * The variant of the button.
    */
@@ -70,16 +70,19 @@ interface ButtonProps extends React.ComponentProps<'button'> {
   customStyle?: StyleXStyles;
 }
 
-export default function Button({
-  variant = DEFAULT_VARIANT,
-  size = DEFAULT_SIZE,
-  icon,
-  label,
-  tooltip,
-  isDisabled = false,
-  customStyle,
-  ...props
-}: ButtonProps) {
+export default React.forwardRef(function Button(
+  {
+    variant = DEFAULT_VARIANT,
+    size = DEFAULT_SIZE,
+    icon,
+    label,
+    tooltip,
+    isDisabled = false,
+    customStyle,
+    ...props
+  }: ButtonProps,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const button = (
     <button
       {...stylex.props(
@@ -91,6 +94,7 @@ export default function Button({
       type="button"
       disabled={isDisabled}
       {...props}
+      ref={ref}
     >
       <div {...stylex.props(styles.content)}>
         {icon && <Icon name={icon} customStyle={styles.icon} />}
@@ -126,7 +130,7 @@ export default function Button({
   } else {
     return button;
   }
-}
+});
 
 const styles = stylex.create({
   main: {

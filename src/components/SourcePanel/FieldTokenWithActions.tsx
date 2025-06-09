@@ -206,7 +206,8 @@ export function FieldTokenWithActions({
   );
 }
 
-interface ActionButtonProps extends React.ComponentProps<typeof Button> {
+interface ActionButtonProps
+  extends React.ComponentPropsWithoutRef<typeof Button> {
   tooltip: string;
   onTooltipOpenChange: (open: boolean) => void;
 }

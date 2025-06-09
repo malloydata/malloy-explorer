@@ -10,7 +10,7 @@ import stylex from '@stylexjs/stylex';
 import {fontStyles, tooltipStyles} from './styles';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import {useRef} from 'react';
-import {RichText} from './RichText';
+import RichText from './RichText';
 
 interface HoverTextProps {
   text: string;

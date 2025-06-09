@@ -22,7 +22,7 @@ import {backgroundColors} from '../colors.stylex';
 import {DraggableAttributes} from '@dnd-kit/core';
 import {SyntheticListenerMap} from '@dnd-kit/core/dist/hooks/utilities';
 
-export interface TokenProps extends React.ComponentProps<'button'> {
+export interface TokenProps extends React.ComponentPropsWithoutRef<'button'> {
   /**
    * The label to display on the token.
    */
@@ -81,20 +81,23 @@ export interface TokenProps extends React.ComponentProps<'button'> {
   customStyle?: StyleXStyles;
 }
 
-export default function Token({
-  label,
-  icon,
-  color = DEFAULT_TOKEN_COLOR,
-  size = DEFAULT_TOKEN_SIZE,
-  onClick,
-  onHover,
-  asButtonTrigger = false,
-  tooltip,
-  tooltipProps,
-  customStyle,
-  dragProps,
-  ...props
-}: TokenProps) {
+export default React.forwardRef(function Token(
+  {
+    label,
+    icon,
+    color = DEFAULT_TOKEN_COLOR,
+    size = DEFAULT_TOKEN_SIZE,
+    onClick,
+    onHover,
+    asButtonTrigger = false,
+    tooltip,
+    tooltipProps,
+    customStyle,
+    dragProps,
+    ...props
+  }: TokenProps,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const isInteractive = onClick !== undefined || asButtonTrigger;
 
   const token = (
@@ -118,6 +121,7 @@ export default function Token({
             onMouseEnter: () => onHover(true),
             onMouseLeave: () => onHover(false),
           })}
+          ref={ref}
           {...props}
         />
       )}
@@ -146,7 +150,7 @@ export default function Token({
   ) : (
     token
   );
-}
+});
 
 const styles = stylex.create({
   button: {

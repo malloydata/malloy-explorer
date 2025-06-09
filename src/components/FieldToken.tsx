@@ -12,7 +12,7 @@ import {Token} from './primitives';
 import {hoverActionsVars} from './SourcePanel/field-token.stylex';
 import {fieldKindToColor, fieldToIcon} from './utils/icon';
 
-interface FieldTokenProps extends React.ComponentProps<typeof Token> {
+interface FieldTokenProps extends React.ComponentPropsWithoutRef<typeof Token> {
   /**
    * The field information associated with the token.
    */
@@ -29,12 +29,10 @@ interface FieldTokenProps extends React.ComponentProps<typeof Token> {
   hoverActionsVisible?: boolean;
 }
 
-export default function FieldToken({
-  field,
-  hoverActions,
-  hoverActionsVisible,
-  ...props
-}: FieldTokenProps) {
+export default React.forwardRef(function FieldToken(
+  {field, hoverActions, hoverActionsVisible, ...props}: FieldTokenProps,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   let label = field.name;
   if (
     field.kind === 'dimension' &&
@@ -56,13 +54,14 @@ export default function FieldToken({
         color={fieldKindToColor(field.kind)}
         icon={fieldToIcon(field)}
         {...props}
+        ref={ref}
       />
       {hoverActions && (
         <div {...stylex.props(styles.hoverActions)}>{hoverActions}</div>
       )}
     </div>
   );
-}
+});
 
 const styles = stylex.create({
   main: {

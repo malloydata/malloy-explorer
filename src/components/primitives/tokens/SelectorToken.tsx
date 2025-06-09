@@ -128,21 +128,21 @@ export default function SelectorToken<T extends string>({
   );
 }
 
-interface SelectItemProps<T> extends React.ComponentProps<typeof Select.Item> {
+interface SelectItemProps<T>
+  extends React.ComponentPropsWithoutRef<typeof Select.Item> {
   value: string;
   selectedValue: T | undefined;
 }
 
-function SelectItem<T>({
-  children,
-  value,
-  selectedValue,
-  ...props
-}: SelectItemProps<T>) {
+const SelectItem = React.forwardRef(function _SelectItem<T>(
+  {children, value, selectedValue, ...props}: SelectItemProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   return (
     <Select.Item
       {...stylex.props(fontStyles.body, styles.selectItem)}
       value={value}
+      ref={ref}
       {...props}
     >
       {value === selectedValue ? (
@@ -153,7 +153,7 @@ function SelectItem<T>({
       <Select.ItemText>{children}</Select.ItemText>
     </Select.Item>
   );
-}
+});
 
 const styles = stylex.create({
   selectTrigger: {

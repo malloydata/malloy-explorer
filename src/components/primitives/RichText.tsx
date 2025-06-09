@@ -1,20 +1,16 @@
 import React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 
-interface RichTextProps extends React.ComponentProps<'div'> {
+interface RichTextProps extends React.ComponentPropsWithoutRef<'div'> {
   children: string;
-  ref?: React.RefObject<HTMLDivElement | null>;
   isTooltipContent?: boolean;
   customStyle: StyleXStyles;
 }
 
-export function RichText({
-  children,
-  ref,
-  customStyle,
-  isTooltipContent = false,
-  ...props
-}: RichTextProps) {
+export default React.forwardRef(function RichText(
+  {children, customStyle, isTooltipContent = false, ...props}: RichTextProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   const parts = children.split(/((?:http|https):\/\/\S*)\b/);
   const multiLine = parts.length > 1;
   const formatted = parts.map((part, idx) => {
@@ -46,7 +42,7 @@ export function RichText({
       {formatted}
     </div>
   );
-}
+});
 
 const styles = stylex.create({
   preWrap: {
