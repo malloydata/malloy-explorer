@@ -38,7 +38,6 @@ export default defineConfig({
         '@malloydata/malloy-interfaces',
         '@malloydata/malloy-query-builder',
         '@malloydata/render',
-        '@malloydata/render/webcomponent',
       ],
       output: {
         manualChunks: _id => {
@@ -60,7 +59,6 @@ export default defineConfig({
       '@malloydata/malloy-filter',
       '@malloydata/malloy-interfaces',
       '@malloydata/malloy-query-builder',
-      '@malloydata/render/webcomponent',
     ],
   },
 });
