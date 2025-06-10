@@ -39,6 +39,7 @@ import RadioChecked from '../assets/radio_checked.svg?react';
 import RadioUnchecked from '../assets/radio_unchecked.svg?react';
 import Warning from '../../../assets/ui/warning.svg?react';
 import CheckCircle from '../../../assets/ui/check_circle.svg?react';
+import Gear from '../../../assets/ui/gear.svg?react';
 import Info from '../../../assets/ui/info.svg?react';
 import Error from '../../../assets/ui/error.svg?react';
 import Refresh from '../../../assets/ui/refresh.svg?react';
@@ -82,6 +83,7 @@ export const ICON_MAP = {
   radioUnchecked: RadioUnchecked,
   warning: Warning,
   check_circle: CheckCircle,
+  gear: Gear,
   info: Info,
   error: Error,
   refresh: Refresh,
@@ -120,6 +122,7 @@ export const ICON_MAP = {
 
   // Visualizations
   viz_bar_chart: VizBarChar,
+  viz_bar: VizBarChar,
   viz_boolean: VizBoolean,
   viz_bytes: VizNumber,
   viz_cartesian_chart: VizLine,
@@ -129,6 +132,7 @@ export const ICON_MAP = {
   viz_image: VizImage,
   viz_json: VizJson,
   viz_line_chart: VizLine,
+  viz_line: VizLine,
   viz_link: VizLink,
   viz_list: VizList,
   viz_list_detail: VizListDetail,

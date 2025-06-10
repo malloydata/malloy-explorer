@@ -1484,7 +1484,7 @@ export const modelInfo: Malloy.ModelInfo = {
             name: 'carriers_over_time',
             annotations: [
               {value: '#" Flight counts by carrier as a function of time. \n'},
-              {value: '# line_chart\n'},
+              {value: '# line_chart.baseline_zero=false\n'},
               {
                 value:
                   '#(malloy) limit = 10000 ordered_by = [{ dep_month = desc }]\n',
@@ -2357,7 +2357,28 @@ const query4: Malloy.Query = {
   },
 };
 
-export const queries: Malloy.Query[] = [query0, query1, query2, query3, query4];
+const query5: Malloy.Query = {
+  definition: {
+    kind: 'arrow',
+    source: {
+      kind: 'source_reference',
+      name: 'flights',
+    },
+    view: {
+      kind: 'view_reference',
+      name: 'carriers_over_time',
+    },
+  },
+};
+
+export const queries: Malloy.Query[] = [
+  query0,
+  query1,
+  query2,
+  query3,
+  query4,
+  query5,
+];
 
 export const result: Malloy.Result = {
   connection_name: 'connection',
