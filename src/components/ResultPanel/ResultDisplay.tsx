@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useMemo, useRef} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {Banner, Button, Spinner} from '../primitives';
@@ -18,22 +18,11 @@ import {
   QueryResponse,
   SubmittedQuery,
 } from './SubmittedQuery';
-// CSS file needed because stylex doesn't support ::part selector
-import './result_display.css';
-import '@malloydata/render/webcomponent';
-import type {MalloyRenderProps} from '@malloydata/render';
+import {MalloyRenderer} from '@malloydata/render';
 import {Variant} from '../primitives/Banner';
 import RunInfoHover from './RunInfoHover';
-import DOMElement from '../primitives/DOMElement';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
-
-// TODO: Figure out how to make this part of @malloydata/render/webcomponent export
-declare global {
-  interface HTMLElementTagNameMap {
-    'malloy-render': HTMLElement & MalloyRenderProps;
-  }
-}
 
 // TODO - export from malloy-render
 export interface DrillData {
@@ -169,31 +158,35 @@ interface RenderedResultProps {
 }
 
 function RenderedResult({result, source}: RenderedResultProps) {
-  const [renderer, setRenderer] = useState<HTMLElement>();
   const {onDrill, setQuery} = useContext(QueryEditorContext);
 
-  useEffect(() => {
-    const renderer = document.createElement('malloy-render');
-    renderer.malloyResult = result;
-    renderer.onDrill = ({stableQuery, stableDrillClauses}: DrillData) => {
-      if (onDrill) {
-        onDrill({stableQuery, stableDrillClauses});
-        return;
-      }
-      const rootQuery = new ASTQuery({query: stableQuery, source});
-      setQuery?.(rootQuery.build());
-    };
-    renderer.tableConfig = {enableDrill: true};
-    setRenderer(renderer);
-  }, [onDrill, result, source, setQuery]);
+  const vizContainer = useRef<HTMLDivElement>(null);
+  const viz = useMemo(() => {
+    const renderer = new MalloyRenderer();
+    const viz = renderer.createViz({
+      onDrill: ({stableQuery, stableDrillClauses}: DrillData) => {
+        if (onDrill) {
+          onDrill({stableQuery, stableDrillClauses});
+          return;
+        }
+        const rootQuery = new ASTQuery({query: stableQuery, source});
+        setQuery?.(rootQuery.build());
+      },
+      tableConfig: {enableDrill: true},
+    });
+    return viz;
+  }, [onDrill, source, setQuery]);
 
-  if (renderer) {
+  useEffect(() => {
+    if (vizContainer.current && viz) {
+      viz.setResult(result);
+      viz.render(vizContainer.current);
+    }
+  }, [viz, result]);
+
+  if (viz) {
     return (
-      <DOMElement
-        className="malloy-render_result-wrapper"
-        element={renderer}
-        style={{overflow: 'hidden', height: '100%'}}
-      />
+      <div ref={vizContainer} {...stylex.props(styles.vizContainer)}></div>
     );
   } else {
     return (
@@ -289,5 +282,12 @@ const styles = stylex.create({
     flexDirection: 'column',
     gap: '8px',
     height: '100%',
+  },
+  vizContainer: {
+    height: '100%',
+    position: 'relative',
+    zIndex: 0,
+    overflow: 'hidden',
+    width: '100%',
   },
 });
