@@ -114,14 +114,14 @@ export const parsedToLabels = (
         case 'after':
           {
             const {not} = temporalClause;
-            op = `is${not ? ' not' : ''} after`;
+            op = not ? 'through' : 'is after';
             value = displayTimeFromMoment(temporalClause.after);
           }
           break;
         case 'before':
           {
             const {not} = temporalClause;
-            op = not ? 'is on or after' : 'is before';
+            op = not ? 'starting' : 'is before';
             value = displayTimeFromMoment(temporalClause.before);
           }
           break;

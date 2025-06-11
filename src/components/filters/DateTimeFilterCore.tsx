@@ -28,7 +28,11 @@ import {DatePicker} from '../primitives';
 import {filterStyles} from './styles';
 
 type TemporalFilterOperator = TemporalFilter['operator'];
-type TemporalFilterType = TemporalFilterOperator | '-null' | 'not_before';
+type TemporalFilterType =
+  | TemporalFilterOperator
+  | '-null'
+  | '-before'
+  | '-after';
 
 type TypeOption = {
   value: TemporalFilterType;
@@ -37,11 +41,13 @@ type TypeOption = {
 
 // Helper function to determine the filter type from a TemporalFilter
 function typeFromFilter(filter: TemporalFilter): TemporalFilterType {
-  if (filter.operator === 'null' && filter.not) {
-    return '-null';
-  }
-  if (filter.operator === 'before' && filter.not) {
-    return 'not_before';
+  if (
+    (filter.operator === 'null' ||
+      filter.operator === 'after' ||
+      filter.operator === 'before') &&
+    filter.not
+  ) {
+    return `-${filter.operator}` as TemporalFilterType;
   }
   return filter.operator;
 }
@@ -58,10 +64,7 @@ function unitsFromFilter(
     return filter.units;
   } else if (filter.operator === 'to') {
     return guessUnits(filter.fromMoment, isDateTime);
-  } else if (
-    filter.operator === 'before' &&
-    filter.before.moment === 'literal'
-  ) {
+  } else if (filter.operator === 'before') {
     return guessUnits(filter.before, isDateTime);
   } else if (filter.operator === 'after') {
     return guessUnits(filter.after, isDateTime);
@@ -121,9 +124,10 @@ export const DateTimeFilterCore: React.FC<DateTimeFilterCoreProps> = ({
               {value: 'in_last', label: 'last'},
               {value: 'last', label: 'last complete'},
               {value: 'next', label: 'next complete'},
-              {value: 'not_before', label: 'on or after'},
+              {value: '-before', label: 'starting'},
               {value: 'after', label: 'after'},
               {value: 'before', label: 'before'},
+              {value: '-after', label: 'through'},
               {value: 'in', label: 'is'},
               {value: 'to', label: 'between'},
               {value: 'null', label: 'null'},
@@ -520,6 +524,11 @@ export function dateTimeFilterChangeType(
   let n = '7';
   let fromMoment: Moment = createTemporalLiteral(new Date(), units);
   let toMoment: Moment = createTemporalLiteral(new Date(), units);
+  let not = false;
+  if (type.startsWith('-')) {
+    type = type.slice(1) as TemporalFilterType;
+    not = true;
+  }
 
   switch (filter.operator) {
     case 'in_last':
@@ -548,19 +557,15 @@ export function dateTimeFilterChangeType(
     case 'next':
       return {operator: type, n, units};
     case 'after':
-      return {operator: type, after: fromMoment};
+      return {operator: type, after: fromMoment, not};
     case 'before':
-      return {operator: type, before: fromMoment};
-    case 'not_before':
-      return {operator: 'before', before: fromMoment, not: true};
+      return {operator: type, before: fromMoment, not};
     case 'in':
       return {operator: type, in: fromMoment};
     case 'to':
       return {operator: type, fromMoment, toMoment};
     case 'null':
-      return {operator: 'null'};
-    case '-null':
-      return {operator: 'null', not: true};
+      return {operator: type, not};
   }
   return filter;
 }
