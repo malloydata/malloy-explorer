@@ -142,7 +142,11 @@ export function FieldList({
         groups.map(group => (
           <div key={group.name}>
             <div
-              {...stylex.props(addMenuStyles.item, styles.fieldItem)}
+              {...stylex.props(
+                addMenuStyles.item,
+                styles.fieldItem,
+                styles.sticky
+              )}
               data-disabled="true"
             >
               {group.name}
@@ -223,5 +227,12 @@ const styles = stylex.create({
     height: 20,
     paddingTop: 8,
     paddingBottom: 8,
+  },
+  sticky: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
+    backgroundColor: 'var(--malloy-color-background, white)',
+    borderBottom: '1px solid var(--malloy-color-border, #e0e0e0)',
   },
 });
