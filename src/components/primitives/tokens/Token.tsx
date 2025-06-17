@@ -134,6 +134,7 @@ export default function Token({
         <Tooltip.Content
           {...tooltipProps}
           {...stylex.props(
+            fontStyles.tooltipText,
             typeof tooltip === 'string'
               ? tooltipStyles.default
               : tooltipStyles.card

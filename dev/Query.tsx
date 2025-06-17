@@ -94,7 +94,7 @@ const App = () => {
               <QueryEditor />
             </div>
           </div>
-          <div>
+          <div style={{width: 'calc(100% - 500px)', padding: 8}}>
             <div>
               <MalloyPreview />
             </div>
