@@ -9,18 +9,22 @@ import * as React from 'react';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {Icon, SelectorToken, TokenGroup} from '../primitives';
 import stylex from '@stylexjs/stylex';
-import {useContext} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {
   RENDERER_PREFIX,
-  QueryRendererName,
-  tagToRenderer,
-  VISUALIZATION_OPTIONS,
   VizName,
-  legacyToViz,
   VIZ_RENDERERS,
+  legacyToViz,
+  tagToRenderer,
+  QueryRendererName,
 } from '../utils/renderer';
-import {RendererPopover} from './RendererPopover';
+import {VizEditorPopover} from './VizEditor/VizEditorPopover';
+import {
+  CoreVizPluginInstance,
+  MalloyRenderer,
+  isCoreVizPluginInstance,
+} from '@malloydata/render';
 
 export interface VisualizationProps {
   rootQuery: ASTQuery;
@@ -29,15 +33,44 @@ export interface VisualizationProps {
 
 export function Visualization({rootQuery, view}: VisualizationProps) {
   const {setQuery} = useContext(QueryEditorContext);
-  const currentTag = view.getTag();
-  const rendererTag = view.getTag(RENDERER_PREFIX);
+  const renderer = useMemo(() => new MalloyRenderer(), []);
+  const [currentRenderer, setCurrentRenderer] = useState<VizName>('table');
+  const [plugin, setPlugin] = useState<CoreVizPluginInstance>();
 
-  const currentRenderer: VizName = (rendererTag.tag('viz')?.text() ??
-    legacyToViz(
-      (tagToRenderer(currentTag) as QueryRendererName) ?? 'table'
-    )) as VizName;
+  useEffect(() => {
+    const viz = renderer.createViz({
+      onError: error => {
+        console.error('Malloy render error', error);
+      },
+    });
+    viz.setResult({
+      schema: view.definition.getOutputSchema(),
+      annotations: view
+        .getTag()
+        .toString()
+        .split('\n')
+        .map(value => ({value})),
+      connection_name: '',
+    });
+    const metadata = viz.getMetadata();
+    if (metadata) {
+      const plugin = viz.getActivePlugin(metadata.getRootField().key);
+      if (plugin && isCoreVizPluginInstance(plugin)) {
+        setCurrentRenderer(plugin.name as VizName);
+        setPlugin(plugin);
+      }
+    } else {
+      const currentTag = view.getTag();
+      const rendererTag = view.getTag(RENDERER_PREFIX);
+      const currentRenderer: VizName = (rendererTag.tag('viz')?.text() ??
+        legacyToViz(
+          (tagToRenderer(currentTag) as QueryRendererName) ?? 'table'
+        )) as VizName;
+      setCurrentRenderer(currentRenderer);
+    }
+  }, [renderer, view]);
 
-  const setRenderer = (renderer: VizName): void => {
+  const updateViz = (renderer: VizName): void => {
     view.setTagProperty(['viz'], renderer, RENDERER_PREFIX);
     setQuery?.(rootQuery.build());
   };
@@ -46,7 +79,7 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
     icon: <Icon name={`viz_${viz}`} />,
     label: snakeToTitle(viz),
     value: viz,
-    onClick: () => setRenderer(viz),
+    onClick: () => updateViz(viz),
   }));
 
   const tokens = [
@@ -56,18 +89,15 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
       icon={`viz_${currentRenderer}`}
       value={currentRenderer}
       items={items}
-      onChange={viz => setRenderer(viz)}
+      onChange={viz => updateViz(viz)}
     />,
   ];
 
-  const options = VISUALIZATION_OPTIONS[currentRenderer];
-
-  if (options) {
+  if (plugin) {
     tokens.push(
-      <RendererPopover
+      <VizEditorPopover
         key="menu"
-        viz={currentRenderer}
-        options={options}
+        plugin={plugin}
         view={view}
         rootQuery={rootQuery}
       />
