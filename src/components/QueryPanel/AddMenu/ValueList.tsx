@@ -15,6 +15,7 @@ import {useMemo} from 'react';
 
 export interface FieldListProps {
   search: string;
+  filter?: (value: string) => boolean;
   onClick: (value: SearchIndexResult) => void;
   fieldPath?: string;
   ref?: React.RefObject<HTMLDivElement | null>;
@@ -25,6 +26,7 @@ export interface FieldListProps {
 export function ValueList({
   onClick,
   search,
+  filter,
   fieldPath,
   ref,
   customStyle,
@@ -36,9 +38,10 @@ export function ValueList({
       searchResults &&
       searchResults
         .filter(r => r.fieldType === 'string' && r.fieldValue !== null)
+        .filter(r => (filter ? filter(r.fieldValue ?? '') : true))
         .sort((a, b) => b.weight - a.weight)
         .slice(0, 100),
-    [searchResults]
+    [searchResults, filter]
   );
 
   return (
