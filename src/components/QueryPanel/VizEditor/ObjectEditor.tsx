@@ -15,8 +15,10 @@ import ArrayEditor from './ArrayEditor';
 import NumberEditor from './NumberEditor';
 import StringEditor from './StringEditor';
 import BooleanEditor from './BooleanEditor';
+import FieldEditor from './FieldEditor';
 
 export default function ObjectEditor({
+  view,
   name,
   path,
   current,
@@ -35,6 +37,7 @@ export default function ObjectEditor({
         if (subOption.type === 'boolean') {
           return (
             <BooleanEditor
+              view={view}
               name={subName}
               path={[...path, subName]}
               option={subOption}
@@ -46,6 +49,7 @@ export default function ObjectEditor({
         } else if (subOption.type === 'string') {
           return (
             <StringEditor
+              view={view}
               name={subName}
               path={[...path, subName]}
               option={subOption}
@@ -57,6 +61,7 @@ export default function ObjectEditor({
         } else if (subOption.type === 'number') {
           return (
             <NumberEditor
+              view={view}
               name={subName}
               path={[...path, subName]}
               option={subOption}
@@ -68,6 +73,7 @@ export default function ObjectEditor({
         } else if (subOption.type === 'object') {
           return (
             <ObjectEditor
+              view={view}
               name={subName}
               path={[...path, subName]}
               option={subOption}
@@ -82,34 +88,21 @@ export default function ObjectEditor({
               'subtype' in subOption.items &&
               subOption.items.subtype === 'field'
             ) {
-              const jsonFields: string[] = (current[subName] ?? []) as string[];
-              const fields = jsonFields.map(field => {
-                try {
-                  return JSON.parse(field)[0];
-                } catch (e) {
-                  console.warn('Failed to parse field', field, e);
-                  return '';
-                }
-              });
-              const updateFields = (path: string[], value: unknown) => {
-                const jsonFields = (value as string[]).map(field =>
-                  JSON.stringify([field])
-                );
-                updateCurrent(path, jsonFields);
-              };
               return (
-                <ArrayEditor
+                <FieldEditor
+                  view={view}
                   name={subName}
                   path={[...path, subName]}
                   option={subOption}
-                  current={fields}
-                  updateCurrent={updateFields}
+                  current={(current[subName] ?? []) as string[]}
+                  updateCurrent={updateCurrent}
                   key={key}
                 />
               );
             } else {
               return (
                 <ArrayEditor
+                  view={view}
                   name={subName}
                   path={[...path, subName]}
                   option={subOption}
@@ -125,6 +118,7 @@ export default function ObjectEditor({
         } else if (subOption.type === 'oneOf') {
           return (
             <OneOfEditor
+              view={view}
               name={subName}
               path={[...path, subName]}
               option={subOption}

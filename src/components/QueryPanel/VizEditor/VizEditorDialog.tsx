@@ -74,6 +74,7 @@ export function VizEditorDialog({
 const styles = stylex.create({
   content: {
     maxWidth: '75vw',
+    width: 600,
     maxHeight: '75vh',
   },
 });
