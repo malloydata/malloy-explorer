@@ -51,6 +51,7 @@ export function VizEditor({rootQuery, view, plugin, setOpen}: VizEditorProps) {
     <div {...stylex.props(styles.editor)}>
       <div {...stylex.props(styles.editorGrid)}>
         <ObjectEditor
+          view={view}
           name=""
           path={[]}
           option={schema}
