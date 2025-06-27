@@ -44,10 +44,17 @@ export default function FieldEditor({
     updateCurrent(path, jsonFields);
   };
   const lcSearch = searchValue.toLocaleLowerCase();
-  const filteredFields = view.definition
-    .getOutputSchema()
-    .fields.filter(field => field.name.toLocaleLowerCase().includes(lcSearch))
-    .filter(field => !fields.includes(field.name));
+  const dimensions = view.definition.getOutputSchema()
+    .fields as Malloy.FieldInfoWithDimension[];
+
+  const filteredFields = dimensions
+    .filter(field => field.name.toLocaleLowerCase().includes(lcSearch))
+    .filter(field => !fields.includes(field.name))
+    .filter(
+      field =>
+        !('fieldTypes' in option.items) ||
+        option.items.fieldTypes?.includes(field.type.kind)
+    );
 
   return (
     <>

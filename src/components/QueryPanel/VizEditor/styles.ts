@@ -20,7 +20,7 @@ export const styles = stylex.create({
     justifyContent: 'left',
   },
   heading: {
-    gridColumn: 'span 3',
+    gridColumn: 'span 2',
     fontWeight: 'bold',
   },
   label: {
