@@ -138,6 +138,7 @@ export function FieldTokenWithActions({
                 />
               }
               onOpenChange={setIsFilterPopoverOpen}
+              layoutProps={{align: 'start'}}
             />
             <ActionButton
               icon="orderBy"
@@ -169,6 +170,7 @@ export function FieldTokenWithActions({
                 />
               }
               onOpenChange={setIsFilterPopoverOpen}
+              layoutProps={{align: 'start'}}
             />
             <ActionButton
               icon="orderBy"
