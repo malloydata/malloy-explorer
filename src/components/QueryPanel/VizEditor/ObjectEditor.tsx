@@ -18,6 +18,7 @@ import BooleanEditor from './BooleanEditor';
 import FieldEditor from './FieldEditor';
 import {useState} from 'react';
 import {Button} from '../../primitives';
+import InfoHover from './InfoHover';
 
 export default function ObjectEditor({
   view,
@@ -34,6 +35,9 @@ export default function ObjectEditor({
         <>
           <div {...stylex.props(styles.label, styles.heading)}>
             <label>{option.title ?? name}</label>
+            {option.description ? (
+              <InfoHover info={option.description} />
+            ) : null}
           </div>
           <Button
             variant="flat"

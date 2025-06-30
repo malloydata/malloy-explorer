@@ -64,10 +64,10 @@ export const styles = stylex.create({
     flexGrow: 1,
   },
   input: {
-    border: '1px solid #e0e0e0',
+    border: '1px solid rgb(239, 239, 239)',
+    borderRadius: 4,
     color: 'rgb(95, 99, 104)',
-    padding: '4px 8px 4px 8px',
-    borderRadius: 5,
+    padding: '3px 3px 3px 10px',
   },
   card: {
     maxWidth: '350px',

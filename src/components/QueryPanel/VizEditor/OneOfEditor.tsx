@@ -21,6 +21,7 @@ import {SelectDropdown} from '../../primitives/SelectDropdown';
 import {useState} from 'react';
 
 export default function OneOfEditor({
+  view,
   name,
   path,
   current,
@@ -39,6 +40,7 @@ export default function OneOfEditor({
           case 'string':
             return (
               <OneOfStringEditor
+                view={view}
                 key={key}
                 name={name}
                 path={path}
@@ -50,6 +52,7 @@ export default function OneOfEditor({
           case 'number':
             return (
               <OneOfNumberEditor
+                view={view}
                 key={key}
                 name={name}
                 path={path}
@@ -61,6 +64,7 @@ export default function OneOfEditor({
           case 'array':
             return (
               <OneOfArrayEditor
+                view={view}
                 key={key}
                 name={name}
                 path={path}
@@ -179,6 +183,7 @@ function OneOfNumberEditor({
           setValue(value);
           updateCurrent(path, valueAsNumber);
         }}
+        {...stylex.props(styles.input)}
       />
       <div />
     </>

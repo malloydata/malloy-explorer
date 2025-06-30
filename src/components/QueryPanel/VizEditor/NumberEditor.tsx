@@ -33,6 +33,7 @@ export default function NumberEditor({
           updateCurrent(path, valueAsNumber);
         }}
         key={name}
+        {...stylex.props(styles.input)}
       />
       {option.description ? <InfoHover info={option.description} /> : <div />}
     </>
