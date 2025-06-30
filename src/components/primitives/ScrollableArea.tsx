@@ -23,6 +23,9 @@ interface ScrollableAreaProps {
   children: React.ReactNode;
 }
 
+/**
+ * @deprecated
+ */
 export default function ScrollableArea({children}: ScrollableAreaProps) {
   return (
     <Root {...stylex.props(styles.root)}>

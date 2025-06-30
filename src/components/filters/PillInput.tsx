@@ -22,7 +22,6 @@ import {DEFAULT_TOKEN_COLOR, TokenColor} from '../primitives/tokens/types';
 import {iconVars, labelVars} from '../primitives/tokens/token.stylex';
 import {iconColors, textColors} from '../primitives/colors.stylex';
 import ClearIcon from '../../assets/refinements/clear.svg?react';
-import {ScrollableArea} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 
 interface PillInputProps {
@@ -144,61 +143,59 @@ export const PillInput: React.FC<PillInputProps> = ({
 
   return (
     <div {...stylex.props(fontStyles.body, styles.main)}>
-      <ScrollableArea>
-        <div
-          {...stylex.props(styles.content, customStyle)}
-          onKeyUp={onKeyUp}
-          onClick={() => inp.current?.focus()}
-          ref={ref}
-        >
-          {pills}
-          <input
-            {...stylex.props(styles.input)}
-            ref={inp}
-            type={type}
-            placeholder={values.length === 0 ? placeholder : ''}
-            value={value}
-            size={1}
-            onChange={event => {
-              setValue(event.target.value);
-            }}
-            onKeyDown={event => {
-              if (event.key === 'Enter') {
-                if (value !== '') {
-                  commitValue();
-                  event.stopPropagation();
-                  event.preventDefault();
-                }
+      <div
+        {...stylex.props(styles.content, customStyle)}
+        onKeyUp={onKeyUp}
+        onClick={() => inp.current?.focus()}
+        ref={ref}
+      >
+        {pills}
+        <input
+          {...stylex.props(styles.input)}
+          ref={inp}
+          type={type}
+          placeholder={values.length === 0 ? placeholder : ''}
+          value={value}
+          size={1}
+          onChange={event => {
+            setValue(event.target.value);
+          }}
+          onKeyDown={event => {
+            if (event.key === 'Enter') {
+              if (value !== '') {
+                commitValue();
+                event.stopPropagation();
+                event.preventDefault();
               }
-            }}
-            onKeyUp={event => {
-              if (event.key === 'Backspace') {
-                if (value === '' && values.length > 0) {
-                  commitValue();
-                  inp.current?.blur();
-                  setSelectedPill(values.length - 1);
-                }
-              } else if (event.key === 'ArrowLeft') {
-                if (
-                  inp.current?.selectionStart === 0 ||
-                  inp.current?.selectionStart === null
-                ) {
-                  commitValue();
-                  inp.current?.blur();
-                  setSelectedPill(values.length - 1);
-                  event.preventDefault();
-                  event.stopPropagation();
-                }
+            }
+          }}
+          onKeyUp={event => {
+            if (event.key === 'Backspace') {
+              if (value === '' && values.length > 0) {
+                commitValue();
+                inp.current?.blur();
+                setSelectedPill(values.length - 1);
               }
-            }}
-            onFocus={() => {
-              setFocused(true);
-              setSelectedPill(undefined);
-            }}
-            autoFocus={autoFocus}
-          />
-        </div>
-      </ScrollableArea>
+            } else if (event.key === 'ArrowLeft') {
+              if (
+                inp.current?.selectionStart === 0 ||
+                inp.current?.selectionStart === null
+              ) {
+                commitValue();
+                inp.current?.blur();
+                setSelectedPill(values.length - 1);
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            }
+          }}
+          onFocus={() => {
+            setFocused(true);
+            setSelectedPill(undefined);
+          }}
+          autoFocus={autoFocus}
+        />
+      </div>
     </div>
   );
 };
@@ -240,6 +237,7 @@ const styles = stylex.create({
     padding: '2px 3px',
     display: 'grid',
     minHeight: 0,
+    overflow: 'auto',
   },
   content: {
     outline: 'none',

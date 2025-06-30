@@ -20,6 +20,7 @@ import {Button} from '../../primitives';
 import {fontStyles} from '../../primitives/styles';
 import {ViewParent} from '../../utils/fields';
 import ErrorIcon from '../../primitives/ErrorIcon';
+import {dialogStyles} from '../dialogStyles';
 
 export interface RenameDialogProps {
   rootQuery: ASTQuery | undefined;
@@ -116,55 +117,3 @@ export function RenameDialog({
     </Dialog.Root>
   );
 }
-
-const dialogStyles = stylex.create({
-  displayNone: {
-    display: 'none',
-  },
-  overlay: {
-    background: 'rgba(0 0 0 / 0.0)',
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    display: 'grid',
-    placeItems: 'center',
-    zIndex: 100,
-  },
-  title: {
-    fontSize: '16px',
-    margin: 0,
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    boxShadow:
-      '0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 2px 12px 0 rgba(0, 0, 0, 0.1)',
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 8,
-    minWidth: 240,
-    maxWidth: 280,
-    gap: 8,
-  },
-  editor: {
-    width: 250,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-  },
-  editorRow: {
-    display: 'flex',
-    gap: 8,
-  },
-  editorCell: {
-    flexGrow: 1,
-  },
-  input: {
-    border: '1px solid #e0e0e0',
-    color: 'rgb(95, 99, 104)',
-    padding: '4px 8px 4px 8px',
-    borderRadius: 5,
-  },
-});
