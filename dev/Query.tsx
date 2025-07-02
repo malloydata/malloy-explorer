@@ -90,6 +90,9 @@ const App = () => {
                   const qb = new QB.ASTQuery({source, query});
                   window.alert(qb.toMalloy());
                 }}
+                runRawQuery={query => {
+                  window.alert(query);
+                }}
               />
               <QueryEditor />
             </div>

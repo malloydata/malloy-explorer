@@ -38,7 +38,8 @@ export interface QueryProps {
 
 export function Query({definition}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const {rootQuery, setQuery, initialMalloy, setInitialMalloy} =
+    useContext(QueryEditorContext);
   const updateQuery = useUpdateQuery();
 
   if (!rootQuery) {
@@ -72,8 +73,9 @@ export function Query({definition}: QueryProps) {
                     onClick={() => {
                       focusMainView();
                       setQuery(undefined);
+                      setInitialMalloy?.('');
                     }}
-                    disabled={isEmpty}
+                    disabled={rootQuery.isEmpty() && !initialMalloy}
                   />
                   <DropdownMenuItem
                     icon="nest"
@@ -90,6 +92,15 @@ export function Query({definition}: QueryProps) {
                       !(definition instanceof ASTArrowQueryDefinition)
                     }
                   />
+                  {setInitialMalloy ? (
+                    <DropdownMenuItem
+                      icon="malloy"
+                      label="Convert to Malloy"
+                      onClick={() => {
+                        setInitialMalloy(rootQuery.toMalloy());
+                      }}
+                    />
+                  ) : null}
                 </>
               ) : (
                 <></>

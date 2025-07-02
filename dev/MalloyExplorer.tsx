@@ -20,11 +20,17 @@ import {
 } from '../src';
 import {topValues} from './sample_models/example_top_values';
 import {compileMalloy, runQuery} from './utils/runtime';
+import {DrillData} from '@malloydata/render';
 
 const url = new URL(
   '../malloy-samples/faa/flights.malloy',
   window.document.location.toString()
 );
+
+const onDrill = (drillData: DrillData) => {
+  console.info(drillData);
+  window.alert('Drill!');
+};
 
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
@@ -32,6 +38,7 @@ const App = () => {
   const [source, setSource] = useState<Malloy.SourceInfo | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = useState<string[]>([]);
   const [submittedQuery, setSubmittedQuery] = useState<SubmittedQuery>();
+  const [initialMalloy, setInitialMalloy] = React.useState('');
 
   useEffect(() => {
     const compile = async () => {
@@ -55,6 +62,9 @@ const App = () => {
         focusedNestViewPath={focusedNestViewPath}
         onFocusedNestViewPathChange={setFocusedNestViewPath}
         topValues={topValues}
+        onDrill={onDrill}
+        initialMalloy={initialMalloy}
+        setInitialMalloy={setInitialMalloy}
       >
         <div {...stylex.props(styles.page)}>
           <div {...stylex.props(styles.content)}>
@@ -92,6 +102,9 @@ const App = () => {
                       },
                     })
                   );
+                }}
+                runRawQuery={(source, query) => {
+                  window.alert(query);
                 }}
               />
             </ResizableCollapsiblePanel>
