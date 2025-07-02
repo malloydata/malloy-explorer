@@ -68,11 +68,13 @@
     "@shikijs/core": "^3.2.1",
     "@shikijs/engine-javascript": "^3.2.1",
     "@shikijs/langs": "^3.2.1",
+    "@shikijs/monaco": "^3.7.0",
     "@shikijs/themes": "^3.2.1",
     "@shikijs/types": "^3.2.1",
     "@stylexjs/stylex": "^0.10.1",
     "assert": "^2.1.0",
     "moment": "^2.30.1",
+    "monaco-editor-core": "^0.52.2",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },

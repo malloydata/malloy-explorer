@@ -28,13 +28,21 @@ export interface QueryEditorContextProps {
   /** Provide to allow editing of the query */
   setQuery?: (query: Malloy.Query | undefined) => void;
   topValues?: SearchValueMapResult[];
-  onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
+  onDrill?: (drillData: DrillData) => void;
+
+  /** Value to initialize text editor */
+  initialMalloy?: string;
+  setInitialMalloy?: (value: string) => void;
+
+  /** Current value of text editor */
+  malloy?: string;
+  setMalloy: (value: string) => void;
 }
 
 /**
  * QueryEditorContext enables query editing by providing the setQuery
  * callback.
  */
-export const QueryEditorContext = React.createContext<QueryEditorContextProps>(
-  {}
-);
+export const QueryEditorContext = React.createContext<QueryEditorContextProps>({
+  setMalloy: () => {},
+});

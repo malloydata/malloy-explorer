@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../primitives/styles';
-import {useContext} from 'react';
+import {useContext, useEffect} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
@@ -26,10 +26,24 @@ import {useQueryFocus} from '../MalloyQueryFocusProvider';
  */
 export interface QueryActionBarProps {
   runQuery: (source: Malloy.SourceInfo, query: Malloy.Query) => void;
+  runRawQuery?: (source: Malloy.SourceInfo, query: string) => void;
 }
 
-export function QueryActionBar({runQuery}: QueryActionBarProps) {
-  const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
+export function QueryActionBar({runQuery, runRawQuery}: QueryActionBarProps) {
+  const {
+    initialMalloy,
+    malloy,
+    rootQuery,
+    setInitialMalloy,
+    setMalloy,
+    setQuery,
+    source,
+  } = useContext(QueryEditorContext);
+
+  useEffect(() => {
+    setMalloy(initialMalloy ?? '');
+  }, [initialMalloy, setMalloy]);
+
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
   const {focusMainView} = useQueryFocus();
@@ -37,8 +51,12 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
   const isRunEnabled = rootQuery?.isRunnable();
   const onRunQuery = () => {
-    if (source && rootQuery) {
-      runQuery(source, rootQuery.build());
+    if (source) {
+      if (malloy && runRawQuery) {
+        runRawQuery(source, malloy);
+      } else if (rootQuery) {
+        runQuery(source, rootQuery.build());
+      }
     }
   };
 
@@ -53,8 +71,9 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
           onClick={() => {
             focusMainView();
             setQuery?.(undefined);
+            setInitialMalloy?.('');
           }}
-          isDisabled={!rootQuery || rootQuery?.isEmpty()}
+          isDisabled={(!rootQuery || rootQuery?.isEmpty()) && !malloy}
           label="Clear"
           variant="flat"
           size="compact"
@@ -85,7 +104,7 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
         {onCollapse && (
           <Button
             icon="sidebarCollapse"
-            tooltip="Close the source panel"
+            tooltip="Close the query panel"
             onClick={onCollapse}
             size="compact"
             variant="flat"

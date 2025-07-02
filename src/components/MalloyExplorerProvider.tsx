@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {ReactNode} from 'react';
+import {ReactNode, useState} from 'react';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import type {DrillData} from '@malloydata/render';
@@ -26,6 +26,8 @@ export interface MalloyExplorerProviderProps {
   children: ReactNode | ReactNode[];
   topValues?: SearchValueMapResult[];
   onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
+  initialMalloy?: string;
+  setInitialMalloy?: (malloy: string) => void;
 }
 
 export function MalloyExplorerProvider({
@@ -37,8 +39,11 @@ export function MalloyExplorerProvider({
   children,
   topValues,
   onDrill,
+  initialMalloy,
+  setInitialMalloy,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
+  const [malloy, setMalloy] = useState('');
 
   return (
     <TooltipProvider>
@@ -54,6 +59,10 @@ export function MalloyExplorerProvider({
             setQuery: onQueryChange,
             topValues,
             onDrill,
+            initialMalloy,
+            setInitialMalloy,
+            malloy,
+            setMalloy,
           }}
         >
           {children}
