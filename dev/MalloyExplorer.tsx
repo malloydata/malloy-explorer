@@ -21,14 +21,21 @@ import {
 import {modelInfo} from './sample_models/example_model';
 import {exampleResult} from './sample_models/example_result';
 import {topValues} from './sample_models/example_top_values';
+import {DrillData} from '@malloydata/render';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
+
+const onDrill = (drillData: DrillData) => {
+  console.info(drillData);
+  window.alert('Drill!');
+};
 
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = React.useState<
     string[]
   >([]);
+  const [initialMalloy, setInitialMalloy] = React.useState('');
 
   return (
     <React.StrictMode>
@@ -39,10 +46,9 @@ const App = () => {
         focusedNestViewPath={focusedNestViewPath}
         onFocusedNestViewPathChange={setFocusedNestViewPath}
         topValues={topValues}
-        onDrill={params => {
-          console.info(params);
-          window.alert('Drill!');
-        }}
+        onDrill={onDrill}
+        initialMalloy={initialMalloy}
+        setInitialMalloy={setInitialMalloy}
       >
         <div {...stylex.props(styles.page)}>
           <div {...stylex.props(styles.content)}>
@@ -66,6 +72,9 @@ const App = () => {
                 runQuery={(source, query) => {
                   const qb = new QueryBuilder.ASTQuery({source, query});
                   window.alert(qb.toMalloy());
+                }}
+                runRawQuery={(source, query) => {
+                  window.alert(query);
                 }}
               />
             </ResizableCollapsiblePanel>

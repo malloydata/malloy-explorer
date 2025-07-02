@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
@@ -27,6 +28,7 @@ import {viewToVisualizationIcon} from '../utils/icon';
 import {textColors} from '../primitives/colors.stylex';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
 import {FocusableView} from './FocusableView';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -36,6 +38,7 @@ export interface QueryProps {
 
 export function Query({rootQuery, query, setQuery}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
+  const {initialMalloy, setInitialMalloy} = useContext(QueryEditorContext);
 
   return (
     <FocusableView>
@@ -62,8 +65,9 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
                     onClick={() => {
                       focusMainView();
                       setQuery?.(undefined);
+                      setInitialMalloy?.('');
                     }}
-                    disabled={rootQuery.isEmpty()}
+                    disabled={rootQuery.isEmpty() && !initialMalloy}
                   />
                   <DropdownMenuItem
                     icon="nest"
@@ -82,6 +86,15 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
                       !(rootQuery.definition instanceof ASTArrowQueryDefinition)
                     }
                   />
+                  {setInitialMalloy ? (
+                    <DropdownMenuItem
+                      icon="malloy"
+                      label="Convert to Malloy"
+                      onClick={() => {
+                        setInitialMalloy(rootQuery.toMalloy());
+                      }}
+                    />
+                  ) : null}
                 </>
               ) : (
                 <></>
