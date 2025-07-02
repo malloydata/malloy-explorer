@@ -10,8 +10,9 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["ESNext", "DOM"],
-    "target": "ES2019"
+    "lib": ["es2022", "dom"],
+    "target": "ES2019",
+    "types": ["vite/client"]
   },
   "include": ["src"]
 }

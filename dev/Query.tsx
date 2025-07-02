@@ -26,30 +26,26 @@ const App = () => {
   const [queryIdx, setQueryIdx] = useState(
     +(document.location.hash?.slice(1) || 0)
   );
-  const [query, setQuery] = useState<Malloy.Query | undefined>(
+  const [query, setQuery] = useState<Malloy.Query | string | undefined>(
     queries[queryIdx]
   );
-  const fromHistory = React.useRef(false);
 
-  useEffect(() => {
-    if (fromHistory.current) {
-      console.info('Skipping', query);
-      fromHistory.current = false;
-      return;
-    }
-    console.info('Pushing', query);
-    window.history.pushState(
-      query,
-      window.document.title,
-      window.document.location.toString()
-    );
-  }, [query]);
+  const onQueryChange = React.useCallback(
+    (query: Malloy.Query | string | undefined) => {
+      console.info('Pushing', query);
+      window.history.pushState(
+        query,
+        window.document.title,
+        window.document.location.toString()
+      );
+    },
+    []
+  );
 
   useEffect(() => {
     const popper = (event: PopStateEvent) => {
       console.info('Popped', event.state);
       setQuery(event.state);
-      fromHistory.current = true;
     };
     window.addEventListener('popstate', popper);
     return () => window.removeEventListener('popstate', popper);
@@ -69,10 +65,10 @@ const App = () => {
       <MalloyExplorerProvider
         source={source}
         query={query}
-        onQueryChange={setQuery}
         topValues={topValues}
         onFocusedNestViewPathChange={setFocusedNestViewPath}
         focusedNestViewPath={focusedNestViewPath}
+        onQueryChange={onQueryChange}
       >
         <div style={{gap: 8, display: 'flex'}}>
           <div style={{padding: 8, width: 500}}>
@@ -89,6 +85,9 @@ const App = () => {
                 runQuery={(source, query) => {
                   const qb = new QB.ASTQuery({source, query});
                   window.alert(qb.toMalloy());
+                }}
+                runRawQuery={query => {
+                  window.alert(query);
                 }}
               />
               <QueryEditor />

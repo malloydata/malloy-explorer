@@ -12,12 +12,13 @@ import type {DrillData} from '@malloydata/render';
 
 export interface QueryEditorContextProps {
   /** Source object at the root level */
-  source?: Malloy.SourceInfo;
+  source: Malloy.SourceInfo;
   /** Query object to represent current state at the root level  */
-  rootQuery?: ASTQuery;
+  rootQuery: ASTQuery | undefined;
   /** Provide to allow editing of the query */
-  setQuery: (query: Malloy.Query | undefined) => void;
-  onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
+  setQuery: (query: Malloy.Query | string | undefined) => void;
+  query: Malloy.Query | string | undefined;
+  onDrill?: (drillData: DrillData) => void;
 }
 
 /**
@@ -25,5 +26,13 @@ export interface QueryEditorContextProps {
  * callback.
  */
 export const QueryEditorContext = React.createContext<QueryEditorContextProps>({
+  source: {
+    name: '',
+    schema: {
+      fields: [],
+    },
+  },
+  rootQuery: undefined,
   setQuery: () => {},
+  query: undefined,
 });

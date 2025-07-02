@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
-
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   Badge,
   Icon,
@@ -17,6 +17,7 @@ import {
   AccordionList,
   AccordionListItem,
 } from '../primitives';
+import * as Toast from '@radix-ui/react-toast';
 import {textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
 import {sourceToFieldItems} from './utils';
@@ -35,14 +36,13 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
   const {source, rootQuery} = React.useContext(QueryEditorContext);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
+  const [copyToastOpen, setCopyToastOpen] = React.useState(false);
+  const [copyPath, setCopyPath] = React.useState('');
 
   const fieldItems = React.useMemo(() => {
-    if (source) {
-      return sourceToFieldItems(source).filter(
-        fi => !hasExplorerFilterFieldAnnotation(fi.field.annotations ?? [])
-      );
-    }
-    return [];
+    return sourceToFieldItems(source).filter(
+      fi => !hasExplorerFilterFieldAnnotation(fi.field.annotations ?? [])
+    );
   }, [source]);
 
   const views = fieldItems.filter(item => item.field.kind === 'view');
@@ -61,106 +61,137 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
 
   const isSearchActive = !!searchQuery;
 
-  if (!source || !rootQuery) {
-    return null;
-  }
+  const onCopy = React.useCallback(
+    (field: Malloy.FieldInfo, path: string[]) => {
+      const copyPath = [...path, field.name].join('.');
+      window.navigator.clipboard.writeText(copyPath);
+      setCopyToastOpen(true);
+      setCopyPath(copyPath);
+    },
+    []
+  );
 
   return (
-    <div {...stylex.props(styles.main)}>
-      <div {...stylex.props(fontStyles.body, styles.header)}>
-        <div {...stylex.props(styles.headerTopRow)}>
-          <div {...stylex.props(styles.heading)}>
-            <Icon name="database" color="gray" />
-            <div {...stylex.props(fontStyles.largeBody, styles.title)}>
-              {source.name}
+    <Toast.ToastProvider duration={3000}>
+      <div {...stylex.props(styles.main)}>
+        <div {...stylex.props(fontStyles.body, styles.header)}>
+          <div {...stylex.props(styles.headerTopRow)}>
+            <div {...stylex.props(styles.heading)}>
+              <Icon name="database" color="gray" />
+              <div {...stylex.props(fontStyles.largeBody, styles.title)}>
+                {source.name}
+              </div>
             </div>
-          </div>
-          <div {...stylex.props(styles.headerEndContent)}>
-            <Button
-              icon="refresh"
-              tooltip="Refresh the source"
-              onClick={onRefresh}
-              size="compact"
-              variant="flat"
-            />
-            {onCollapse && (
+            <div {...stylex.props(styles.headerEndContent)}>
               <Button
-                icon="sidebarCollapse"
-                tooltip="Close the source panel"
-                onClick={onCollapse}
+                icon="refresh"
+                tooltip="Refresh the source"
+                onClick={onRefresh}
                 size="compact"
                 variant="flat"
               />
-            )}
+              {onCollapse && (
+                <Button
+                  icon="sidebarCollapse"
+                  tooltip="Close the source panel"
+                  onClick={onCollapse}
+                  size="compact"
+                  variant="flat"
+                />
+              )}
+            </div>
           </div>
-        </div>
-        <TextInput
-          value={searchQuery}
-          onChange={v => setSearchQuery(v)}
-          placeholder={'Search'}
-          size="compact"
-          icon="search"
-          hasClear={true}
-        />
-      </div>
-      <Divider />
-      <div {...stylex.props(styles.content)}>
-        {isSearchActive ? (
-          <SearchResultList
-            rootQuery={rootQuery}
-            source={source}
-            items={searchResultItems}
+          <TextInput
+            value={searchQuery}
+            onChange={v => setSearchQuery(v)}
+            placeholder={'Search'}
+            size="compact"
+            icon="search"
+            hasClear={true}
           />
-        ) : (
-          <AccordionList defaultExpandedItemId="views">
-            <AccordionListItem
-              id="dimensions"
-              key="dimensions"
-              label="Dimensions"
-              startIcon={<Icon name="dimension" color="cyan" />}
-              badge={
-                <Badge label={dimensions.length.toString()} color="cyan" />
-              }
-            >
-              <FieldGroupList
-                rootQuery={rootQuery}
-                source={source}
-                fieldItems={fieldItems}
-                fieldGroupType="dimension"
-              />
-            </AccordionListItem>
-            <AccordionListItem
-              id="measures"
-              key="measures"
-              label="Measures"
-              startIcon={<Icon name="measure" color="green" />}
-              badge={<Badge label={measures.length.toString()} color="green" />}
-            >
-              <FieldGroupList
-                rootQuery={rootQuery}
-                source={source}
-                fieldItems={fieldItems}
-                fieldGroupType="measure"
-              />
-            </AccordionListItem>
-            <AccordionListItem
-              id="views"
-              key="views"
-              label="Views"
-              startIcon={<Icon name="view" color="purple" />}
-              badge={<Badge label={views.length.toString()} color="purple" />}
-            >
-              <FieldGroupList
-                rootQuery={rootQuery}
-                source={source}
-                fieldItems={fieldItems}
-                fieldGroupType="view"
-              />
-            </AccordionListItem>
-          </AccordionList>
-        )}
+        </div>
+        <Divider />
+        <div {...stylex.props(styles.content)}>
+          {isSearchActive ? (
+            <SearchResultList
+              rootQuery={rootQuery}
+              source={source}
+              items={searchResultItems}
+              onCopy={onCopy}
+            />
+          ) : (
+            <AccordionList defaultExpandedItemId="views">
+              <AccordionListItem
+                id="dimensions"
+                key="dimensions"
+                label="Dimensions"
+                startIcon={<Icon name="dimension" color="cyan" />}
+                badge={
+                  <Badge label={dimensions.length.toString()} color="cyan" />
+                }
+              >
+                <FieldGroupList
+                  rootQuery={rootQuery}
+                  source={source}
+                  fieldItems={fieldItems}
+                  fieldGroupType="dimension"
+                  onCopy={onCopy}
+                />
+              </AccordionListItem>
+              <AccordionListItem
+                id="measures"
+                key="measures"
+                label="Measures"
+                startIcon={<Icon name="measure" color="green" />}
+                badge={
+                  <Badge label={measures.length.toString()} color="green" />
+                }
+              >
+                <FieldGroupList
+                  rootQuery={rootQuery}
+                  source={source}
+                  fieldItems={fieldItems}
+                  fieldGroupType="measure"
+                  onCopy={onCopy}
+                />
+              </AccordionListItem>
+              <AccordionListItem
+                id="views"
+                key="views"
+                label="Views"
+                startIcon={<Icon name="view" color="purple" />}
+                badge={<Badge label={views.length.toString()} color="purple" />}
+              >
+                <FieldGroupList
+                  rootQuery={rootQuery}
+                  source={source}
+                  fieldItems={fieldItems}
+                  fieldGroupType="view"
+                  onCopy={onCopy}
+                />
+              </AccordionListItem>
+            </AccordionList>
+          )}
+        </div>
+        <Toast.Root
+          open={copyToastOpen}
+          onOpenChange={setCopyToastOpen}
+          {...stylex.props(styles.toastRoot)}
+        >
+          <Toast.Title
+            {...stylex.props(styles.toastTitle, fontStyles.emphasized)}
+          >
+            Copied to clipboard
+          </Toast.Title>
+          <Toast.Description
+            {...stylex.props(styles.toastDescription, fontStyles.body)}
+          >
+            Copied <code>{copyPath}</code> to clipboard
+          </Toast.Description>
+        </Toast.Root>
+        <Toast.Viewport {...stylex.props(styles.toastViewport)} />
       </div>
-    </div>
+    </Toast.ToastProvider>
   );
 }
 
@@ -203,5 +234,15 @@ const styles = stylex.create({
   },
   headerEndContent: {
     display: 'flex',
+  },
+  toastRoot: {
+    padding: 10,
+  },
+  toastTitle: {},
+  toastDescription: {},
+  toastViewport: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
   },
 });

@@ -69,6 +69,8 @@ import VizTable from '../../../assets/visualizations/viz_table.svg?react';
 import VizText from '../../../assets/visualizations/viz_text.svg?react';
 import VizTime from '../../../assets/visualizations/viz_time.svg?react';
 
+import Malloy from '../../../assets/ui/logo.svg?react';
+
 import Search from '../assets/search.svg?react';
 
 export const ICON_MAP = {
@@ -91,6 +93,7 @@ export const ICON_MAP = {
   sidebarCollapse: SidebarCollapse,
   filterSliders: FilterSliders,
   download: Download,
+  malloy: Malloy,
 
   // Operations
   aggregate: AggregateIcon,

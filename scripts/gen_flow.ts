@@ -13,6 +13,7 @@ const files = [
   'components/ResultPanel/SubmittedQuery.d.ts',
   'components/SourcePanel/SourcePanel.d.ts',
   'components/ResizableCollapsiblePanel.d.ts',
+  'contexts/LSPContext.d.ts',
 ];
 
 async function go() {

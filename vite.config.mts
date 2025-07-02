@@ -30,6 +30,7 @@ export default defineConfig({
     rollupOptions: {
       preserveSymlinks: true,
       external: [
+        'monaco-editor-core',
         'react',
         'react-dom',
         'react/jsx-runtime',
