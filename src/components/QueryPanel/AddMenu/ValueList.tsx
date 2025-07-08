@@ -21,6 +21,7 @@ export interface FieldListProps {
   ref?: React.RefObject<HTMLDivElement | null>;
   customStyle?: StyleXStyles;
   showPath?: boolean;
+  hideNoMatchMessage?: boolean;
 }
 
 export function ValueList({
@@ -31,6 +32,7 @@ export function ValueList({
   ref,
   customStyle,
   showPath = true,
+  hideNoMatchMessage = false,
 }: FieldListProps) {
   const {searchResults} = useSearch(search, fieldPath);
   const stringSearchResults = useMemo(
@@ -61,7 +63,7 @@ export function ValueList({
             ) : null}
           </div>
         ))
-      ) : search ? (
+      ) : search && !hideNoMatchMessage ? (
         <div {...stylex.props(addMenuStyles.item)} data-disabled="true">
           No matching values
         </div>

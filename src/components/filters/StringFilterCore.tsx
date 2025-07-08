@@ -167,6 +167,7 @@ export const StringFilterCore: React.FC<StringFilterCoreProps> = ({
               customStyle={styles.valueList}
               showPath={false}
               filter={value => !currentFilter.values.includes(value)}
+              hideNoMatchMessage={true}
             />
           </div>
         </>
