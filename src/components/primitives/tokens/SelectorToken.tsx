@@ -11,7 +11,6 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {IconType} from '../utils/icon';
 import Icon from '../Icon';
 import {fontStyles} from '../styles';
-import ScrollableArea from '../ScrollableArea';
 import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
 import {
   DEFAULT_TOKEN_COLOR,
@@ -108,7 +107,6 @@ export default function SelectorToken<T extends string>({
                 }}
               />
             )}
-            <ScrollableArea>
               <Select.Group {...stylex.props(styles.selectGroup)}>
                 {filteredItems.map(item => (
                   <SelectItem
@@ -120,7 +118,6 @@ export default function SelectorToken<T extends string>({
                   </SelectItem>
                 ))}
               </Select.Group>
-            </ScrollableArea>
           </Select.Viewport>
         </Select.Content>
       </Select.Portal>
@@ -177,6 +174,7 @@ const styles = stylex.create({
     maxHeight: '300px',
     padding: '4px',
     gap: '2px',
+    overflow: 'auto',
   },
   selectItem: {
     display: 'flex',
