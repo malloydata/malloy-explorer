@@ -8,6 +8,7 @@
 import * as React from 'react';
 import * as QueryBuilder from '@malloydata/malloy-query-builder';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import type {DrillData} from '@malloydata/render';
 import stylex from '@stylexjs/stylex';
 import {useState} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -24,6 +25,11 @@ import {topValues} from './sample_models/example_top_values';
 
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
+const onDrill = (drillData: DrillData) => {
+  console.info(drillData);
+  window.alert('Drill!');
+};
+
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = React.useState<
@@ -39,10 +45,7 @@ const App = () => {
         focusedNestViewPath={focusedNestViewPath}
         onFocusedNestViewPathChange={setFocusedNestViewPath}
         topValues={topValues}
-        onDrill={params => {
-          console.info(params);
-          window.alert('Drill!');
-        }}
+        onDrill={onDrill}
       >
         <div {...stylex.props(styles.page)}>
           <div {...stylex.props(styles.content)}>
