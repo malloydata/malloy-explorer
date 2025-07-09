@@ -47,6 +47,7 @@ import {
 import {RenameDialog} from './RenameDialog';
 import {atomicTypeToIcon} from '../../utils/icon';
 import {addAggregate, addGroupBy} from '../../utils/segment';
+import {hoverActionsVars} from './hover.stylex';
 
 export interface SortableOperationsProps {
   rootQuery: ASTQuery;
@@ -227,27 +228,39 @@ function SortableOperation({
   return (
     <div id={id} ref={setNodeRef} style={style}>
       {granular ? (
-        <TokenGroup customStyle={customStyles.tokenGroup}>
-          <Token
-            color={color}
-            icon={icon}
-            label={fieldInfo.name}
-            dragProps={{attributes, listeners}}
-          />
-          <SelectorToken
-            color={color}
-            value={granular.value}
-            onChange={(granulation: Malloy.TimestampTimeframe) => {
-              if (
-                operation.field.expression instanceof
-                ASTTimeTruncationExpression
-              )
-                operation.field.expression.truncation = granulation;
-              setQuery?.(rootQuery.build());
-            }}
-            items={granular.options}
-          />
-        </TokenGroup>
+        <div
+          {...stylex.props(
+            customStyles.main,
+            hoverActionsVisible && customStyles.showHoverActions
+          )}
+        >
+          <TokenGroup customStyle={customStyles.tokenGroup}>
+            <Token
+              color={color}
+              icon={icon}
+              label={fieldInfo.name}
+              dragProps={{attributes, listeners}}
+            />
+            <SelectorToken
+              color={color}
+              value={granular.value}
+              onChange={(granulation: Malloy.TimestampTimeframe) => {
+                if (
+                  operation.field.expression instanceof
+                  ASTTimeTruncationExpression
+                )
+                  operation.field.expression.truncation = granulation;
+                setQuery?.(rootQuery.build());
+              }}
+              items={granular.options}
+            />
+          </TokenGroup>
+          {hoverActions && (
+            <div {...stylex.props(customStyles.hoverActions)}>
+              {hoverActions}
+            </div>
+          )}
+        </div>
       ) : (
         <FieldToken
           field={fieldInfo}
@@ -321,5 +334,22 @@ function granularityMenuItems(fieldInfo: Malloy.FieldInfo, field: ASTField) {
 const customStyles = stylex.create({
   tokenGroup: {
     display: 'flex',
+  },
+  main: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: '4px',
+    [hoverActionsVars.display]: {
+      default: 'none',
+      ':hover': 'block',
+    },
+  },
+  hoverActions: {
+    display: hoverActionsVars.display,
+    flexShrink: 0,
+  },
+  showHoverActions: {
+    [hoverActionsVars.display]: 'block',
   },
 });

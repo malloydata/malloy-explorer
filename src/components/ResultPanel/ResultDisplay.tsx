@@ -18,17 +18,11 @@ import {
   QueryResponse,
   SubmittedQuery,
 } from './SubmittedQuery';
-import {MalloyRenderer} from '@malloydata/render';
+import {DrillData, MalloyRenderer} from '@malloydata/render';
 import {Variant} from '../primitives/Banner';
 import RunInfoHover from './RunInfoHover';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
-
-// TODO - export from malloy-render
-export interface DrillData {
-  stableQuery: Malloy.Query | undefined;
-  stableDrillClauses: Malloy.DrillOperation[] | undefined;
-}
 
 export interface ResultDisplayProps {
   source: Malloy.SourceInfo;
@@ -164,11 +158,12 @@ function RenderedResult({result, source}: RenderedResultProps) {
   const viz = useMemo(() => {
     const renderer = new MalloyRenderer();
     const viz = renderer.createViz({
-      onDrill: ({stableQuery, stableDrillClauses}: DrillData) => {
+      onDrill: (drillData: DrillData) => {
         if (onDrill) {
-          onDrill({stableQuery, stableDrillClauses});
+          onDrill(drillData);
           return;
         }
+        const {stableQuery} = drillData;
         const rootQuery = new ASTQuery({query: stableQuery, source});
         setQuery?.(rootQuery.build());
       },

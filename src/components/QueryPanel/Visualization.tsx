@@ -36,40 +36,46 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
   const renderer = useMemo(() => new MalloyRenderer(), []);
   const [currentRenderer, setCurrentRenderer] = useState<VizName>('table');
   const [plugin, setPlugin] = useState<CoreVizPluginInstance>();
+  const [error, setError] = useState('');
   const [open, setOpen] = useState(false);
+  const tag = view.getTag().toString();
 
   useEffect(() => {
+    setError('');
     const viz = renderer.createViz({
       onError: error => {
         console.error('Malloy render error', error);
+        setError(error.message);
       },
     });
     viz.setResult({
       schema: view.definition.getOutputSchema(),
-      annotations: view
-        .getTag()
-        .toString()
-        .split('\n')
-        .map(value => ({value})),
+      annotations: tag.split('\n').map(value => ({value})),
       connection_name: '',
     });
     const metadata = viz.getMetadata();
     if (metadata) {
       const plugin = viz.getActivePlugin(metadata.getRootField().key);
-      if (plugin && isCoreVizPluginInstance(plugin)) {
-        setCurrentRenderer(plugin.name as VizName);
-        setPlugin(plugin);
+      if (plugin) {
+        if (isCoreVizPluginInstance(plugin)) {
+          setCurrentRenderer(plugin.name as VizName);
+          setPlugin(plugin);
+          return;
+        }
+        if (plugin.name === 'error') {
+          setError((plugin.getMetadata() as {message: string}).message);
+        }
       }
-    } else {
-      const currentTag = view.getTag();
-      const rendererTag = view.getTag(RENDERER_PREFIX);
-      const currentRenderer: VizName = (rendererTag.tag('viz')?.text() ??
-        legacyToViz(
-          (tagToRenderer(currentTag) as QueryRendererName) ?? 'table'
-        )) as VizName;
-      setCurrentRenderer(currentRenderer);
     }
-  }, [renderer, view]);
+    const currentTag = view.getTag();
+    const rendererTag = view.getTag(RENDERER_PREFIX);
+    const currentRenderer: VizName = (rendererTag.tag('viz')?.text() ??
+      legacyToViz(
+        (tagToRenderer(currentTag) as QueryRendererName) ?? 'table'
+      )) as VizName;
+    setCurrentRenderer(currentRenderer);
+    setPlugin(undefined);
+  }, [renderer, view, tag]);
 
   const updateViz = (renderer: VizName): void => {
     view.setTagProperty(['viz'], renderer, RENDERER_PREFIX);
@@ -103,6 +109,12 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
         customStyle={styles.trigger}
         tooltip="Edit Settings..."
       />
+    );
+  }
+
+  if (error) {
+    tokens.push(
+      <Token icon="warning" tooltip={error} customStyle={styles.trigger} />
     );
   }
 

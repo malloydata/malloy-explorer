@@ -9,6 +9,7 @@ import * as React from 'react';
 import {ReactNode} from 'react';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import type {DrillData} from '@malloydata/render';
 import {
   QueryEditorContext,
   SearchValueMapResult,
@@ -24,13 +25,7 @@ export interface MalloyExplorerProviderProps {
   onFocusedNestViewPathChange: (path: string[]) => void;
   children: ReactNode | ReactNode[];
   topValues?: SearchValueMapResult[];
-  onDrill?: ({
-    stableQuery,
-    stableDrillClauses,
-  }: {
-    stableQuery: Malloy.Query | undefined;
-    stableDrillClauses: Malloy.DrillOperation[] | undefined;
-  }) => void;
+  onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
 }
 
 export function MalloyExplorerProvider({
