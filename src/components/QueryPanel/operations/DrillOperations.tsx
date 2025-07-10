@@ -32,21 +32,24 @@ export function DrillOperations({drills}: DrillOperationsProps) {
     <div>
       <div {...stylex.props(styles.title)}>drills</div>
       <div {...stylex.props(localStyles.content)}>
-        {drills.map((drill, key) => (
-          <TokenGroup
-            key={key}
-            color="cyan"
-            customStyle={localStyles.tokenGroup}
-          >
-            <FieldToken field={drill.filter.fieldReference.getFieldInfo()} />
-            <Token label={'='} />
-            {drill.filter instanceof ASTFilterWithLiteralEquality ? (
-              <LiteralValue value={drill.filter.value.node} />
-            ) : (
-              <Token label={drill.filter.filterString} />
-            )}
-          </TokenGroup>
-        ))}
+        {drills.map((drill, key) => {
+          const field = drill.filter.expression.getFieldInfo();
+          return field ? (
+            <TokenGroup
+              key={key}
+              color="cyan"
+              customStyle={localStyles.tokenGroup}
+            >
+              <FieldToken field={field} />
+              <Token label={'='} />
+              {drill.filter instanceof ASTFilterWithLiteralEquality ? (
+                <LiteralValue value={drill.filter.value.node} />
+              ) : (
+                <Token label={drill.filter.filterString} />
+              )}
+            </TokenGroup>
+          ) : null;
+        })}
       </div>
     </div>
   );

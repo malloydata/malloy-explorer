@@ -33,6 +33,8 @@ export default defineConfig({
         'react',
         'react-dom',
         'react/jsx-runtime',
+        '@malloydata/db-duckdb/wasm',
+        '@malloydata/malloy',
         '@malloydata/malloy-tag',
         '@malloydata/malloy-filter',
         '@malloydata/malloy-interfaces',
@@ -54,11 +56,14 @@ export default defineConfig({
   optimizeDeps: {
     force: true,
     include: [
+      '@malloydata/db-duckdb/wasm',
       '@malloydata/render',
+      '@malloydata/malloy',
       '@malloydata/malloy-tag',
       '@malloydata/malloy-filter',
       '@malloydata/malloy-interfaces',
       '@malloydata/malloy-query-builder',
     ],
+    exclude: ['@mapbox/node-pre-gyp'],
   },
 });

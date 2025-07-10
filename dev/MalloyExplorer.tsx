@@ -6,11 +6,9 @@
  */
 
 import * as React from 'react';
-import * as QueryBuilder from '@malloydata/malloy-query-builder';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import type {DrillData} from '@malloydata/render';
 import stylex from '@stylexjs/stylex';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {
   QueryPanel,
@@ -18,23 +16,35 @@ import {
   ResultPanel,
   SourcePanel,
   ResizableCollapsiblePanel,
+  SubmittedQuery,
 } from '../src';
-import {modelInfo} from './sample_models/example_model';
-import {exampleResult} from './sample_models/example_result';
 import {topValues} from './sample_models/example_top_values';
+import {compileMalloy, runQuery} from './utils/runtime';
 
-const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
-
-const onDrill = (drillData: DrillData) => {
-  console.info(drillData);
-  window.alert('Drill!');
-};
+const url = new URL(
+  '../malloy-samples/faa/flights.malloy',
+  window.document.location.toString()
+);
 
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | undefined>();
-  const [focusedNestViewPath, setFocusedNestViewPath] = React.useState<
-    string[]
-  >([]);
+  const [model, setModel] = useState<Malloy.ModelInfo | undefined>();
+  const [source, setSource] = useState<Malloy.SourceInfo | undefined>();
+  const [focusedNestViewPath, setFocusedNestViewPath] = useState<string[]>([]);
+  const [submittedQuery, setSubmittedQuery] = useState<SubmittedQuery>();
+
+  useEffect(() => {
+    const compile = async () => {
+      const model = await compileMalloy(url);
+      setModel(model);
+      setSource(model.entries.at(-1));
+    };
+    compile();
+  }, []);
+
+  if (!model || !source) {
+    return null;
+  }
 
   return (
     <React.StrictMode>
@@ -45,7 +55,6 @@ const App = () => {
         focusedNestViewPath={focusedNestViewPath}
         onFocusedNestViewPathChange={setFocusedNestViewPath}
         topValues={topValues}
-        onDrill={onDrill}
       >
         <div {...stylex.props(styles.page)}>
           <div {...stylex.props(styles.content)}>
@@ -66,9 +75,23 @@ const App = () => {
               title="Query"
             >
               <QueryPanel
-                runQuery={(source, query) => {
-                  const qb = new QueryBuilder.ASTQuery({source, query});
-                  window.alert(qb.toMalloy());
+                runQuery={(_source, query) => {
+                  const submittedQuery = {
+                    executionState: 'compiling' as const,
+                    query,
+                    queryResolutionStartMillis: Date.now(),
+                    onCancel: () => {},
+                  };
+                  setSubmittedQuery(submittedQuery);
+                  runQuery(url, query).then(({result}) =>
+                    setSubmittedQuery({
+                      ...submittedQuery,
+                      executionState: 'finished' as const,
+                      response: {
+                        result,
+                      },
+                    })
+                  );
                 }}
               />
             </ResizableCollapsiblePanel>
@@ -76,19 +99,7 @@ const App = () => {
               source={source}
               draftQuery={query}
               setDraftQuery={setQuery}
-              submittedQuery={
-                query
-                  ? {
-                      executionState: 'finished',
-                      response: {
-                        result: exampleResult,
-                      },
-                      query,
-                      queryResolutionStartMillis: Date.now(),
-                      onCancel: () => {},
-                    }
-                  : undefined
-              }
+              submittedQuery={submittedQuery}
               options={{showRawQuery: true}}
             />
           </div>
