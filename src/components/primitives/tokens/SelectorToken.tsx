@@ -75,14 +75,14 @@ export default function SelectorToken<T extends string>({
           styles.selectTrigger,
           tokenColorVariants[color],
           tokenSizeVariants[size],
-          fontStyles.body,
-          tokenStyles.label,
           customStyle
         )}
       >
         {icon && <Icon name={icon} customStyle={tokenStyles.icon} />}
         <Select.Value asChild>
-          <div {...stylex.props(styles.selectLabel)}>{label}</div>
+          <div {...stylex.props(fontStyles.body, tokenStyles.label)}>
+            {label}
+          </div>
         </Select.Value>
       </Select.Trigger>
       <Select.Portal>
@@ -107,17 +107,17 @@ export default function SelectorToken<T extends string>({
                 }}
               />
             )}
-              <Select.Group {...stylex.props(styles.selectGroup)}>
-                {filteredItems.map(item => (
-                  <SelectItem
-                    key={item.value}
-                    value={item.value}
-                    selectedValue={value}
-                  >
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </Select.Group>
+            <Select.Group {...stylex.props(styles.selectGroup)}>
+              {filteredItems.map(item => (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  selectedValue={value}
+                >
+                  {item.label}
+                </SelectItem>
+              ))}
+            </Select.Group>
           </Select.Viewport>
         </Select.Content>
       </Select.Portal>
@@ -155,10 +155,6 @@ function SelectItem<T>({
 const styles = stylex.create({
   selectTrigger: {
     whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  selectLabel: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
