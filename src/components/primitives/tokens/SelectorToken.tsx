@@ -11,7 +11,6 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {IconType} from '../utils/icon';
 import Icon from '../Icon';
 import {fontStyles} from '../styles';
-import ScrollableArea from '../ScrollableArea';
 import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
 import {
   DEFAULT_TOKEN_COLOR,
@@ -76,14 +75,14 @@ export default function SelectorToken<T extends string>({
           styles.selectTrigger,
           tokenColorVariants[color],
           tokenSizeVariants[size],
-          fontStyles.body,
-          tokenStyles.label,
           customStyle
         )}
       >
         {icon && <Icon name={icon} customStyle={tokenStyles.icon} />}
         <Select.Value asChild>
-          <div {...stylex.props(styles.selectLabel)}>{label}</div>
+          <div {...stylex.props(fontStyles.body, tokenStyles.label)}>
+            {label}
+          </div>
         </Select.Value>
       </Select.Trigger>
       <Select.Portal>
@@ -108,19 +107,17 @@ export default function SelectorToken<T extends string>({
                 }}
               />
             )}
-            <ScrollableArea>
-              <Select.Group {...stylex.props(styles.selectGroup)}>
-                {filteredItems.map(item => (
-                  <SelectItem
-                    key={item.value}
-                    value={item.value}
-                    selectedValue={value}
-                  >
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </Select.Group>
-            </ScrollableArea>
+            <Select.Group {...stylex.props(styles.selectGroup)}>
+              {filteredItems.map(item => (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  selectedValue={value}
+                >
+                  {item.label}
+                </SelectItem>
+              ))}
+            </Select.Group>
           </Select.Viewport>
         </Select.Content>
       </Select.Portal>
@@ -161,10 +158,6 @@ const styles = stylex.create({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
-  selectLabel: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
   selectViewport: {
     borderRadius: '12px',
     background: 'rgba(255, 255, 255, 1)',
@@ -177,6 +170,7 @@ const styles = stylex.create({
     maxHeight: '300px',
     padding: '4px',
     gap: '2px',
+    overflow: 'auto',
   },
   selectItem: {
     display: 'flex',
