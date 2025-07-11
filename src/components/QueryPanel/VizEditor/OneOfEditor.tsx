@@ -180,7 +180,7 @@ function OneOfNumberEditor({
         max={option.maximum}
         value={value}
         onChange={({target: {valueAsNumber}}) => {
-          setValue(value);
+          setValue(valueAsNumber);
           updateCurrent(path, valueAsNumber);
         }}
         {...stylex.props(styles.input)}
