@@ -33,7 +33,10 @@ export default function ObjectEditor({
     <>
       {name ? (
         <>
-          <div {...stylex.props(styles.label, styles.heading)}>
+          <div
+            {...stylex.props(styles.label, styles.heading)}
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
             <label>{option.title ?? name}</label>
             {option.description ? (
               <InfoHover info={option.description} />
