@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {ReactNode, useCallback, useState} from 'react';
+import {ReactNode, useCallback} from 'react';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import type {DrillData} from '@malloydata/render';
@@ -19,14 +19,12 @@ import {SearchValueMapResult, TopValuesContext} from '../hooks/useTopValues';
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;
   query?: Malloy.Query | string;
-  onQueryChange?: (query: Malloy.Query | undefined) => void;
+  onQueryChange: (query: Malloy.Query | string | undefined) => void;
   focusedNestViewPath: string[];
   onFocusedNestViewPathChange: (path: string[]) => void;
   children: ReactNode | ReactNode[];
   topValues?: SearchValueMapResult[];
   onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
-  initialMalloy?: string;
-  setInitialMalloy?: (malloy: string) => void;
 }
 
 export function MalloyExplorerProvider({
@@ -38,11 +36,8 @@ export function MalloyExplorerProvider({
   children,
   topValues,
   onDrill,
-  initialMalloy,
-  setInitialMalloy,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
-  const [malloy, setMalloy] = useState('');
 
   const updateQuery = useCallback(() => {
     onQueryChange?.(rootQuery?.build());
@@ -63,10 +58,6 @@ export function MalloyExplorerProvider({
                 rootQuery,
                 setQuery: onQueryChange,
                 onDrill,
-                malloy,
-                setMalloy,
-                initialMalloy,
-                setInitialMalloy,
               }}
             >
               {children}

@@ -38,7 +38,6 @@ const App = () => {
   const [source, setSource] = useState<Malloy.SourceInfo | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = useState<string[]>([]);
   const [submittedQuery, setSubmittedQuery] = useState<SubmittedQuery>();
-  const [initialMalloy, setInitialMalloy] = React.useState('');
 
   useEffect(() => {
     const compile = async () => {
@@ -63,8 +62,6 @@ const App = () => {
         onFocusedNestViewPathChange={setFocusedNestViewPath}
         topValues={topValues}
         onDrill={onDrill}
-        initialMalloy={initialMalloy}
-        setInitialMalloy={setInitialMalloy}
       >
         <div {...stylex.props(styles.page)}>
           <div {...stylex.props(styles.content)}>

@@ -6,7 +6,6 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
@@ -30,6 +29,7 @@ import {useQueryFocus} from '../MalloyQueryFocusProvider';
 import {FocusableView} from './FocusableView';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {useUpdateQuery} from '../../hooks/useQueryUpdate';
+import {useContext} from 'react';
 
 export interface QueryProps {
   definition: ASTQueryDefinition;
@@ -38,8 +38,7 @@ export interface QueryProps {
 
 export function Query({definition}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
-  const {rootQuery, setQuery, initialMalloy, setInitialMalloy} =
-    useContext(QueryEditorContext);
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const updateQuery = useUpdateQuery();
 
   if (!rootQuery) {
@@ -73,9 +72,8 @@ export function Query({definition}: QueryProps) {
                     onClick={() => {
                       focusMainView();
                       setQuery(undefined);
-                      setInitialMalloy?.('');
                     }}
-                    disabled={rootQuery.isEmpty() && !initialMalloy}
+                    disabled={rootQuery.isEmpty()}
                   />
                   <DropdownMenuItem
                     icon="nest"
@@ -92,15 +90,13 @@ export function Query({definition}: QueryProps) {
                       !(definition instanceof ASTArrowQueryDefinition)
                     }
                   />
-                  {setInitialMalloy ? (
-                    <DropdownMenuItem
-                      icon="malloy"
-                      label="Convert to Malloy"
-                      onClick={() => {
-                        setInitialMalloy(rootQuery.toMalloy());
-                      }}
-                    />
-                  ) : null}
+                  <DropdownMenuItem
+                    icon="malloy"
+                    label="Convert to Malloy"
+                    onClick={() => {
+                      setQuery(rootQuery.toMalloy());
+                    }}
+                  />
                 </>
               ) : (
                 <></>

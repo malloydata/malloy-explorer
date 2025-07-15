@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import * as monaco from 'monaco-editor-core';
 import {shikiToMonaco} from '@shikijs/monaco';
 import {getHighlighter} from '../primitives/syntax_highlighting/syntaxHighlighter';
@@ -9,7 +10,7 @@ import stylex from '@stylexjs/stylex';
 export interface EditorPanelProps {
   language: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | Malloy.Query) => void;
 }
 
 export default function EditorPanel({
@@ -18,6 +19,8 @@ export default function EditorPanel({
   onChange,
 }: EditorPanelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [malloy] = React.useState<string>(value);
+
   useEffect(() => {
     const load = async () => {
       const highlighter = await getHighlighter();
@@ -41,7 +44,7 @@ export default function EditorPanel({
   useEffect(() => {
     if (containerRef.current) {
       const editor = monaco.editor.create(containerRef.current, {
-        value,
+        value: malloy,
         language,
         automaticLayout: true,
         theme: 'light-plus',
@@ -59,7 +62,7 @@ export default function EditorPanel({
     }
 
     return () => {};
-  }, [language, value, onChange]);
+  }, [language, malloy, onChange]);
 
   return <div ref={containerRef} {...stylex.props(styles.container)} />;
 }

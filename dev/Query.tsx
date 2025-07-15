@@ -26,7 +26,7 @@ const App = () => {
   const [queryIdx, setQueryIdx] = useState(
     +(document.location.hash?.slice(1) || 0)
   );
-  const [query, setQuery] = useState<Malloy.Query | undefined>(
+  const [query, setQuery] = useState<Malloy.Query | string | undefined>(
     queries[queryIdx]
   );
   const fromHistory = React.useRef(false);
