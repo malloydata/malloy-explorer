@@ -2315,7 +2315,10 @@ const query3: Malloy.Query = {
             kind: 'where',
             filter: {
               kind: 'filter_string',
-              field_reference: {name: 'carrier'},
+              expression: {
+                kind: 'field_reference',
+                name: 'carrier',
+              },
               filter: 'WN',
             },
           },
