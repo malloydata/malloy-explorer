@@ -6,13 +6,18 @@
  */
 
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {API, URLReader} from '@malloydata/malloy';
+import {
+  API,
+  MalloyError,
+  SingleConnectionRuntime,
+  URLReader,
+} from '@malloydata/malloy';
 import {DuckDBWASMConnection} from '@malloydata/db-duckdb/wasm';
 
 class Fetcher implements API.LookupConnection<API.Connection>, URLReader {
   private registeredTables: Record<string, boolean> = {};
-  private duckdb: DuckDBWASMConnection;
   private connection: API.Connection;
+  duckdb: DuckDBWASMConnection;
 
   constructor(private url: URL) {
     this.duckdb = new DuckDBWASMConnection('duckdb', null, 'malloy');
@@ -25,7 +30,7 @@ class Fetcher implements API.LookupConnection<API.Connection>, URLReader {
     return result.text();
   }
 
-  async lookupConnection(): Promise<API.Connection> {
+  async lookupConnection(_: string): Promise<API.Connection> {
     return this.connection;
   }
 
@@ -90,3 +95,61 @@ export async function runQuery(url: URL, query: Malloy.Query) {
     }
   );
 }
+
+export async function runRawQuery(
+  url: URL,
+  query: string
+): Promise<Malloy.CompileQueryResponse> {
+  const fetcher = getFetcher(url);
+  const runtime = new SingleConnectionRuntime({
+    urlReader: fetcher,
+    connection: fetcher.duckdb,
+  });
+  const modelMaterializer = runtime.loadModel(url);
+  const queryMaterializer = modelMaterializer.loadQuery(query, {
+    noThrowOnError: true,
+  });
+  try {
+    const result = await queryMaterializer.run();
+    return {result: API.util.wrapResult(result)};
+  } catch (error) {
+    if (error instanceof MalloyError) {
+      return {
+        logs: error.problems.map(problem => {
+          const {at, severity, message} = problem;
+          const {url, range} = at || EMPTY_LOCATION;
+          return {
+            url,
+            range,
+            severity,
+            message,
+          };
+        }),
+      };
+    } else {
+      return {
+        logs: [
+          {
+            ...EMPTY_LOCATION,
+            severity: 'error',
+            message: error instanceof Error ? error.message : String(error),
+          },
+        ],
+      };
+    }
+  }
+}
+
+const EMPTY_LOCATION = {
+  url: '',
+  range: {
+    start: {
+      line: 0,
+      character: 0,
+    },
+    end: {
+      line: 0,
+      character: 0,
+    },
+  },
+};

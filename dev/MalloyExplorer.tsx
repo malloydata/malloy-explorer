@@ -19,7 +19,7 @@ import {
   SubmittedQuery,
 } from '../src';
 import {topValues} from './sample_models/example_top_values';
-import {compileMalloy, runQuery} from './utils/runtime';
+import {compileMalloy, runQuery, runRawQuery} from './utils/runtime';
 import {DrillData} from '@malloydata/render';
 
 const url = new URL(
@@ -33,7 +33,7 @@ const onDrill = (drillData: DrillData) => {
 };
 
 const App = () => {
-  const [query, setQuery] = useState<Malloy.Query | undefined>();
+  const [query, setQuery] = useState<Malloy.Query | string | undefined>();
   const [model, setModel] = useState<Malloy.ModelInfo | undefined>();
   const [source, setSource] = useState<Malloy.SourceInfo | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = useState<string[]>([]);
@@ -103,8 +103,23 @@ const App = () => {
                     })
                   );
                 }}
-                runRawQuery={(source, query) => {
-                  window.alert(query);
+                runRawQuery={(_source, query) => {
+                  const submittedQuery = {
+                    executionState: 'compiling' as const,
+                    query,
+                    queryResolutionStartMillis: Date.now(),
+                    onCancel: () => {},
+                  };
+                  setSubmittedQuery(submittedQuery);
+                  runRawQuery(url, query).then(({result}) =>
+                    setSubmittedQuery({
+                      ...submittedQuery,
+                      executionState: 'finished' as const,
+                      response: {
+                        result,
+                      },
+                    })
+                  );
                 }}
               />
             </ResizableCollapsiblePanel>

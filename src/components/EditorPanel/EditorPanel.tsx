@@ -47,6 +47,7 @@ export default function EditorPanel({
         theme: 'light-plus',
         wrappingStrategy: 'simple',
         wordWrap: 'on',
+        minimap: {enabled: false},
       });
 
       editor.onDidChangeModelContent(() => {

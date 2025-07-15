@@ -19,7 +19,7 @@ import {MalloyQueryFocusProvider} from './MalloyQueryFocusProvider';
 
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;
-  query?: Malloy.Query;
+  query?: Malloy.Query | string;
   onQueryChange?: (query: Malloy.Query | undefined) => void;
   focusedNestViewPath: string[];
   onFocusedNestViewPathChange: (path: string[]) => void;
