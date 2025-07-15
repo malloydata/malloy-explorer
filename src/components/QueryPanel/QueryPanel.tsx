@@ -20,17 +20,13 @@ interface QueryPanelProps {
 }
 
 export default function QueryPanel({runQuery, runRawQuery}: QueryPanelProps) {
-  const {initialMalloy, setMalloy} = useContext(QueryEditorContext);
+  const {query, setQuery} = useContext(QueryEditorContext);
 
   return (
     <div {...stylex.props(styles.main)}>
       <QueryActionBar runQuery={runQuery} runRawQuery={runRawQuery} />
-      {initialMalloy ? (
-        <EditorPanel
-          language="malloy"
-          value={initialMalloy}
-          onChange={setMalloy}
-        />
+      {typeof query === 'string' ? (
+        <EditorPanel language="malloy" value={query} onChange={setQuery} />
       ) : (
         <QueryEditor />
       )}

@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import {fontStyles, tooltipStyles} from '../primitives/styles';
-import {useContext, useEffect} from 'react';
+import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
@@ -30,19 +30,7 @@ export interface QueryActionBarProps {
 }
 
 export function QueryActionBar({runQuery, runRawQuery}: QueryActionBarProps) {
-  const {
-    initialMalloy,
-    malloy,
-    rootQuery,
-    setInitialMalloy,
-    setMalloy,
-    setQuery,
-    source,
-  } = useContext(QueryEditorContext);
-
-  useEffect(() => {
-    setMalloy(initialMalloy ?? '');
-  }, [initialMalloy, setMalloy]);
+  const {query, rootQuery, setQuery, source} = useContext(QueryEditorContext);
 
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
@@ -50,11 +38,12 @@ export function QueryActionBar({runQuery, runRawQuery}: QueryActionBarProps) {
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
   const isRunEnabled =
-    rootQuery?.isRunnable() || (malloy && malloy.trim().length > 0);
+    rootQuery?.isRunnable() ||
+    (typeof query === 'string' && query.trim().length > 0);
   const onRunQuery = () => {
     if (source) {
-      if (malloy && runRawQuery) {
-        runRawQuery(source, malloy);
+      if (typeof query === 'string' && runRawQuery) {
+        runRawQuery(source, query);
       } else if (rootQuery) {
         runQuery(source, rootQuery.build());
       }
@@ -72,9 +61,10 @@ export function QueryActionBar({runQuery, runRawQuery}: QueryActionBarProps) {
           onClick={() => {
             focusMainView();
             setQuery?.(undefined);
-            setInitialMalloy?.('');
           }}
-          isDisabled={(!rootQuery || rootQuery?.isEmpty()) && !malloy}
+          isDisabled={
+            (!rootQuery || rootQuery?.isEmpty()) && typeof query !== 'string'
+          }
           label="Clear"
           variant="flat"
           size="compact"

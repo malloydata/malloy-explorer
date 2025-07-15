@@ -16,16 +16,9 @@ export interface QueryEditorContextProps {
   /** Query object to represent current state at the root level  */
   rootQuery?: ASTQuery;
   /** Provide to allow editing of the query */
-  setQuery?: (query: Malloy.Query | undefined) => void;
+  setQuery: (query: Malloy.Query | string | undefined) => void;
+  query?: Malloy.Query | string;
   onDrill?: (drillData: DrillData) => void;
-
-  /** Value to initialize text editor */
-  initialMalloy?: string;
-  setInitialMalloy?: (value: string) => void;
-
-  /** Current value of text editor */
-  malloy?: string;
-  setMalloy: (value: string) => void;
 }
 
 /**
@@ -34,5 +27,4 @@ export interface QueryEditorContextProps {
  */
 export const QueryEditorContext = React.createContext<QueryEditorContextProps>({
   setQuery: () => {},
-  setMalloy: () => {},
 });
