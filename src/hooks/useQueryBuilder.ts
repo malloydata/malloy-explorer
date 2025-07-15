@@ -11,10 +11,10 @@ import {useMemo} from 'react';
 
 export function useQueryBuilder(
   source?: Malloy.SourceInfo,
-  query?: Malloy.Query
+  query?: Malloy.Query | string
 ) {
   return useMemo(() => {
-    if (source) {
+    if (source && typeof query !== 'string') {
       return new ASTQuery({query, source});
     } else {
       return undefined;
