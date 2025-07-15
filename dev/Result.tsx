@@ -17,7 +17,7 @@ import {Button} from '../src/components/primitives';
 const source = modelInfo.entries.at(-1) as Malloy.SourceInfo;
 
 const App = () => {
-  const [draftQuery, setDraftQuery] = React.useState<Malloy.Query>();
+  const [draftQuery, setDraftQuery] = React.useState<Malloy.Query | string>();
   const [isRun, setIsRun] = React.useState<boolean>(false);
 
   const submitted: SubmittedQuery | undefined = draftQuery
@@ -69,7 +69,7 @@ const App = () => {
           <ResultPanel
             source={source}
             draftQuery={draftQuery}
-            setDraftQuery={q => setDraftQuery(q)}
+            setDraftQuery={setDraftQuery}
             submittedQuery={isRun ? submitted : undefined}
             options={{
               showRawQuery: true,

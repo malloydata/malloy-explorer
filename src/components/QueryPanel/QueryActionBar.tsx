@@ -49,7 +49,8 @@ export function QueryActionBar({runQuery, runRawQuery}: QueryActionBarProps) {
   const {focusMainView} = useQueryFocus();
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
-  const isRunEnabled = rootQuery?.isRunnable();
+  const isRunEnabled =
+    rootQuery?.isRunnable() || (malloy && malloy.trim().length > 0);
   const onRunQuery = () => {
     if (source) {
       if (malloy && runRawQuery) {
