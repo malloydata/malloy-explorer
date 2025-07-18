@@ -21,3 +21,4 @@ export type {
 export {SourcePanel} from './components/SourcePanel';
 export {ResizeBar} from './components/primitives';
 export {ResizableCollapsiblePanel} from './components/ResizableCollapsiblePanel';
+export {LSPContext} from './contexts/LSPContext';
