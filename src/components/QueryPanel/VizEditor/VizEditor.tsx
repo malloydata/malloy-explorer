@@ -19,6 +19,7 @@ import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import ObjectEditor from './ObjectEditor';
 import {Button} from '../../primitives';
 import {RENDERER_PREFIX} from '../../utils/renderer';
+import {setAtPath} from './utils';
 
 export interface VizEditorProps {
   rootQuery: ASTQuery;
@@ -31,21 +32,16 @@ export interface VizEditorProps {
 export function VizEditor({rootQuery, view, plugin, setOpen}: VizEditorProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const [current, setCurrent] = useState(plugin.getSettings());
-  console.info('RendererEditor current settings:', current);
 
   const schema = plugin.getSchema();
   const updateCurrent = (path: string[], value: unknown) => {
-    const newCurrent = {...current};
-    let target = newCurrent;
-    for (let i = 0; i < path.length - 1; i++) {
-      if (!(path[i] in target)) {
-        target[path[i]] = {};
-      }
-      target = target[path[i]] as Record<string, unknown>;
-    }
-    target[path[path.length - 1]] = value;
+    const newCurrent = setAtPath(current, path, value);
     setCurrent(newCurrent);
   };
+
+  React.useEffect(() => {
+    console.info('RendererEditor current settings:', current);
+  }, [current]);
 
   return (
     <div {...stylex.props(styles.editor)}>

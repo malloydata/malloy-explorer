@@ -21,6 +21,7 @@ import {PillInput} from '../../filters/PillInput';
 import {SelectDropdown} from '../../primitives/SelectDropdown';
 import {useState} from 'react';
 import ObjectEditor from './ObjectEditor';
+import {setAtPath} from './utils';
 
 export default function OneOfEditor({
   view,
@@ -246,7 +247,7 @@ function OneOfObjectEditor({
 }: EditorProps<JSONSchemaObject, unknown>) {
   const isObject =
     current != null && typeof current === 'object' && !Array.isArray(current);
-  const [value, setValue] = useState<Record<string, unknown>>(
+  const [objectValue, setObjectValue] = useState<Record<string, unknown>>(
     isObject ? (current as Record<string, unknown>) : {}
   );
 
@@ -258,16 +259,17 @@ function OneOfObjectEditor({
           checked={isObject}
           onChange={({target: {checked}}) => {
             if (checked) {
-              updateCurrent(path, value);
+              updateCurrent(path, objectValue);
             }
           }}
         />
       </div>
-      <div {...stylex.props(styles.nest)}>
+      <div {...stylex.props(styles.nest, styles.editorGrid)}>
         <ObjectEditor
-          current={value}
+          current={objectValue}
           updateCurrent={(path, value) => {
-            setValue(value as Record<string, unknown>);
+            const [_, ...subPath] = path;
+            setObjectValue(setAtPath(objectValue, subPath, value));
             updateCurrent(path, value);
           }}
           view={view}
