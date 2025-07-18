@@ -9,6 +9,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   API,
   MalloyError,
+  ModelDef,
   SingleConnectionRuntime,
   URLReader,
 } from '@malloydata/malloy';
@@ -153,3 +154,13 @@ const EMPTY_LOCATION = {
     },
   },
 };
+
+export async function initLSP(url: URL): Promise<ModelDef> {
+  const fetcher = getFetcher(url);
+  const runtime = new SingleConnectionRuntime({
+    urlReader: fetcher,
+    connection: fetcher.duckdb,
+  });
+  const model = await runtime.getModel(url);
+  return model._modelDef;
+}
