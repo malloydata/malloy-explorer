@@ -9,6 +9,7 @@ import * as React from 'react';
 import {
   JSONSchemaArray,
   JSONSchemaNumber,
+  JSONSchemaObject,
   JSONSchemaOneOf,
   JSONSchemaString,
 } from '@malloydata/render';
@@ -19,6 +20,7 @@ import InfoHover from './InfoHover';
 import {PillInput} from '../../filters/PillInput';
 import {SelectDropdown} from '../../primitives/SelectDropdown';
 import {useState} from 'react';
+import ObjectEditor from './ObjectEditor';
 
 export default function OneOfEditor({
   view,
@@ -74,6 +76,17 @@ export default function OneOfEditor({
               />
             );
           case 'object':
+            return (
+              <OneOfObjectEditor
+                view={view}
+                key={key}
+                name={name}
+                path={path}
+                updateCurrent={updateCurrent}
+                current={current}
+                option={subOption}
+              />
+            );
           case 'boolean':
         }
         return null;
@@ -220,6 +233,49 @@ function OneOfArrayEditor({
         }}
       />
       <div />
+    </>
+  );
+}
+
+function OneOfObjectEditor({
+  path,
+  current,
+  option,
+  updateCurrent,
+  view,
+}: EditorProps<JSONSchemaObject, unknown>) {
+  const isObject =
+    current != null && typeof current === 'object' && !Array.isArray(current);
+  const [value, setValue] = useState<Record<string, unknown>>(
+    isObject ? (current as Record<string, unknown>) : {}
+  );
+
+  return (
+    <>
+      <div {...stylex.props(styles.left)}>
+        <input
+          type="radio"
+          checked={isObject}
+          onChange={({target: {checked}}) => {
+            if (checked) {
+              updateCurrent(path, value);
+            }
+          }}
+        />
+      </div>
+      <div {...stylex.props(styles.nest)}>
+        <ObjectEditor
+          current={value}
+          updateCurrent={(path, value) => {
+            setValue(value as Record<string, unknown>);
+            updateCurrent(path, value);
+          }}
+          view={view}
+          name={''}
+          path={path}
+          option={option}
+        />
+      </div>
     </>
   );
 }
