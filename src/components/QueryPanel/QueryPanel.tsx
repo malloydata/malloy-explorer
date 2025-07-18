@@ -11,7 +11,7 @@ import stylex from '@stylexjs/stylex';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {QueryActionBar} from './QueryActionBar';
 import {QueryEditor} from './QueryEditor';
-import EditorPanel from '../EditorPanel/EditorPanel';
+import CodeEditor from '../CodeEditor';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 
 interface QueryPanelProps {
@@ -26,7 +26,7 @@ export default function QueryPanel({runQuery, runRawQuery}: QueryPanelProps) {
     <div {...stylex.props(styles.main)}>
       <QueryActionBar runQuery={runQuery} runRawQuery={runRawQuery} />
       {typeof query === 'string' ? (
-        <EditorPanel language="malloy" value={query} onChange={setQuery} />
+        <CodeEditor language="malloy" value={query} onChange={setQuery} />
       ) : (
         <QueryEditor />
       )}
