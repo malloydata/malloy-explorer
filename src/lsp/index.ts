@@ -7,6 +7,7 @@
 
 export {diagnostics} from './diagnostics';
 export {provideCodeActions} from './code_actions';
+export {provideCompletionItems} from './completions';
 export {provideDefinition} from './definitions';
 export {provideDocumentSymbols} from './symbols';
 export {provideHover} from './hover';

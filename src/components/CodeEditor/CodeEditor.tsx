@@ -15,6 +15,7 @@ import EditorWorker from 'monaco-editor-core/esm/vs/editor/editor.worker?worker'
 import {
   diagnostics,
   provideCodeActions,
+  provideCompletionItems,
   provideDefinition,
   provideDocumentSymbols,
   provideHover,
@@ -29,17 +30,17 @@ window.MonacoEnvironment = {
   },
 };
 
-export interface EditorPanelProps {
+export interface CodeEditorProps {
   language: string;
   value: string;
   onChange: (value: string | Malloy.Query) => void;
 }
 
-export default function EditorPanel({
+export default function CodeEditor({
   language,
   value,
   onChange,
-}: EditorPanelProps) {
+}: CodeEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [malloy] = React.useState<string>(value);
   const [ready, setReady] = React.useState(false);
@@ -103,6 +104,10 @@ export default function EditorPanel({
       monaco.languages.registerDocumentSymbolProvider('malloy', {
         provideDocumentSymbols: (...args) =>
           provideDocumentSymbols(modelDef, ...args),
+      }),
+      monaco.languages.registerCompletionItemProvider('malloy', {
+        provideCompletionItems: (...args) =>
+          provideCompletionItems(modelDef, ...args),
       })
     );
 
