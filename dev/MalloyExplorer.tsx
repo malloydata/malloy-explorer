@@ -11,6 +11,7 @@ import stylex from '@stylexjs/stylex';
 import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {
+  LSPContext,
   QueryPanel,
   MalloyExplorerProvider,
   ResultPanel,
@@ -19,8 +20,9 @@ import {
   SubmittedQuery,
 } from '../src';
 import {topValues} from './sample_models/example_top_values';
-import {compileMalloy, runQuery, runRawQuery} from './utils/runtime';
+import {initLSP, runQuery, runRawQuery} from './utils/runtime';
 import {DrillData} from '@malloydata/render';
+import {ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
 
 const url = new URL(
   '../malloy-samples/faa/flights.malloy',
@@ -35,13 +37,17 @@ const onDrill = (drillData: DrillData) => {
 const App = () => {
   const [query, setQuery] = useState<Malloy.Query | string | undefined>();
   const [model, setModel] = useState<Malloy.ModelInfo | undefined>();
+  const [modelDef, setModelDef] = useState<ModelDef>();
   const [source, setSource] = useState<Malloy.SourceInfo | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = useState<string[]>([]);
   const [submittedQuery, setSubmittedQuery] = useState<SubmittedQuery>();
 
   useEffect(() => {
     const compile = async () => {
-      const model = await compileMalloy(url);
+      // const model = await compileMalloy(url);
+      const modelDef = await initLSP(url);
+      setModelDef(modelDef);
+      const model = modelDefToModelInfo(modelDef);
       setModel(model);
       setSource(model.entries.at(-1));
     };
@@ -54,82 +60,84 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <MalloyExplorerProvider
-        source={source}
-        query={query}
-        onQueryChange={setQuery}
-        focusedNestViewPath={focusedNestViewPath}
-        onFocusedNestViewPathChange={setFocusedNestViewPath}
-        topValues={topValues}
-        onDrill={onDrill}
-      >
-        <div {...stylex.props(styles.page)}>
-          <div {...stylex.props(styles.content)}>
-            <ResizableCollapsiblePanel
-              isInitiallyExpanded={true}
-              initialWidth={280}
-              minWidth={180}
-              icon="database"
-              title={source.name}
-            >
-              <SourcePanel onRefresh={() => {}} />
-            </ResizableCollapsiblePanel>
-            <ResizableCollapsiblePanel
-              isInitiallyExpanded={true}
-              initialWidth={360}
-              minWidth={280}
-              icon="filterSliders"
-              title="Query"
-            >
-              <QueryPanel
-                runQuery={(_source, query) => {
-                  const submittedQuery = {
-                    executionState: 'compiling' as const,
-                    query,
-                    queryResolutionStartMillis: Date.now(),
-                    onCancel: () => {},
-                  };
-                  setSubmittedQuery(submittedQuery);
-                  runQuery(url, query).then(({result}) =>
-                    setSubmittedQuery({
-                      ...submittedQuery,
-                      executionState: 'finished' as const,
-                      response: {
-                        result,
-                      },
-                    })
-                  );
-                }}
-                runRawQuery={(_source, query) => {
-                  const submittedQuery = {
-                    executionState: 'compiling' as const,
-                    query,
-                    queryResolutionStartMillis: Date.now(),
-                    onCancel: () => {},
-                  };
-                  setSubmittedQuery(submittedQuery);
-                  runRawQuery(url, query).then(({result}) =>
-                    setSubmittedQuery({
-                      ...submittedQuery,
-                      executionState: 'finished' as const,
-                      response: {
-                        result,
-                      },
-                    })
-                  );
-                }}
+      <LSPContext.Provider value={{modelDef}}>
+        <MalloyExplorerProvider
+          source={source}
+          query={query}
+          onQueryChange={setQuery}
+          focusedNestViewPath={focusedNestViewPath}
+          onFocusedNestViewPathChange={setFocusedNestViewPath}
+          topValues={topValues}
+          onDrill={onDrill}
+        >
+          <div {...stylex.props(styles.page)}>
+            <div {...stylex.props(styles.content)}>
+              <ResizableCollapsiblePanel
+                isInitiallyExpanded={true}
+                initialWidth={280}
+                minWidth={180}
+                icon="database"
+                title={source.name}
+              >
+                <SourcePanel onRefresh={() => {}} />
+              </ResizableCollapsiblePanel>
+              <ResizableCollapsiblePanel
+                isInitiallyExpanded={true}
+                initialWidth={360}
+                minWidth={280}
+                icon="filterSliders"
+                title="Query"
+              >
+                <QueryPanel
+                  runQuery={(_source, query) => {
+                    const submittedQuery = {
+                      executionState: 'compiling' as const,
+                      query,
+                      queryResolutionStartMillis: Date.now(),
+                      onCancel: () => {},
+                    };
+                    setSubmittedQuery(submittedQuery);
+                    runQuery(url, query).then(({result}) =>
+                      setSubmittedQuery({
+                        ...submittedQuery,
+                        executionState: 'finished' as const,
+                        response: {
+                          result,
+                        },
+                      })
+                    );
+                  }}
+                  runRawQuery={(_source, query) => {
+                    const submittedQuery = {
+                      executionState: 'compiling' as const,
+                      query,
+                      queryResolutionStartMillis: Date.now(),
+                      onCancel: () => {},
+                    };
+                    setSubmittedQuery(submittedQuery);
+                    runRawQuery(url, query).then(({result}) =>
+                      setSubmittedQuery({
+                        ...submittedQuery,
+                        executionState: 'finished' as const,
+                        response: {
+                          result,
+                        },
+                      })
+                    );
+                  }}
+                />
+              </ResizableCollapsiblePanel>
+              <ResultPanel
+                source={source}
+                draftQuery={query}
+                setDraftQuery={setQuery}
+                submittedQuery={submittedQuery}
+                options={{showRawQuery: true}}
               />
-            </ResizableCollapsiblePanel>
-            <ResultPanel
-              source={source}
-              draftQuery={query}
-              setDraftQuery={setQuery}
-              submittedQuery={submittedQuery}
-              options={{showRawQuery: true}}
-            />
+            </div>
           </div>
-        </div>
-      </MalloyExplorerProvider>
+        </MalloyExplorerProvider>
+      </LSPContext.Provider>
     </React.StrictMode>
   );
 };

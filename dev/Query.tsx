@@ -31,19 +31,19 @@ const App = () => {
   );
   const fromHistory = React.useRef(false);
 
-  useEffect(() => {
-    if (fromHistory.current) {
-      console.info('Skipping', query);
-      fromHistory.current = false;
-      return;
-    }
-    console.info('Pushing', query);
-    window.history.pushState(
-      query,
-      window.document.title,
-      window.document.location.toString()
-    );
-  }, [query]);
+  // useEffect(() => {
+  //   if (fromHistory.current) {
+  //     console.info('Skipping', query);
+  //     fromHistory.current = false;
+  //     return;
+  //   }
+  //   console.info('Pushing', query);
+  //   window.history.pushState(
+  //     query,
+  //     window.document.title,
+  //     window.document.location.toString()
+  //   );
+  // }, [query]);
 
   useEffect(() => {
     const popper = (event: PopStateEvent) => {
