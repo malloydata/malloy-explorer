@@ -27,6 +27,7 @@ import {viewToVisualizationIcon} from '../utils/icon';
 import {textColors} from '../primitives/colors.stylex';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
 import {FocusableView} from './FocusableView';
+import {LSPContext} from '../../contexts/LSPContext';
 
 export interface QueryProps {
   rootQuery: ASTQuery;
@@ -36,6 +37,7 @@ export interface QueryProps {
 
 export function Query({rootQuery, query, setQuery}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
+  const {modelDef} = React.useContext(LSPContext);
 
   return (
     <FocusableView>
@@ -82,13 +84,15 @@ export function Query({rootQuery, query, setQuery}: QueryProps) {
                       !(rootQuery.definition instanceof ASTArrowQueryDefinition)
                     }
                   />
-                  <DropdownMenuItem
-                    icon="malloy"
-                    label="Convert to Malloy"
-                    onClick={() => {
-                      setQuery(rootQuery.toMalloy());
-                    }}
-                  />
+                  {modelDef ? (
+                    <DropdownMenuItem
+                      icon="malloy"
+                      label="Convert to Malloy"
+                      onClick={() => {
+                        setQuery(rootQuery.toMalloy());
+                      }}
+                    />
+                  ) : null}
                 </>
               ) : (
                 <></>

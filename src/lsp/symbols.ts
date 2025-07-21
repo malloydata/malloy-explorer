@@ -6,11 +6,9 @@
  */
 
 import * as monaco from 'monaco-editor-core';
-import {
-  DocumentSymbol as MalloyDocumentSymbol,
-  ModelDef,
-} from '@malloydata/malloy';
+import {DocumentSymbol as MalloyDocumentSymbol} from '@malloydata/malloy';
 import {stubParse} from './stub_compile';
+import {getModel} from './utils';
 
 function mapSymbol({
   name,
@@ -59,10 +57,10 @@ function mapSymbol({
 }
 
 export function provideDocumentSymbols(
-  modelDef: ModelDef,
   textModel: monaco.editor.ITextModel,
   _token: monaco.CancellationToken
 ): monaco.languages.DocumentSymbol[] {
+  const modelDef = getModel(textModel.uri.toString());
   const malloy = textModel.getValue();
   const parse = stubParse(modelDef, malloy);
   return parse.symbols.map(mapSymbol);
