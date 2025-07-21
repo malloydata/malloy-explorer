@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext, useMemo, useState} from 'react';
+import {useCallback, useContext, useMemo, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -22,6 +22,7 @@ import {arrayMove, SortableContext, useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {
   ASTAggregateViewOperation,
+  ASTCalculateViewOperation,
   ASTField,
   ASTGroupByViewOperation,
   ASTNestViewOperation,
@@ -46,14 +47,23 @@ import {
 } from '../../primitives';
 import {RenameDialog} from './RenameDialog';
 import {atomicTypeToIcon} from '../../utils/icon';
-import {addAggregate, addGroupBy} from '../../utils/segment';
+import {
+  addAggregate,
+  addGroupBy,
+  recomputePartitionByAndPrimaryAxis,
+} from '../../utils/segment';
 import {hoverActionsVars} from './hover.stylex';
+import {getPrimaryAxis} from '../../utils/axis';
 
 export interface SortableOperationsProps {
   rootQuery: ASTQuery;
   segment: ASTSegmentViewDefinition;
   view: ViewParent;
-  operations: Array<ASTAggregateViewOperation | ASTGroupByViewOperation>;
+  operations: Array<
+    | ASTAggregateViewOperation
+    | ASTGroupByViewOperation
+    | ASTCalculateViewOperation
+  >;
   kind: 'aggregate' | 'group_by';
 }
 
@@ -154,7 +164,10 @@ interface SortableOperationProps {
   rootQuery: ASTQuery;
   id: string;
   view: ViewParent;
-  operation: ASTAggregateViewOperation | ASTGroupByViewOperation;
+  operation:
+    | ASTAggregateViewOperation
+    | ASTGroupByViewOperation
+    | ASTCalculateViewOperation;
   color: 'green' | 'cyan';
 }
 
@@ -169,12 +182,19 @@ function SortableOperation({
 }: SortableOperationProps) {
   const {setQuery} = useContext(QueryEditorContext);
   const fieldInfo = operation.getFieldInfo();
-  const path = operation.field.getReference()?.path ?? NULL_PATH;
+  const field =
+    operation instanceof ASTCalculateViewOperation ? null : operation.field;
+  const path =
+    operation instanceof ASTCalculateViewOperation
+      ? (operation.expression.node.field_reference.path ?? NULL_PATH)
+      : (operation.field.getReference()?.path ?? NULL_PATH);
   const {attributes, listeners, setNodeRef, transform, transition} =
     useSortable({id, data: {name: fieldInfo.name}});
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameTarget, setRenameTarget] = useState<
-    ASTGroupByViewOperation | ASTAggregateViewOperation
+    | ASTGroupByViewOperation
+    | ASTAggregateViewOperation
+    | ASTCalculateViewOperation
   >();
   const [hoverActionsVisible, setHoverActionsVisible] = useState(false);
 
@@ -182,6 +202,29 @@ function SortableOperation({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  // TODO: Memo these across all components, not per-component
+  const primaryAxis = useMemo(() => {
+    return getPrimaryAxis(rootQuery);
+  }, [rootQuery]);
+  const canSmooth =
+    operation.kind === 'aggregate' &&
+    primaryAxis !== null &&
+    primaryAxis?.kind === 'dimension' &&
+    (primaryAxis.type.kind === 'timestamp_type' ||
+      primaryAxis.type.kind === 'date_type');
+
+  const enableSmoothing = useCallback(
+    (operation: ASTAggregateViewOperation) => {
+      if (!canSmooth) {
+        return;
+      }
+      operation.convertToCalculateMovingAverage(7);
+      recomputePartitionByAndPrimaryAxis(rootQuery.getOrAddDefaultSegment());
+      setQuery?.(rootQuery.build());
+    },
+    [canSmooth, rootQuery, setQuery]
+  );
 
   const hoverActions = useMemo(() => {
     return (
@@ -199,6 +242,17 @@ function SortableOperation({
           onOpenChange={setHoverActionsVisible}
         >
           {[
+            canSmooth ? (
+              <DropdownMenuItem
+                key="smoothing"
+                label="Add smoothing"
+                onClick={() => {
+                  if (operation instanceof ASTAggregateViewOperation) {
+                    enableSmoothing(operation);
+                  }
+                }}
+              />
+            ) : null,
             <DropdownMenuItem
               key="rename"
               label="Rename"
@@ -212,14 +266,38 @@ function SortableOperation({
         <ClearButton
           onClick={() => {
             operation.delete();
+            recomputePartitionByAndPrimaryAxis(
+              rootQuery.getOrAddDefaultSegment()
+            );
             setQuery?.(rootQuery?.build());
           }}
         />
       </>
     );
-  }, [fieldInfo, operation, path, rootQuery, setQuery]);
+  }, [
+    canSmooth,
+    enableSmoothing,
+    fieldInfo.name,
+    operation,
+    path,
+    rootQuery,
+    setQuery,
+  ]);
 
-  const granular = granularityMenuItems(fieldInfo, operation.field);
+  const hasSmoothedField = useMemo(() => {
+    return rootQuery
+      .getOrAddDefaultSegment()
+      .operations.items.some(operation => {
+        return operation.kind === 'calculate';
+      });
+  }, [rootQuery]);
+
+  const granular = granularityMenuItems(fieldInfo, field);
+  if (hasSmoothedField && granular && operation.name === primaryAxis?.name) {
+    granular.options = granular.options.filter(
+      option => option.value === 'day'
+    );
+  }
   let icon: IconType = 'orderBy';
   if (fieldInfo.kind === 'dimension' || fieldInfo.kind === 'measure') {
     icon = atomicTypeToIcon(fieldInfo.type.kind);
@@ -227,7 +305,7 @@ function SortableOperation({
 
   return (
     <div id={id} ref={setNodeRef} style={style}>
-      {granular ? (
+      {field && granular ? (
         <div
           {...stylex.props(
             customStyles.main,
@@ -245,11 +323,8 @@ function SortableOperation({
               color={color}
               value={granular.value}
               onChange={(granulation: Malloy.TimestampTimeframe) => {
-                if (
-                  operation.field.expression instanceof
-                  ASTTimeTruncationExpression
-                )
-                  operation.field.expression.truncation = granulation;
+                if (field.expression instanceof ASTTimeTruncationExpression)
+                  field.expression.truncation = granulation;
                 setQuery?.(rootQuery.build());
               }}
               items={granular.options}
@@ -261,20 +336,57 @@ function SortableOperation({
             </div>
           )}
         </div>
+      ) : operation instanceof ASTCalculateViewOperation ? (
+        <TokenGroup customStyle={customStyles.tokenGroup}>
+          <FieldToken
+            field={fieldInfo}
+            color={color}
+            hoverActionsVisible={hoverActionsVisible}
+            hoverActions={hoverActions}
+            tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
+            tooltipProps={{
+              side: 'right',
+              align: 'start',
+              alignOffset: 28,
+            }}
+            dragProps={{attributes, listeners}}
+          />
+          <SelectorToken
+            color={color}
+            value={'' + (operation.expression.node.rows_preceding ?? 7)}
+            onChange={(value: string) => {
+              if (value === '1') {
+                // TODO: Convert to normal aggregate
+              } else {
+                operation.expression.node.rows_preceding = parseInt(value, 10);
+                setQuery?.(rootQuery.build());
+              }
+            }}
+            items={[
+              {label: '7d', value: '7'},
+              {label: '14d', value: '14'},
+              {label: '28d', value: '28'},
+              {label: '30d', value: '30'},
+              {label: 'Remove smoothing', value: '1'},
+            ]}
+          />
+        </TokenGroup>
       ) : (
-        <FieldToken
-          field={fieldInfo}
-          color={color}
-          hoverActionsVisible={hoverActionsVisible}
-          hoverActions={hoverActions}
-          tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
-          tooltipProps={{
-            side: 'right',
-            align: 'start',
-            alignOffset: 28,
-          }}
-          dragProps={{attributes, listeners}}
-        />
+        <>
+          <FieldToken
+            field={fieldInfo}
+            color={color}
+            hoverActionsVisible={hoverActionsVisible}
+            hoverActions={hoverActions}
+            tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
+            tooltipProps={{
+              side: 'right',
+              align: 'start',
+              alignOffset: 28,
+            }}
+            dragProps={{attributes, listeners}}
+          />
+        </>
       )}
       <RenameDialog
         rootQuery={rootQuery}
@@ -306,8 +418,12 @@ const TimestampGranulation: Malloy.TimestampTimeframe[] = [
   'year',
 ] as const;
 
-function granularityMenuItems(fieldInfo: Malloy.FieldInfo, field: ASTField) {
+function granularityMenuItems(
+  fieldInfo: Malloy.FieldInfo,
+  field: ASTField | null
+) {
   if (
+    !field ||
     fieldInfo.kind !== 'dimension' ||
     !(field.expression instanceof ASTTimeTruncationExpression)
   ) {

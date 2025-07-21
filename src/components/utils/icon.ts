@@ -18,7 +18,7 @@ export function atomicTypeToIcon(
 }
 
 export function fieldKindToColor(
-  kind: 'dimension' | 'measure' | 'join' | 'view'
+  kind: 'dimension' | 'measure' | 'join' | 'view' | 'calculate'
 ) {
   return fieldKindMap[kind];
 }
@@ -31,6 +31,7 @@ export function fieldToIcon(field: Malloy.FieldInfo): IconType {
       break;
     case 'dimension':
     case 'measure':
+    case 'calculate':
       icon = atomicTypeToIcon(field.type.kind);
       break;
     case 'join':
@@ -69,6 +70,7 @@ const fieldKindMap = {
   view: 'purple',
   dimension: 'cyan',
   measure: 'green',
+  calculate: 'green',
   join: undefined,
 } as const;
 

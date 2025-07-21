@@ -8,15 +8,20 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTAggregateViewOperation,
+  ASTArrowQueryDefinition,
+  ASTCalculateViewOperation,
   ASTGroupByViewOperation,
   ASTLimitViewOperation,
   ASTNestViewOperation,
   ASTOrderByViewOperation,
   ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
+  ASTTimeTruncationExpression,
+  ASTViewDefinition,
   ParsedFilter,
 } from '@malloydata/malloy-query-builder';
 import {ViewParent, findUniqueFieldName, getViewDefinition} from './fields';
+import {getPrimaryAxisFromSchema} from './axis';
 
 export function toFullName(path: string[] | undefined, name: string): string {
   return [...(path || []), name].join('.');
@@ -155,6 +160,70 @@ export function addGroupBy(
     segment.addTimestampGroupBy(field.name, path, 'second');
   } else {
     segment.addGroupBy(field.name, path, rename);
+  }
+
+  // TODO: Recompute smoothing logic, if needed
+}
+
+/*
+ * Update the view to support the Moving Average opertation:
+ * - If there is no primary axis, convert the moving averages to measures
+ * - Ensure that the partition_by operations for each moving average reflect
+ *   the non-primary-axis group_by operations
+ */
+
+export function recomputePartitionByAndPrimaryAxis(
+  segment: ASTSegmentViewDefinition
+) {
+  const primaryAxis = getPrimaryAxisFromSchema(segment.getOutputSchema());
+  const groupBys = segment.operations.items.filter(
+    op => op.kind === 'group_by'
+  ) as ASTGroupByViewOperation[];
+  const movingAverages = segment.operations.items.filter(
+    op =>
+      op.kind === 'calculate' &&
+      (op as ASTCalculateViewOperation).expression.kind === 'moving_average'
+  ) as ASTCalculateViewOperation[];
+
+  const canSmooth =
+    primaryAxis !== null &&
+    primaryAxis?.kind === 'dimension' &&
+    (primaryAxis.type.kind === 'timestamp_type' ||
+      primaryAxis.type.kind === 'date_type');
+
+  // If there is no primary axis, convert the moving averages to measures
+  if (!canSmooth) {
+    movingAverages.forEach(operation => {
+      operation.delete();
+      segment.addAggregate(operation.getFieldInfo().name);
+    });
+  } else {
+    // If there is a primary time axis, ensure that each calculate contains the
+    // appropriate partition_by operations.
+    const nonPrimaryGroupByNames = groupBys.filter(
+      gb => gb.name !== primaryAxis.name
+    );
+    movingAverages.forEach(operation => {
+      operation.expression.edit();
+      operation.expression.setPartitionFields(
+        nonPrimaryGroupByNames
+          .map(gb => gb.field.getReference())
+          .filter(ref => !!ref)
+      );
+    });
+
+    // If there are moving averages, ensure the primary time axis is set to 'day' granularity.
+    const primaryTimeAxisOperation = groupBys.find(
+      gb => gb.name === primaryAxis.name
+    );
+    if (primaryTimeAxisOperation) {
+      const expression = primaryTimeAxisOperation.field?.expression;
+      if (expression && expression.kind === 'time_truncation') {
+        const truncationExpression = primaryTimeAxisOperation.field
+          .expression as ASTTimeTruncationExpression;
+        truncationExpression.truncation = 'day';
+      }
+    }
   }
 }
 

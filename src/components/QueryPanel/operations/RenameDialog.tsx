@@ -11,6 +11,7 @@ import stylex from '@stylexjs/stylex';
 import * as Dialog from '@radix-ui/react-dialog';
 import {
   ASTAggregateViewOperation,
+  ASTCalculateViewOperation,
   ASTGroupByViewOperation,
   ASTNestViewOperation,
   ASTQuery,
@@ -29,6 +30,7 @@ export interface RenameDialogProps {
     | ASTGroupByViewOperation
     | ASTAggregateViewOperation
     | ASTNestViewOperation
+    | ASTCalculateViewOperation
     | undefined;
   open: boolean;
   setOpen: (open: boolean) => void;

@@ -17,6 +17,7 @@ import {
   ASTViewDefinition,
   ASTWhereViewOperation,
   ASTHavingViewOperation,
+  ASTCalculateViewOperation,
   ASTDrillViewOperation,
 } from '@malloydata/malloy-query-builder';
 import {DrillOperations} from './operations/DrillOperations';
@@ -26,6 +27,7 @@ import {LimitOperation} from './operations/LimitOperation';
 import {AggregateOperations} from './operations/AggregateOperations';
 import {OrderByOperations} from './operations/OrderByOperations';
 import {NestOperations} from './operations/NestOperation';
+import {CalculateOperations} from './operations/CalculateOperations';
 import stylex from '@stylexjs/stylex';
 import {ViewParent} from '../utils/fields';
 
@@ -49,6 +51,7 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   const filters: Array<ASTWhereViewOperation | ASTHavingViewOperation> = [];
   const orderBys: ASTOrderByViewOperation[] = [];
   const nests: ASTNestViewOperation[] = [];
+  const calculates: ASTCalculateViewOperation[] = [];
   let limit: ASTLimitViewOperation | undefined;
 
   if (!(viewDef instanceof ASTSegmentViewDefinition)) {
@@ -72,6 +75,8 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
       nests.push(operation);
     } else if (operation instanceof ASTDrillViewOperation) {
       drills.push(operation);
+    } else if (operation instanceof ASTCalculateViewOperation) {
+      calculates.push(operation);
     } else {
       limit = operation;
     }
@@ -90,6 +95,12 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
         segment={segment}
         view={view}
         aggregates={aggregates}
+      />
+      <CalculateOperations
+        rootQuery={rootQuery}
+        segment={segment}
+        view={view}
+        calculates={calculates}
       />
       <DrillOperations rootQuery={rootQuery} drills={drills} />
       <FilterOperations rootQuery={rootQuery} filters={filters} />
