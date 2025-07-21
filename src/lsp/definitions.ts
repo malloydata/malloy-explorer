@@ -5,17 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {DocumentRange, ModelDef} from '@malloydata/malloy';
+import {DocumentRange} from '@malloydata/malloy';
 import * as monaco from 'monaco-editor-core';
 import {stubCompile} from './stub_compile';
-import {convertPosition} from './utils';
+import {convertPosition, getModel} from './utils';
 
 export async function provideDefinition(
-  modelDef: ModelDef,
   textModel: monaco.editor.ITextModel,
   position: monaco.Position,
   _token: monaco.CancellationToken
 ): Promise<monaco.languages.Definition> {
+  const modelDef = getModel(textModel.uri.toString());
   try {
     const malloy = textModel.getValue();
     const model = await stubCompile(modelDef, malloy);

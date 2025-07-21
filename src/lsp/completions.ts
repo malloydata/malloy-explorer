@@ -7,17 +7,16 @@
 
 import * as monaco from 'monaco-editor-core';
 import {stubParse} from './stub_compile';
-import {ModelDef} from '@malloydata/malloy';
-import {convertPosition} from './utils';
+import {convertPosition, getModel} from './utils';
 import {COMPLETION_DOCS} from './completion_docs';
 
 export function provideCompletionItems(
-  modelDef: ModelDef,
   textModel: monaco.editor.ITextModel,
   position: monaco.Position,
   _context: monaco.languages.CompletionContext,
   _token: monaco.CancellationToken
 ): monaco.languages.CompletionList {
+  const modelDef = getModel(textModel.uri.toString());
   const malloyPosition = convertPosition(position);
   const malloy = textModel.getValue();
   const parse = stubParse(modelDef, malloy);

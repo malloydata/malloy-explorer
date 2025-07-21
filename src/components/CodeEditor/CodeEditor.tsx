@@ -8,27 +8,11 @@
 import React, {useEffect, useRef} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as monaco from 'monaco-editor-core';
-import {shikiToMonaco} from '@shikijs/monaco';
-import {getHighlighter} from '../primitives/syntax_highlighting/syntaxHighlighter';
 import stylex from '@stylexjs/stylex';
-import EditorWorker from 'monaco-editor-core/esm/vs/editor/editor.worker?worker';
-import {
-  diagnostics,
-  provideCodeActions,
-  provideCompletionItems,
-  provideDefinition,
-  provideDocumentSymbols,
-  provideHover,
-} from '../../lsp';
 import {LSPContext} from '../../contexts/LSPContext';
-// import MalloyEditorWorker from '../../workers/editor_worker?worker';
-
-// @ts-expect-error no types
-window.MonacoEnvironment = {
-  getWorker(_workerId: string, _label: string) {
-    return new EditorWorker();
-  },
-};
+import {initMonaco} from '../utils/monaco';
+import {diagnostics} from '../../lsp';
+import {registerModel} from '../../lsp/utils';
 
 export interface CodeEditorProps {
   language: string;
@@ -44,17 +28,12 @@ export default function CodeEditor({
   const containerRef = useRef<HTMLDivElement>(null);
   const [malloy] = React.useState<string>(value);
   const [ready, setReady] = React.useState(false);
-  const {modelDef} = React.useContext(LSPContext);
+  const {modelDef, modelUri} = React.useContext(LSPContext);
 
   useEffect(() => {
     const load = async () => {
-      const highlighter = await getHighlighter();
-
-      monaco.languages.register({id: 'sql'});
-      monaco.languages.register({id: 'malloy'});
-
-      shikiToMonaco(highlighter, monaco);
-
+      // TODO: Better handle cleanup
+      await initMonaco();
       setReady(true);
     };
     void load();
@@ -62,11 +41,19 @@ export default function CodeEditor({
 
   useEffect(() => {
     const disposables: monaco.IDisposable[] = [];
-    if (!ready || !containerRef.current || !modelDef) {
+    if (!ready || !containerRef.current || !modelDef || !modelUri) {
       return () => {};
     }
 
-    const model = monaco.editor.createModel(malloy, 'malloy');
+    const uriString = modelUri.toString();
+    registerModel(uriString, modelDef);
+
+    const model = monaco.editor.createModel(
+      malloy,
+      'malloy',
+      monaco.Uri.parse(uriString)
+    );
+
     const editor = monaco.editor.create(containerRef.current, {
       model,
       language,
@@ -86,33 +73,13 @@ export default function CodeEditor({
         monaco.editor.setModelMarkers(
           model,
           'malloy',
-          await diagnostics(modelDef, newValue)
+          await diagnostics(uriString, newValue)
         );
       })
     );
 
-    disposables.push(
-      monaco.languages.registerHoverProvider('malloy', {
-        provideHover: (...args) => provideHover(modelDef, ...args),
-      }),
-      monaco.languages.registerDefinitionProvider('malloy', {
-        provideDefinition: (...args) => provideDefinition(modelDef, ...args),
-      }),
-      monaco.languages.registerCodeActionProvider('malloy', {
-        provideCodeActions: (...args) => provideCodeActions(modelDef, ...args),
-      }),
-      monaco.languages.registerDocumentSymbolProvider('malloy', {
-        provideDocumentSymbols: (...args) =>
-          provideDocumentSymbols(modelDef, ...args),
-      }),
-      monaco.languages.registerCompletionItemProvider('malloy', {
-        provideCompletionItems: (...args) =>
-          provideCompletionItems(modelDef, ...args),
-      })
-    );
-
     return () => disposables.forEach(disposable => disposable.dispose());
-  }, [language, modelDef, malloy, onChange, ready]);
+  }, [language, modelUri, malloy, onChange, ready, modelDef]);
 
   return <div ref={containerRef} {...stylex.props(styles.container)} />;
 }

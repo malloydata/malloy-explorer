@@ -6,14 +6,17 @@
  */
 
 import * as monaco from 'monaco-editor-core';
-import {LogMessage, MalloyError, ModelDef} from '@malloydata/malloy';
+import {LogMessage, MalloyError} from '@malloydata/malloy';
 import {LogSeverity} from '@malloydata/malloy-interfaces';
 import {stubCompile} from './stub_compile';
+import {getModel} from './utils';
 
 export async function diagnostics(
-  modelDef: ModelDef,
+  modelUri: string,
   malloy: string
 ): Promise<monaco.editor.IMarkerData[]> {
+  const modelDef = getModel(modelUri);
+
   const markers: monaco.editor.IMarkerData[] = [];
   try {
     const model = await stubCompile(modelDef, malloy);
