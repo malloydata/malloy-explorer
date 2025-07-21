@@ -22,7 +22,7 @@ export function QueryEditor() {
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   if (!rootQuery) {
-    console.error('Missing <MalloyExplorerProvider>');
+    console.error('No a stable query available');
     return null;
   }
 
