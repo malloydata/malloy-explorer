@@ -10,6 +10,7 @@ import type {ModelDef} from '@malloydata/malloy';
 
 export interface LSPContextProps {
   modelDef?: ModelDef;
+  modelUri?: URL;
 }
 
 export const LSPContext = createContext<LSPContextProps>({});

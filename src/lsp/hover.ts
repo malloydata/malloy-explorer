@@ -6,23 +6,23 @@
  */
 
 import * as monaco from 'monaco-editor-core';
-import {Annotation, Model, ModelDef} from '@malloydata/malloy';
+import {Annotation, Model} from '@malloydata/malloy';
 
 import {COMPLETION_DOCS} from './completion_docs';
 import {stubCompile, stubParse} from './stub_compile';
-import {convertPosition} from './utils';
+import {convertPosition, getModel} from './utils';
 
 // TODO: export from Malloy
 type DocumentReference = Exclude<ReturnType<Model['getReference']>, undefined>;
 
 export async function provideHover(
-  modelDef: ModelDef,
-  model: monaco.editor.ITextModel,
+  textModel: monaco.editor.ITextModel,
   position: monaco.Position,
   _token: monaco.CancellationToken,
   _context?: monaco.languages.HoverContext<monaco.languages.Hover>
 ): Promise<monaco.languages.Hover | null> {
-  const malloy = model.getValue();
+  const modelDef = getModel(textModel.uri.toString());
+  const malloy = textModel.getValue();
   const context = stubParse(modelDef, malloy).helpContext(
     convertPosition(position)
   );

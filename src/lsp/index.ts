@@ -11,3 +11,4 @@ export {provideCompletionItems} from './completions';
 export {provideDefinition} from './definitions';
 export {provideDocumentSymbols} from './symbols';
 export {provideHover} from './hover';
+export {registerModel, initLsp} from './utils';

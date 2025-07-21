@@ -30,6 +30,7 @@ import {FocusableView} from './FocusableView';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {useUpdateQuery} from '../../hooks/useQueryUpdate';
 import {useContext} from 'react';
+import {LSPContext} from '../../contexts/LSPContext';
 
 export interface QueryProps {
   definition: ASTQueryDefinition;
@@ -39,6 +40,7 @@ export interface QueryProps {
 export function Query({definition}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const {modelDef} = useContext(LSPContext);
   const updateQuery = useUpdateQuery();
 
   if (!rootQuery) {
@@ -90,13 +92,15 @@ export function Query({definition}: QueryProps) {
                       !(definition instanceof ASTArrowQueryDefinition)
                     }
                   />
-                  <DropdownMenuItem
-                    icon="malloy"
-                    label="Convert to Malloy"
-                    onClick={() => {
-                      setQuery(rootQuery.toMalloy());
-                    }}
-                  />
+                  {modelDef ? (
+                    <DropdownMenuItem
+                      icon="malloy"
+                      label="Convert to Malloy"
+                      onClick={() => {
+                        setQuery(rootQuery.toMalloy());
+                      }}
+                    />
+                  ) : null}
                 </>
               ) : (
                 <></>

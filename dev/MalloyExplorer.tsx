@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import '../src/components/utils/monaco_worker';
 import stylex from '@stylexjs/stylex';
 import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -20,11 +21,11 @@ import {
   SubmittedQuery,
 } from '../src';
 import {topValues} from './sample_models/example_top_values';
-import {initLSP, runQuery, runRawQuery} from './utils/runtime';
+import {initLspContext, runQuery, runRawQuery} from './utils/runtime';
 import {DrillData} from '@malloydata/render';
 import {ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
 
-const url = new URL(
+const modelUri = new URL(
   '../malloy-samples/faa/flights.malloy',
   window.document.location.toString()
 );
@@ -44,8 +45,7 @@ const App = () => {
 
   useEffect(() => {
     const compile = async () => {
-      // const model = await compileMalloy(url);
-      const modelDef = await initLSP(url);
+      const modelDef = await initLspContext(modelUri);
       setModelDef(modelDef);
       const model = modelDefToModelInfo(modelDef);
       setModel(model);
@@ -60,7 +60,7 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <LSPContext.Provider value={{modelDef}}>
+      <LSPContext.Provider value={{modelDef, modelUri}}>
         <MalloyExplorerProvider
           source={source}
           query={query}
@@ -97,7 +97,7 @@ const App = () => {
                       onCancel: () => {},
                     };
                     setSubmittedQuery(submittedQuery);
-                    runQuery(url, query).then(({result}) =>
+                    runQuery(modelUri, query).then(({result}) =>
                       setSubmittedQuery({
                         ...submittedQuery,
                         executionState: 'finished' as const,
@@ -115,7 +115,7 @@ const App = () => {
                       onCancel: () => {},
                     };
                     setSubmittedQuery(submittedQuery);
-                    runRawQuery(url, query).then(({result}) =>
+                    runRawQuery(modelUri, query).then(({result}) =>
                       setSubmittedQuery({
                         ...submittedQuery,
                         executionState: 'finished' as const,

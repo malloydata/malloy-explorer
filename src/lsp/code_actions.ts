@@ -5,17 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {LogMessage, MalloyError, ModelDef} from '@malloydata/malloy';
+import {LogMessage, MalloyError} from '@malloydata/malloy';
 import * as monaco from 'monaco-editor-core';
 import {stubCompile} from './stub_compile';
+import {getModel} from './utils';
 
 export async function provideCodeActions(
-  modelDef: ModelDef,
   textModel: monaco.editor.ITextModel,
   range: monaco.Range,
   _context: monaco.languages.CodeActionContext,
   _token: monaco.CancellationToken
 ): Promise<monaco.languages.CodeActionList> {
+  const modelDef = getModel(textModel.uri.toString());
   const malloy = textModel.getValue();
   const problems: LogMessage[] = [];
   try {
