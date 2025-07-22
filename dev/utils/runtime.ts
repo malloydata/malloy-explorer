@@ -9,6 +9,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   API,
   MalloyError,
+  malloyToQuery,
   ModelDef,
   SingleConnectionRuntime,
   URLReader,
@@ -163,4 +164,8 @@ export async function initLspContext(url: URL): Promise<ModelDef> {
   });
   const model = await runtime.getModel(url);
   return model._modelDef;
+}
+
+export function malloyToStableQuery(malloy: string) {
+  return malloyToQuery(malloy);
 }

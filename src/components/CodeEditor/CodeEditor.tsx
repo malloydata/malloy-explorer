@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as monaco from 'monaco-editor-core';
 import stylex from '@stylexjs/stylex';
@@ -13,6 +13,10 @@ import {LSPContext} from '../../contexts/LSPContext';
 import {initMonaco} from '../utils/monaco';
 import {diagnostics} from '../../lsp';
 import {registerModel} from '../../lsp/utils';
+import {styles as componentStyles} from '../styles';
+import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {fontStyles} from '../primitives/styles';
 
 export interface CodeEditorProps {
   language: string;
@@ -25,10 +29,12 @@ export default function CodeEditor({
   value,
   onChange,
 }: CodeEditorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const {setQuery} = useContext(QueryEditorContext);
+  const [validStableQuery, setValidStableQuery] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
   const [malloy] = React.useState<string>(value);
   const [ready, setReady] = React.useState(false);
-  const {modelDef, modelUri} = React.useContext(LSPContext);
+  const {modelDef, modelUri, malloyToQuery} = React.useContext(LSPContext);
 
   useEffect(() => {
     const load = async () => {
@@ -41,9 +47,15 @@ export default function CodeEditor({
 
   useEffect(() => {
     const disposables: monaco.IDisposable[] = [];
-    if (!ready || !containerRef.current || !modelDef || !modelUri) {
+    if (!ready || !editorRef.current || !modelDef || !modelUri) {
       return () => {};
     }
+
+    const updateDiagnostics = async (malloy: string) => {
+      const markers = await diagnostics(uriString, malloy);
+      setValidStableQuery(markers.length === 0);
+      monaco.editor.setModelMarkers(model, 'malloy', markers);
+    };
 
     const uriString = modelUri.toString();
     registerModel(uriString, modelDef);
@@ -54,7 +66,7 @@ export default function CodeEditor({
       monaco.Uri.parse(uriString)
     );
 
-    const editor = monaco.editor.create(containerRef.current, {
+    const editor = monaco.editor.create(editorRef.current, {
       model,
       language,
       automaticLayout: true,
@@ -70,18 +82,50 @@ export default function CodeEditor({
       editor.onDidChangeModelContent(async () => {
         const newValue = editor.getValue();
         onChange(newValue);
-        monaco.editor.setModelMarkers(
-          model,
-          'malloy',
-          await diagnostics(uriString, newValue)
-        );
+        updateDiagnostics(newValue);
       })
     );
+
+    void updateDiagnostics(malloy);
 
     return () => disposables.forEach(disposable => disposable.dispose());
   }, [language, modelUri, malloy, onChange, ready, modelDef]);
 
-  return <div ref={containerRef} {...stylex.props(styles.container)} />;
+  return (
+    <div {...stylex.props(styles.container)}>
+      <div {...stylex.props(componentStyles.queryCard, styles.controls)}>
+        <div
+          {...stylex.props(componentStyles.labelWithIcon, fontStyles.largeBody)}
+        >
+          <Icon name="malloy" />
+          Malloy Editor
+        </div>
+        <DropdownMenu
+          trigger={
+            <Button
+              variant="flat"
+              icon="meatballs"
+              size="compact"
+              tooltip="More Actions"
+            />
+          }
+        >
+          <DropdownMenuItem
+            icon="malloy"
+            label="Use Query Editor"
+            onClick={() => {
+              if (malloy && malloyToQuery && validStableQuery) {
+                const {query} = malloyToQuery(value);
+                setQuery(query);
+              }
+            }}
+            disabled={!validStableQuery}
+          />
+        </DropdownMenu>
+      </div>
+      <div ref={editorRef} {...stylex.props(styles.editor)} />
+    </div>
+  );
 }
 
 const styles = stylex.create({
@@ -90,5 +134,18 @@ const styles = stylex.create({
     borderTop: '1px solid #CCD3DB',
     width: '100%',
     height: 'calc(100% - 4px)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  controls: {
+    margin: '4px 12px 0 12px',
+    flexGrow: 0,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  editor: {
+    flexGrow: 1,
   },
 });
