@@ -219,7 +219,10 @@ function SortableOperation({
       if (!canSmooth) {
         return;
       }
-      operation.convertToCalculateMovingAverage(7);
+      operation.convertToCalculateMovingAverage(
+        operation.name + '_smoothed',
+        7
+      );
       recomputePartitionByAndPrimaryAxis(rootQuery.getOrAddDefaultSegment());
       setQuery?.(rootQuery.build());
     },
@@ -337,40 +340,53 @@ function SortableOperation({
           )}
         </div>
       ) : operation instanceof ASTCalculateViewOperation ? (
-        <TokenGroup customStyle={customStyles.tokenGroup}>
-          <FieldToken
-            field={fieldInfo}
-            color={color}
-            hoverActionsVisible={hoverActionsVisible}
-            hoverActions={hoverActions}
-            tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
-            tooltipProps={{
-              side: 'right',
-              align: 'start',
-              alignOffset: 28,
-            }}
-            dragProps={{attributes, listeners}}
-          />
-          <SelectorToken
-            color={color}
-            value={'' + (operation.expression.node.rows_preceding ?? 7)}
-            onChange={(value: string) => {
-              if (value === '1') {
-                // TODO: Convert to normal aggregate
-              } else {
-                operation.expression.node.rows_preceding = parseInt(value, 10);
-                setQuery?.(rootQuery.build());
-              }
-            }}
-            items={[
-              {label: '7d', value: '7'},
-              {label: '14d', value: '14'},
-              {label: '28d', value: '28'},
-              {label: '30d', value: '30'},
-              {label: 'Remove smoothing', value: '1'},
-            ]}
-          />
-        </TokenGroup>
+        <FieldToken
+          field={fieldInfo}
+          color={color}
+          hoverActionsVisible={hoverActionsVisible}
+          hoverActions={hoverActions}
+          tooltip={<FieldHoverCard field={fieldInfo} path={path} />}
+          tooltipProps={{
+            side: 'right',
+            align: 'start',
+            alignOffset: 28,
+          }}
+          dragProps={{attributes, listeners}}
+          additionalSiblings={
+            <SelectorToken
+              color={color}
+              value={'' + (operation.expression.node.rows_preceding ?? 7)}
+              onChange={(value: string) => {
+                if (value === '1') {
+                  view.getOrAddDefaultSegment().operations.add(
+                    new ASTAggregateViewOperation({
+                      kind: 'aggregate',
+                      field: {
+                        expression: {
+                          kind: 'field_reference',
+                          name: operation.expression.node.field_reference.name,
+                        },
+                      },
+                    })
+                  );
+                  operation.delete();
+                  setQuery?.(rootQuery.build());
+                } else {
+                  operation.expression.edit();
+                  operation.expression.rowsPreceding = parseInt(value, 10);
+                  setQuery?.(rootQuery.build());
+                }
+              }}
+              items={[
+                {label: '7d', value: '7'},
+                {label: '14d', value: '14'},
+                {label: '28d', value: '28'},
+                {label: '30d', value: '30'},
+                {label: 'Remove smoothing', value: '1'},
+              ]}
+            />
+          }
+        />
       ) : (
         <>
           <FieldToken

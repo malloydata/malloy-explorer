@@ -8,6 +8,7 @@
 import * as React from 'react';
 import {
   ASTAggregateViewOperation,
+  ASTCalculateViewOperation,
   ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
@@ -18,7 +19,7 @@ export interface AggregateOperationsProps {
   rootQuery: ASTQuery;
   segment: ASTSegmentViewDefinition;
   view: ViewParent;
-  aggregates: ASTAggregateViewOperation[];
+  aggregates: (ASTAggregateViewOperation | ASTCalculateViewOperation)[];
 }
 
 export function AggregateOperations({

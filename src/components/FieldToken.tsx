@@ -27,10 +27,16 @@ interface FieldTokenProps extends React.ComponentProps<typeof Token> {
    * The controlled visible state of the hover actions.
    */
   hoverActionsVisible?: boolean;
+
+  /**
+   * Optional sibling elements to render before the hover actions.
+   */
+  additionalSiblings?: React.ReactNode;
 }
 
 export default function FieldToken({
   field,
+  additionalSiblings,
   hoverActions,
   hoverActionsVisible,
   ...props
@@ -57,6 +63,7 @@ export default function FieldToken({
         icon={fieldToIcon(field)}
         {...props}
       />
+      {additionalSiblings}
       {hoverActions && (
         <div {...stylex.props(styles.hoverActions)}>{hoverActions}</div>
       )}

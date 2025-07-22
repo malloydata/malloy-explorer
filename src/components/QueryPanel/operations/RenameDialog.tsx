@@ -57,6 +57,7 @@ export function RenameDialog({
   }
 
   const onRename = () => {
+    target.edit();
     target.name = name;
     setQuery?.(rootQuery?.build());
     setOpen(false);
