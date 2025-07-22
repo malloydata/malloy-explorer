@@ -6,7 +6,8 @@
  */
 
 import * as monaco from 'monaco-editor-core';
-import {LogMessage, MalloyError} from '@malloydata/malloy';
+import * as Malloy from '@malloydata/malloy-interfaces';
+import {LogMessage, MalloyError, malloyToQuery} from '@malloydata/malloy';
 import {LogSeverity} from '@malloydata/malloy-interfaces';
 import {stubCompile} from './stub_compile';
 import {getModel} from './utils';
@@ -22,6 +23,10 @@ export async function diagnostics(
     const model = await stubCompile(modelDef, malloy);
     for (const log of model.problems) {
       markers.push(logToMarker(log));
+    }
+    const {logs} = malloyToQuery(malloy);
+    for (const log of logs) {
+      markers.push(stableLogToMarker(log));
     }
   } catch (error) {
     if (error instanceof MalloyError) {
@@ -53,5 +58,16 @@ function logToMarker(log: LogMessage): monaco.editor.IMarkerData {
     startColumn: (log.at?.range.start.character ?? 0) + 1,
     endLineNumber: (log.at?.range.end.line ?? 0) + 1,
     endColumn: (log.at?.range.end.character ?? 0) + 1,
+  };
+}
+
+function stableLogToMarker(log: Malloy.LogMessage): monaco.editor.IMarkerData {
+  return {
+    severity: monaco.MarkerSeverity.Hint,
+    message: log.message,
+    startLineNumber: (log.range.start.line ?? 0) + 1,
+    startColumn: (log.range.start.character ?? 0) + 1,
+    endLineNumber: (log.range.end.line ?? 0) + 1,
+    endColumn: (log.range.end.character ?? 0) + 1,
   };
 }

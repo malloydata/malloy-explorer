@@ -23,7 +23,7 @@ import {
 import {topValues} from './sample_models/example_top_values';
 import {initLspContext, runQuery, runRawQuery} from './utils/runtime';
 import {DrillData} from '@malloydata/render';
-import {ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
+import {malloyToQuery, ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
 
 const modelUri = new URL(
   '../malloy-samples/faa/flights.malloy',
@@ -60,7 +60,7 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <LSPContext.Provider value={{modelDef, modelUri}}>
+      <LSPContext.Provider value={{modelDef, modelUri, malloyToQuery}}>
         <MalloyExplorerProvider
           source={source}
           query={query}

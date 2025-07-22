@@ -5,12 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {createContext} from 'react';
 import type {ModelDef} from '@malloydata/malloy';
 
 export interface LSPContextProps {
   modelDef?: ModelDef;
   modelUri?: URL;
+  malloyToQuery?: (malloy: string) => {
+    query?: Malloy.Query | undefined;
+    logs: Malloy.LogMessage[];
+  };
 }
 
 export const LSPContext = createContext<LSPContextProps>({});
