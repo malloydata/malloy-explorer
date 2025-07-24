@@ -72,15 +72,17 @@ const App = () => {
         >
           <div {...stylex.props(styles.page)}>
             <div {...stylex.props(styles.content)}>
-              <ResizableCollapsiblePanel
-                isInitiallyExpanded={true}
-                initialWidth={280}
-                minWidth={180}
-                icon="database"
-                title={source.name}
-              >
-                <SourcePanel onRefresh={() => {}} />
-              </ResizableCollapsiblePanel>
+              {typeof query !== 'string' ? (
+                <ResizableCollapsiblePanel
+                  isInitiallyExpanded={true}
+                  initialWidth={280}
+                  minWidth={180}
+                  icon="database"
+                  title={source.name}
+                >
+                  <SourcePanel onRefresh={() => {}} />
+                </ResizableCollapsiblePanel>
+              ) : null}
               <ResizableCollapsiblePanel
                 isInitiallyExpanded={true}
                 initialWidth={360}
