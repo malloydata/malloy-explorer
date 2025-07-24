@@ -6,6 +6,6 @@
  *
  */
 
-global.structuredClone = (val: unknown) => {
+globalThis.structuredClone = (val: unknown) => {
   return JSON.parse(JSON.stringify(val));
 };
