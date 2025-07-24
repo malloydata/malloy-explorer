@@ -100,28 +100,30 @@ export default function CodeEditor({
           <Icon name="malloy" />
           Malloy Editor
         </div>
-        <DropdownMenu
-          trigger={
-            <Button
-              variant="flat"
-              icon="meatballs"
-              size="compact"
-              tooltip="More Actions"
+        {malloyToQuery ? (
+          <DropdownMenu
+            trigger={
+              <Button
+                variant="flat"
+                icon="meatballs"
+                size="compact"
+                tooltip="More Actions"
+              />
+            }
+          >
+            <DropdownMenuItem
+              icon="malloy"
+              label="Use Query Editor"
+              onClick={() => {
+                if (malloy && malloyToQuery && validStableQuery) {
+                  const {query} = malloyToQuery(value);
+                  setQuery(query);
+                }
+              }}
+              disabled={!validStableQuery}
             />
-          }
-        >
-          <DropdownMenuItem
-            icon="malloy"
-            label="Use Query Editor"
-            onClick={() => {
-              if (malloy && malloyToQuery && validStableQuery) {
-                const {query} = malloyToQuery(value);
-                setQuery(query);
-              }
-            }}
-            disabled={!validStableQuery}
-          />
-        </DropdownMenu>
+          </DropdownMenu>
+        ) : null}
       </div>
       <div ref={editorRef} {...stylex.props(styles.editor)} />
     </div>
