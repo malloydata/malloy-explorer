@@ -6,16 +6,16 @@
  */
 
 import {LogMessage, MalloyError} from '@malloydata/malloy';
-import * as monaco from 'monaco-editor-core';
+import * as Monaco from '../components/utils/monaco_shim';
 import {stubCompile} from './stub_compile';
 import {getModel} from './utils';
 
 export async function provideCodeActions(
-  textModel: monaco.editor.ITextModel,
-  range: monaco.Range,
-  _context: monaco.languages.CodeActionContext,
-  _token: monaco.CancellationToken
-): Promise<monaco.languages.CodeActionList> {
+  textModel: Monaco.editor.ITextModel,
+  range: Monaco.Range,
+  _context: Monaco.languages.CodeActionContext,
+  _token: Monaco.CancellationToken
+): Promise<Monaco.languages.CodeActionList> {
   const modelDef = getModel(textModel.uri.toString());
   const malloy = textModel.getValue();
   const problems: LogMessage[] = [];
@@ -30,7 +30,7 @@ export async function provideCodeActions(
     }
   }
 
-  const actions: monaco.languages.CodeAction[] = [];
+  const actions: Monaco.languages.CodeAction[] = [];
 
   for (const problem of problems) {
     if (problem.at?.range) {
@@ -42,7 +42,7 @@ export async function provideCodeActions(
         par.end.character + 1 === range.endColumn &&
         problem.replacement
       ) {
-        const edit: monaco.languages.WorkspaceEdit = {
+        const edit: Monaco.languages.WorkspaceEdit = {
           edits: [
             {
               resource: textModel.uri,
@@ -52,7 +52,7 @@ export async function provideCodeActions(
           ],
         };
 
-        const codeAction: monaco.languages.CodeAction = {
+        const codeAction: Monaco.languages.CodeAction = {
           title: `Replace with ${problem.replacement}`,
           kind: 'quickfix',
           edit,
