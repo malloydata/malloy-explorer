@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as monaco from 'monaco-editor-core';
+import * as Monaco from '../components/utils/monaco_shim';
 import {Annotation, Model} from '@malloydata/malloy';
 
 import {COMPLETION_DOCS} from './completion_docs';
@@ -16,11 +16,11 @@ import {convertPosition, getModel} from './utils';
 type DocumentReference = Exclude<ReturnType<Model['getReference']>, undefined>;
 
 export async function provideHover(
-  textModel: monaco.editor.ITextModel,
-  position: monaco.Position,
-  _token: monaco.CancellationToken,
-  _context?: monaco.languages.HoverContext<monaco.languages.Hover>
-): Promise<monaco.languages.Hover | null> {
+  textModel: Monaco.editor.ITextModel,
+  position: Monaco.Position,
+  _token: Monaco.CancellationToken,
+  _context?: Monaco.languages.HoverContext<Monaco.languages.Hover>
+): Promise<Monaco.languages.Hover | null> {
   const modelDef = getModel(textModel.uri.toString());
   const malloy = textModel.getValue();
   const context = stubParse(modelDef, malloy).helpContext(
@@ -58,7 +58,7 @@ function getReferenceHover({text, definition}: DocumentReference) {
   const markdown = `\`\`\`
 ${tags}${text}: ${definition.type}
 \`\`\``;
-  const contents: monaco.IMarkdownString[] = [
+  const contents: Monaco.IMarkdownString[] = [
     {
       value: markdown,
     },

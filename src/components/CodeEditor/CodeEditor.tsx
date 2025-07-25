@@ -7,7 +7,7 @@
 
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import * as monaco from 'monaco-editor-core';
+import * as Monaco from '../utils/monaco_shim';
 import stylex from '@stylexjs/stylex';
 import {LSPContext} from '../../contexts/LSPContext';
 import {initMonaco} from '../utils/monaco';
@@ -35,6 +35,7 @@ export default function CodeEditor({
   const [malloy] = React.useState<string>(value);
   const [ready, setReady] = React.useState(false);
   const {modelDef, modelUri, malloyToQuery} = React.useContext(LSPContext);
+  const monaco = Monaco.getMonaco();
 
   useEffect(() => {
     const load = async () => {
@@ -46,7 +47,7 @@ export default function CodeEditor({
   }, []);
 
   useEffect(() => {
-    const disposables: monaco.IDisposable[] = [];
+    const disposables: Monaco.IDisposable[] = [];
     if (!ready || !editorRef.current || !modelDef || !modelUri) {
       return () => {};
     }
@@ -89,7 +90,7 @@ export default function CodeEditor({
     void updateDiagnostics(malloy);
 
     return () => disposables.forEach(disposable => disposable.dispose());
-  }, [language, modelUri, malloy, onChange, ready, modelDef]);
+  }, [language, modelUri, monaco, malloy, onChange, ready, modelDef]);
 
   return (
     <div {...stylex.props(styles.container)}>

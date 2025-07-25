@@ -6,15 +6,16 @@
  */
 
 import {DocumentRange} from '@malloydata/malloy';
-import * as monaco from 'monaco-editor-core';
+import * as Monaco from '../components/utils/monaco_shim';
 import {stubCompile} from './stub_compile';
 import {convertPosition, getModel} from './utils';
 
 export async function provideDefinition(
-  textModel: monaco.editor.ITextModel,
-  position: monaco.Position,
-  _token: monaco.CancellationToken
-): Promise<monaco.languages.Definition> {
+  textModel: Monaco.editor.ITextModel,
+  position: Monaco.Position,
+  _token: Monaco.CancellationToken
+): Promise<Monaco.languages.Definition> {
+  const monaco = Monaco.getMonaco();
   const modelDef = getModel(textModel.uri.toString());
   try {
     const malloy = textModel.getValue();
@@ -51,7 +52,7 @@ export async function provideDefinition(
   return [];
 }
 
-function convertRange(range: DocumentRange): monaco.IRange {
+function convertRange(range: DocumentRange): Monaco.IRange {
   return {
     startLineNumber: range.start.line + 1,
     startColumn: range.start.character + 1,
