@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as monaco from 'monaco-editor-core';
+import * as Monaco from '../components/utils/monaco_shim';
 import {DocumentSymbol as MalloyDocumentSymbol} from '@malloydata/malloy';
 import {stubParse} from './stub_compile';
 import {getModel} from './utils';
@@ -15,8 +15,10 @@ function mapSymbol({
   range,
   type,
   children,
-}: MalloyDocumentSymbol): monaco.languages.DocumentSymbol {
-  let kind: monaco.languages.SymbolKind;
+}: MalloyDocumentSymbol): Monaco.languages.DocumentSymbol {
+  const monaco = Monaco.getMonaco();
+
+  let kind: Monaco.languages.SymbolKind;
   let detail = type;
   switch (type) {
     case 'explore':
@@ -57,9 +59,9 @@ function mapSymbol({
 }
 
 export function provideDocumentSymbols(
-  textModel: monaco.editor.ITextModel,
-  _token: monaco.CancellationToken
-): monaco.languages.DocumentSymbol[] {
+  textModel: Monaco.editor.ITextModel,
+  _token: Monaco.CancellationToken
+): Monaco.languages.DocumentSymbol[] {
   const modelDef = getModel(textModel.uri.toString());
   const malloy = textModel.getValue();
   const parse = stubParse(modelDef, malloy);

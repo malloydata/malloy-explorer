@@ -5,17 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as monaco from 'monaco-editor-core';
+import * as Monaco from '../components/utils/monaco_shim';
 import {stubParse} from './stub_compile';
 import {convertPosition, getModel} from './utils';
 import {COMPLETION_DOCS} from './completion_docs';
 
 export function provideCompletionItems(
-  textModel: monaco.editor.ITextModel,
-  position: monaco.Position,
-  _context: monaco.languages.CompletionContext,
-  _token: monaco.CancellationToken
-): monaco.languages.CompletionList {
+  textModel: Monaco.editor.ITextModel,
+  position: Monaco.Position,
+  _context: Monaco.languages.CompletionContext,
+  _token: Monaco.CancellationToken
+): Monaco.languages.CompletionList {
   const modelDef = getModel(textModel.uri.toString());
   const malloyPosition = convertPosition(position);
   const malloy = textModel.getValue();
@@ -26,6 +26,7 @@ export function provideCompletionItems(
     endColumn: position.column,
     endLineNumber: position.lineNumber,
   });
+  const monaco = Monaco.getMonaco();
 
   let startColumn = position.column;
   while (startColumn > 0 && prefix.charAt(startColumn - 2).match(/\w/)) {
@@ -35,7 +36,7 @@ export function provideCompletionItems(
   return {
     suggestions: parse
       .completions(malloyPosition)
-      .map<monaco.languages.CompletionItem>(completion => {
+      .map<Monaco.languages.CompletionItem>(completion => {
         return {
           insertText: completion.text,
           label: completion.text,

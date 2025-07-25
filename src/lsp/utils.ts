@@ -6,7 +6,7 @@
  */
 
 import {ModelDef} from '@malloydata/malloy';
-import * as monaco from 'monaco-editor-core';
+import * as Monaco from '../components/utils/monaco_shim';
 import {
   provideCodeActions,
   provideCompletionItems,
@@ -15,7 +15,7 @@ import {
   provideHover,
 } from '.';
 
-export function convertPosition(position: monaco.Position) {
+export function convertPosition(position: Monaco.Position) {
   return {
     line: position.lineNumber - 1,
     character: position.column,
@@ -35,8 +35,10 @@ export function getModel(modelUri: string): ModelDef {
   throw new Error(`Unknown model ${modelUri}`);
 }
 
-export function initLsp(): monaco.IDisposable {
-  const disposables: monaco.IDisposable[] = [];
+export function initLsp(): Monaco.IDisposable {
+  const monaco = Monaco.getMonaco();
+
+  const disposables: Monaco.IDisposable[] = [];
   disposables.push(
     monaco.languages.registerHoverProvider('malloy', {
       provideHover,

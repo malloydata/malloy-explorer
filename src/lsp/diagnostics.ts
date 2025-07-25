@@ -5,20 +5,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as monaco from 'monaco-editor-core';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {LogMessage, MalloyError, malloyToQuery} from '@malloydata/malloy';
 import {LogSeverity} from '@malloydata/malloy-interfaces';
 import {stubCompile} from './stub_compile';
 import {getModel} from './utils';
+import * as Monaco from '../components/utils/monaco_shim';
 
 export async function diagnostics(
   modelUri: string,
   malloy: string
-): Promise<monaco.editor.IMarkerData[]> {
+): Promise<Monaco.editor.IMarkerData[]> {
   const modelDef = getModel(modelUri);
 
-  const markers: monaco.editor.IMarkerData[] = [];
+  const markers: Monaco.editor.IMarkerData[] = [];
   try {
     const model = await stubCompile(modelDef, malloy);
     for (const log of model.problems) {
@@ -38,7 +38,9 @@ export async function diagnostics(
   return markers;
 }
 
-function convertSeverity(severity: LogSeverity): monaco.MarkerSeverity {
+function convertSeverity(severity: LogSeverity): Monaco.MarkerSeverity {
+  const monaco = Monaco.getMonaco();
+
   switch (severity) {
     case 'error':
       return monaco.MarkerSeverity.Error;
@@ -50,7 +52,7 @@ function convertSeverity(severity: LogSeverity): monaco.MarkerSeverity {
   return monaco.MarkerSeverity.Hint;
 }
 
-function logToMarker(log: LogMessage): monaco.editor.IMarkerData {
+function logToMarker(log: LogMessage): Monaco.editor.IMarkerData {
   return {
     severity: convertSeverity(log.severity),
     message: log.message,
@@ -61,7 +63,9 @@ function logToMarker(log: LogMessage): monaco.editor.IMarkerData {
   };
 }
 
-function stableLogToMarker(log: Malloy.LogMessage): monaco.editor.IMarkerData {
+function stableLogToMarker(log: Malloy.LogMessage): Monaco.editor.IMarkerData {
+  const monaco = Monaco.getMonaco();
+
   return {
     severity: monaco.MarkerSeverity.Hint,
     message: log.message,
