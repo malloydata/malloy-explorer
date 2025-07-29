@@ -3,10 +3,7 @@ import type {
   FieldInfoWithDimension,
   Schema,
 } from '@malloydata/malloy-interfaces';
-import {
-  ASTArrowQueryDefinition,
-  ASTQuery,
-} from '@malloydata/malloy-query-builder';
+import {ViewParent} from './fields';
 
 /**
  * Gets the computed primary axis from the root query. Roughly follows this logic:
@@ -14,9 +11,7 @@ import {
  * - Otherwise find the first output field with a time or date type'
  * - Otherwise, find the first output field
  */
-export const getPrimaryAxis = (rootQuery: ASTQuery): FieldInfo | undefined => {
-  const defintion = rootQuery.definition as ASTArrowQueryDefinition;
-  const view = defintion?.view;
+export const getPrimaryAxis = (view: ViewParent): FieldInfo | undefined => {
   const schema = view.getOutputSchema();
   return getPrimaryAxisFromSchema(schema);
 };

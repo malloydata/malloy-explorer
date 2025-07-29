@@ -7,23 +7,18 @@
 
 import * as React from 'react';
 import {ViewDefinition} from './ViewDefinition';
-import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
+import {ASTView} from '@malloydata/malloy-query-builder';
 import {Visualization} from './Visualization';
 
 export interface ViewProps {
-  rootQuery: ASTQuery;
   view: ASTView;
 }
 
-export function View({rootQuery, view}: ViewProps) {
+export function View({view}: ViewProps) {
   return (
     <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-      <Visualization rootQuery={rootQuery} view={view} />
-      <ViewDefinition
-        rootQuery={rootQuery}
-        view={view}
-        viewDef={view.definition}
-      />
+      <Visualization view={view} />
+      <ViewDefinition view={view} viewDef={view.definition} />
     </div>
   );
 }

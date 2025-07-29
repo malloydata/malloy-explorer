@@ -17,14 +17,12 @@ import {VizEditor} from './VizEditor';
 import {dialogStyles} from '../dialogStyles';
 
 export interface VizEditorPopoverProps {
-  rootQuery: ASTQuery;
   plugin: CoreVizPluginInstance;
   view: ASTQuery | ASTView;
   customStyle?: StyleXStyles;
 }
 
 export function VizEditorPopover({
-  rootQuery,
   plugin,
   view,
   customStyle,
@@ -39,7 +37,6 @@ export function VizEditorPopover({
       <Popover.Portal>
         <Popover.Content align="end">
           <VizEditor
-            rootQuery={rootQuery}
             view={view}
             plugin={plugin}
             setOpen={setOpen}

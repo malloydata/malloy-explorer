@@ -6,7 +6,6 @@
  */
 
 import * as React from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {AddFieldItem} from './AddFieldItem';
 import {
   getInputSchemaFromViewParent,
@@ -17,7 +16,6 @@ import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {addFilter} from '../../utils/segment';
 
 export interface AddWhereProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   search: string;
 }

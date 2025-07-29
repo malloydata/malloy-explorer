@@ -12,7 +12,6 @@ import {
   ASTLimitViewOperation,
   ASTNestViewOperation,
   ASTOrderByViewOperation,
-  ASTQuery,
   ASTSegmentViewDefinition,
   ASTViewDefinition,
   ASTWhereViewOperation,
@@ -38,12 +37,11 @@ const operationStyles = stylex.create({
 });
 
 export interface OperationsProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   viewDef: ASTViewDefinition;
 }
 
-export function Operations({rootQuery, view, viewDef}: OperationsProps) {
+export function Operations({view, viewDef}: OperationsProps) {
   const groupBys: ASTGroupByViewOperation[] = [];
   const aggregates: (ASTAggregateViewOperation | ASTCalculateViewOperation)[] =
     [];
@@ -84,23 +82,17 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
 
   return (
     <div {...stylex.props(operationStyles.indent)}>
-      <GroupByOperations
-        rootQuery={rootQuery}
-        segment={segment}
-        view={view}
-        groupBys={groupBys}
-      />
+      <GroupByOperations segment={segment} view={view} groupBys={groupBys} />
       <AggregateOperations
-        rootQuery={rootQuery}
         segment={segment}
         view={view}
         aggregates={aggregates}
       />
-      <DrillOperations rootQuery={rootQuery} drills={drills} />
-      <FilterOperations rootQuery={rootQuery} filters={filters} />
-      <OrderByOperations rootQuery={rootQuery} orderBys={orderBys} />
-      <NestOperations rootQuery={rootQuery} view={view} nests={nests} />
-      <LimitOperation rootQuery={rootQuery} limit={limit} />
+      <DrillOperations drills={drills} />
+      <FilterOperations filters={filters} />
+      <OrderByOperations orderBys={orderBys} />
+      <NestOperations view={view} nests={nests} />
+      <LimitOperation limit={limit} />
     </div>
   );
 }

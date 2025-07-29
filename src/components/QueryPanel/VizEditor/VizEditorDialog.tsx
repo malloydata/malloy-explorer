@@ -17,7 +17,6 @@ import {dialogStyles} from '../dialogStyles';
 import {Icon} from '../../primitives';
 
 export interface VizEditorDialogProps {
-  rootQuery: ASTQuery;
   plugin?: CoreVizPluginInstance;
   view: ASTQuery | ASTView;
   customStyle?: StyleXStyles;
@@ -26,7 +25,6 @@ export interface VizEditorDialogProps {
 }
 
 export function VizEditorDialog({
-  rootQuery,
   plugin,
   view,
   customStyle,
@@ -58,12 +56,7 @@ export function VizEditorDialog({
             <Dialog.Description {...stylex.props(dialogStyles.displayNone)}>
               Edit visualization parameters
             </Dialog.Description>
-            <VizEditor
-              rootQuery={rootQuery}
-              view={view}
-              plugin={plugin}
-              setOpen={setOpen}
-            />
+            <VizEditor view={view} plugin={plugin} setOpen={setOpen} />
           </Dialog.Content>
         </Dialog.Overlay>
       </Dialog.Portal>

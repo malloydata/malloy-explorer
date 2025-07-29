@@ -9,7 +9,6 @@ import * as React from 'react';
 import {
   ASTDrillViewOperation,
   ASTFilterWithLiteralEquality,
-  ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -19,7 +18,6 @@ import FieldToken from '../../FieldToken';
 // import FieldToken from '../../FieldToken';
 
 export interface DrillOperationsProps {
-  rootQuery: ASTQuery;
   drills: ASTDrillViewOperation[];
 }
 

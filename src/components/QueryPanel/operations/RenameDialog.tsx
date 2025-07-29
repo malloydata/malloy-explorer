@@ -14,7 +14,6 @@ import {
   ASTCalculateViewOperation,
   ASTGroupByViewOperation,
   ASTNestViewOperation,
-  ASTQuery,
 } from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {Button} from '../../primitives';
@@ -24,7 +23,6 @@ import ErrorIcon from '../../primitives/ErrorIcon';
 import {dialogStyles} from '../dialogStyles';
 
 export interface RenameDialogProps {
-  rootQuery: ASTQuery | undefined;
   view: ViewParent;
   target:
     | ASTGroupByViewOperation
@@ -36,15 +34,9 @@ export interface RenameDialogProps {
   setOpen: (open: boolean) => void;
 }
 
-export function RenameDialog({
-  rootQuery,
-  view,
-  target,
-  open,
-  setOpen,
-}: RenameDialogProps) {
+export function RenameDialog({view, target, open, setOpen}: RenameDialogProps) {
   const [name, setName] = useState('');
-  const {setQuery} = useContext(QueryEditorContext);
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   useEffect(() => {
     if (target) {

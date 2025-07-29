@@ -10,7 +10,6 @@ import stylex from '@stylexjs/stylex';
 import {Operations} from './Operations';
 import {
   ASTArrowViewDefinition,
-  ASTQuery,
   ASTReferenceViewDefinition,
   ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
@@ -23,44 +22,28 @@ import {textColors} from '../primitives/colors.stylex';
 import {ViewParent} from '../utils/fields';
 
 export interface ViewProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   viewDef: ASTViewDefinition;
 }
 
-export function ViewDefinition({rootQuery, view, viewDef}: ViewProps) {
+export function ViewDefinition({view, viewDef}: ViewProps) {
   if (viewDef instanceof ASTArrowViewDefinition) {
-    return (
-      <ViewDefinition
-        rootQuery={rootQuery}
-        view={view}
-        viewDef={viewDef.view}
-      />
-    );
+    return <ViewDefinition view={view} viewDef={viewDef.view} />;
   } else if (viewDef instanceof ASTRefinementViewDefinition) {
     return (
       <div>
-        <ViewDefinition
-          rootQuery={rootQuery}
-          view={view}
-          viewDef={viewDef.base}
-        />
-        <ViewDefinition
-          rootQuery={rootQuery}
-          view={view}
-          viewDef={viewDef.refinement}
-        />
+        <ViewDefinition view={view} viewDef={viewDef.base} />
+        <ViewDefinition view={view} viewDef={viewDef.refinement} />
       </div>
     );
   } else if (viewDef instanceof ASTSegmentViewDefinition) {
-    return <Operations rootQuery={rootQuery} view={view} viewDef={viewDef} />;
+    return <Operations view={view} viewDef={viewDef} />;
   } else {
-    return <CollapsingView rootQuery={rootQuery} viewDef={viewDef} />;
+    return <CollapsingView viewDef={viewDef} />;
   }
 }
 
 interface CollapsingViewProps {
-  rootQuery: ASTQuery;
   viewDef: ASTReferenceViewDefinition;
 }
 

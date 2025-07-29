@@ -8,7 +8,6 @@
 import * as React from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {hoverStyles} from './hover.stylex';
 import {styles as commonStyles} from '../../styles';
 import {FieldMenu} from '../AddMenu/FieldMenu';
@@ -17,7 +16,6 @@ import {isNotAnnotatedFilteredField, ViewParent} from '../../utils/fields';
 import {getSegmentIfPresent} from '../../utils/segment';
 
 export interface OperationActionTitleProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   title: string;
   actionTitle: string;
