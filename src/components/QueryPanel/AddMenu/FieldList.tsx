@@ -24,6 +24,7 @@ interface Group {
     | Malloy.FieldInfoWithDimension
     | Malloy.FieldInfoWithMeasure
     | Malloy.FieldInfoWithView
+    | Malloy.FieldInfoWithCalculate
   >;
 }
 
@@ -69,7 +70,7 @@ export function FieldList({
     const lcSearch = search.toLocaleLowerCase();
 
     const buildGroups = (
-      types: Array<'dimension' | 'measure' | 'view'>,
+      types: Array<'dimension' | 'measure' | 'view' | 'calculate'>,
       path: string[],
       name: string,
       fields: Malloy.FieldInfo[]

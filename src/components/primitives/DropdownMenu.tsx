@@ -18,7 +18,8 @@ import {iconVars, labelVars, sublabelVars} from './dropdown-menu.stylex';
 type DropdownMenuChild =
   | React.ReactElement<DropdownMenuItemProps, typeof DropdownMenuItem>
   | React.ReactElement<DropdownSubMenuItemProps, typeof DropdownSubMenuItem>
-  | React.ReactElement<DropdownMenuLabelProps, typeof DropdownMenuLabel>;
+  | React.ReactElement<DropdownMenuLabelProps, typeof DropdownMenuLabel>
+  | null;
 
 interface DropdownMenuProps {
   trigger: ReactElement;

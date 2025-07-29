@@ -17,6 +17,7 @@ import {
   ASTViewDefinition,
   ASTWhereViewOperation,
   ASTHavingViewOperation,
+  ASTCalculateViewOperation,
   ASTDrillViewOperation,
 } from '@malloydata/malloy-query-builder';
 import {DrillOperations} from './operations/DrillOperations';
@@ -44,7 +45,8 @@ export interface OperationsProps {
 
 export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   const groupBys: ASTGroupByViewOperation[] = [];
-  const aggregates: ASTAggregateViewOperation[] = [];
+  const aggregates: (ASTAggregateViewOperation | ASTCalculateViewOperation)[] =
+    [];
   const drills: ASTDrillViewOperation[] = [];
   const filters: Array<ASTWhereViewOperation | ASTHavingViewOperation> = [];
   const orderBys: ASTOrderByViewOperation[] = [];
@@ -60,7 +62,10 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   segment.operations.items.forEach(operation => {
     if (operation instanceof ASTGroupByViewOperation) {
       groupBys.push(operation);
-    } else if (operation instanceof ASTAggregateViewOperation) {
+    } else if (
+      operation instanceof ASTAggregateViewOperation ||
+      operation instanceof ASTCalculateViewOperation
+    ) {
       aggregates.push(operation);
     } else if (operation instanceof ASTWhereViewOperation) {
       filters.push(operation);
