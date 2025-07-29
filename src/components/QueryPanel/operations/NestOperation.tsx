@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import {useContext, useState} from 'react';
-import {ASTNestViewOperation, ASTQuery} from '@malloydata/malloy-query-builder';
+import {ASTNestViewOperation} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
@@ -15,7 +15,7 @@ import {Button, DropdownMenu, DropdownMenuItem} from '../../primitives';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 import {AddMenu} from '../AddMenu/AddMenu';
-import {viewToVisualizationIcon} from '../../utils/icon';
+import {tagToVisualization} from '../../utils/icon';
 import {RenameDialog} from './RenameDialog';
 import {ViewParent} from '../../utils/fields';
 import {useQueryFocus} from '../../MalloyQueryFocusProvider';
@@ -23,12 +23,11 @@ import {NestViewPathContext} from '../../contexts/NestViewPathContext';
 import {FocusableView} from '../FocusableView';
 
 export interface NestOperationsProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   nests: ASTNestViewOperation[];
 }
 
-export function NestOperations({rootQuery, view, nests}: NestOperationsProps) {
+export function NestOperations({view, nests}: NestOperationsProps) {
   if (nests.length === 0) {
     return null;
   }
@@ -36,25 +35,19 @@ export function NestOperations({rootQuery, view, nests}: NestOperationsProps) {
   return (
     <div {...stylex.props(styles.tokenContainer)}>
       {nests.map(nest => (
-        <NestOperation
-          key={nest.name}
-          rootQuery={rootQuery}
-          view={view}
-          nest={nest}
-        />
+        <NestOperation key={nest.name} view={view} nest={nest} />
       ))}
     </div>
   );
 }
 
 export interface NestOperationProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   nest: ASTNestViewOperation;
 }
 
-export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function NestOperation({view, nest}: NestOperationProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   const [renameOpen, setRenameOpen] = useState(false);
 
@@ -80,7 +73,7 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
           onClick={() => {
             focusNestView([...parentNestViewPath]);
             nest.delete();
-            setQuery?.(rootQuery.build());
+            setQuery?.(rootQuery?.build());
           }}
         />
         <DropdownMenuItem
@@ -90,7 +83,7 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
           }}
         />
       </DropdownMenu>
-      <AddMenu rootQuery={rootQuery} view={nest.view} />
+      <AddMenu view={nest.view} />
     </>
   );
 
@@ -99,16 +92,15 @@ export function NestOperation({rootQuery, view, nest}: NestOperationProps) {
       <div key={nest.name} {...stylex.props(viewStyles.indent)}>
         <CollapsiblePanel
           title={nest.name}
-          icon={viewToVisualizationIcon(nest.view)}
+          icon={tagToVisualization(nest.view.getTag())}
           defaultOpen={true}
           controls={getControls(nest)}
           collapsedControls={getControls(nest)}
           isFocused={isNestViewFocused([...parentNestViewPath, nest.name])}
         >
-          <View rootQuery={rootQuery} view={nest.view} />
+          <View view={nest.view} />
         </CollapsiblePanel>
         <RenameDialog
-          rootQuery={rootQuery}
           view={view}
           target={nest}
           open={renameOpen}

@@ -8,8 +8,8 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {AtomicTypeType, ParameterTypeType} from '@malloydata/malloy-interfaces';
 import {IconType} from '../primitives';
-import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {RendererName, tagToRenderer} from './renderer';
+import {Tag} from '@malloydata/malloy-tag';
 
 export function atomicTypeToIcon(
   type: AtomicTypeType | ParameterTypeType
@@ -47,8 +47,7 @@ export function relationshipToIcon(
   return relationshipMap[relationship];
 }
 
-export function viewToVisualizationIcon(view: ASTQuery | ASTView): IconType {
-  const currentTag = view.getTag();
+export function tagToVisualization(currentTag: Tag): IconType {
   const currentRenderer: RendererName = tagToRenderer(currentTag) ?? 'table';
   return `viz_${currentRenderer}`;
 }

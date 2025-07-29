@@ -8,7 +8,6 @@
 import * as React from 'react';
 import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {AddFieldItem} from './AddFieldItem';
 import {
@@ -19,13 +18,12 @@ import {
 import {addGroupBy, getSegmentIfPresent} from '../../utils/segment';
 
 export interface AddGroupByProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   search: string;
 }
 
-export function AddGroupBy({rootQuery, view, search}: AddGroupByProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function AddGroupBy({view, search}: AddGroupByProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const {fields} = getInputSchemaFromViewParent(view);
   const segment = getSegmentIfPresent(view);
 
@@ -49,7 +47,7 @@ export function AddGroupBy({rootQuery, view, search}: AddGroupByProps) {
       filter={filter}
       onAddOperation={(field, path) => {
         addGroupBy(view, field, path);
-        setQuery?.(rootQuery.build());
+        setQuery?.(rootQuery?.build());
       }}
       search={search}
     />

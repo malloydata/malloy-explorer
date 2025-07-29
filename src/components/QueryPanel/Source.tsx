@@ -8,7 +8,7 @@
 import * as React from 'react';
 import {
   ASTArrowQueryDefinition,
-  ASTQuery,
+  ASTQueryDefinition,
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles as componentStyles} from '../styles';
@@ -18,21 +18,17 @@ import {Icon} from '../primitives';
  * Source
  */
 export interface SourceProps {
-  rootQuery: ASTQuery;
+  definition: ASTQueryDefinition;
 }
 
-export function Source({rootQuery}: SourceProps) {
-  if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
+export function Source({definition}: SourceProps) {
+  if (definition instanceof ASTArrowQueryDefinition) {
     return (
       <div {...stylex.props(componentStyles.queryCard, styles.content)}>
         <div {...stylex.props(componentStyles.labelWithIcon)}>
           <Icon name="database" />
           <div {...stylex.props(styles.label)}>
-            {
-              rootQuery.definition.as
-                .ArrowQueryDefinition()
-                .source.as.ReferenceQueryArrowSource().name
-            }
+            {definition.source.getSourceInfo().name}
           </div>
         </div>
       </div>

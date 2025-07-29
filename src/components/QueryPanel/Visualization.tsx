@@ -27,12 +27,11 @@ import {
 } from '@malloydata/render';
 
 export interface VisualizationProps {
-  rootQuery: ASTQuery;
   view: ASTQuery | ASTView;
 }
 
-export function Visualization({rootQuery, view}: VisualizationProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function Visualization({view}: VisualizationProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const renderer = useMemo(() => new MalloyRenderer(), []);
   const [currentRenderer, setCurrentRenderer] = useState<VizName>('table');
   const [plugin, setPlugin] = useState<CoreVizPluginInstance>();
@@ -79,7 +78,7 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
 
   const updateViz = (renderer: VizName): void => {
     view.setTagProperty(['viz'], renderer, RENDERER_PREFIX);
-    setQuery?.(rootQuery.build());
+    setQuery?.(rootQuery?.build());
   };
 
   const items = VIZ_RENDERERS.map(viz => ({
@@ -124,7 +123,6 @@ export function Visualization({rootQuery, view}: VisualizationProps) {
       <VizEditorDialog
         open={open}
         setOpen={setOpen}
-        rootQuery={rootQuery}
         plugin={plugin}
         view={view}
       />

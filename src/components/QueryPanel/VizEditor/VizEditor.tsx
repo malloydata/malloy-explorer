@@ -21,15 +21,14 @@ import {Button} from '../../primitives';
 import {RENDERER_PREFIX} from '../../utils/renderer';
 
 export interface VizEditorProps {
-  rootQuery: ASTQuery;
   plugin: CoreVizPluginInstance;
   view: ASTQuery | ASTView;
   customStyle?: StyleXStyles;
   setOpen: (open: boolean) => void;
 }
 
-export function VizEditor({rootQuery, view, plugin, setOpen}: VizEditorProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function VizEditor({view, plugin, setOpen}: VizEditorProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const [current, setCurrent] = useState(plugin.getSettings());
   console.info('RendererEditor current settings:', current);
 
@@ -81,7 +80,7 @@ export function VizEditor({rootQuery, view, plugin, setOpen}: VizEditorProps) {
               annotations.remove(old);
             }
             view.getOrAddAnnotations().add(new ASTAnnotation({value}));
-            setQuery?.(rootQuery.build());
+            setQuery?.(rootQuery?.build());
             setOpen(false);
           }}
           customStyle={styles.editorCell}

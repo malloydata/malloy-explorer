@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import Icon from '../../primitives/Icon';
 import {AddItem} from './AddItem';
@@ -15,12 +14,11 @@ import {getSegmentIfPresent, segmentHasLimit} from '../../utils/segment';
 import {ViewParent} from '../../utils/fields';
 
 export interface AddLimitProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
 }
 
-export function AddLimit({rootQuery, view}: AddLimitProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function AddLimit({view}: AddLimitProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   const segment = getSegmentIfPresent(view);
   const hasLimit = segment ? segmentHasLimit(segment) : false;
@@ -33,7 +31,7 @@ export function AddLimit({rootQuery, view}: AddLimitProps) {
       onClick={() => {
         const segment = view.getOrAddDefaultSegment();
         segment.setLimit(10);
-        setQuery?.(rootQuery.build());
+        setQuery?.(rootQuery?.build());
       }}
     />
   );

@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import {useContext, useState} from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
 import * as Popover from '@radix-ui/react-popover';
 import stylex from '@stylexjs/stylex';
 import {Button, Divider, Icon, TextInput} from '../../primitives';
@@ -38,14 +37,13 @@ import {
 import {AddItem} from './AddItem';
 
 export interface AddMenuProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
 }
 
-export function AddMenu({rootQuery, view}: AddMenuProps) {
+export function AddMenu({view}: AddMenuProps) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
-  const {setQuery} = useContext(QueryEditorContext);
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const [search, setSearch] = useState('');
   const segment = getSegmentIfPresent(view);
 
@@ -116,7 +114,7 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                     } else {
                       addNest(view, field);
                     }
-                    setQuery?.(rootQuery.build());
+                    setQuery?.(rootQuery?.build());
                   }}
                   search={search}
                 />
@@ -134,7 +132,7 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                         values: [value.fieldValue ?? '∅'],
                       },
                     });
-                    setQuery?.(rootQuery.build());
+                    setQuery?.(rootQuery?.build());
                   }}
                 />
               </div>
@@ -168,14 +166,14 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
                   open={active === 'view'}
                 />
                 <Divider />
-                <AddLimit rootQuery={rootQuery} view={view} />
+                <AddLimit view={view} />
                 <AddItem
                   icon={<Icon name="orderBy" />}
                   label="Order by"
                   onClick={() => toggleActive('order_by')}
                   open={active === 'order_by'}
                 />
-                <AddEmptyNest rootQuery={rootQuery} view={view} />
+                <AddEmptyNest view={view} />
               </div>
             )}
             <div
@@ -183,23 +181,15 @@ export function AddMenu({rootQuery, view}: AddMenuProps) {
               style={{overflowY: 'auto'}}
             >
               {active === 'group_by' && (
-                <AddGroupBy rootQuery={rootQuery} view={view} search={search} />
+                <AddGroupBy view={view} search={search} />
               )}
               {active === 'aggregate' && (
-                <AddAggregate
-                  rootQuery={rootQuery}
-                  view={view}
-                  search={search}
-                />
+                <AddAggregate view={view} search={search} />
               )}
-              {active === 'where' && (
-                <AddWhere rootQuery={rootQuery} view={view} search={search} />
-              )}
-              {active === 'view' && (
-                <AddView rootQuery={rootQuery} view={view} search={search} />
-              )}
+              {active === 'where' && <AddWhere view={view} search={search} />}
+              {active === 'view' && <AddView view={view} search={search} />}
               {active === 'order_by' && (
-                <AddOrderBy rootQuery={rootQuery} view={view} search={search} />
+                <AddOrderBy view={view} search={search} />
               )}
             </div>
           </div>

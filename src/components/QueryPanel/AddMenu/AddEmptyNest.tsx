@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import Icon from '../../primitives/Icon';
 import {AddItem} from './AddItem';
@@ -15,12 +14,11 @@ import {segmentNestNo} from '../../utils/segment';
 import {ViewParent} from '../../utils/fields';
 
 export interface AddEmptyNestProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
 }
 
-export function AddEmptyNest({rootQuery, view}: AddEmptyNestProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function AddEmptyNest({view}: AddEmptyNestProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   return (
     <AddItem
@@ -30,7 +28,7 @@ export function AddEmptyNest({rootQuery, view}: AddEmptyNestProps) {
         const segment = view.getOrAddDefaultSegment();
         const nestNo = segmentNestNo(segment, `Nest`);
         segment.addEmptyNest(nestNo > 1 ? `Nest ${nestNo}` : `Nest`);
-        setQuery?.(rootQuery.build());
+        setQuery?.(rootQuery?.build());
       }}
     />
   );

@@ -7,10 +7,7 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import {
-  ASTOrderByViewOperation,
-  ASTQuery,
-} from '@malloydata/malloy-query-builder';
+import {ASTOrderByViewOperation} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
@@ -20,15 +17,11 @@ import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 
 export interface OrderByOperationsProps {
-  rootQuery: ASTQuery;
   orderBys: ASTOrderByViewOperation[];
 }
 
-export function OrderByOperations({
-  rootQuery,
-  orderBys,
-}: OrderByOperationsProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function OrderByOperations({orderBys}: OrderByOperationsProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   if (orderBys.length === 0) {
     return null;
   }
@@ -62,7 +55,7 @@ export function OrderByOperations({
                   value={orderBy.direction ?? 'asc'}
                   onChange={direction => {
                     orderBy.direction = direction;
-                    setQuery?.(rootQuery.build());
+                    setQuery?.(rootQuery?.build());
                   }}
                 />
               </TokenGroup>
@@ -70,7 +63,7 @@ export function OrderByOperations({
                 <ClearButton
                   onClick={() => {
                     orderBy.delete();
-                    setQuery?.(rootQuery.build());
+                    setQuery?.(rootQuery?.build());
                   }}
                 />
               </div>

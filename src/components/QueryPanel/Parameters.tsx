@@ -9,7 +9,8 @@ import * as React from 'react';
 import {useContext} from 'react';
 import {
   ASTArrowQueryDefinition,
-  ASTQuery,
+  ASTQueryDefinition,
+  ASTReferenceQueryArrowSource,
 } from '@malloydata/malloy-query-builder';
 import {LiteralValueEditor} from './LiteralValueEditor';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
@@ -22,16 +23,17 @@ import stylex from '@stylexjs/stylex';
  * Source
  */
 export interface ParametersProps {
-  rootQuery: ASTQuery;
+  definition: ASTQueryDefinition;
 }
 
-export function Parameters({rootQuery}: ParametersProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function Parameters({definition}: ParametersProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
-  if (rootQuery.definition instanceof ASTArrowQueryDefinition) {
-    const source = rootQuery.definition.as
-      .ArrowQueryDefinition()
-      .source.as.ReferenceQueryArrowSource();
+  if (
+    definition instanceof ASTArrowQueryDefinition &&
+    definition.source instanceof ASTReferenceQueryArrowSource
+  ) {
+    const {source} = definition;
 
     const sourceParameters = source.getSourceParameters();
 
@@ -60,7 +62,7 @@ export function Parameters({rootQuery}: ParametersProps) {
                 }
                 setValue={value => {
                   source.setParameter(parameter.name, value);
-                  setQuery?.(rootQuery.build());
+                  setQuery?.(rootQuery?.build());
                 }}
               />
             </TokenGroup>

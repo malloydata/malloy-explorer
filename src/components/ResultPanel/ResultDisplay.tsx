@@ -165,7 +165,7 @@ function RenderedResult({result, source}: RenderedResultProps) {
         }
         const {stableQuery} = drillData;
         const rootQuery = new ASTQuery({query: stableQuery, source});
-        setQuery?.(rootQuery.build());
+        setQuery?.(rootQuery?.build());
       },
       tableConfig: {enableDrill: true},
     });

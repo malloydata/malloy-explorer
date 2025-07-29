@@ -26,7 +26,6 @@ import {
   ASTField,
   ASTGroupByViewOperation,
   ASTNestViewOperation,
-  ASTQuery,
   ASTSegmentViewDefinition,
   ASTTimeTruncationExpression,
 } from '@malloydata/malloy-query-builder';
@@ -56,7 +55,6 @@ import {hoverActionsVars} from './hover.stylex';
 import {getPrimaryAxis} from '../../utils/axis';
 
 export interface SortableOperationsProps {
-  rootQuery: ASTQuery;
   segment: ASTSegmentViewDefinition;
   view: ViewParent;
   operations: Array<
@@ -68,13 +66,12 @@ export interface SortableOperationsProps {
 }
 
 export function SortableOperations({
-  rootQuery,
   segment,
   view,
   operations,
   kind,
 }: SortableOperationsProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const sensors = useSensors(useSensor(PointerSensor));
 
   const items = useMemo(() => {
@@ -101,7 +98,7 @@ export function SortableOperations({
       const oldIndex = names.indexOf(active.id as string);
       const newIndex = names.indexOf(over.id as string);
       segment.reorderFields(arrayMove(names, oldIndex, newIndex));
-      setQuery?.(rootQuery.build());
+      setQuery?.(rootQuery?.build());
     }
   }
 
@@ -115,7 +112,7 @@ export function SortableOperations({
           types: ['dimension'] as 'dimension'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
             addGroupBy(view, field, path);
-            setQuery?.(rootQuery.build());
+            setQuery?.(rootQuery?.build());
           },
         }
       : {
@@ -124,18 +121,13 @@ export function SortableOperations({
           types: ['measure'] as 'measure'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
             addAggregate(view, field, path);
-            setQuery?.(rootQuery.build());
+            setQuery?.(rootQuery?.build());
           },
         };
 
   return (
     <div>
-      <OperationActionTitle
-        rootQuery={rootQuery}
-        view={view}
-        fields={fields}
-        {...props}
-      />
+      <OperationActionTitle view={view} fields={fields} {...props} />
       <div {...stylex.props(styles.tokenContainer)}>
         <DndContext
           sensors={sensors}
@@ -145,7 +137,6 @@ export function SortableOperations({
           <SortableContext items={items}>
             {items.map(item => (
               <SortableOperation
-                rootQuery={rootQuery}
                 key={item.id}
                 id={item.id}
                 color={kind === 'group_by' ? 'cyan' : 'green'}
@@ -161,7 +152,6 @@ export function SortableOperations({
 }
 
 interface SortableOperationProps {
-  rootQuery: ASTQuery;
   id: string;
   view: ViewParent;
   operation:
@@ -174,13 +164,12 @@ interface SortableOperationProps {
 const NULL_PATH: string[] = [] as const;
 
 function SortableOperation({
-  rootQuery,
   id,
   view,
   operation,
   color,
 }: SortableOperationProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const fieldInfo = operation.getFieldInfo();
   const field =
     operation instanceof ASTCalculateViewOperation ? null : operation.field;
@@ -204,8 +193,8 @@ function SortableOperation({
   };
 
   const primaryAxis = useMemo(() => {
-    return getPrimaryAxis(rootQuery);
-  }, [rootQuery]);
+    return getPrimaryAxis(view);
+  }, [view]);
   const canSmooth =
     operation.kind === 'aggregate' &&
     primaryAxis !== null &&
@@ -222,10 +211,10 @@ function SortableOperation({
         operation.name + '_smoothed',
         7
       );
-      recomputePartitionByAndPrimaryAxis(rootQuery.getOrAddDefaultSegment());
-      setQuery?.(rootQuery.build());
+      recomputePartitionByAndPrimaryAxis(view.getOrAddDefaultSegment());
+      setQuery?.(rootQuery?.build());
     },
-    [canSmooth, rootQuery, setQuery]
+    [canSmooth, rootQuery, setQuery, view]
   );
 
   const hoverActions = useMemo(() => {
@@ -268,9 +257,7 @@ function SortableOperation({
         <ClearButton
           onClick={() => {
             operation.delete();
-            recomputePartitionByAndPrimaryAxis(
-              rootQuery.getOrAddDefaultSegment()
-            );
+            recomputePartitionByAndPrimaryAxis(view.getOrAddDefaultSegment());
             setQuery?.(rootQuery?.build());
           }}
         />
@@ -284,15 +271,14 @@ function SortableOperation({
     path,
     rootQuery,
     setQuery,
+    view,
   ]);
 
   const hasSmoothedField = useMemo(() => {
-    return rootQuery
-      .getOrAddDefaultSegment()
-      .operations.items.some(operation => {
-        return operation.kind === 'calculate';
-      });
-  }, [rootQuery]);
+    return view.getOrAddDefaultSegment().operations.items.some(operation => {
+      return operation.kind === 'calculate';
+    });
+  }, [view]);
 
   const granular = granularityMenuItems(fieldInfo, field);
   if (hasSmoothedField && granular && operation.name === primaryAxis?.name) {
@@ -327,7 +313,7 @@ function SortableOperation({
               onChange={(granulation: Malloy.TimestampTimeframe) => {
                 if (field.expression instanceof ASTTimeTruncationExpression)
                   field.expression.truncation = granulation;
-                setQuery?.(rootQuery.build());
+                setQuery?.(rootQuery?.build());
               }}
               items={granular.options}
             />
@@ -369,11 +355,11 @@ function SortableOperation({
                     })
                   );
                   operation.delete();
-                  setQuery?.(rootQuery.build());
+                  setQuery?.(rootQuery?.build());
                 } else {
                   operation.expression.edit();
                   operation.expression.rowsPreceding = parseInt(value, 10);
-                  setQuery?.(rootQuery.build());
+                  setQuery?.(rootQuery?.build());
                 }
               }}
               items={[
@@ -404,7 +390,6 @@ function SortableOperation({
         </>
       )}
       <RenameDialog
-        rootQuery={rootQuery}
         view={view}
         target={renameTarget}
         open={renameOpen}

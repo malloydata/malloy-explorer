@@ -8,28 +8,24 @@
 import * as React from 'react';
 import {
   ASTGroupByViewOperation,
-  ASTQuery,
   ASTSegmentViewDefinition,
 } from '@malloydata/malloy-query-builder';
 import {SortableOperations} from './SortableOperations';
 import {ViewParent} from '../../utils/fields';
 
 export interface GroupByOperationsProps {
-  rootQuery: ASTQuery;
   segment: ASTSegmentViewDefinition;
   view: ViewParent;
   groupBys: ASTGroupByViewOperation[];
 }
 
 export function GroupByOperations({
-  rootQuery,
   segment,
   view,
   groupBys,
 }: GroupByOperationsProps) {
   return (
     <SortableOperations
-      rootQuery={rootQuery}
       segment={segment}
       view={view}
       operations={groupBys}

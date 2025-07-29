@@ -19,18 +19,20 @@ import {fontStyles} from '../primitives/styles';
  * The Query Viewing and Editing panel.
  */
 export function QueryEditor() {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const {rootQuery} = useContext(QueryEditorContext);
 
   if (!rootQuery) {
     console.error('Missing <MalloyExplorerProvider>');
     return null;
   }
 
+  const {definition} = rootQuery;
+
   return (
     <div {...stylex.props(fontStyles.body, styles.main)}>
-      <Source rootQuery={rootQuery} />
-      <Parameters rootQuery={rootQuery} />
-      <Query rootQuery={rootQuery} query={rootQuery} setQuery={setQuery} />
+      <Source definition={definition} />
+      <Parameters definition={definition} />
+      <Query definition={definition} />
     </div>
   );
 }

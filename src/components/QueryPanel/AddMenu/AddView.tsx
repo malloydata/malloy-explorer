@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import {useContext, useMemo} from 'react';
-import {ASTQuery} from '@malloydata/malloy-query-builder';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {addNest} from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
@@ -19,19 +18,22 @@ import {
 } from '../../utils/fields';
 
 export interface AddViewProps {
-  rootQuery: ASTQuery;
   view: ViewParent;
   search: string;
 }
 
-export function AddView({rootQuery, view, search}: AddViewProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function AddView({view, search}: AddViewProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const allFields = getInputSchemaFromViewParent(view).fields;
   const fields = useMemo(
     () =>
       allFields.filter(field => field.kind === 'view' && !isIndexView(field)),
     [allFields]
   );
+
+  if (!rootQuery) {
+    return null;
+  }
 
   return (
     <AddFieldItem
@@ -47,7 +49,7 @@ export function AddView({rootQuery, view, search}: AddViewProps) {
         } else {
           addNest(view, field);
         }
-        setQuery?.(rootQuery.build());
+        setQuery?.(rootQuery?.build());
       }}
       search={search}
     />

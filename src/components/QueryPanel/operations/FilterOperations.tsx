@@ -8,7 +8,6 @@
 import * as React from 'react';
 import {useCallback, useContext} from 'react';
 import {
-  ASTQuery,
   ASTWhereViewOperation,
   ASTHavingViewOperation,
   ParsedFilter,
@@ -26,12 +25,11 @@ import {FilterPopover} from '../../filters/FilterPopover';
 import {parsedToLabels} from '../../utils/filters';
 
 export interface FilterOperationsProps {
-  rootQuery: ASTQuery;
   filters: Array<ASTWhereViewOperation | ASTHavingViewOperation>;
 }
 
-export function FilterOperations({rootQuery, filters}: FilterOperationsProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function FilterOperations({filters}: FilterOperationsProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
 
   if (filters.length === 0) {
     return null;
@@ -51,16 +49,13 @@ export function FilterOperations({rootQuery, filters}: FilterOperationsProps) {
                   <ClearButton
                     onClick={() => {
                       filterOperation.delete();
-                      setQuery?.(rootQuery.build());
+                      setQuery?.(rootQuery?.build());
                     }}
                   />
                 </div>
               }
             >
-              <SingleFilterOperation
-                filterOperation={filterOperation}
-                rootQuery={rootQuery}
-              />
+              <SingleFilterOperation filterOperation={filterOperation} />
             </ErrorElement>
           );
         })}
@@ -70,20 +65,16 @@ export function FilterOperations({rootQuery, filters}: FilterOperationsProps) {
 }
 
 interface SingleFilterOperationProps {
-  rootQuery: ASTQuery;
   filterOperation: ASTWhereViewOperation | ASTHavingViewOperation;
 }
-function SingleFilterOperation({
-  rootQuery,
-  filterOperation,
-}: SingleFilterOperationProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+function SingleFilterOperation({filterOperation}: SingleFilterOperationProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   const setFilter = useCallback(
     (filter: ParsedFilter) => {
       if (filterOperation.filter instanceof ASTFilterWithFilterString) {
         filterOperation.filter.setFilter(filter);
       }
-      setQuery?.(rootQuery.build());
+      setQuery?.(rootQuery?.build());
     },
     [filterOperation.filter, rootQuery, setQuery]
   );
@@ -121,7 +112,7 @@ function SingleFilterOperation({
         <ClearButton
           onClick={() => {
             filterOperation.delete();
-            setQuery?.(rootQuery.build());
+            setQuery?.(rootQuery?.build());
           }}
         />
       </div>

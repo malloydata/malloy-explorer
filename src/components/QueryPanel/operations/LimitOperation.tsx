@@ -7,10 +7,7 @@
 
 import * as React from 'react';
 import {useContext} from 'react';
-import {
-  ASTLimitViewOperation,
-  ASTQuery,
-} from '@malloydata/malloy-query-builder';
+import {ASTLimitViewOperation} from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
@@ -19,12 +16,11 @@ import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 
 export interface LimitOperationProps {
-  rootQuery: ASTQuery;
   limit: ASTLimitViewOperation | undefined;
 }
 
-export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
-  const {setQuery} = useContext(QueryEditorContext);
+export function LimitOperation({limit}: LimitOperationProps) {
+  const {rootQuery, setQuery} = useContext(QueryEditorContext);
   if (!limit) {
     return null;
   }
@@ -37,7 +33,7 @@ export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
           value={limit.limit}
           onChange={value => {
             limit.limit = value;
-            setQuery?.(rootQuery.build());
+            setQuery?.(rootQuery?.build());
           }}
           errorMessage={limit.limit < 0 ? 'Limit must be positive' : undefined}
         />
@@ -45,7 +41,7 @@ export function LimitOperation({rootQuery, limit}: LimitOperationProps) {
           <ClearButton
             onClick={() => {
               limit.delete();
-              setQuery?.(rootQuery.build());
+              setQuery?.(rootQuery?.build());
             }}
           />
         </div>
