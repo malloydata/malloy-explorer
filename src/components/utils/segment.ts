@@ -8,7 +8,6 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTAggregateViewOperation,
-  ASTArrowQueryDefinition,
   ASTCalculateViewOperation,
   ASTGroupByViewOperation,
   ASTLimitViewOperation,
@@ -17,7 +16,6 @@ import {
   ASTRefinementViewDefinition,
   ASTSegmentViewDefinition,
   ASTTimeTruncationExpression,
-  ASTViewDefinition,
   ParsedFilter,
 } from '@malloydata/malloy-query-builder';
 import {ViewParent, findUniqueFieldName, getViewDefinition} from './fields';

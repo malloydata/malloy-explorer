@@ -51,7 +51,6 @@ export function Operations({rootQuery, view, viewDef}: OperationsProps) {
   const filters: Array<ASTWhereViewOperation | ASTHavingViewOperation> = [];
   const orderBys: ASTOrderByViewOperation[] = [];
   const nests: ASTNestViewOperation[] = [];
-  const calculates: ASTCalculateViewOperation[] = [];
   let limit: ASTLimitViewOperation | undefined;
 
   if (!(viewDef instanceof ASTSegmentViewDefinition)) {
