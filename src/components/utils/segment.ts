@@ -160,9 +160,8 @@ export function addGroupBy(
     segment.addTimestampGroupBy(field.name, path, 'second');
   } else {
     segment.addGroupBy(field.name, path, rename);
+    recomputePartitionByAndPrimaryAxis(segment);
   }
-
-  // TODO: Recompute smoothing logic, if needed
 }
 
 /*

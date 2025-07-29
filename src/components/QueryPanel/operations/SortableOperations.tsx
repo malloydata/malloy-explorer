@@ -203,7 +203,6 @@ function SortableOperation({
     transition,
   };
 
-  // TODO: Memo these across all components, not per-component
   const primaryAxis = useMemo(() => {
     return getPrimaryAxis(rootQuery);
   }, [rootQuery]);
