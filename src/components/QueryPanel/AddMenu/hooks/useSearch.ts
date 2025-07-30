@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {useContext} from 'react';
-import {QueryEditorContext} from '../../../../contexts/QueryEditorContext';
+import {useTopValues} from '../../../../hooks/useTopValues';
 
 export interface SearchIndexResult {
   fieldName: string;
@@ -19,7 +18,7 @@ export function useSearch(
   searchTerm: string,
   fieldPath?: string
 ): {searchResults: SearchIndexResult[] | undefined; isLoading: boolean} {
-  const {topValues} = useContext(QueryEditorContext);
+  const topValues = useTopValues();
   if (topValues && searchTerm) {
     let searchValues = topValues;
 

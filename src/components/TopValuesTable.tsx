@@ -6,11 +6,10 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {QueryEditorContext} from '../contexts/QueryEditorContext';
 import stylex from '@stylexjs/stylex';
 import {backgroundColors, textColors} from './primitives/colors.stylex';
+import {useTopValues} from '../hooks/useTopValues';
 
 export interface TopValuesTableProps {
   field: Malloy.FieldInfo;
@@ -18,7 +17,7 @@ export interface TopValuesTableProps {
 }
 
 export function TopValuesTable({field, path}: TopValuesTableProps) {
-  const {topValues} = useContext(QueryEditorContext);
+  const topValues = useTopValues();
   const fieldPath = [...path, field.name].join('.');
   const fieldTopValues = topValues?.find(
     entry => entry.fieldName === fieldPath
