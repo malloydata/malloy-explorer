@@ -114,13 +114,9 @@ export function useOperations(
   }, [matchingFieldItem, view, path, field.name, fullName]);
 
   return {
-    isGroupByAllowed: !groupByDisabledReason,
     groupByDisabledReason,
-    isAggregateAllowed: !aggregateDisabledReason,
     aggregateDisabledReason,
-    isFilterAllowed: !filterDisabledReason,
     filterDisabledReason,
-    isOrderByAllowed: !orderByDisabledReason,
     orderByDisabledReason,
   };
 }

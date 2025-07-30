@@ -6,9 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {AddFieldItem} from './AddFieldItem';
 import {
   ViewParent,
@@ -16,6 +14,7 @@ import {
   isNotAnnotatedFilteredField,
 } from '../../utils/fields';
 import {addGroupBy, getSegmentIfPresent} from '../../utils/segment';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddGroupByProps {
   view: ViewParent;
@@ -23,7 +22,7 @@ export interface AddGroupByProps {
 }
 
 export function AddGroupBy({view, search}: AddGroupByProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const {fields} = getInputSchemaFromViewParent(view);
   const segment = getSegmentIfPresent(view);
 
@@ -47,7 +46,7 @@ export function AddGroupBy({view, search}: AddGroupByProps) {
       filter={filter}
       onAddOperation={(field, path) => {
         addGroupBy(view, field, path);
-        setQuery?.(rootQuery?.build());
+        updateQuery();
       }}
       search={search}
     />

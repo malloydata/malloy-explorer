@@ -6,16 +6,15 @@
  */
 
 import * as React from 'react';
-import {ReactNode} from 'react';
+import {ReactNode, useCallback} from 'react';
 import {TooltipProvider} from '@radix-ui/react-tooltip';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import type {DrillData} from '@malloydata/render';
-import {
-  QueryEditorContext,
-  SearchValueMapResult,
-} from '../contexts/QueryEditorContext';
+import {QueryEditorContext} from '../contexts/QueryEditorContext';
 import {useQueryBuilder} from '../hooks/useQueryBuilder';
 import {MalloyQueryFocusProvider} from './MalloyQueryFocusProvider';
+import {UpdateQueryContext} from '../hooks/useQueryUpdate';
+import {SearchValueMapResult, TopValuesContext} from '../hooks/useTopValues';
 
 export interface MalloyExplorerProviderProps {
   source: Malloy.SourceInfo;
@@ -31,7 +30,7 @@ export interface MalloyExplorerProviderProps {
 export function MalloyExplorerProvider({
   source,
   query,
-  onQueryChange,
+  onQueryChange = () => {},
   focusedNestViewPath,
   onFocusedNestViewPathChange,
   children,
@@ -40,6 +39,10 @@ export function MalloyExplorerProvider({
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
 
+  const updateQuery = useCallback(() => {
+    onQueryChange?.(rootQuery?.build());
+  }, [onQueryChange, rootQuery]);
+
   return (
     <TooltipProvider>
       <MalloyQueryFocusProvider
@@ -47,17 +50,20 @@ export function MalloyExplorerProvider({
         focusedNestViewPath={focusedNestViewPath}
         onFocusedNestViewPathChange={onFocusedNestViewPathChange}
       >
-        <QueryEditorContext.Provider
-          value={{
-            source,
-            rootQuery,
-            setQuery: onQueryChange,
-            topValues,
-            onDrill,
-          }}
-        >
-          {children}
-        </QueryEditorContext.Provider>
+        <UpdateQueryContext.Provider value={{updateQuery}}>
+          <TopValuesContext.Provider value={{topValues}}>
+            <QueryEditorContext.Provider
+              value={{
+                source,
+                rootQuery,
+                setQuery: onQueryChange,
+                onDrill,
+              }}
+            >
+              {children}
+            </QueryEditorContext.Provider>
+          </TopValuesContext.Provider>
+        </UpdateQueryContext.Provider>
       </MalloyQueryFocusProvider>
     </TooltipProvider>
   );

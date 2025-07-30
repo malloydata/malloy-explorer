@@ -6,9 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {AddFieldItem} from './AddFieldItem';
 import {
   getInputSchemaFromViewParent,
@@ -16,6 +14,7 @@ import {
   isNotAnnotatedFilteredField,
 } from '../../utils/fields';
 import {addAggregate, getSegmentIfPresent} from '../../utils/segment';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddAggregateProps {
   view: ViewParent;
@@ -23,7 +22,7 @@ export interface AddAggregateProps {
 }
 
 export function AddAggregate({view, search}: AddAggregateProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const {fields} = getInputSchemaFromViewParent(view);
   const segment = getSegmentIfPresent(view);
 
@@ -47,7 +46,7 @@ export function AddAggregate({view, search}: AddAggregateProps) {
       filter={filter}
       onAddOperation={(field, path) => {
         addAggregate(view, field, path);
-        setQuery?.(rootQuery?.build());
+        updateQuery();
       }}
       search={search}
     />

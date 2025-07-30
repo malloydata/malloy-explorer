@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import FieldToken from '../FieldToken';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {Button} from '../primitives';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {useUpdateQuery} from '../../hooks/useQueryUpdate';
 import {FieldHoverCard} from '../FieldHoverCard';
 import {
   ASTArrowQueryDefinition,
+  ASTQuery,
   ParsedFilter,
 } from '@malloydata/malloy-query-builder';
 import {
@@ -30,17 +31,19 @@ import {useQueryFocus} from '../MalloyQueryFocusProvider';
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
 interface FieldTokenWithActionsProps {
+  rootQuery: ASTQuery;
   field: Malloy.FieldInfo;
   path: string[];
   viewDef: ASTArrowQueryDefinition;
 }
 
 export function FieldTokenWithActions({
+  rootQuery,
   field,
   path,
   viewDef,
 }: FieldTokenWithActionsProps) {
-  const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   const {focusedNestView} = useQueryFocus();
 
@@ -73,21 +76,21 @@ export function FieldTokenWithActions({
       } else if (operation === 'filter' && !filterDisabledReason && filter) {
         addFilter(view, field, path, filter);
       }
-      setQuery?.(rootQuery?.build());
+      updateQuery();
     }
   };
 
   const handleSetView = () => {
-    if (field.kind === 'view' && rootQuery?.isEmpty()) {
-      rootQuery?.setView(field.name);
-      setQuery?.(rootQuery?.build());
+    if (field.kind === 'view' && rootQuery.isEmpty()) {
+      rootQuery.setView(field.name);
+      updateQuery();
     }
   };
 
   const handleAddView = () => {
     if (field.kind === 'view') {
       addNest(view, field);
-      setQuery?.(rootQuery?.build());
+      updateQuery();
     }
   };
 
@@ -99,10 +102,10 @@ export function FieldTokenWithActions({
           <>
             <ActionButton
               icon="insert"
-              disabled={!rootQuery?.isEmpty()}
+              disabled={!rootQuery.isEmpty()}
               onClick={handleSetView}
               tooltip={
-                !rootQuery?.isEmpty()
+                !rootQuery.isEmpty()
                   ? 'Can only add a view to an empty query.'
                   : 'Add view'
               }
@@ -189,7 +192,7 @@ export function FieldTokenWithActions({
             ? () => handleAddOperationAction('aggregate')
             : field.kind === 'view'
               ? () => {
-                  if (rootQuery?.isEmpty()) {
+                  if (rootQuery.isEmpty()) {
                     handleSetView();
                   } else {
                     handleAddView();

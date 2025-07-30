@@ -6,19 +6,18 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import Icon from '../../primitives/Icon';
 import {AddItem} from './AddItem';
 import {getSegmentIfPresent, segmentHasLimit} from '../../utils/segment';
 import {ViewParent} from '../../utils/fields';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddLimitProps {
   view: ViewParent;
 }
 
 export function AddLimit({view}: AddLimitProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   const segment = getSegmentIfPresent(view);
   const hasLimit = segment ? segmentHasLimit(segment) : false;
@@ -31,7 +30,7 @@ export function AddLimit({view}: AddLimitProps) {
       onClick={() => {
         const segment = view.getOrAddDefaultSegment();
         segment.setLimit(10);
-        setQuery?.(rootQuery?.build());
+        updateQuery();
       }}
     />
   );

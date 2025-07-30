@@ -16,6 +16,7 @@ import {
   isNotAnnotatedFilteredField,
   ViewParent,
 } from '../../utils/fields';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddViewProps {
   view: ViewParent;
@@ -23,7 +24,8 @@ export interface AddViewProps {
 }
 
 export function AddView({view, search}: AddViewProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const {rootQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const allFields = getInputSchemaFromViewParent(view).fields;
   const fields = useMemo(
     () =>
@@ -49,7 +51,7 @@ export function AddView({view, search}: AddViewProps) {
         } else {
           addNest(view, field);
         }
-        setQuery?.(rootQuery?.build());
+        updateQuery();
       }}
       search={search}
     />

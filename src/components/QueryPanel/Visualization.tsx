@@ -9,8 +9,7 @@ import * as React from 'react';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {Icon, SelectorToken, Token, TokenGroup} from '../primitives';
 import stylex from '@stylexjs/stylex';
-import {useContext, useEffect, useMemo, useState} from 'react';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {useEffect, useMemo, useState} from 'react';
 import {
   RENDERER_PREFIX,
   VizName,
@@ -25,13 +24,14 @@ import {
   MalloyRenderer,
   isCoreVizPluginInstance,
 } from '@malloydata/render';
+import {useUpdateQuery} from '../../hooks/useQueryUpdate';
 
 export interface VisualizationProps {
   view: ASTQuery | ASTView;
 }
 
 export function Visualization({view}: VisualizationProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const renderer = useMemo(() => new MalloyRenderer(), []);
   const [currentRenderer, setCurrentRenderer] = useState<VizName>('table');
   const [plugin, setPlugin] = useState<CoreVizPluginInstance>();
@@ -78,7 +78,7 @@ export function Visualization({view}: VisualizationProps) {
 
   const updateViz = (renderer: VizName): void => {
     view.setTagProperty(['viz'], renderer, RENDERER_PREFIX);
-    setQuery?.(rootQuery?.build());
+    updateQuery();
   };
 
   const items = VIZ_RENDERERS.map(viz => ({

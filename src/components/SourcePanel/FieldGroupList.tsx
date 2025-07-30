@@ -11,8 +11,10 @@ import {CollapsibleListItem, List} from '../primitives';
 import {FieldItem, groupFieldItemsByKind, groupFieldItemsByPath} from './utils';
 import {FieldTokenWithActions} from './FieldTokenWithActions';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
-import {ASTArrowQueryDefinition} from '@malloydata/malloy-query-builder';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {
+  ASTArrowQueryDefinition,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 
 const getLabelFromPath = (source: SourceInfo, path: string[]) => {
   return path.at(-1) ?? source.name;
@@ -25,12 +27,14 @@ const getSublabelFromPath = (source: SourceInfo, path: string[]) => {
 };
 
 interface FieldGroupListProps {
+  rootQuery: ASTQuery;
   source: SourceInfo;
   fieldItems: FieldItem[];
   fieldGroupType: 'view' | 'measure' | 'dimension';
 }
 
 export default function FieldGroupList({
+  rootQuery,
   source,
   fieldItems,
   fieldGroupType,
@@ -52,9 +56,7 @@ export default function FieldGroupList({
     );
   }, [fieldGroupsByKindByPath, fieldGroupType]);
 
-  const {rootQuery} = React.useContext(QueryEditorContext);
-
-  const viewDef = rootQuery?.definition;
+  const viewDef = rootQuery.definition;
 
   if (!(viewDef instanceof ASTArrowQueryDefinition)) {
     return null;
@@ -72,6 +74,7 @@ export default function FieldGroupList({
           >
             {item.items.map(({field, path}) => (
               <FieldTokenWithActions
+                rootQuery={rootQuery}
                 key={[...path, field.name].join('.')}
                 field={field}
                 path={path}

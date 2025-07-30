@@ -10,10 +10,13 @@ import {fontStyles} from '../primitives/styles';
 
 import {FieldTokenWithActions} from './FieldTokenWithActions';
 import {SourceInfo} from '@malloydata/malloy-interfaces';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
-import {ASTArrowQueryDefinition} from '@malloydata/malloy-query-builder';
+import {
+  ASTArrowQueryDefinition,
+  ASTQuery,
+} from '@malloydata/malloy-query-builder';
 
 interface SearchResultListProps {
+  rootQuery: ASTQuery;
   source: SourceInfo;
   items: FieldItem[];
 }
@@ -21,6 +24,7 @@ interface SearchResultListProps {
 const FIELD_KIND_ORDER = ['dimension', 'measure', 'view'] as const;
 
 export default function SearchResultList({
+  rootQuery,
   source,
   items,
 }: SearchResultListProps) {
@@ -36,9 +40,7 @@ export default function SearchResultList({
       }));
   }, [source, items]);
 
-  const {rootQuery} = React.useContext(QueryEditorContext);
-
-  const viewDef = rootQuery?.definition;
+  const viewDef = rootQuery.definition;
 
   if (!(viewDef instanceof ASTArrowQueryDefinition)) {
     return null;
@@ -66,6 +68,7 @@ export default function SearchResultList({
                   </div>
                   {subgroupItems.map(({field, path}) => (
                     <FieldTokenWithActions
+                      rootQuery={rootQuery}
                       key={[...path, field.name].join('.')}
                       field={field}
                       path={path}

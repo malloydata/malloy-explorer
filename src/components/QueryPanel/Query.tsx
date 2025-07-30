@@ -29,6 +29,7 @@ import {textColors} from '../primitives/colors.stylex';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
 import {FocusableView} from './FocusableView';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {useUpdateQuery} from '../../hooks/useQueryUpdate';
 
 export interface QueryProps {
   definition: ASTQueryDefinition;
@@ -38,6 +39,7 @@ export interface QueryProps {
 export function Query({definition}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   if (!rootQuery) {
     return null;
@@ -69,7 +71,7 @@ export function Query({definition}: QueryProps) {
                     label="Clear query"
                     onClick={() => {
                       focusMainView();
-                      setQuery?.(undefined);
+                      setQuery(undefined);
                     }}
                     disabled={isEmpty}
                   />
@@ -81,7 +83,7 @@ export function Query({definition}: QueryProps) {
                         definition.view.convertToNest('Nest');
                       }
 
-                      setQuery?.(rootQuery?.build());
+                      updateQuery();
                     }}
                     disabled={
                       isEmpty ||

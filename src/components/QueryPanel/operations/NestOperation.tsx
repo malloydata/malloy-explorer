@@ -12,7 +12,6 @@ import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
 import {View} from '../View';
 import {Button, DropdownMenu, DropdownMenuItem} from '../../primitives';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import CollapsiblePanel from '../../primitives/CollapsiblePanel';
 import {AddMenu} from '../AddMenu/AddMenu';
 import {tagToVisualization} from '../../utils/icon';
@@ -21,6 +20,7 @@ import {ViewParent} from '../../utils/fields';
 import {useQueryFocus} from '../../MalloyQueryFocusProvider';
 import {NestViewPathContext} from '../../contexts/NestViewPathContext';
 import {FocusableView} from '../FocusableView';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface NestOperationsProps {
   view: ViewParent;
@@ -47,7 +47,7 @@ export interface NestOperationProps {
 }
 
 export function NestOperation({view, nest}: NestOperationProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   const [renameOpen, setRenameOpen] = useState(false);
 
@@ -73,7 +73,7 @@ export function NestOperation({view, nest}: NestOperationProps) {
           onClick={() => {
             focusNestView([...parentNestViewPath]);
             nest.delete();
-            setQuery?.(rootQuery?.build());
+            updateQuery();
           }}
         />
         <DropdownMenuItem
