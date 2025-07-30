@@ -10,24 +10,13 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import type {DrillData} from '@malloydata/render';
 
-// TODO switch to stable API when available
-export interface SearchValueMapResult {
-  fieldName: string;
-  cardinality: number;
-  values: {
-    fieldValue: string | null;
-    weight: number;
-  }[];
-}
-
 export interface QueryEditorContextProps {
   /** Source object at the root level */
   source?: Malloy.SourceInfo;
   /** Query object to represent current state at the root level  */
   rootQuery?: ASTQuery;
   /** Provide to allow editing of the query */
-  setQuery?: (query: Malloy.Query | undefined) => void;
-  topValues?: SearchValueMapResult[];
+  setQuery: (query: Malloy.Query | undefined) => void;
   onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
 }
 
@@ -35,6 +24,6 @@ export interface QueryEditorContextProps {
  * QueryEditorContext enables query editing by providing the setQuery
  * callback.
  */
-export const QueryEditorContext = React.createContext<QueryEditorContextProps>(
-  {}
-);
+export const QueryEditorContext = React.createContext<QueryEditorContextProps>({
+  setQuery: () => {},
+});

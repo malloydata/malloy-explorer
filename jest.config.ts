@@ -8,7 +8,7 @@
 module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/test/jest.setup.ts'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  testMatch: ['**/?(*.)spec.(ts|js)?(x)'],
+  testMatch: ['<rootDir>/src/**/?(*.)spec.(ts|js)?(x)'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/dev/', '/src/test/'],
   transform: {
     '^.+\\.tsx?$': ['babel-jest'],

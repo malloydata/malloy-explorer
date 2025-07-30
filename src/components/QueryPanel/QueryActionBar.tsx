@@ -52,9 +52,9 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
         <Button
           onClick={() => {
             focusMainView();
-            setQuery?.(undefined);
+            setQuery(undefined);
           }}
-          isDisabled={!rootQuery || rootQuery?.isEmpty()}
+          isDisabled={!rootQuery || rootQuery.isEmpty()}
           label="Clear"
           variant="flat"
           size="compact"

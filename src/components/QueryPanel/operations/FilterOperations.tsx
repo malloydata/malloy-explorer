@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useCallback, useContext} from 'react';
+import {useCallback} from 'react';
 import {
   ASTWhereViewOperation,
   ASTHavingViewOperation,
@@ -16,20 +16,20 @@ import {
 } from '@malloydata/malloy-query-builder';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {Token} from '../../primitives';
 import {hoverStyles} from './hover.stylex';
 import {ClearButton} from './ClearButton';
 import {ErrorElement} from '../../ErrorElement';
 import {FilterPopover} from '../../filters/FilterPopover';
 import {parsedToLabels} from '../../utils/filters';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface FilterOperationsProps {
   filters: Array<ASTWhereViewOperation | ASTHavingViewOperation>;
 }
 
 export function FilterOperations({filters}: FilterOperationsProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   if (filters.length === 0) {
     return null;
@@ -49,7 +49,7 @@ export function FilterOperations({filters}: FilterOperationsProps) {
                   <ClearButton
                     onClick={() => {
                       filterOperation.delete();
-                      setQuery?.(rootQuery?.build());
+                      updateQuery();
                     }}
                   />
                 </div>
@@ -68,15 +68,15 @@ interface SingleFilterOperationProps {
   filterOperation: ASTWhereViewOperation | ASTHavingViewOperation;
 }
 function SingleFilterOperation({filterOperation}: SingleFilterOperationProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const setFilter = useCallback(
     (filter: ParsedFilter) => {
       if (filterOperation.filter instanceof ASTFilterWithFilterString) {
         filterOperation.filter.setFilter(filter);
       }
-      setQuery?.(rootQuery?.build());
+      updateQuery();
     },
-    [filterOperation.filter, rootQuery, setQuery]
+    [filterOperation.filter, updateQuery]
   );
 
   const {filter} = filterOperation;
@@ -112,7 +112,7 @@ function SingleFilterOperation({filterOperation}: SingleFilterOperationProps) {
         <ClearButton
           onClick={() => {
             filterOperation.delete();
-            setQuery?.(rootQuery?.build());
+            updateQuery();
           }}
         />
       </div>

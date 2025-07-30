@@ -32,7 +32,7 @@ export interface SourcePanelProps {
 }
 
 export function SourcePanel({onRefresh}: SourcePanelProps) {
-  const {source} = React.useContext(QueryEditorContext);
+  const {source, rootQuery} = React.useContext(QueryEditorContext);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
@@ -61,7 +61,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
 
   const isSearchActive = !!searchQuery;
 
-  if (!source) {
+  if (!source || !rootQuery) {
     return null;
   }
 
@@ -106,7 +106,11 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
       <Divider />
       <div {...stylex.props(styles.content)}>
         {isSearchActive ? (
-          <SearchResultList source={source} items={searchResultItems} />
+          <SearchResultList
+            rootQuery={rootQuery}
+            source={source}
+            items={searchResultItems}
+          />
         ) : (
           <AccordionList defaultExpandedItemId="views">
             <AccordionListItem
@@ -119,6 +123,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
               }
             >
               <FieldGroupList
+                rootQuery={rootQuery}
                 source={source}
                 fieldItems={fieldItems}
                 fieldGroupType="dimension"
@@ -132,6 +137,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
               badge={<Badge label={measures.length.toString()} color="green" />}
             >
               <FieldGroupList
+                rootQuery={rootQuery}
                 source={source}
                 fieldItems={fieldItems}
                 fieldGroupType="measure"
@@ -145,6 +151,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
               badge={<Badge label={views.length.toString()} color="purple" />}
             >
               <FieldGroupList
+                rootQuery={rootQuery}
                 source={source}
                 fieldItems={fieldItems}
                 fieldGroupType="view"

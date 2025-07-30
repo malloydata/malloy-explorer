@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as QB from '@malloydata/malloy-query-builder';
+import {ASTQuery} from '@malloydata/malloy-query-builder';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {useMemo} from 'react';
 
@@ -15,7 +15,7 @@ export function useQueryBuilder(
 ) {
   return useMemo(() => {
     if (source) {
-      return new QB.ASTQuery({query, source});
+      return new ASTQuery({query, source});
     } else {
       return undefined;
     }

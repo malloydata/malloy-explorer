@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import stylex from '@stylexjs/stylex';
 import * as Dialog from '@radix-ui/react-dialog';
 import {
@@ -15,12 +15,12 @@ import {
   ASTGroupByViewOperation,
   ASTNestViewOperation,
 } from '@malloydata/malloy-query-builder';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {Button} from '../../primitives';
 import {fontStyles} from '../../primitives/styles';
 import {ViewParent} from '../../utils/fields';
 import ErrorIcon from '../../primitives/ErrorIcon';
 import {dialogStyles} from '../dialogStyles';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface RenameDialogProps {
   view: ViewParent;
@@ -36,7 +36,7 @@ export interface RenameDialogProps {
 
 export function RenameDialog({view, target, open, setOpen}: RenameDialogProps) {
   const [name, setName] = useState('');
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   useEffect(() => {
     if (target) {
@@ -51,7 +51,7 @@ export function RenameDialog({view, target, open, setOpen}: RenameDialogProps) {
   const onRename = () => {
     target.edit();
     target.name = name;
-    setQuery?.(rootQuery?.build());
+    updateQuery();
     setOpen(false);
   };
 

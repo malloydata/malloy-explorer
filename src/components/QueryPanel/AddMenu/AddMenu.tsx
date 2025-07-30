@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext, useState} from 'react';
+import {useState} from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import stylex from '@stylexjs/stylex';
 import {Button, Divider, Icon, TextInput} from '../../primitives';
@@ -19,7 +19,6 @@ import {AddAggregate} from './AddAggregate';
 import {AddWhere} from './AddWhere';
 import {AddView} from './AddView';
 import {FieldInfo} from '@malloydata/malloy-interfaces';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {FieldList} from './FieldList';
 import {
   addAggregate,
@@ -35,6 +34,7 @@ import {
   ViewParent,
 } from '../../utils/fields';
 import {AddItem} from './AddItem';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddMenuProps {
   view: ViewParent;
@@ -43,7 +43,7 @@ export interface AddMenuProps {
 export function AddMenu({view}: AddMenuProps) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const [search, setSearch] = useState('');
   const segment = getSegmentIfPresent(view);
 
@@ -114,7 +114,7 @@ export function AddMenu({view}: AddMenuProps) {
                     } else {
                       addNest(view, field);
                     }
-                    setQuery?.(rootQuery?.build());
+                    updateQuery();
                   }}
                   search={search}
                 />
@@ -132,7 +132,7 @@ export function AddMenu({view}: AddMenuProps) {
                         values: [value.fieldValue ?? '∅'],
                       },
                     });
-                    setQuery?.(rootQuery?.build());
+                    updateQuery();
                   }}
                 />
               </div>

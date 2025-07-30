@@ -6,9 +6,8 @@
  */
 
 import * as React from 'react';
-import {useContext, useMemo} from 'react';
+import {useMemo} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {
   addOrderBy,
   getSegmentIfPresent,
@@ -16,6 +15,7 @@ import {
 } from '../../utils/segment';
 import {AddFieldItem} from './AddFieldItem';
 import {ViewParent} from '../../utils/fields';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddEmptyNestProps {
   view: ViewParent;
@@ -23,7 +23,7 @@ export interface AddEmptyNestProps {
 }
 
 export function AddOrderBy({view, search}: AddEmptyNestProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const outputSchemaFields = view.getOutputSchema().fields;
   const segment = getSegmentIfPresent(view);
 
@@ -47,7 +47,7 @@ export function AddOrderBy({view, search}: AddEmptyNestProps) {
       types={['dimension']}
       onAddOperation={field => {
         addOrderBy(view, field);
-        setQuery?.(rootQuery?.build());
+        updateQuery();
       }}
       disabledMessage="There must be at least one field in the output to order by."
       search={search}

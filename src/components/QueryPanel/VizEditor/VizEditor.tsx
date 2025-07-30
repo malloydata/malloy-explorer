@@ -8,17 +8,17 @@
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import * as React from 'react';
 import {styles} from './styles';
-import {useContext, useState} from 'react';
+import {useState} from 'react';
 import {
   ASTAnnotation,
   ASTQuery,
   ASTView,
 } from '@malloydata/malloy-query-builder';
 import {CoreVizPluginInstance} from '@malloydata/render';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import ObjectEditor from './ObjectEditor';
 import {Button} from '../../primitives';
 import {RENDERER_PREFIX} from '../../utils/renderer';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface VizEditorProps {
   plugin: CoreVizPluginInstance;
@@ -28,7 +28,7 @@ export interface VizEditorProps {
 }
 
 export function VizEditor({view, plugin, setOpen}: VizEditorProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const [current, setCurrent] = useState(plugin.getSettings());
   console.info('RendererEditor current settings:', current);
 
@@ -80,7 +80,7 @@ export function VizEditor({view, plugin, setOpen}: VizEditorProps) {
               annotations.remove(old);
             }
             view.getOrAddAnnotations().add(new ASTAnnotation({value}));
-            setQuery?.(rootQuery?.build());
+            updateQuery();
             setOpen(false);
           }}
           customStyle={styles.editorCell}

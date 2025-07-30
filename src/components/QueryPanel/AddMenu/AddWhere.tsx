@@ -12,8 +12,8 @@ import {
   isNotAnnotatedFilteredField,
   ViewParent,
 } from '../../utils/fields';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {addFilter} from '../../utils/segment';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddWhereProps {
   view: ViewParent;
@@ -21,7 +21,7 @@ export interface AddWhereProps {
 }
 
 export function AddWhere({view, search}: AddWhereProps) {
-  const {rootQuery, setQuery} = React.useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   const {fields} = getInputSchemaFromViewParent(view);
 
@@ -43,7 +43,7 @@ export function AddWhere({view, search}: AddWhereProps) {
           (field.kind === 'dimension' || field.kind === 'measure')
         ) {
           addFilter(view, field, path, filter);
-          setQuery?.(rootQuery?.build());
+          updateQuery();
         }
       }}
       isFilterOperation={true}

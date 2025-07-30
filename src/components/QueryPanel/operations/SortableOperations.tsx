@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useCallback, useContext, useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {styles} from '../../styles';
@@ -29,7 +29,6 @@ import {
   ASTSegmentViewDefinition,
   ASTTimeTruncationExpression,
 } from '@malloydata/malloy-query-builder';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import {ClearButton} from './ClearButton';
 import {OperationActionTitle} from './OperationActionTitle';
 import FieldToken from '../../FieldToken';
@@ -53,6 +52,7 @@ import {
 } from '../../utils/segment';
 import {hoverActionsVars} from './hover.stylex';
 import {getPrimaryAxis} from '../../utils/axis';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface SortableOperationsProps {
   segment: ASTSegmentViewDefinition;
@@ -71,7 +71,7 @@ export function SortableOperations({
   operations,
   kind,
 }: SortableOperationsProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const sensors = useSensors(useSensor(PointerSensor));
 
   const items = useMemo(() => {
@@ -98,7 +98,7 @@ export function SortableOperations({
       const oldIndex = names.indexOf(active.id as string);
       const newIndex = names.indexOf(over.id as string);
       segment.reorderFields(arrayMove(names, oldIndex, newIndex));
-      setQuery?.(rootQuery?.build());
+      updateQuery();
     }
   }
 
@@ -112,7 +112,7 @@ export function SortableOperations({
           types: ['dimension'] as 'dimension'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
             addGroupBy(view, field, path);
-            setQuery?.(rootQuery?.build());
+            updateQuery();
           },
         }
       : {
@@ -121,7 +121,7 @@ export function SortableOperations({
           types: ['measure'] as 'measure'[],
           onClick: (field: Malloy.FieldInfo, path: string[]) => {
             addAggregate(view, field, path);
-            setQuery?.(rootQuery?.build());
+            updateQuery();
           },
         };
 
@@ -169,7 +169,7 @@ function SortableOperation({
   operation,
   color,
 }: SortableOperationProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
   const fieldInfo = operation.getFieldInfo();
   const field =
     operation instanceof ASTCalculateViewOperation ? null : operation.field;
@@ -212,9 +212,9 @@ function SortableOperation({
         7
       );
       recomputePartitionByAndPrimaryAxis(view.getOrAddDefaultSegment());
-      setQuery?.(rootQuery?.build());
+      updateQuery();
     },
-    [canSmooth, rootQuery, setQuery, view]
+    [canSmooth, updateQuery, view]
   );
 
   const hoverActions = useMemo(() => {
@@ -258,7 +258,7 @@ function SortableOperation({
           onClick={() => {
             operation.delete();
             recomputePartitionByAndPrimaryAxis(view.getOrAddDefaultSegment());
-            setQuery?.(rootQuery?.build());
+            updateQuery();
           }}
         />
       </>
@@ -269,8 +269,7 @@ function SortableOperation({
     fieldInfo.name,
     operation,
     path,
-    rootQuery,
-    setQuery,
+    updateQuery,
     view,
   ]);
 
@@ -313,7 +312,7 @@ function SortableOperation({
               onChange={(granulation: Malloy.TimestampTimeframe) => {
                 if (field.expression instanceof ASTTimeTruncationExpression)
                   field.expression.truncation = granulation;
-                setQuery?.(rootQuery?.build());
+                updateQuery();
               }}
               items={granular.options}
             />
@@ -355,11 +354,11 @@ function SortableOperation({
                     })
                   );
                   operation.delete();
-                  setQuery?.(rootQuery?.build());
+                  updateQuery();
                 } else {
                   operation.expression.edit();
                   operation.expression.rowsPreceding = parseInt(value, 10);
-                  setQuery?.(rootQuery?.build());
+                  updateQuery();
                 }
               }}
               items={[

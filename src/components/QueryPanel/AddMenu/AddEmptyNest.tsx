@@ -6,19 +6,18 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
-import {QueryEditorContext} from '../../../contexts/QueryEditorContext';
 import Icon from '../../primitives/Icon';
 import {AddItem} from './AddItem';
 import {segmentNestNo} from '../../utils/segment';
 import {ViewParent} from '../../utils/fields';
+import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 
 export interface AddEmptyNestProps {
   view: ViewParent;
 }
 
 export function AddEmptyNest({view}: AddEmptyNestProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   return (
     <AddItem
@@ -28,7 +27,7 @@ export function AddEmptyNest({view}: AddEmptyNestProps) {
         const segment = view.getOrAddDefaultSegment();
         const nestNo = segmentNestNo(segment, `Nest`);
         segment.addEmptyNest(nestNo > 1 ? `Nest ${nestNo}` : `Nest`);
-        setQuery?.(rootQuery?.build());
+        updateQuery();
       }}
     />
   );

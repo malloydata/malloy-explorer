@@ -6,18 +6,17 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
+import stylex from '@stylexjs/stylex';
 import {
   ASTArrowQueryDefinition,
   ASTQueryDefinition,
   ASTReferenceQueryArrowSource,
 } from '@malloydata/malloy-query-builder';
 import {LiteralValueEditor} from './LiteralValueEditor';
-import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {Token, TokenGroup} from '../primitives';
 import {atomicTypeToIcon} from '../utils/icon';
 import CollapsiblePanel from '../primitives/CollapsiblePanel';
-import stylex from '@stylexjs/stylex';
+import {useUpdateQuery} from '../../hooks/useQueryUpdate';
 
 /**
  * Source
@@ -27,7 +26,7 @@ export interface ParametersProps {
 }
 
 export function Parameters({definition}: ParametersProps) {
-  const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const updateQuery = useUpdateQuery();
 
   if (
     definition instanceof ASTArrowQueryDefinition &&
@@ -62,7 +61,7 @@ export function Parameters({definition}: ParametersProps) {
                 }
                 setValue={value => {
                   source.setParameter(parameter.name, value);
-                  setQuery?.(rootQuery?.build());
+                  updateQuery();
                 }}
               />
             </TokenGroup>
