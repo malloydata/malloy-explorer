@@ -41,12 +41,10 @@ export function QueryActionBar({runQuery, runRawQuery}: QueryActionBarProps) {
     rootQuery?.isRunnable() ||
     (typeof query === 'string' && query.trim().length > 0);
   const onRunQuery = () => {
-    if (source) {
-      if (typeof query === 'string' && runRawQuery) {
-        runRawQuery(source, query);
-      } else if (rootQuery) {
-        runQuery(source, rootQuery.build());
-      }
+    if (typeof query === 'string' && runRawQuery) {
+      runRawQuery(source, query);
+    } else if (rootQuery) {
+      runQuery(source, rootQuery.build());
     }
   };
 
