@@ -35,7 +35,7 @@ export function FieldHoverCard({field, path}: FieldHoverCardProps) {
 
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const pathString = [source?.name ?? '', ...path].join(' > ');
+  const pathString = [source.name ?? '', ...path].join(' > ');
   const descriptionAnnotation = getDescriptionAnnotation(
     field.annotations ?? []
   );

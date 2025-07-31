@@ -37,12 +37,9 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
   const fieldItems = React.useMemo(() => {
-    if (source) {
-      return sourceToFieldItems(source).filter(
-        fi => !hasExplorerFilterFieldAnnotation(fi.field.annotations ?? [])
-      );
-    }
-    return [];
+    return sourceToFieldItems(source).filter(
+      fi => !hasExplorerFilterFieldAnnotation(fi.field.annotations ?? [])
+    );
   }, [source]);
 
   const views = fieldItems.filter(item => item.field.kind === 'view');
@@ -61,7 +58,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
 
   const isSearchActive = !!searchQuery;
 
-  if (!source || !rootQuery) {
+  if (!rootQuery) {
     return null;
   }
 

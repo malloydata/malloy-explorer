@@ -40,13 +40,10 @@ export default function FieldGroupList({
   fieldGroupType,
 }: FieldGroupListProps): React.ReactNode {
   const fieldGroupsByKindByPath = React.useMemo(() => {
-    if (source) {
-      return groupFieldItemsByKind(fieldItems).map(group => ({
-        ...group,
-        items: groupFieldItemsByPath(source, group.items),
-      }));
-    }
-    return [];
+    return groupFieldItemsByKind(fieldItems).map(group => ({
+      ...group,
+      items: groupFieldItemsByPath(source, group.items),
+    }));
   }, [source, fieldItems]);
 
   const items = React.useMemo(() => {
