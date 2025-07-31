@@ -35,6 +35,8 @@ export default function CodeEditor({
   const [malloy] = React.useState<string>(value);
   const [ready, setReady] = React.useState(false);
   const {modelDef, modelUri, malloyToQuery} = React.useContext(LSPContext);
+  const [editor, setEditor] =
+    React.useState<Monaco.editor.IStandaloneCodeEditor>();
   const monaco = Monaco.getMonaco();
 
   useEffect(() => {
@@ -77,6 +79,7 @@ export default function CodeEditor({
       minimap: {enabled: false},
     });
 
+    setEditor(editor);
     disposables.push(model, editor);
 
     disposables.push(
@@ -91,6 +94,12 @@ export default function CodeEditor({
 
     return () => disposables.forEach(disposable => disposable.dispose());
   }, [language, modelUri, monaco, malloy, onChange, ready, modelDef]);
+
+  useEffect(() => {
+    if (editor && value !== editor.getValue()) {
+      editor.setValue(value);
+    }
+  }, [editor, value]);
 
   return (
     <div {...stylex.props(styles.container)}>
