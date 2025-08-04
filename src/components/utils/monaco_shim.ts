@@ -10,6 +10,15 @@ import * as monaco from 'monaco-editor-core';
 
 export type Monaco = typeof monaco;
 
+let malloyMonacoInstance: Monaco | undefined;
+
 export function getMonaco(): Monaco {
-  return monaco;
+  if (!malloyMonacoInstance) {
+    throw new Error('getMonaco() called before setMonaco()');
+  }
+  return malloyMonacoInstance;
+}
+
+export function setMonaco(monaco: Monaco) {
+  malloyMonacoInstance = monaco;
 }
