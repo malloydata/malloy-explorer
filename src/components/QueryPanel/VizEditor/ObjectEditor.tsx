@@ -28,7 +28,7 @@ export default function ObjectEditor({
   option,
   updateCurrent,
 }: EditorProps<JSONSchemaObject, Record<string, unknown>>) {
-  const [isExpanded, setIsExpanded] = useState(path.length === 0);
+  const [isExpanded, setIsExpanded] = useState(path.length === 0 || !name);
   return (
     <>
       {name ? (

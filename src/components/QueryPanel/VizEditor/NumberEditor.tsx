@@ -19,17 +19,22 @@ export default function NumberEditor({
   option,
   updateCurrent,
 }: EditorProps<JSONSchemaNumber>) {
+  const [value, setValue] = React.useState(
+    (current ?? option.minimum) as number
+  );
+
   return (
     <>
       <div {...stylex.props(styles.left, styles.label)}>
         <label>{option.title ?? name}:</label>
       </div>
       <input
-        value={current as number}
+        value={value}
         type="number"
         min={option.minimum}
         max={option.maximum}
         onChange={({target: {valueAsNumber}}) => {
+          setValue(valueAsNumber);
           updateCurrent(path, valueAsNumber);
         }}
         key={name}

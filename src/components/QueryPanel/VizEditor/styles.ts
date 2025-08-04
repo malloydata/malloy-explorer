@@ -19,6 +19,9 @@ export const styles = stylex.create({
     display: 'flex',
     justifyContent: 'left',
   },
+  nest: {
+    gridColumn: 'span 2',
+  },
   heading: {
     gridColumn: 'span 2',
     fontWeight: 'bold',
