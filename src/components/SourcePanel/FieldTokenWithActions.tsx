@@ -276,7 +276,7 @@ function queryEditorClick(
     } else {
       return false;
     }
-  } else if (field.kind === 'join') {
+  } else if (field.kind === 'view') {
     if (rootQuery.isEmpty()) {
       rootQuery.setView(field.name);
     } else {
