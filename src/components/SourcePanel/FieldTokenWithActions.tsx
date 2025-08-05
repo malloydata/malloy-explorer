@@ -15,6 +15,7 @@ import {
   addGroupBy,
   addNest,
   addOrderByFromSource,
+  getSegmentIfPresent,
 } from '../utils/segment';
 import {useOperations} from './hooks/useOperations';
 import {FilterPopover} from '../filters/FilterPopover';
@@ -27,6 +28,7 @@ import {
 import {fontStyles, tooltipStyles} from '../primitives/styles';
 import stylex from '@stylexjs/stylex';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
+import {ViewParent} from '../utils/fields';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
@@ -43,164 +45,35 @@ export function FieldTokenWithActions({
   path,
   viewDef,
 }: FieldTokenWithActionsProps) {
-  const updateQuery = useUpdateQuery();
-
   const {focusedNestView} = useQueryFocus();
+  const updateQuery = useUpdateQuery();
 
   const view = focusedNestView ?? viewDef;
 
-  const {
-    groupByDisabledReason,
-    aggregateDisabledReason,
-    filterDisabledReason,
-    orderByDisabledReason,
-  } = useOperations(view, field, path);
-
-  const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState<
-    boolean | undefined
-  >();
-
+  const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState(false);
   const [isTooltipOpen, setIsTooltipOpen] = useState<boolean>(false);
 
-  const handleAddOperationAction = (
-    operation: Operation,
-    filter?: ParsedFilter
-  ) => {
-    if (field.kind === 'dimension' || field.kind === 'measure') {
-      if (operation === 'groupBy' && !groupByDisabledReason) {
-        addGroupBy(view, field, path);
-      } else if (operation === 'aggregate' && !aggregateDisabledReason) {
-        addAggregate(view, field, path);
-      } else if (operation === 'orderBy' && !orderByDisabledReason) {
-        addOrderByFromSource(view, path, field.name);
-      } else if (operation === 'filter' && !filterDisabledReason && filter) {
-        addFilter(view, field, path, filter);
-      }
-      updateQuery();
-    }
-  };
-
-  const handleSetView = () => {
-    if (field.kind === 'view' && rootQuery.isEmpty()) {
-      rootQuery.setView(field.name);
-      updateQuery();
-    }
-  };
-
-  const handleAddView = () => {
-    if (field.kind === 'view') {
-      addNest(view, field);
-      updateQuery();
-    }
-  };
+  const showHover = isFilterPopoverOpen || isTooltipOpen;
 
   return (
     <FieldToken
       field={field}
       hoverActions={
-        field.kind === 'view' ? (
-          <>
-            <ActionButton
-              icon="insert"
-              disabled={!rootQuery.isEmpty()}
-              onClick={handleSetView}
-              tooltip={
-                !rootQuery.isEmpty()
-                  ? 'Can only add a view to an empty query.'
-                  : 'Add view'
-              }
-              onTooltipOpenChange={setIsTooltipOpen}
-            />
-
-            <ActionButton
-              icon="nest"
-              onClick={handleAddView}
-              tooltip="Add as new nested query"
-              onTooltipOpenChange={setIsTooltipOpen}
-            />
-          </>
-        ) : field.kind === 'measure' ? (
-          <>
-            <ActionButton
-              icon="aggregate"
-              tooltip={aggregateDisabledReason || 'Add as aggregate'}
-              disabled={!!aggregateDisabledReason}
-              onClick={() => handleAddOperationAction('aggregate')}
-              onTooltipOpenChange={setIsTooltipOpen}
-            />
-            <FilterPopover
-              fieldInfo={field}
-              path={path}
-              setFilter={filter => handleAddOperationAction('filter', filter)}
-              trigger={
-                <ActionButton
-                  icon="filter"
-                  tooltip={filterDisabledReason || 'Add as filter'}
-                  disabled={!!filterDisabledReason}
-                  onTooltipOpenChange={setIsTooltipOpen}
-                />
-              }
-              onOpenChange={setIsFilterPopoverOpen}
-              layoutProps={{align: 'start'}}
-            />
-            <ActionButton
-              icon="orderBy"
-              tooltip={orderByDisabledReason || 'Add as order by'}
-              disabled={!!orderByDisabledReason}
-              onClick={() => handleAddOperationAction('orderBy')}
-              onTooltipOpenChange={setIsTooltipOpen}
-            />
-          </>
-        ) : field.kind === 'dimension' ? (
-          <>
-            <ActionButton
-              icon="groupBy"
-              tooltip={groupByDisabledReason || 'Add as group by'}
-              disabled={!!groupByDisabledReason}
-              onClick={() => handleAddOperationAction('groupBy')}
-              onTooltipOpenChange={setIsTooltipOpen}
-            />
-            <FilterPopover
-              fieldInfo={field}
-              path={path}
-              setFilter={filter => handleAddOperationAction('filter', filter)}
-              trigger={
-                <ActionButton
-                  icon="filter"
-                  tooltip={filterDisabledReason || 'Add as filter'}
-                  disabled={!!filterDisabledReason}
-                  onTooltipOpenChange={setIsTooltipOpen}
-                />
-              }
-              onOpenChange={setIsFilterPopoverOpen}
-              layoutProps={{align: 'start'}}
-            />
-            <ActionButton
-              icon="orderBy"
-              tooltip={orderByDisabledReason || 'Add as order by'}
-              disabled={!!orderByDisabledReason}
-              onClick={() => handleAddOperationAction('orderBy')}
-              onTooltipOpenChange={setIsTooltipOpen}
-            />
-          </>
-        ) : null
+        <QueryEditorActions
+          rootQuery={rootQuery}
+          field={field}
+          view={view}
+          path={path}
+          setIsFilterPopoverOpen={setIsFilterPopoverOpen}
+          setIsTooltipOpen={setIsTooltipOpen}
+        />
       }
-      onClick={
-        field.kind === 'dimension' && !groupByDisabledReason
-          ? () => handleAddOperationAction('groupBy')
-          : field.kind === 'measure' && !aggregateDisabledReason
-            ? () => handleAddOperationAction('aggregate')
-            : field.kind === 'view'
-              ? () => {
-                  if (rootQuery.isEmpty()) {
-                    handleSetView();
-                  } else {
-                    handleAddView();
-                  }
-                }
-              : undefined
-      }
-      hoverActionsVisible={isFilterPopoverOpen || isTooltipOpen}
+      onClick={() => {
+        if (queryEditorClick(rootQuery, view, field, path)) {
+          updateQuery();
+        }
+      }}
+      hoverActionsVisible={showHover}
       tooltip={<FieldHoverCard field={field} path={path} />}
       tooltipProps={{
         side: 'right',
@@ -236,4 +109,181 @@ function ActionButton({
       </TooltipPortal>
     </Tooltip>
   );
+}
+
+interface QueryEditorActions {
+  rootQuery: ASTQuery;
+  view: ViewParent;
+  field: Malloy.FieldInfo;
+  path: string[];
+  setIsTooltipOpen: (open: boolean) => void;
+  setIsFilterPopoverOpen: (open: boolean) => void;
+}
+
+function QueryEditorActions({
+  rootQuery,
+  view,
+  field,
+  path,
+  setIsTooltipOpen,
+  setIsFilterPopoverOpen,
+}: QueryEditorActions) {
+  const updateQuery = useUpdateQuery();
+  const {
+    groupByDisabledReason,
+    aggregateDisabledReason,
+    filterDisabledReason,
+    orderByDisabledReason,
+  } = useOperations(view, field, path);
+
+  const handleAddOperationAction = (
+    operation: Operation,
+    filter?: ParsedFilter
+  ) => {
+    if (field.kind === 'dimension' || field.kind === 'measure') {
+      if (operation === 'groupBy' && !groupByDisabledReason) {
+        addGroupBy(view, field, path);
+      } else if (operation === 'aggregate' && !aggregateDisabledReason) {
+        addAggregate(view, field, path);
+      } else if (operation === 'orderBy' && !orderByDisabledReason) {
+        addOrderByFromSource(view, path, field.name);
+      } else if (operation === 'filter' && !filterDisabledReason && filter) {
+        addFilter(view, field, path, filter);
+      }
+      updateQuery();
+    }
+  };
+
+  const handleSetView = () => {
+    if (field.kind === 'view' && rootQuery.isEmpty()) {
+      rootQuery.setView(field.name);
+      updateQuery();
+    }
+  };
+
+  const handleAddView = () => {
+    if (field.kind === 'view') {
+      addNest(view, field);
+      updateQuery();
+    }
+  };
+
+  return field.kind === 'view' ? (
+    <>
+      <ActionButton
+        icon="insert"
+        disabled={!rootQuery.isEmpty()}
+        onClick={handleSetView}
+        tooltip={
+          !rootQuery.isEmpty()
+            ? 'Can only add a view to an empty query.'
+            : 'Add view'
+        }
+        onTooltipOpenChange={setIsTooltipOpen}
+      />
+
+      <ActionButton
+        icon="nest"
+        onClick={handleAddView}
+        tooltip="Add as new nested query"
+        onTooltipOpenChange={setIsTooltipOpen}
+      />
+    </>
+  ) : field.kind === 'measure' ? (
+    <>
+      <ActionButton
+        icon="aggregate"
+        tooltip={aggregateDisabledReason || 'Add as aggregate'}
+        disabled={!!aggregateDisabledReason}
+        onClick={() => handleAddOperationAction('aggregate')}
+        onTooltipOpenChange={setIsTooltipOpen}
+      />
+      <FilterPopover
+        fieldInfo={field}
+        path={path}
+        setFilter={filter => handleAddOperationAction('filter', filter)}
+        trigger={
+          <ActionButton
+            icon="filter"
+            tooltip={filterDisabledReason || 'Add as filter'}
+            disabled={!!filterDisabledReason}
+            onTooltipOpenChange={setIsTooltipOpen}
+          />
+        }
+        onOpenChange={setIsFilterPopoverOpen}
+        layoutProps={{align: 'start'}}
+      />
+      <ActionButton
+        icon="orderBy"
+        tooltip={orderByDisabledReason || 'Add as order by'}
+        disabled={!!orderByDisabledReason}
+        onClick={() => handleAddOperationAction('orderBy')}
+        onTooltipOpenChange={setIsTooltipOpen}
+      />
+    </>
+  ) : field.kind === 'dimension' ? (
+    <>
+      <ActionButton
+        icon="groupBy"
+        tooltip={groupByDisabledReason || 'Add as group by'}
+        disabled={!!groupByDisabledReason}
+        onClick={() => handleAddOperationAction('groupBy')}
+        onTooltipOpenChange={setIsTooltipOpen}
+      />
+      <FilterPopover
+        fieldInfo={field}
+        path={path}
+        setFilter={filter => handleAddOperationAction('filter', filter)}
+        trigger={
+          <ActionButton
+            icon="filter"
+            tooltip={filterDisabledReason || 'Add as filter'}
+            disabled={!!filterDisabledReason}
+            onTooltipOpenChange={setIsTooltipOpen}
+          />
+        }
+        onOpenChange={setIsFilterPopoverOpen}
+        layoutProps={{align: 'start'}}
+      />
+      <ActionButton
+        icon="orderBy"
+        tooltip={orderByDisabledReason || 'Add as order by'}
+        disabled={!!orderByDisabledReason}
+        onClick={() => handleAddOperationAction('orderBy')}
+        onTooltipOpenChange={setIsTooltipOpen}
+      />
+    </>
+  ) : null;
+}
+
+function queryEditorClick(
+  rootQuery: ASTQuery,
+  view: ViewParent,
+  field: Malloy.FieldInfo,
+  path: string[]
+) {
+  const segment = getSegmentIfPresent(view);
+
+  if (field.kind === 'dimension') {
+    if (!segment?.hasField(field.name, path)) {
+      addGroupBy(view, field, path);
+    } else {
+      return false;
+    }
+  } else if (field.kind === 'measure') {
+    if (!segment?.hasField(field.name, path)) {
+      addAggregate(view, field, path);
+    } else {
+      return false;
+    }
+  } else if (field.kind === 'join') {
+    if (rootQuery.isEmpty()) {
+      rootQuery.setView(field.name);
+    } else {
+      addNest(view, field);
+    }
+  } else {
+    return false;
+  }
+  return true;
 }

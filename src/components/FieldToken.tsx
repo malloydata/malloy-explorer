@@ -41,6 +41,7 @@ export default function FieldToken({
   hoverActionsVisible,
   ...props
 }: FieldTokenProps) {
+  const [isHovered, setIsHovered] = React.useState(false);
   let label = field.name;
   if (
     field.kind === 'dimension' &&
@@ -50,12 +51,14 @@ export default function FieldToken({
       label += `.${field.type.timeframe}`;
     }
   }
+
+  const showHover = (isHovered || hoverActionsVisible) && !!hoverActions;
+
   return (
     <div
-      {...stylex.props(
-        styles.main,
-        hoverActionsVisible && styles.showHoverActions
-      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      {...stylex.props(styles.main, showHover && styles.showHoverActions)}
     >
       <Token
         label={label}
@@ -64,7 +67,7 @@ export default function FieldToken({
         {...props}
       />
       {additionalSiblings}
-      {hoverActions && (
+      {showHover && (
         <div {...stylex.props(styles.hoverActions)}>{hoverActions}</div>
       )}
     </div>
@@ -77,10 +80,6 @@ const styles = stylex.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: '4px',
-    [hoverActionsVars.display]: {
-      default: 'none',
-      ':hover': 'block',
-    },
   },
   hoverActions: {
     display: hoverActionsVars.display,
