@@ -42,7 +42,7 @@ export function useOperations(
     const segment = getSegmentIfPresent(view);
 
     if (matchingFieldItem?.field.kind !== 'dimension') {
-      return 'Grouping is only available on a dimenion.';
+      return 'Grouping is only available on a dimension.';
     }
     if (segment?.hasField(field.name, path)) {
       return 'Cannot group by a field already in the view.';
