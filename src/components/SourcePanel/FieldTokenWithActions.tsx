@@ -53,6 +53,8 @@ export function FieldTokenWithActions({
   const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState(false);
   const [isTooltipOpen, setIsTooltipOpen] = useState<boolean>(false);
 
+  const showHover = isFilterPopoverOpen || isTooltipOpen;
+
   return (
     <FieldToken
       field={field}
@@ -71,7 +73,7 @@ export function FieldTokenWithActions({
           updateQuery();
         }
       }}
-      hoverActionsVisible={isFilterPopoverOpen || isTooltipOpen}
+      hoverActionsVisible={showHover}
       tooltip={<FieldHoverCard field={field} path={path} />}
       tooltipProps={{
         side: 'right',
