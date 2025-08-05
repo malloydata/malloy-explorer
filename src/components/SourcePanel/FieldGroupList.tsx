@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {CollapsibleListItem, List} from '../primitives';
 import {FieldItem, groupFieldItemsByKind, groupFieldItemsByPath} from './utils';
@@ -15,6 +16,7 @@ import {
   ASTArrowQueryDefinition,
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
+import {FieldTokenWithCopy} from './FieldTypeWithCopy';
 
 const getLabelFromPath = (source: SourceInfo, path: string[]) => {
   return path.at(-1) ?? source.name;
@@ -27,10 +29,11 @@ const getSublabelFromPath = (source: SourceInfo, path: string[]) => {
 };
 
 interface FieldGroupListProps {
-  rootQuery: ASTQuery;
+  rootQuery?: ASTQuery;
   source: SourceInfo;
   fieldItems: FieldItem[];
   fieldGroupType: 'view' | 'measure' | 'dimension';
+  onCopy: (field: Malloy.FieldInfo, path: string[]) => void;
 }
 
 export default function FieldGroupList({
@@ -38,6 +41,7 @@ export default function FieldGroupList({
   source,
   fieldItems,
   fieldGroupType,
+  onCopy,
 }: FieldGroupListProps): React.ReactNode {
   const fieldGroupsByKindByPath = React.useMemo(() => {
     return groupFieldItemsByKind(fieldItems).map(group => ({
@@ -53,11 +57,8 @@ export default function FieldGroupList({
     );
   }, [fieldGroupsByKindByPath, fieldGroupType]);
 
-  const viewDef = rootQuery.definition;
-
-  if (!(viewDef instanceof ASTArrowQueryDefinition)) {
-    return null;
-  }
+  const viewDef = rootQuery?.definition;
+  const astMode = rootQuery && viewDef instanceof ASTArrowQueryDefinition;
 
   return (
     <div {...stylex.props(styles.main)}>
@@ -69,15 +70,24 @@ export default function FieldGroupList({
             sublabel={getSublabelFromPath(source, item.groupPath)}
             isInitiallyExpanded={index === 0}
           >
-            {item.items.map(({field, path}) => (
-              <FieldTokenWithActions
-                rootQuery={rootQuery}
-                key={[...path, field.name].join('.')}
-                field={field}
-                path={path}
-                viewDef={viewDef}
-              />
-            ))}
+            {item.items.map(({field, path}) =>
+              astMode ? (
+                <FieldTokenWithActions
+                  rootQuery={rootQuery}
+                  key={[...path, field.name].join('.')}
+                  field={field}
+                  path={path}
+                  viewDef={viewDef}
+                />
+              ) : (
+                <FieldTokenWithCopy
+                  key={[...path, field.name].join('.')}
+                  field={field}
+                  path={path}
+                  onCopy={onCopy}
+                />
+              )
+            )}
           </CollapsibleListItem>
         ))}
       </List>
