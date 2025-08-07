@@ -44,6 +44,7 @@ import Info from '../../../assets/ui/info.svg?react';
 import Error from '../../../assets/ui/error.svg?react';
 import Refresh from '../../../assets/ui/refresh.svg?react';
 import SidebarCollapse from '../../../assets/ui/sidebar_collapse.svg?react';
+import Download from '../../../assets/ui/download.svg?react';
 import FilterSliders from '../../../assets/ui/filter-sliders.svg?react';
 
 import VizBarChar from '../../../assets/visualizations/viz_bar_chart.svg?react';
@@ -89,6 +90,7 @@ export const ICON_MAP = {
   refresh: Refresh,
   sidebarCollapse: SidebarCollapse,
   filterSliders: FilterSliders,
+  download: Download,
 
   // Operations
   aggregate: AggregateIcon,

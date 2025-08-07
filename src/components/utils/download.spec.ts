@@ -22,9 +22,8 @@
  */
 
 import {API, Runtime, type WriteStream} from '@malloydata/malloy';
-import * as Malloy from '@malloydata/malloy-interfaces';
 import {DuckDBConnection} from '@malloydata/db-duckdb';
-import {CSVWriter} from './download';
+import {CSVWriter, dataIterator} from './download';
 
 class StringAccumulator implements WriteStream {
   public accumulatedValue = '';
@@ -127,16 +126,6 @@ AGL,4437,983.4800540906018
     expect(accumulator.accumulatedValue).toBe(expectedCsv);
   });
 });
-
-async function* dataIterator(result: Malloy.Result) {
-  if (result.data?.kind === 'array_cell') {
-    for (const row of result.data.array_value) {
-      if (row.kind === 'record_cell') {
-        yield row;
-      }
-    }
-  }
-}
 
 const runQuery = async (queryString: string) => {
   const connection = new DuckDBConnection('duckdb', ':memory:');

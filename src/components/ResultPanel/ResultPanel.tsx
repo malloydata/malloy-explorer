@@ -20,6 +20,7 @@ import {useState, useEffect} from 'react';
 import {colors} from '../QueryPanel/AddMenu/colors.stylex';
 import DebugPane, {DebugOptions} from './DebugPane';
 import CopyToClipboard from './CopyToClipboard';
+import {DownloadButton} from './DownloadButton';
 
 enum Tab {
   RESULTS = 'Results',
@@ -129,6 +130,9 @@ export default function ResultPanel({
         </List>
         {tab !== Tab.RESULTS && clipboardText && (
           <CopyToClipboard text={clipboardText} label="Copy Code" />
+        )}
+        {tab === Tab.RESULTS && (
+          <DownloadButton result={submittedQuery?.response?.result} />
         )}
       </div>
       <div {...stylex.props(styles.contentContainer)}>

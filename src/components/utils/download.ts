@@ -311,3 +311,13 @@ function toObject(
   }
   return result;
 }
+
+export async function* dataIterator(result: Malloy.Result) {
+  if (result.data?.kind === 'array_cell') {
+    for (const row of result.data.array_value) {
+      if (row.kind === 'record_cell') {
+        yield row;
+      }
+    }
+  }
+}
