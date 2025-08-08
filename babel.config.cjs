@@ -31,7 +31,7 @@ module.exports = {
   ],
   env: {
     test: {
-      presets: ['@babel/preset-env'],
+      presets: [['@babel/preset-env', {targets: {node: 'current'}}]],
       plugins: [
         [
           '@stylexjs/babel-plugin',
