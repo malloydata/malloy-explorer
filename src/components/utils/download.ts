@@ -28,9 +28,18 @@ export class JSONWriter extends DataWriter {
     data: AsyncIterableIterator<Malloy.DataWithRecordCell>
   ): Promise<void> {
     this.stream.write('[\n');
+    let first = true;
     for await (const row of data) {
+      if (first) {
+        first = false;
+      } else {
+        this.stream.write(',\n');
+      }
       const json = JSON.stringify(
-        toObject(this.result.schema, row.record_value),
+        toObject(
+          this.result.schema.fields.filter(field => field.kind === 'dimension'),
+          row.record_value
+        ),
         null,
         2
       );
@@ -42,7 +51,6 @@ export class JSONWriter extends DataWriter {
           this.stream.write('\n');
         }
       }
-      this.stream.write(',\n');
     }
     this.stream.write('\n]\n');
     this.stream.close();
@@ -267,12 +275,12 @@ export class CSVWriter extends DataWriter {
 }
 
 function toObject(
-  schema: Malloy.Schema,
+  fields: Malloy.DimensionInfo[],
   data: Malloy.Cell[]
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {};
-  for (let idx = 0; idx < schema.fields.length; idx++) {
-    const field = schema.fields[idx];
+  for (let idx = 0; idx < fields.length; idx++) {
+    const field = fields[idx];
     const value = data[idx];
     switch (value.kind) {
       case 'string_cell':
@@ -294,12 +302,23 @@ function toObject(
         result[field.name] = value.json_value;
         break;
       case 'record_cell':
-        if (field.kind === 'join') {
-          result[field.name] = toObject(field.schema, value.record_value);
-        }
+        result[field.name] = toObject(fields, value.record_value);
         break;
       case 'array_cell':
-        // result[key] = ;
+        if (
+          field.type.kind === 'array_type' &&
+          field.type.element_type.kind === 'record_type'
+        ) {
+          const ary: unknown[] = [];
+          for (const cell of value.array_value) {
+            if (cell.kind === 'record_cell') {
+              ary.push(
+                toObject(field.type.element_type.fields, cell.record_value)
+              );
+            }
+          }
+          result[field.name] = ary;
+        }
         break;
       case 'null_cell':
         result[field.name] = null;
