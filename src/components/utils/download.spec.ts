@@ -92,22 +92,22 @@ describe('download', () => {
       const csvWriter = new CSVWriter(accumulator, result);
       await csvWriter.process(dataIterator(result));
       const expectedCsv = `\
-  faa_region,by_state,,,,by_facility_type,,airport_count
-  AGL,state,airport_count,by_county,,facility_type,airport_count,4437
-  ,IL,890,county,airport_count,AIRPORT,3443,
-  ,,,COOK,51,HELIPORT,826,
-  ,,,LA SALLE,39,,,
-  ,OH,749,county,airport_count,,,
-  ,,,FRANKLIN,27,,,
-  ,,,CUYAHOGA,27,,,
-  ASW,state,airport_count,by_county,,facility_type,airport_count,3268
-  ,TX,1845,county,airport_count,AIRPORT,2341,
-  ,,,HARRIS,135,HELIPORT,861,
-  ,,,TARRANT,63,,,
-  ,LA,500,county,airport_count,,,
-  ,,,PLAQUEMINES,31,,,
-  ,,,VERMILION,29,,,
-  `;
+faa_region,by_state,,,,by_facility_type,,airport_count
+AGL,state,airport_count,by_county,,facility_type,airport_count,4437
+,IL,890,county,airport_count,AIRPORT,3443,
+,,,COOK,51,HELIPORT,826,
+,,,LA SALLE,39,,,
+,OH,749,county,airport_count,,,
+,,,FRANKLIN,27,,,
+,,,CUYAHOGA,27,,,
+ASW,state,airport_count,by_county,,facility_type,airport_count,3268
+,TX,1845,county,airport_count,AIRPORT,2341,
+,,,HARRIS,135,HELIPORT,861,
+,,,TARRANT,63,,,
+,LA,500,county,airport_count,,,
+,,,PLAQUEMINES,31,,,
+,,,VERMILION,29,,,
+`;
       expect(accumulator.accumulatedValue).toBe(expectedCsv);
     });
 
@@ -117,13 +117,13 @@ describe('download', () => {
       const csvWriter = new CSVWriter(accumulator, result);
       await csvWriter.process(dataIterator(result));
       const expectedCsv = `\
-  faa_region,airport_count,avg_elevation
-  ANM,2102,3284.3910561370126
-  AWP,1503,1667.0991350632069
-  ACE,1579,1339.0139328689045
-  ASW,3268,1007.2873317013464
-  AGL,4437,983.4800540906018
-  `;
+faa_region,airport_count,avg_elevation
+ANM,2102,3284.3910561370126
+AWP,1503,1667.0991350632069
+ACE,1579,1339.0139328689045
+ASW,3268,1007.2873317013464
+AGL,4437,983.4800540906018
+`;
       expect(accumulator.accumulatedValue).toBe(expectedCsv);
     });
   });
