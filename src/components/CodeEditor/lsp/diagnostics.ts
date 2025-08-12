@@ -10,7 +10,7 @@ import {LogMessage, MalloyError, malloyToQuery} from '@malloydata/malloy';
 import {LogSeverity} from '@malloydata/malloy-interfaces';
 import {stubCompile} from './stub_compile';
 import {getModel} from './utils';
-import * as Monaco from '../components/utils/monaco_shim';
+import * as Monaco from '../monaco/monaco_shim';
 
 export async function diagnostics(
   modelUri: string,

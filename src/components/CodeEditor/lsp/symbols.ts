@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as Monaco from '../components/utils/monaco_shim';
+import * as Monaco from '../monaco/monaco_shim';
 import {DocumentSymbol as MalloyDocumentSymbol} from '@malloydata/malloy';
 import {stubParse} from './stub_compile';
 import {getModel} from './utils';

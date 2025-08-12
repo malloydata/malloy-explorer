@@ -7,8 +7,8 @@
 
 import * as Monaco from './monaco_shim';
 import {shikiToMonaco} from '@shikijs/monaco';
-import {getHighlighter} from '../primitives/syntax_highlighting/syntaxHighlighter';
-import {initLsp} from '../../lsp';
+import {getHighlighter} from '../../primitives/syntax_highlighting/syntaxHighlighter';
+import {initLsp} from '../lsp';
 import {HighlighterCore} from '@shikijs/types';
 
 let highlighterPromise: Promise<HighlighterCore> | null = null;

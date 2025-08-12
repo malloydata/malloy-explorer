@@ -7,4 +7,6 @@
 
 import CodedEditor from './CodeEditor';
 export * from './CodeEditor';
+export * from './CodeEditorContext';
+export {setMonaco} from './monaco/monaco_shim';
 export default CodedEditor;

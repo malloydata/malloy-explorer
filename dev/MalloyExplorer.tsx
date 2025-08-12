@@ -7,21 +7,21 @@
 
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import '../src/components/utils/monaco_worker';
+import '../src/components/CodeEditor/monaco/monaco_worker';
 import stylex from '@stylexjs/stylex';
 import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {
-  LSPContext,
   QueryPanel,
   MalloyExplorerProvider,
   ResultPanel,
   SourcePanel,
   ResizableCollapsiblePanel,
   SubmittedQuery,
+  CodeEditorContext,
 } from '../src';
 import {topValues} from './sample_models/example_top_values';
-import {initLspContext, runQuery, runRawQuery} from './utils/runtime';
+import {initCodeEditorContext, runQuery, runRawQuery} from './utils/runtime';
 import {malloyToQuery, ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
 
 const modelUri = new URL(
@@ -39,7 +39,7 @@ const App = () => {
 
   useEffect(() => {
     const compile = async () => {
-      const modelDef = await initLspContext(modelUri);
+      const modelDef = await initCodeEditorContext(modelUri);
       setModelDef(modelDef);
       const model = modelDefToModelInfo(modelDef);
       setModel(model);
@@ -54,7 +54,7 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <LSPContext.Provider value={{modelDef, modelUri, malloyToQuery}}>
+      <CodeEditorContext.Provider value={{modelDef, modelUri, malloyToQuery}}>
         <MalloyExplorerProvider
           source={source}
           query={query}
@@ -130,7 +130,7 @@ const App = () => {
             </div>
           </div>
         </MalloyExplorerProvider>
-      </LSPContext.Provider>
+      </CodeEditorContext.Provider>
     </React.StrictMode>
   );
 };

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as Monaco from '../components/utils/monaco_shim';
+import * as Monaco from '../monaco/monaco_shim';
 import {stubParse} from './stub_compile';
 import {convertPosition, getModel} from './utils';
 import {COMPLETION_DOCS} from './completion_docs';

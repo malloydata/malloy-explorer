@@ -6,7 +6,7 @@
  */
 
 import {DocumentRange} from '@malloydata/malloy';
-import * as Monaco from '../components/utils/monaco_shim';
+import * as Monaco from '../monaco/monaco_shim';
 import {stubCompile} from './stub_compile';
 import {convertPosition, getModel} from './utils';
 

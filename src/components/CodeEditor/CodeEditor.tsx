@@ -7,16 +7,15 @@
 
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
-import * as Monaco from '../utils/monaco_shim';
+import * as Monaco from './monaco/monaco_shim';
 import stylex from '@stylexjs/stylex';
-import {LSPContext} from '../../contexts/LSPContext';
-import {initMonaco} from '../utils/monaco';
-import {diagnostics} from '../../lsp';
-import {registerModel} from '../../lsp/utils';
+import {initMonaco} from './monaco/monaco';
+import {diagnostics, registerModel} from './lsp';
 import {styles as componentStyles} from '../styles';
 import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {fontStyles} from '../primitives/styles';
+import {CodeEditorContext} from './CodeEditorContext';
 
 export interface CodeEditorProps {
   language: string;
@@ -34,7 +33,8 @@ export default function CodeEditor({
   const editorRef = useRef<HTMLDivElement>(null);
   const [malloy] = React.useState<string>(value);
   const [ready, setReady] = React.useState(false);
-  const {modelDef, modelUri, malloyToQuery} = React.useContext(LSPContext);
+  const {modelDef, modelUri, malloyToQuery} =
+    React.useContext(CodeEditorContext);
   const [editor, setEditor] =
     React.useState<Monaco.editor.IStandaloneCodeEditor>();
   const monaco = Monaco.getMonaco();

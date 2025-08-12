@@ -6,7 +6,7 @@
  */
 
 import {ModelDef} from '@malloydata/malloy';
-import * as Monaco from '../components/utils/monaco_shim';
+import * as Monaco from '../monaco/monaco_shim';
 import {
   provideCodeActions,
   provideCompletionItems,

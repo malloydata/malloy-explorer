@@ -13,7 +13,9 @@ const files = [
   'components/ResultPanel/SubmittedQuery.d.ts',
   'components/SourcePanel/SourcePanel.d.ts',
   'components/ResizableCollapsiblePanel.d.ts',
-  'contexts/LSPContext.d.ts',
+  'components/CodeEditor/index.d.ts',
+  'components/CodeEditor/CodeEditor.d.ts',
+  'components/CodeEditor/CodeEditorContext.d.ts',
 ];
 
 async function go() {

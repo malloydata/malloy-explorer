@@ -30,7 +30,7 @@ import {FocusableView} from './FocusableView';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {useUpdateQuery} from '../../hooks/useQueryUpdate';
 import {useContext} from 'react';
-import {LSPContext} from '../../contexts/LSPContext';
+import {CodeEditorContext} from '../CodeEditor';
 
 export interface QueryProps {
   definition: ASTQueryDefinition;
@@ -40,7 +40,7 @@ export interface QueryProps {
 export function Query({definition}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
-  const {modelDef} = useContext(LSPContext);
+  const {modelDef} = useContext(CodeEditorContext);
   const updateQuery = useUpdateQuery();
 
   if (!rootQuery) {

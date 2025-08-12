@@ -156,7 +156,7 @@ const EMPTY_LOCATION = {
   },
 };
 
-export async function initLspContext(url: URL): Promise<ModelDef> {
+export async function initCodeEditorContext(url: URL): Promise<ModelDef> {
   const fetcher = getFetcher(url);
   const runtime = new SingleConnectionRuntime({
     urlReader: fetcher,

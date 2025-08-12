@@ -9,7 +9,7 @@ import * as Malloy from '@malloydata/malloy-interfaces';
 import * as React from 'react';
 import type {ModelDef} from '@malloydata/malloy';
 
-export interface LSPContextProps {
+export interface CodeEditorContextProps {
   modelDef?: ModelDef;
   modelUri?: URL;
   malloyToQuery?: (malloy: string) => {
@@ -18,4 +18,6 @@ export interface LSPContextProps {
   };
 }
 
-export const LSPContext = React.createContext<LSPContextProps>({});
+export const CodeEditorContext = React.createContext<CodeEditorContextProps>(
+  {}
+);
