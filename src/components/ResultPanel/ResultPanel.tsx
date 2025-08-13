@@ -73,6 +73,7 @@ export default function ResultPanel({
     return null;
   })();
 
+  const showMalloy = typeof draftQuery === 'object';
   const showStableQuery =
     options?.showRawQuery && typeof draftQuery === 'object';
 
@@ -100,12 +101,14 @@ export default function ResultPanel({
           >
             {Tab.RESULTS}
           </Trigger>
-          <Trigger
-            value={Tab.MALLOY}
-            {...stylex.props(fontStyles.body, styles.tab)}
-          >
-            {Tab.MALLOY}
-          </Trigger>
+          {showMalloy && (
+            <Trigger
+              value={Tab.MALLOY}
+              {...stylex.props(fontStyles.body, styles.tab)}
+            >
+              {Tab.MALLOY}
+            </Trigger>
+          )}
           <Trigger
             value={Tab.SQL}
             disabled={!submittedQueryExists}
