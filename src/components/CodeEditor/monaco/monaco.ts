@@ -13,9 +13,9 @@ import {HighlighterCore} from '@shikijs/types';
 
 let highlighterPromise: Promise<HighlighterCore> | null = null;
 
-export async function initMonaco(): Promise<Monaco.IDisposable> {
-  const monaco = Monaco.getMonaco();
-
+export async function initMonaco(
+  monaco: typeof Monaco
+): Promise<Monaco.IDisposable> {
   if (highlighterPromise) {
     // TODO: Better handle cleanup for multiple invocations
     return {dispose: () => {}};
@@ -33,7 +33,7 @@ export async function initMonaco(): Promise<Monaco.IDisposable> {
     MALLOY_LANGUAGE_CONFIGURATION
   );
 
-  return initLsp();
+  return initLsp(monaco);
 }
 
 const MALLOY_LANGUAGE_CONFIGURATION: Monaco.languages.LanguageConfiguration = {

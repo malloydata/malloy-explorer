@@ -11,11 +11,11 @@ import {stubCompile} from './stub_compile';
 import {convertPosition, getModel} from './utils';
 
 export async function provideDefinition(
+  monaco: typeof Monaco,
   textModel: Monaco.editor.ITextModel,
   position: Monaco.Position,
   _token: Monaco.CancellationToken
 ): Promise<Monaco.languages.Definition> {
-  const monaco = Monaco.getMonaco();
   const modelDef = getModel(textModel.uri.toString());
   try {
     const malloy = textModel.getValue();

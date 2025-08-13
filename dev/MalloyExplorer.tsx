@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import * as monaco from 'monaco-editor-core';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import '../src/components/CodeEditor/monaco/monaco_worker';
 import stylex from '@stylexjs/stylex';
@@ -54,7 +55,9 @@ const App = () => {
 
   return (
     <React.StrictMode>
-      <CodeEditorContext.Provider value={{modelDef, modelUri, malloyToQuery}}>
+      <CodeEditorContext.Provider
+        value={{monaco, modelDef, modelUri, malloyToQuery}}
+      >
         <MalloyExplorerProvider
           source={source}
           query={query}

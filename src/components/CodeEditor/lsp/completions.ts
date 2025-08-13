@@ -11,6 +11,7 @@ import {convertPosition, getModel} from './utils';
 import {COMPLETION_DOCS} from './completion_docs';
 
 export function provideCompletionItems(
+  monaco: typeof Monaco,
   textModel: Monaco.editor.ITextModel,
   position: Monaco.Position,
   _context: Monaco.languages.CompletionContext,
@@ -26,7 +27,6 @@ export function provideCompletionItems(
     endColumn: position.column,
     endLineNumber: position.lineNumber,
   });
-  const monaco = Monaco.getMonaco();
 
   let startColumn = position.column;
   while (startColumn > 0 && prefix.charAt(startColumn - 2).match(/\w/)) {

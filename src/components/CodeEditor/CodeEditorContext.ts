@@ -6,10 +6,12 @@
  */
 
 import * as Malloy from '@malloydata/malloy-interfaces';
+import * as Monaco from './monaco/monaco_shim';
 import * as React from 'react';
 import type {ModelDef} from '@malloydata/malloy';
 
 export interface CodeEditorContextProps {
+  monaco?: typeof Monaco;
   modelDef?: ModelDef;
   modelUri?: URL;
   malloyToQuery?: (malloy: string) => {

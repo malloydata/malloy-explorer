@@ -33,29 +33,36 @@ export default function CodeEditor({
   const editorRef = useRef<HTMLDivElement>(null);
   const [malloy] = React.useState<string>(value);
   const [ready, setReady] = React.useState(false);
-  const {modelDef, modelUri, malloyToQuery} =
+  const {modelDef, modelUri, monaco, malloyToQuery} =
     React.useContext(CodeEditorContext);
   const [editor, setEditor] =
     React.useState<Monaco.editor.IStandaloneCodeEditor>();
-  const monaco = Monaco.getMonaco();
 
   useEffect(() => {
-    const load = async () => {
-      // TODO: Better handle cleanup
-      await initMonaco();
-      setReady(true);
+    let disposablePromise: Promise<Monaco.IDisposable> | undefined;
+    if (monaco) {
+      const load = async () => {
+        disposablePromise = initMonaco(monaco);
+        await disposablePromise;
+        setReady(true);
+      };
+      void load();
+    }
+    return () => {
+      if (disposablePromise) {
+        disposablePromise.then(disposable => disposable.dispose());
+      }
     };
-    void load();
-  }, []);
+  }, [monaco]);
 
   useEffect(() => {
     const disposables: Monaco.IDisposable[] = [];
-    if (!ready || !editorRef.current || !modelDef || !modelUri) {
+    if (!monaco || !ready || !editorRef.current || !modelDef || !modelUri) {
       return () => {};
     }
 
     const updateDiagnostics = async (malloy: string) => {
-      const markers = await diagnostics(uriString, malloy);
+      const markers = await diagnostics(monaco, uriString, malloy);
       setValidStableQuery(markers.length === 0);
       monaco.editor.setModelMarkers(model, 'malloy', markers);
     };

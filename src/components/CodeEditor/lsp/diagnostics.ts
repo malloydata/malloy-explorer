@@ -13,6 +13,7 @@ import {getModel} from './utils';
 import * as Monaco from '../monaco/monaco_shim';
 
 export async function diagnostics(
+  monaco: typeof Monaco,
   modelUri: string,
   malloy: string
 ): Promise<Monaco.editor.IMarkerData[]> {
@@ -22,25 +23,26 @@ export async function diagnostics(
   try {
     const model = await stubCompile(modelDef, malloy);
     for (const log of model.problems) {
-      markers.push(logToMarker(log));
+      markers.push(logToMarker(monaco, log));
     }
     const {logs} = malloyToQuery(malloy);
     for (const log of logs) {
-      markers.push(stableLogToMarker(log));
+      markers.push(stableLogToMarker(monaco, log));
     }
   } catch (error) {
     if (error instanceof MalloyError) {
       for (const log of error.problems) {
-        markers.push(logToMarker(log));
+        markers.push(logToMarker(monaco, log));
       }
     }
   }
   return markers;
 }
 
-function convertSeverity(severity: LogSeverity): Monaco.MarkerSeverity {
-  const monaco = Monaco.getMonaco();
-
+function convertSeverity(
+  monaco: typeof Monaco,
+  severity: LogSeverity
+): Monaco.MarkerSeverity {
   switch (severity) {
     case 'error':
       return monaco.MarkerSeverity.Error;
@@ -52,9 +54,12 @@ function convertSeverity(severity: LogSeverity): Monaco.MarkerSeverity {
   return monaco.MarkerSeverity.Hint;
 }
 
-function logToMarker(log: LogMessage): Monaco.editor.IMarkerData {
+function logToMarker(
+  monaco: typeof Monaco,
+  log: LogMessage
+): Monaco.editor.IMarkerData {
   return {
-    severity: convertSeverity(log.severity),
+    severity: convertSeverity(monaco, log.severity),
     message: log.message,
     startLineNumber: (log.at?.range.start.line ?? 0) + 1,
     startColumn: (log.at?.range.start.character ?? 0) + 1,
@@ -63,9 +68,10 @@ function logToMarker(log: LogMessage): Monaco.editor.IMarkerData {
   };
 }
 
-function stableLogToMarker(log: Malloy.LogMessage): Monaco.editor.IMarkerData {
-  const monaco = Monaco.getMonaco();
-
+function stableLogToMarker(
+  monaco: typeof Monaco,
+  log: Malloy.LogMessage
+): Monaco.editor.IMarkerData {
   return {
     severity: monaco.MarkerSeverity.Hint,
     message: log.message,

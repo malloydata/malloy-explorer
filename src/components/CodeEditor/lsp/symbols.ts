@@ -10,14 +10,10 @@ import {DocumentSymbol as MalloyDocumentSymbol} from '@malloydata/malloy';
 import {stubParse} from './stub_compile';
 import {getModel} from './utils';
 
-function mapSymbol({
-  name,
-  range,
-  type,
-  children,
-}: MalloyDocumentSymbol): Monaco.languages.DocumentSymbol {
-  const monaco = Monaco.getMonaco();
-
+function mapSymbol(
+  monaco: typeof Monaco,
+  {name, range, type, children}: MalloyDocumentSymbol
+): Monaco.languages.DocumentSymbol {
   let kind: Monaco.languages.SymbolKind;
   let detail = type;
   switch (type) {
@@ -53,17 +49,18 @@ function mapSymbol({
       endLineNumber: range.end.line + 1,
       endColumn: range.end.character + 1,
     },
-    children: children.map(mapSymbol),
+    children: children.map(symbol => mapSymbol(monaco, symbol)),
     tags: [],
   };
 }
 
 export function provideDocumentSymbols(
+  monaco: typeof Monaco,
   textModel: Monaco.editor.ITextModel,
   _token: Monaco.CancellationToken
 ): Monaco.languages.DocumentSymbol[] {
   const modelDef = getModel(textModel.uri.toString());
   const malloy = textModel.getValue();
   const parse = stubParse(modelDef, malloy);
-  return parse.symbols.map(mapSymbol);
+  return parse.symbols.map(symbol => mapSymbol(monaco, symbol));
 }

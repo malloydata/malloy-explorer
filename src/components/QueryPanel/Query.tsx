@@ -40,7 +40,7 @@ export interface QueryProps {
 export function Query({definition}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
-  const {modelDef} = useContext(CodeEditorContext);
+  const {monaco, modelDef} = useContext(CodeEditorContext);
   const updateQuery = useUpdateQuery();
 
   if (!rootQuery) {
@@ -92,7 +92,7 @@ export function Query({definition}: QueryProps) {
                       !(definition instanceof ASTArrowQueryDefinition)
                     }
                   />
-                  {modelDef ? (
+                  {monaco && modelDef ? (
                     <DropdownMenuItem
                       icon="malloy"
                       label="Convert to Malloy"

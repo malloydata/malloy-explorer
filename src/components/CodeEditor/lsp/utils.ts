@@ -35,25 +35,25 @@ export function getModel(modelUri: string): ModelDef {
   throw new Error(`Unknown model ${modelUri}`);
 }
 
-export function initLsp(): Monaco.IDisposable {
-  const monaco = Monaco.getMonaco();
-
+export function initLsp(monaco: typeof Monaco): Monaco.IDisposable {
   const disposables: Monaco.IDisposable[] = [];
   disposables.push(
     monaco.languages.registerHoverProvider('malloy', {
       provideHover,
     }),
     monaco.languages.registerDefinitionProvider('malloy', {
-      provideDefinition,
+      provideDefinition: (...args) => provideDefinition(monaco, ...args),
     }),
     monaco.languages.registerCodeActionProvider('malloy', {
       provideCodeActions,
     }),
     monaco.languages.registerDocumentSymbolProvider('malloy', {
-      provideDocumentSymbols,
+      provideDocumentSymbols: (...args) =>
+        provideDocumentSymbols(monaco, ...args),
     }),
     monaco.languages.registerCompletionItemProvider('malloy', {
-      provideCompletionItems,
+      provideCompletionItems: (...args) =>
+        provideCompletionItems(monaco, ...args),
     })
   );
 

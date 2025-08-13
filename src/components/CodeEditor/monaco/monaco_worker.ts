@@ -6,8 +6,6 @@
  */
 
 import EditorWorker from 'monaco-editor-core/esm/vs/editor/editor.worker?worker';
-import {setMonaco} from './monaco_shim';
-import * as monaco from 'monaco-editor-core';
 
 // @ts-expect-error no types
 window.MonacoEnvironment = {
@@ -15,5 +13,3 @@ window.MonacoEnvironment = {
     return new EditorWorker();
   },
 };
-
-setMonaco(monaco);

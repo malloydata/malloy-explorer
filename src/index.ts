@@ -22,6 +22,6 @@ export type {
 export {SourcePanel} from './components/SourcePanel';
 export {ResizeBar} from './components/primitives';
 export {ResizableCollapsiblePanel} from './components/ResizableCollapsiblePanel';
-export {CodeEditorContext, setMonaco} from './components/CodeEditor';
+export {CodeEditorContext} from './components/CodeEditor';
 
 export {modelDefToModelInfo, malloyToQuery} from '@malloydata/malloy';
