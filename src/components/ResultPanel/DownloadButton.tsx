@@ -18,6 +18,7 @@ import {
 } from '../utils/download';
 import {Icon} from '../primitives';
 import {fontStyles} from '../primitives/styles';
+import {textColors} from '../primitives/colors.stylex';
 
 export interface DownloadButtonProps {
   result?: Malloy.Result;
@@ -31,7 +32,7 @@ export function DownloadButton({name = 'malloy', result}: DownloadButtonProps) {
 
   useEffect(() => {
     const createBlob = async () => {
-      if (!result) {
+      if (!result?.data) {
         setHref('');
         return;
       }
@@ -74,6 +75,10 @@ export function DownloadButton({name = 'malloy', result}: DownloadButtonProps) {
         href={href}
         download={fileName}
         {...stylex.props(styles.link, fontStyles.body)}
+        style={{
+          textDecoration: 'none',
+          color: textColors.primary,
+        }}
       >
         <Icon name="download" />
         <div>Download CSV</div>
@@ -103,7 +108,6 @@ const styles = stylex.create({
     display: 'flex',
     alignContent: 'center',
     gap: 8,
-    textDecoration: 'none',
     background: {
       default: 'transparent',
       ':hover': 'rgba(0, 0, 0, 0.05)',

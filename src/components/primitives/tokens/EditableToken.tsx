@@ -183,7 +183,7 @@ const styles = stylex.create({
     color: labelVars.color,
     gridArea: '1 / 1',
     padding: '0px',
-    background: 'transparent',
+    background: 'transparent !important', // :| don't ask
     borderStyle: 'none',
     outline: 'none',
     whiteSpace: 'nowrap',
