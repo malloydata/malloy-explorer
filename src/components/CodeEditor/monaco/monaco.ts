@@ -28,5 +28,37 @@ export async function initMonaco(): Promise<Monaco.IDisposable> {
 
   shikiToMonaco(highlighter, monaco);
 
+  monaco.languages.setLanguageConfiguration(
+    'malloy',
+    MALLOY_LANGUAGE_CONFIGURATION
+  );
+
   return initLsp();
 }
+
+const MALLOY_LANGUAGE_CONFIGURATION: Monaco.languages.LanguageConfiguration = {
+  comments: {
+    lineComment: '--',
+    blockComment: ['/*', '*/'],
+  },
+  brackets: [
+    ['{', '}'],
+    ['[', ']'],
+    ['(', ')'],
+  ],
+  autoClosingPairs: [
+    {open: '{', close: '}'},
+    {open: '[', close: ']'},
+    {open: '(', close: ')'},
+    {open: '"', close: '"', notIn: ['string']},
+    {open: "'", close: "'"},
+    {open: '/*', close: ' */', notIn: ['string']},
+  ],
+  surroundingPairs: [
+    {open: '{', close: '}'},
+    {open: '[', close: ']'},
+    {open: '(', close: ')'},
+    {open: '"', close: '"'},
+    {open: "'", close: "'"},
+  ],
+} as const;

@@ -69,6 +69,8 @@ export default function CodeEditor({
       monaco.Uri.parse(uriString)
     );
 
+    model.updateOptions({tabSize: 2});
+
     const editor = monaco.editor.create(editorRef.current, {
       model,
       language,
