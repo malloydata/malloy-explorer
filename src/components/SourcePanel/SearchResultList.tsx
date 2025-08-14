@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {
   FIELD_KIND_TO_TITLE,
@@ -14,11 +15,13 @@ import {
   ASTArrowQueryDefinition,
   ASTQuery,
 } from '@malloydata/malloy-query-builder';
+import {FieldTokenWithCopy} from './FieldTokenWithCopy';
 
 interface SearchResultListProps {
-  rootQuery: ASTQuery;
+  rootQuery?: ASTQuery;
   source: SourceInfo;
   items: FieldItem[];
+  onCopy: (field: Malloy.FieldInfo, path: string[]) => void;
 }
 
 const FIELD_KIND_ORDER = ['dimension', 'measure', 'view'] as const;
@@ -27,6 +30,7 @@ export default function SearchResultList({
   rootQuery,
   source,
   items,
+  onCopy,
 }: SearchResultListProps) {
   const fieldGroupsByKindByPath = React.useMemo(() => {
     return groupFieldItemsByKind(items)
@@ -40,11 +44,8 @@ export default function SearchResultList({
       }));
   }, [source, items]);
 
-  const viewDef = rootQuery.definition;
-
-  if (!(viewDef instanceof ASTArrowQueryDefinition)) {
-    return null;
-  }
+  const viewDef = rootQuery?.definition;
+  const astMode = rootQuery && viewDef instanceof ASTArrowQueryDefinition;
 
   return (
     <div {...stylex.props(styles.main)}>
@@ -66,15 +67,24 @@ export default function SearchResultList({
                   <div {...stylex.props(fontStyles.supporting)}>
                     {subgroupPath.join(' > ')}
                   </div>
-                  {subgroupItems.map(({field, path}) => (
-                    <FieldTokenWithActions
-                      rootQuery={rootQuery}
-                      key={[...path, field.name].join('.')}
-                      field={field}
-                      path={path}
-                      viewDef={viewDef}
-                    />
-                  ))}
+                  {subgroupItems.map(({field, path}) =>
+                    astMode ? (
+                      <FieldTokenWithActions
+                        rootQuery={rootQuery}
+                        key={[...path, field.name].join('.')}
+                        field={field}
+                        path={path}
+                        viewDef={viewDef}
+                      />
+                    ) : (
+                      <FieldTokenWithCopy
+                        key={[...path, field.name].join('.')}
+                        field={field}
+                        path={path}
+                        onCopy={onCopy}
+                      />
+                    )
+                  )}
                 </div>
               )
             )}

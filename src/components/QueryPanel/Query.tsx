@@ -6,7 +6,6 @@
  */
 
 import * as React from 'react';
-import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   ASTArrowQueryDefinition,
@@ -30,6 +29,8 @@ import {useQueryFocus} from '../MalloyQueryFocusProvider';
 import {FocusableView} from './FocusableView';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {useUpdateQuery} from '../../hooks/useQueryUpdate';
+import {useContext} from 'react';
+import {CodeEditorContext} from '../CodeEditor';
 
 export interface QueryProps {
   definition: ASTQueryDefinition;
@@ -39,6 +40,7 @@ export interface QueryProps {
 export function Query({definition}: QueryProps) {
   const {focusMainView, isMainViewFocused} = useQueryFocus();
   const {rootQuery, setQuery} = useContext(QueryEditorContext);
+  const {monaco, modelDef} = useContext(CodeEditorContext);
   const updateQuery = useUpdateQuery();
 
   if (!rootQuery) {
@@ -73,7 +75,7 @@ export function Query({definition}: QueryProps) {
                       focusMainView();
                       setQuery(undefined);
                     }}
-                    disabled={isEmpty}
+                    disabled={rootQuery.isEmpty()}
                   />
                   <DropdownMenuItem
                     icon="nest"
@@ -90,6 +92,15 @@ export function Query({definition}: QueryProps) {
                       !(definition instanceof ASTArrowQueryDefinition)
                     }
                   />
+                  {monaco && modelDef ? (
+                    <DropdownMenuItem
+                      icon="malloy"
+                      label="Convert to Malloy"
+                      onClick={() => {
+                        setQuery(rootQuery.toMalloy());
+                      }}
+                    />
+                  ) : null}
                 </>
               ) : (
                 <></>

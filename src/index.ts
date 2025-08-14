@@ -6,6 +6,7 @@
  */
 
 import './stylex.css';
+
 export {MalloyExplorerProvider} from './components/MalloyExplorerProvider';
 export {QueryActionBar, QueryEditor, QueryPanel} from './components/QueryPanel';
 export {ResultPanel} from './components/ResultPanel';
@@ -21,3 +22,6 @@ export type {
 export {SourcePanel} from './components/SourcePanel';
 export {ResizeBar} from './components/primitives';
 export {ResizableCollapsiblePanel} from './components/ResizableCollapsiblePanel';
+export {CodeEditorContext} from './components/CodeEditor';
+
+export {modelDefToModelInfo, malloyToQuery} from '@malloydata/malloy';

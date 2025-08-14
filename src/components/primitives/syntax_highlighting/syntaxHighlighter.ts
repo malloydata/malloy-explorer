@@ -1,6 +1,5 @@
 import {MALLOY_GRAMMAR} from './malloyGrammar';
 import getTransformers, {TransformerOptions} from './transformers/transformers';
-
 import {
   createHighlighterCore,
   HighlighterCore,
@@ -26,7 +25,7 @@ export type SupportedTheme = 'light-plus' | 'dark-plus';
 type HighlighterOptions = {} & TransformerOptions;
 
 let highlighter: Promise<HighlighterCore>;
-function getHighlighter() {
+export function getHighlighter() {
   if (highlighter) {
     return highlighter;
   }

@@ -175,6 +175,7 @@ function RenderedResult({result, source}: RenderedResultProps) {
   useEffect(() => {
     if (vizContainer.current && viz) {
       viz.setResult(result);
+      vizContainer.current.innerHTML = '';
       viz.render(vizContainer.current);
     }
   }, [viz, result]);

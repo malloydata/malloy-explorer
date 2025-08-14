@@ -30,6 +30,7 @@ export default [
       '**/build/',
       '**/malloy-samples/',
       'babel.config.cjs',
+      'jest.config.cjs',
     ],
   },
   ...fixupConfigRules(

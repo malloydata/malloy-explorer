@@ -9,7 +9,13 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/test/jest.setup.ts'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   testMatch: ['<rootDir>/src/**/?(*.)spec.(ts|js)?(x)'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/', '/dev/', '/src/test/'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/dist/',
+    '<rootDir>/dev/',
+    '<rootDir>/src/test/',
+    '<rootDir>/malloy-samples/',
+  ],
   transform: {
     '^.+\\.tsx?$': ['babel-jest'],
   },

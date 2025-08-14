@@ -17,13 +17,20 @@ import {UpdateQueryContext} from '../hooks/useQueryUpdate';
 import {SearchValueMapResult, TopValuesContext} from '../hooks/useTopValues';
 
 export interface MalloyExplorerProviderProps {
+  /** Malloy source to extend for query */
   source: Malloy.SourceInfo;
-  query?: Malloy.Query;
-  onQueryChange?: (query: Malloy.Query | undefined) => void;
+  /** Current query state */
+  query?: Malloy.Query | string;
+  /** Callback for editor changes */
+  onQueryChange?: (query: Malloy.Query | string | undefined) => void;
+  /** Currently focused nest element */
   focusedNestViewPath: string[];
+  /** Callback for user selecting focussed element */
   onFocusedNestViewPathChange: (path: string[]) => void;
-  children: ReactNode | ReactNode[];
+  children: ReactNode;
+  /** Search index result values for suggestions */
   topValues?: SearchValueMapResult[];
+  /** Default drill behavior override callback */
   onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
 }
 
@@ -58,6 +65,7 @@ export function MalloyExplorerProvider({
                 rootQuery,
                 setQuery: onQueryChange,
                 onDrill,
+                query,
               }}
             >
               {children}

@@ -36,8 +36,8 @@ type ResultPanelOptions = {
 
 export interface ResultPanelProps {
   source: Malloy.SourceInfo;
-  draftQuery?: Malloy.Query;
-  setDraftQuery: (query: Malloy.Query) => void;
+  draftQuery?: Malloy.Query | string;
+  setDraftQuery: (query: Malloy.Query | string) => void;
   submittedQuery?: SubmittedQuery;
   options?: ResultPanelOptions;
 }
@@ -73,6 +73,10 @@ export default function ResultPanel({
     return null;
   })();
 
+  const showMalloy = typeof draftQuery === 'object';
+  const showStableQuery =
+    options?.showRawQuery && typeof draftQuery === 'object';
+
   return draftQuery || submittedQuery ? (
     <Root
       {...stylex.props(styles.tabRoot, fontStyles.body)}
@@ -97,12 +101,14 @@ export default function ResultPanel({
           >
             {Tab.RESULTS}
           </Trigger>
-          <Trigger
-            value={Tab.MALLOY}
-            {...stylex.props(fontStyles.body, styles.tab)}
-          >
-            {Tab.MALLOY}
-          </Trigger>
+          {showMalloy && (
+            <Trigger
+              value={Tab.MALLOY}
+              {...stylex.props(fontStyles.body, styles.tab)}
+            >
+              {Tab.MALLOY}
+            </Trigger>
+          )}
           <Trigger
             value={Tab.SQL}
             disabled={!submittedQueryExists}
@@ -119,7 +125,7 @@ export default function ResultPanel({
           >
             {Tab.SQL}
           </Trigger>
-          {options?.showRawQuery && (
+          {showStableQuery && (
             <Trigger
               value={Tab.RAW_QUERY}
               {...stylex.props(fontStyles.body, styles.tab)}
@@ -185,13 +191,13 @@ export default function ResultPanel({
             />
           )}
         </Content>
-        {options?.showRawQuery && (
+        {showStableQuery && (
           <Content
             value={Tab.RAW_QUERY}
             {...stylex.props(styles.content, styles.codeContent)}
           >
             <DebugPane
-              query={draftQuery as Malloy.Query}
+              query={draftQuery}
               debug={
                 options.debugOptions
                   ? {
@@ -213,7 +219,10 @@ export default function ResultPanel({
   );
 }
 
-function queriesAreEqual(one: Malloy.Query, two: Malloy.Query) {
+function queriesAreEqual(
+  one: Malloy.Query | string,
+  two: Malloy.Query | string
+) {
   return JSON.stringify(one) === JSON.stringify(two);
 }
 

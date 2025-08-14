@@ -6,13 +6,19 @@
  */
 
 import * as Malloy from '@malloydata/malloy-interfaces';
-import {API, URLReader} from '@malloydata/malloy';
+import {
+  API,
+  malloyToQuery,
+  ModelDef,
+  SingleConnectionRuntime,
+  URLReader,
+} from '@malloydata/malloy';
 import {DuckDBWASMConnection} from '@malloydata/db-duckdb/wasm';
 
 class Fetcher implements API.LookupConnection<API.Connection>, URLReader {
   private registeredTables: Record<string, boolean> = {};
-  private duckdb: DuckDBWASMConnection;
   private connection: API.Connection;
+  duckdb: DuckDBWASMConnection;
 
   constructor(private url: URL) {
     this.duckdb = new DuckDBWASMConnection('duckdb', null, 'malloy');
@@ -25,7 +31,7 @@ class Fetcher implements API.LookupConnection<API.Connection>, URLReader {
     return result.text();
   }
 
-  async lookupConnection(): Promise<API.Connection> {
+  async lookupConnection(_: string): Promise<API.Connection> {
     return this.connection;
   }
 
@@ -76,17 +82,32 @@ export async function compileMalloy(url: URL): Promise<Malloy.ModelInfo> {
   throw new Error('Unable to compile model');
 }
 
-export async function runQuery(url: URL, query: Malloy.Query) {
+export async function runQuery(url: URL, query: Malloy.Query | string) {
   const fetcher = getFetcher(url);
 
   return API.asynchronous.runQuery(
     {
       model_url: url.toString(),
-      query,
+      query: typeof query === 'string' ? undefined : query,
+      query_malloy: typeof query !== 'string' ? undefined : query,
     },
     {
       connections: fetcher,
       urls: fetcher,
     }
   );
+}
+
+export async function initCodeEditorContext(url: URL): Promise<ModelDef> {
+  const fetcher = getFetcher(url);
+  const runtime = new SingleConnectionRuntime({
+    urlReader: fetcher,
+    connection: fetcher.duckdb,
+  });
+  const model = await runtime.getModel(url);
+  return model._modelDef;
+}
+
+export function malloyToStableQuery(malloy: string) {
+  return malloyToQuery(malloy);
 }

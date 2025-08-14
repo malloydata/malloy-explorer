@@ -10,7 +10,7 @@ export const EXECUTION_STATES = {
 export type QueryExecutionState = keyof typeof EXECUTION_STATES;
 
 export type SubmittedQuery = {
-  query: Malloy.Query;
+  query: Malloy.Query | string;
   executionState: QueryExecutionState;
   queryResolutionStartMillis: number;
   onCancel: () => void;

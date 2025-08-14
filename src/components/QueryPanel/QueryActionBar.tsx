@@ -26,18 +26,27 @@ import {useQueryFocus} from '../MalloyQueryFocusProvider';
  */
 export interface QueryActionBarProps {
   runQuery: (source: Malloy.SourceInfo, query: Malloy.Query) => void;
+  runQueryString?: (source: Malloy.SourceInfo, query: string) => void;
 }
 
-export function QueryActionBar({runQuery}: QueryActionBarProps) {
-  const {rootQuery, setQuery, source} = useContext(QueryEditorContext);
+export function QueryActionBar({
+  runQuery,
+  runQueryString,
+}: QueryActionBarProps) {
+  const {query, rootQuery, setQuery, source} = useContext(QueryEditorContext);
+
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
 
   const {focusMainView} = useQueryFocus();
 
   const isQueryEmpty = !rootQuery || rootQuery.isEmpty();
-  const isRunEnabled = rootQuery?.isRunnable();
+  const isRunEnabled =
+    rootQuery?.isRunnable() ||
+    (typeof query === 'string' && query.trim().length > 0);
   const onRunQuery = () => {
-    if (source && rootQuery) {
+    if (typeof query === 'string' && runQueryString) {
+      runQueryString(source, query);
+    } else if (rootQuery) {
       runQuery(source, rootQuery.build());
     }
   };
@@ -52,9 +61,11 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
         <Button
           onClick={() => {
             focusMainView();
-            setQuery(undefined);
+            setQuery?.(undefined);
           }}
-          isDisabled={!rootQuery || rootQuery.isEmpty()}
+          isDisabled={
+            (!rootQuery || rootQuery?.isEmpty()) && typeof query !== 'string'
+          }
           label="Clear"
           variant="flat"
           size="compact"
@@ -85,7 +96,7 @@ export function QueryActionBar({runQuery}: QueryActionBarProps) {
         {onCollapse && (
           <Button
             icon="sidebarCollapse"
-            tooltip="Close the source panel"
+            tooltip="Close the query panel"
             onClick={onCollapse}
             size="compact"
             variant="flat"
