@@ -10,7 +10,7 @@ import * as monaco from 'monaco-editor-core';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import '../src/components/CodeEditor/monaco/monaco_worker';
 import stylex from '@stylexjs/stylex';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {
   QueryPanel,
@@ -22,7 +22,7 @@ import {
   CodeEditorContext,
 } from '../src';
 import {topValues} from './sample_models/example_top_values';
-import {initCodeEditorContext, runQuery, runRawQuery} from './utils/runtime';
+import {initCodeEditorContext, runQuery} from './utils/runtime';
 import {malloyToQuery, ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
 
 const modelUri = new URL(
@@ -48,6 +48,28 @@ const App = () => {
     };
     compile();
   }, []);
+
+  const onRunQuery = useCallback(
+    (_source: Malloy.SourceInfo, query: Malloy.Query | string) => {
+      const submittedQuery = {
+        executionState: 'compiling' as const,
+        query,
+        queryResolutionStartMillis: Date.now(),
+        onCancel: () => {},
+      };
+      setSubmittedQuery(submittedQuery);
+      runQuery(modelUri, query).then(({result}) =>
+        setSubmittedQuery({
+          ...submittedQuery,
+          executionState: 'finished' as const,
+          response: {
+            result,
+          },
+        })
+      );
+    },
+    []
+  );
 
   if (!model || !source) {
     return null;
@@ -84,44 +106,7 @@ const App = () => {
                 icon="filterSliders"
                 title="Query"
               >
-                <QueryPanel
-                  runQuery={(_source, query) => {
-                    const submittedQuery = {
-                      executionState: 'compiling' as const,
-                      query,
-                      queryResolutionStartMillis: Date.now(),
-                      onCancel: () => {},
-                    };
-                    setSubmittedQuery(submittedQuery);
-                    runQuery(modelUri, query).then(({result}) =>
-                      setSubmittedQuery({
-                        ...submittedQuery,
-                        executionState: 'finished' as const,
-                        response: {
-                          result,
-                        },
-                      })
-                    );
-                  }}
-                  runRawQuery={(_source, query) => {
-                    const submittedQuery = {
-                      executionState: 'compiling' as const,
-                      query,
-                      queryResolutionStartMillis: Date.now(),
-                      onCancel: () => {},
-                    };
-                    setSubmittedQuery(submittedQuery);
-                    runRawQuery(modelUri, query).then(({result}) =>
-                      setSubmittedQuery({
-                        ...submittedQuery,
-                        executionState: 'finished' as const,
-                        response: {
-                          result,
-                        },
-                      })
-                    );
-                  }}
-                />
+                <QueryPanel runQuery={onRunQuery} runQueryString={onRunQuery} />
               </ResizableCollapsiblePanel>
               <ResultPanel
                 source={source}

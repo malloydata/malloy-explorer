@@ -8,7 +8,6 @@
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {
   API,
-  MalloyError,
   malloyToQuery,
   ModelDef,
   SingleConnectionRuntime,
@@ -83,13 +82,14 @@ export async function compileMalloy(url: URL): Promise<Malloy.ModelInfo> {
   throw new Error('Unable to compile model');
 }
 
-export async function runQuery(url: URL, query: Malloy.Query) {
+export async function runQuery(url: URL, query: Malloy.Query | string) {
   const fetcher = getFetcher(url);
 
   return API.asynchronous.runQuery(
     {
       model_url: url.toString(),
-      query,
+      query: typeof query === 'string' ? undefined : query,
+      query_malloy: typeof query !== 'string' ? undefined : query,
     },
     {
       connections: fetcher,
@@ -97,64 +97,6 @@ export async function runQuery(url: URL, query: Malloy.Query) {
     }
   );
 }
-
-export async function runRawQuery(
-  url: URL,
-  query: string
-): Promise<Malloy.CompileQueryResponse> {
-  const fetcher = getFetcher(url);
-  const runtime = new SingleConnectionRuntime({
-    urlReader: fetcher,
-    connection: fetcher.duckdb,
-  });
-  const modelMaterializer = runtime.loadModel(url);
-  const queryMaterializer = modelMaterializer.loadQuery(query, {
-    noThrowOnError: true,
-  });
-  try {
-    const result = await queryMaterializer.run();
-    return {result: API.util.wrapResult(result)};
-  } catch (error) {
-    if (error instanceof MalloyError) {
-      return {
-        logs: error.problems.map(problem => {
-          const {at, severity, message} = problem;
-          const {url, range} = at || EMPTY_LOCATION;
-          return {
-            url,
-            range,
-            severity,
-            message,
-          };
-        }),
-      };
-    } else {
-      return {
-        logs: [
-          {
-            ...EMPTY_LOCATION,
-            severity: 'error',
-            message: error instanceof Error ? error.message : String(error),
-          },
-        ],
-      };
-    }
-  }
-}
-
-const EMPTY_LOCATION = {
-  url: '',
-  range: {
-    start: {
-      line: 0,
-      character: 0,
-    },
-    end: {
-      line: 0,
-      character: 0,
-    },
-  },
-};
 
 export async function initCodeEditorContext(url: URL): Promise<ModelDef> {
   const fetcher = getFetcher(url);
