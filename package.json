@@ -33,7 +33,7 @@
     "malloy-unlink": "npm --no-fund --no-save --no-audit unlink $(./scripts/malloy-packages.ts) && npm --no-fund --no-audit install --force",
     "malloy-build-and-link": "cd ../malloy && npm run -ws build --workspace=@malloydata/malloy-query-builder --workspace=@malloydata/malloy-filter --workspace=@malloydata/malloy-interfaces --workspace=@malloydata/malloy-tag && npm link -ws",
     "prepublishOnly": "npm run build",
-    "test": "jest src"
+    "test": "jest --config jest.config.cjs"
   },
   "bin": {
     "malloy-packages": "./scripts/malloy-packages.ts"
