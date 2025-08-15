@@ -6,6 +6,7 @@
  */
 
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {backgroundColors, utility} from './colors.stylex';
 import * as React from 'react';
 import {fontStyles} from './styles';
 
@@ -24,9 +25,8 @@ export function HoverCard({children, customStyle}: HoverCardProps) {
 
 const styles = stylex.create({
   container: {
-    boxShadow:
-      '0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 2px 12px 0 rgba(0, 0, 0, 0.1)',
-    backgroundColor: 'white',
+    boxShadow: utility.elevationMedium,
+    backgroundColor: backgroundColors.surface,
     borderRadius: '12px',
     padding: '12px',
 

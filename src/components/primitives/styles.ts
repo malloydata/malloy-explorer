@@ -6,21 +6,23 @@
  */
 
 import stylex from '@stylexjs/stylex';
+import {backgroundColors, textColors, utility} from './colors.stylex';
 
 export const tooltipStyles = stylex.create({
   default: {
     padding: '4px 8px',
     borderRadius: '12px',
-    color: 'rgba(221, 226, 232, 1)',
-    backgroundColor: 'rgba(37, 54, 63, 1)',
+    color: textColors.tooltip,
+    backgroundColor: backgroundColors.tooltip,
     maxWidth: '360px',
-    boxShadow:
-      '0px 2px 12px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.1)',
+    boxShadow: utility.elevationSmall,
     zIndex: 2,
   },
   card: {
     width: 'var(--radix-tooltip-trigger-width)',
     maxHeight: 'var(--radix-tooltip-content-available-height)',
+    backgroundColor: backgroundColors.surface,
+    boxShadow: utility.elevationSmall,
     zIndex: 2,
   },
 });
@@ -28,7 +30,7 @@ export const tooltipStyles = stylex.create({
 export const fontStyles = stylex.create({
   largeEmphasized: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
-    color: 'rgba(5, 5, 5, 1)',
+    color: textColors.primary,
     fontWeight: 700,
     fontSize: '16px',
     lineHeight: '24px',
@@ -36,7 +38,7 @@ export const fontStyles = stylex.create({
   },
   largeBody: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
-    color: 'rgba(5, 5, 5, 1)',
+    color: textColors.primary,
     fontWeight: 400,
     fontSize: '16px',
     lineHeight: '20px',
@@ -44,7 +46,7 @@ export const fontStyles = stylex.create({
   },
   emphasized: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
-    color: 'rgba(5, 5, 5, 1)',
+    color: textColors.primary,
     fontWeight: 700,
     fontSize: '14px',
     lineHeight: '20px',
@@ -52,7 +54,7 @@ export const fontStyles = stylex.create({
   },
   body: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
-    color: 'rgba(5, 5, 5, 1)',
+    color: textColors.primary,
     fontWeight: 400,
     fontSize: '14px',
     lineHeight: '20px',
@@ -60,7 +62,7 @@ export const fontStyles = stylex.create({
   },
   link: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
-    color: 'rgba(0, 100, 224, 1)',
+    color: textColors.link,
     fontWeight: 400,
     fontSize: '14px',
     lineHeight: '20px',
@@ -68,7 +70,7 @@ export const fontStyles = stylex.create({
   },
   supporting: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
-    color: 'rgba(5, 5, 5, 1)',
+    color: textColors.primary,
     fontWeight: 400,
     fontSize: '12px',
     lineHeight: '16px',
@@ -84,7 +86,7 @@ export const fontStyles = stylex.create({
   },
   tooltipText: {
     fontFamily: 'SF Pro Text, -apple-system, system-ui, sans-serif',
-    color: 'rgba(221, 226, 232, 1)',
+    color: textColors.tooltip,
     fontSize: '14px',
     fontStyle: 'normal',
     fontWeight: 400,

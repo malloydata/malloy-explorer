@@ -18,7 +18,7 @@ import {
 import {Button, Icon} from '../primitives';
 import ViewAttributeTable from '../ResultPanel/ViewAttributeTable';
 import {useState} from 'react';
-import {textColors} from '../primitives/colors.stylex';
+import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {ViewParent} from '../utils/fields';
 
 export interface ViewProps {
@@ -79,7 +79,7 @@ const styles = stylex.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     borderRadius: '4px',
-    background: 'rgba(230, 235, 239, 1)',
+    background: backgroundColors.surfaceToken,
     height: 'auto',
     paddingBottom: 8,
     paddingLeft: 8,
@@ -103,7 +103,7 @@ const styles = stylex.create({
     borderWidth: 0,
     position: 'relative',
     overflow: 'hidden',
-    background: 'rgba(230, 235, 239, 1)',
+    background: backgroundColors.surfaceToken,
     width: '100%',
   },
   headerTitle: {
@@ -114,7 +114,7 @@ const styles = stylex.create({
   preview: {
     height: 'auto',
     maxHeight: 200,
-    background: '#fff',
+    background: backgroundColors.surface,
     borderRadius: 4,
   },
 });

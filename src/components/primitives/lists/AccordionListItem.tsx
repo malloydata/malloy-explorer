@@ -8,7 +8,7 @@
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../styles';
-import {textColors} from '../colors.stylex';
+import {backgroundColors, textColors} from '../colors.stylex';
 import {AccordionListContext} from './AccordionListContext';
 
 export interface AccordionListItemProps {
@@ -119,7 +119,7 @@ const styles = stylex.create({
     flexGrow: 1,
     padding: '4px 12px',
     gap: '4px',
-    backgroundColor: 'rgba(241, 244, 247, 1)',
+    backgroundColor: backgroundColors.surfaceSubtle,
     overflow: 'auto',
   },
 });

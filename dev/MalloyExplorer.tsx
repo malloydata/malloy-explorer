@@ -10,6 +10,7 @@ import * as monaco from 'monaco-editor-core';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import '../src/components/CodeEditor/monaco/monaco_worker';
 import stylex from '@stylexjs/stylex';
+import {darkThemes} from '../src/components/primitives/colors.stylex';
 import {useCallback, useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {
@@ -88,7 +89,7 @@ const App = () => {
           onFocusedNestViewPathChange={setFocusedNestViewPath}
           topValues={topValues}
         >
-          <div {...stylex.props(styles.page)}>
+          <div {...stylex.props(styles.page, ...darkThemes)}>
             <div {...stylex.props(styles.content)}>
               <ResizableCollapsiblePanel
                 isInitiallyExpanded={true}
@@ -134,7 +135,7 @@ const styles = stylex.create({
   },
   banner: {
     height: '30px',
-    backgroundColor: 'rgba(225, 240, 255, 1)',
+    backgroundColor: 'transparent',
     display: 'flex',
     padding: '2px 10px',
     alignItems: 'center',

@@ -277,10 +277,7 @@ const styles = stylex.create({
     color: colors.disabledText,
     cursor: 'initial',
   },
-  contentContainer: {
-    flexGrow: '1',
-    overflow: 'hidden',
-  },
+  contentContainer: {flexGrow: '1', overflow: 'hidden'},
   content: {
     padding: '12px',
     width: '100%',

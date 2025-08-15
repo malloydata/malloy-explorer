@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from './primitives/colors.stylex';
 import {Button, IconType} from './primitives';
 import {fontStyles} from './primitives/styles';
 import {ResizableCollapsiblePanelContext} from '../contexts/ResizableCollapsiblePanelContext';
@@ -49,8 +50,8 @@ const styles = stylex.create({
     alignItems: 'start',
     justifyContent: 'start',
     height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    borderRight: '1px solid #C8CCD2',
+    backgroundColor: backgroundColors.app,
+    borderRight: '1px solid ' + (backgroundColors.divider as unknown as string),
   },
   content: {
     display: 'flex',

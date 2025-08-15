@@ -18,7 +18,7 @@ import {
   AccordionListItem,
 } from '../primitives';
 import * as Toast from '@radix-ui/react-toast';
-import {textColors} from '../primitives/colors.stylex';
+import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
 import {sourceToFieldItems} from './utils';
 import SearchResultList from './SearchResultList';
@@ -200,8 +200,8 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    borderRight: '1px solid #C8CCD2',
+    backgroundColor: backgroundColors.app,
+    borderRight: '1px solid ' + backgroundColors.divider,
   },
   header: {
     display: 'flex',

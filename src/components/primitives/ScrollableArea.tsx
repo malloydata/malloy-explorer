@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from './colors.stylex';
 import {
   Corner,
   Root,
@@ -70,7 +71,7 @@ const styles = stylex.create({
   },
   scrollbar: {
     display: 'flex',
-    background: '#D0D3D7',
+    background: backgroundColors.controlActive,
     opacity: scrollbarVars.opacity,
     transition: 'opacity 0.5s ease',
   },
@@ -85,11 +86,11 @@ const styles = stylex.create({
   },
   thumb: {
     flex: 1,
-    background: '#0A1317',
+    background: backgroundColors.gray,
     borderRadius: '4px',
   },
   corner: {
-    background: '#D0D3D7',
+    background: backgroundColors.controlActive,
     opacity: cornerVars.opacity,
     transition: 'opacity 0.5s ease',
   },

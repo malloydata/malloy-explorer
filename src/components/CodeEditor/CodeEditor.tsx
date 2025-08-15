@@ -9,6 +9,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as Monaco from './monaco/monaco_shim';
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from '../primitives/colors.stylex';
 import {initMonaco} from './monaco/monaco';
 import {diagnostics, registerModel} from './lsp';
 import {styles as componentStyles} from '../styles';
@@ -152,7 +153,7 @@ export default function CodeEditor({
 const styles = stylex.create({
   container: {
     paddingTop: 4,
-    borderTop: '1px solid #CCD3DB',
+    borderTop: '1px solid ' + (backgroundColors.divider as unknown as string),
     width: '100%',
     height: 'calc(100% - 4px)',
     display: 'flex',

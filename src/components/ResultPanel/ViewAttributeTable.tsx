@@ -86,7 +86,7 @@ const styles = stylex.create({
     padding: '8px',
     gap: '8px',
     borderRadius: '10px',
-    backgroundColor: backgroundColors.washOnWeb,
+    backgroundColor: backgroundColors.surfaceSubtle,
     boxSizing: 'border-box',
     width: '100%',
     height: '200px',

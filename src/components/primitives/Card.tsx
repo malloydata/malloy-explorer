@@ -35,7 +35,7 @@ const styles = stylex.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    background: '#FFFFFF',
+    background: backgroundColors.surface,
     borderRadius: '12px',
     borderStyle: 'solid',
     borderWidth: '1px',

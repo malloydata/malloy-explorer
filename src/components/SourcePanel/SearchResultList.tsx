@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from '../primitives/colors.stylex';
 import {
   FIELD_KIND_TO_TITLE,
   FieldItem,
@@ -102,7 +103,7 @@ const styles = stylex.create({
     alignItems: 'flex-start',
     gap: '16px',
     padding: '8px',
-    backgroundColor: 'rgba(241, 244, 247, 1)',
+    backgroundColor: backgroundColors.surfaceSubtle,
   },
   heading: {
     fontWeight: 700,
