@@ -7,21 +7,12 @@
 
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
-import {utility, backgroundColors} from './colors.stylex';
+import SpinnerSVG from '../../assets/ui/spinner.svg?react';
 
 const SIZES = {
-  large: {
-    border: 3,
-    diameter: 18,
-  },
-  medium: {
-    border: 3,
-    diameter: 14,
-  },
-  small: {
-    border: 3,
-    diameter: 10,
-  },
+  large: 25,
+  medium: 20,
+  small: 15,
 };
 
 type SpinnerSize = keyof typeof SIZES;
@@ -32,69 +23,19 @@ interface SpinnerProps {
   customStyle?: StyleXStyles;
 }
 
-const SPREAD = 0.75;
-const START_POINT = 1.5;
-const INACTIVE_COLOR = utility.spinnerTrack;
-const ACTIVE_COLOR = backgroundColors.brandDefault;
-
 export default function Spinner({size, customStyle}: SpinnerProps) {
-  const ref = React.useRef<HTMLCanvasElement>(null);
-
-  React.useEffect(() => {
-    const canvas = ref.current;
-    if (canvas != null) {
-      const context = canvas.getContext('2d');
-
-      if (!context) {
-        return;
-      }
-
-      const {border, diameter} = SIZES[size];
-      const pixelRatio = window.devicePixelRatio || 1;
-      const radius = (diameter / 2) * pixelRatio;
-      const lineWidth = border * pixelRatio;
-      const frameSize = (radius + lineWidth) * 2;
-
-      canvas.height = canvas.width = frameSize;
-      canvas.style.width = canvas.style.height = frameSize / pixelRatio + 'px';
-
-      context.lineCap = 'round';
-      context.lineWidth = lineWidth;
-
-      const center = frameSize / 2;
-
-      context.beginPath();
-      context.arc(center, center, radius, 0, 2 * Math.PI);
-      context.strokeStyle = INACTIVE_COLOR;
-      context.stroke();
-
-      context.beginPath();
-      context.arc(
-        center,
-        center,
-        radius,
-        START_POINT * Math.PI,
-        ((START_POINT + SPREAD) % 2) * Math.PI
-      );
-      context.strokeStyle = ACTIVE_COLOR;
-      context.stroke();
-    }
-  }, [size]);
-
-  const {border, diameter} = SIZES[size];
-  const frameSize = diameter + border * 2;
   return (
     <div {...stylex.props(styles.root, customStyle)}>
       <span
         aria-valuetext="Loading"
         {...stylex.props(styles.spinner)}
         role="progressbar"
-        style={{
-          height: frameSize,
-          width: frameSize,
-        }}
       >
-        <canvas {...stylex.props(styles.canvas, styles.animated)} ref={ref} />
+        <SpinnerSVG
+          {...stylex.props(styles.spinner, styles.animated)}
+          width={SIZES[size]}
+          height={SIZES[size]}
+        />
       </span>
     </div>
   );
@@ -111,15 +52,11 @@ const rotation = stylex.keyframes({
 
 const styles = stylex.create({
   animated: {
-    animationDuration: '750ms',
+    animationDuration: '2s',
     animationIterationCount: 'infinite',
     animationName: rotation,
     animationTimingFunction: 'linear',
     willChange: 'transform',
-  },
-  canvas: {
-    backfaceVisibility: 'hidden',
-    display: 'block',
   },
   root: {
     alignItems: 'center',
