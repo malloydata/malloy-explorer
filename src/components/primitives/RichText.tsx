@@ -1,5 +1,6 @@
 import React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {textColors} from './colors.stylex';
 
 interface RichTextProps extends React.ComponentProps<'div'> {
   children: string;
@@ -56,6 +57,6 @@ const styles = stylex.create({
     wordWrap: 'break-word',
   },
   link: {
-    color: 'rgb(62, 158, 251) !important',
+    color: (textColors.link as unknown as string) + ' !important',
   },
 });

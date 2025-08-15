@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {utility, backgroundColors} from './colors.stylex';
 
 const SIZES = {
   large: {
@@ -33,8 +34,8 @@ interface SpinnerProps {
 
 const SPREAD = 0.75;
 const START_POINT = 1.5;
-const INACTIVE_COLOR = 'rgba(0, 0, 0, 0.1)';
-const ACTIVE_COLOR = 'rgba(0, 100, 224, 1)';
+const INACTIVE_COLOR = utility.spinnerTrack as unknown as string;
+const ACTIVE_COLOR = backgroundColors.brandDefault as unknown as string;
 
 export default function Spinner({size, customStyle}: SpinnerProps) {
   const ref = React.useRef<HTMLCanvasElement>(null);

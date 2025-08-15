@@ -48,7 +48,7 @@ export function TopValuesTable({field, path}: TopValuesTableProps) {
 
 const styles = stylex.create({
   topValues: {
-    backgroundColor: backgroundColors.washOnWeb,
+    backgroundColor: backgroundColors.surfaceSubtle,
     paddingTop: 4,
     paddingBottom: 4,
     paddingLeft: 8,

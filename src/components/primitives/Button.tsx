@@ -9,7 +9,7 @@ import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {IconType} from './utils/icon';
 import Icon from './Icon';
-import {iconColors, textColors} from './colors.stylex';
+import {backgroundColors, iconColors, textColors} from './colors.stylex';
 import {iconVars, labelVars} from './button.stylex';
 import {fontStyles, tooltipStyles} from './styles';
 import {
@@ -162,7 +162,7 @@ const styles = stylex.create({
     position: 'absolute',
     left: '0px',
     right: '0px',
-    background: 'rgba(255, 255, 255, 0.5)',
+    background: backgroundColors.disabledOverlay,
     pointerEvents: 'none',
     borderRadius: '8px',
     width: '100%',
@@ -173,9 +173,9 @@ const styles = stylex.create({
 const colorVariants = stylex.create({
   default: {
     background: {
-      default: 'rgba(230, 235, 239, 1)',
-      ':hover': 'rgba(221, 226, 232, 1)',
-      ':active': 'rgba(204, 211, 219, 1)',
+      default: backgroundColors.controlDefault,
+      ':hover': backgroundColors.controlHover,
+      ':active': backgroundColors.controlActive,
     },
     [iconVars.color]: {
       default: iconColors.primary,
@@ -189,8 +189,8 @@ const colorVariants = stylex.create({
   flat: {
     background: {
       default: 'transparent',
-      ':hover': 'rgba(0, 0, 0, 0.05)',
-      ':active': 'rgba(0, 0, 0, 0.1)',
+      ':hover': backgroundColors.overlayHover,
+      ':active': backgroundColors.overlayActive,
     },
     [iconVars.color]: {
       default: iconColors.primary,
@@ -203,9 +203,9 @@ const colorVariants = stylex.create({
   },
   primary: {
     background: {
-      default: 'rgba(0, 100, 224, 1)',
-      ':hover': 'rgba(4, 87, 203, 1)',
-      ':active': 'rgba(0, 76, 188, 1)',
+      default: backgroundColors.brandDefault,
+      ':hover': backgroundColors.brandHover,
+      ':active': backgroundColors.brandActive,
     },
     [iconVars.color]: {
       default: iconColors.primaryOnMedia,

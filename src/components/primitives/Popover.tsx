@@ -7,6 +7,7 @@
 
 import React, {ReactNode, RefObject, useRef} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {backgroundColors} from './colors.stylex';
 import * as RadixPopover from '@radix-ui/react-popover';
 
 // Define a type for the placement options that matches what was used with Popper.js
@@ -44,10 +45,10 @@ const styleX = stylex.create({
     position: 'relative',
   },
   popoverContent: {
-    border: '1px solid var(--malloy-composer-menu-border, #ececed)',
+    border: '1px solid var(--malloy-composer-menu-border, ' + (backgroundColors.divider as unknown as string) + ')',
     borderRadius: '4px',
     boxShadow: '0px 1px 5px 1px #0000001a',
-    backgroundColor: 'var(--malloy-composer-menu-background, white)',
+    backgroundColor: 'var(--malloy-composer-menu-background, ' + (backgroundColors.surface as unknown as string) + ')',
     fontSize: 'var(--malloy-composer-menu-fontSize, 14px)',
   },
 });

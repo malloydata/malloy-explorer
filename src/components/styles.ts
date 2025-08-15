@@ -6,6 +6,7 @@
  */
 
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from './primitives/colors.stylex';
 
 export const styles = stylex.create({
   icon: {
@@ -31,7 +32,7 @@ export const styles = stylex.create({
     padding: 5,
   },
   queryCard: {
-    border: '1px solid #CCD3DB',
+    border: '1px solid ' + (backgroundColors.divider as unknown as string),
     borderRadius: 5,
     padding: 8,
   },
@@ -58,7 +59,7 @@ export const styles = stylex.create({
     gap: 8,
   },
   token: {
-    backgroundColor: '#E6EBEF',
+    backgroundColor: backgroundColors.surfaceToken,
     borderRadius: 5,
     padding: '2px 12px 2px 6px',
     display: 'flex',
@@ -66,7 +67,7 @@ export const styles = stylex.create({
     alignItems: 'center',
   },
   tooltip: {
-    backgroundColor: '#E6EBEF',
+    backgroundColor: backgroundColors.surfaceToken,
     borderRadius: 5,
     padding: '2px 12px 2px 6px',
     display: 'flex',

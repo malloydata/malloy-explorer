@@ -12,6 +12,7 @@ import {hoverStyles} from './hover.stylex';
 import {styles as commonStyles} from '../../styles';
 import {FieldMenu} from '../AddMenu/FieldMenu';
 import stylex from '@stylexjs/stylex';
+import {textColors} from '../../primitives/colors.stylex';
 import {isNotAnnotatedFilteredField, ViewParent} from '../../utils/fields';
 import {getSegmentIfPresent} from '../../utils/segment';
 
@@ -80,7 +81,7 @@ export function OperationActionTitle({
 const styles = stylex.create({
   action: {
     background: 'transparent',
-    color: '#0064E0',
+    color: textColors.link,
     marginLeft: 16,
     cursor: 'pointer',
   },

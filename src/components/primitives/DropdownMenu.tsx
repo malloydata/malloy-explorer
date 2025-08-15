@@ -12,7 +12,7 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
 import {Icon, IconType} from '.';
 import {fontStyles, tooltipStyles} from './styles';
-import {iconColors, textColors} from './colors.stylex';
+import {backgroundColors, iconColors, textColors, utility} from './colors.stylex';
 import {iconVars, labelVars, sublabelVars} from './dropdown-menu.stylex';
 
 type DropdownMenuChild =
@@ -204,9 +204,8 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     borderRadius: '10px',
-    background: 'rgba(255, 255, 255, 1)',
-    boxShadow:
-      '0px 2px 12px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.1)',
+    background: backgroundColors.surface,
+    boxShadow: utility.elevationSmall,
     padding: '4px',
   },
   item: {
@@ -217,9 +216,7 @@ const styles = stylex.create({
     borderRadius: '6px',
     cursor: 'pointer',
     outline: 'none',
-    ':is([data-highlighted])': {
-      background: 'rgba(0, 0, 0, 0.05)',
-    },
+    ':is([data-highlighted])': {background: backgroundColors.overlayHover},
     ':is([data-disabled])': {
       cursor: 'not-allowed',
     },

@@ -6,13 +6,14 @@
  */
 
 import stylex from '@stylexjs/stylex';
+import {backgroundColors, textColors} from '../../primitives/colors.stylex';
 
 export const colors = stylex.defineVars({
-  accent: '#0064E0',
-  accentDeemphasized: '#0082FB32',
-  background: 'white',
+  accent: textColors.link as unknown as string,
+  accentDeemphasized: backgroundColors.accentDeemphasized as unknown as string,
+  background: backgroundColors.surface as unknown as string,
   shadowElevation: 'rgba(0, 0, 0, 0.10)',
-  hover: '#0000000D',
-  text: '#050505',
-  disabledText: '#A4B0BC',
+  hover: backgroundColors.overlayHover as unknown as string,
+  text: textColors.primary as unknown as string,
+  disabledText: textColors.disabled as unknown as string,
 });

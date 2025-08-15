@@ -8,6 +8,7 @@
 import * as React from 'react';
 import {useContext} from 'react';
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from '../primitives/colors.stylex';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {QueryActionBar} from './QueryActionBar';
 import {QueryEditor} from './QueryEditor';
@@ -42,7 +43,7 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    background: 'rgba(255, 255, 255, 1)',
-    borderRight: '1px solid rgba(204, 211, 219, 1)',
+    background: backgroundColors.app,
+    borderRight: '1px solid ' + (backgroundColors.divider as unknown as string),
   },
 });

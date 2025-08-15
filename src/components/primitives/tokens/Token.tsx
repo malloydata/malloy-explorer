@@ -162,6 +162,6 @@ const styles = stylex.create({
   },
   nonInteractive: {
     cursor: 'default',
-    background: backgroundColors.token,
+    background: backgroundColors.surfaceToken,
   },
 });
