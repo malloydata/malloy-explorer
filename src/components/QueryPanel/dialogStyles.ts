@@ -6,6 +6,11 @@
  */
 
 import stylex from '@stylexjs/stylex';
+import {
+  backgroundColors,
+  textColors,
+  utility,
+} from '../primitives/colors.stylex';
 
 export const dialogStyles = stylex.create({
   displayNone: {
@@ -28,24 +33,25 @@ export const dialogStyles = stylex.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid #e0e0e0',
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderButtomColor: backgroundColors.divider,
     lineHeight: '2.2em',
   },
   close: {
     border: 'none',
     background: {
       default: 'transparent',
-      ':hover': 'rgba(0, 0, 0, 0.05)',
-      ':active': 'rgba(0, 0, 0, 0.1)',
+      ':hover': backgroundColors.controlHover,
+      ':active': backgroundColors.controlActive,
     },
     borderRadius: 4,
   },
   content: {
     display: 'flex',
     flexDirection: 'column',
-    boxShadow:
-      '0 1px 2px 0 rgba(0, 0, 0, 0.1), 0 2px 12px 0 rgba(0, 0, 0, 0.1)',
-    backgroundColor: 'white',
+    boxShadow: utility.elevationMedium,
+    backgroundColor: backgroundColors.surface,
     borderRadius: 8,
     padding: 8,
     minWidth: 240,
@@ -66,8 +72,11 @@ export const dialogStyles = stylex.create({
     flexGrow: 1,
   },
   input: {
-    border: '1px solid #e0e0e0',
-    color: 'rgb(95, 99, 104)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: backgroundColors.divider,
+    color: textColors.primary,
+    backgroundColor: backgroundColors.surfaceSubtle,
     padding: '4px 8px 4px 8px',
     borderRadius: 5,
   },

@@ -6,11 +6,14 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {BookmarkedView} from './BookmarkedView';
 import stylex from '@stylexjs/stylex';
 import {fontStyles} from '../primitives/styles';
 import {hasExplorerFilterFieldAnnotation} from '../utils/annotations';
+import {backgroundColors} from '../primitives/colors.stylex';
+import {ThemeContext} from '../primitives/contexts/ThemeContext';
 
 export interface EmptyQueryDisplay {
   views: Array<Malloy.ViewInfo>;
@@ -21,8 +24,9 @@ export default function EmptyQueryDisplay({
   views,
   onSelectView,
 }: EmptyQueryDisplay) {
+  const {theme} = useContext(ThemeContext);
   return (
-    <div {...stylex.props(styles.page)}>
+    <div {...stylex.props(styles.page, theme)}>
       <div {...stylex.props(styles.pageChild)}>
         <div {...stylex.props(styles.header, fontStyles.emphasized)}>
           Start with a Bookmarked View
@@ -53,6 +57,7 @@ const styles = stylex.create({
     width: '100%',
     height: '100%',
     overflow: 'auto',
+    backgroundColor: backgroundColors.surface,
   },
   pageChild: {
     margin: 'auto',

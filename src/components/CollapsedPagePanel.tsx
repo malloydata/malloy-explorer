@@ -51,7 +51,9 @@ const styles = stylex.create({
     justifyContent: 'start',
     height: '100%',
     backgroundColor: backgroundColors.app,
-    borderRight: '1px solid ' + (backgroundColors.divider as unknown as string),
+    borderRightWidth: '1px',
+    borderRightStyle: 'solid',
+    borderRightBackground: backgroundColors.divider,
   },
   content: {
     display: 'flex',

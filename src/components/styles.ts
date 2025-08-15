@@ -32,7 +32,9 @@ export const styles = stylex.create({
     padding: 5,
   },
   queryCard: {
-    border: '1px solid ' + (backgroundColors.divider as unknown as string),
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: backgroundColors.divider,
     borderRadius: 5,
     padding: 8,
   },

@@ -24,7 +24,7 @@ export function RichText({
         <a
           key={idx}
           href={part}
-          {...stylex.props(isTooltipContent && styles.link)}
+          style={isTooltipContent ? {color: textColors.link} : {}}
         >
           {part}
         </a>
@@ -55,8 +55,5 @@ const styles = stylex.create({
   },
   breakWord: {
     wordWrap: 'break-word',
-  },
-  link: {
-    color: (textColors.link as unknown as string) + ' !important',
   },
 });

@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import {
   Tooltip,
   TooltipContent,
@@ -15,6 +16,7 @@ import {
 import stylex from '@stylexjs/stylex';
 import {fontStyles, tooltipStyles} from './styles';
 import Icon from './Icon';
+import {ThemeContext} from './contexts/ThemeContext';
 
 interface ErrorIconProps {
   /**
@@ -24,6 +26,7 @@ interface ErrorIconProps {
 }
 
 export default function ErrorIcon({errorMessage}: ErrorIconProps) {
+  const {theme} = useContext(ThemeContext);
   return (
     <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>
@@ -33,7 +36,7 @@ export default function ErrorIcon({errorMessage}: ErrorIconProps) {
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent>
-          <div {...stylex.props(fontStyles.body, tooltipStyles.default)}>
+          <div {...stylex.props(fontStyles.body, tooltipStyles.default, theme)}>
             {errorMessage}
           </div>
         </TooltipContent>

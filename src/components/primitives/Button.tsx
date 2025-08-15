@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {IconType} from './utils/icon';
 import Icon from './Icon';
@@ -18,6 +19,7 @@ import {
   TooltipPortal,
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
+import {ThemeContext} from './contexts/ThemeContext';
 
 const DEFAULT_VARIANT = 'default';
 const DEFAULT_SIZE = 'default';
@@ -80,6 +82,7 @@ export default function Button({
   customStyle,
   ...props
 }: ButtonProps) {
+  const {theme} = useContext(ThemeContext);
   const button = (
     <button
       {...stylex.props(
@@ -116,7 +119,7 @@ export default function Button({
         <TooltipPortal>
           <TooltipContent
             sideOffset={8}
-            {...stylex.props(fontStyles.body, tooltipStyles.default)}
+            {...stylex.props(fontStyles.body, tooltipStyles.default, theme)}
           >
             {tooltip}
           </TooltipContent>

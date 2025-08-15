@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import FieldToken from '../FieldToken';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {Button} from '../primitives';
@@ -36,6 +36,7 @@ import {fontStyles, tooltipStyles} from '../primitives/styles';
 import stylex from '@stylexjs/stylex';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
 import {ViewParent} from '../utils/fields';
+import {ThemeContext} from '../primitives/contexts/ThemeContext';
 
 type Operation = 'groupBy' | 'aggregate' | 'filter' | 'orderBy';
 
@@ -101,6 +102,7 @@ function ActionButton({
   onTooltipOpenChange,
   ...props
 }: ActionButtonProps) {
+  const {theme} = useContext(ThemeContext);
   return (
     <Tooltip delayDuration={300} onOpenChange={onTooltipOpenChange}>
       <TooltipTrigger asChild>
@@ -109,7 +111,7 @@ function ActionButton({
       <TooltipPortal>
         <TooltipContent
           sideOffset={8}
-          {...stylex.props(fontStyles.body, tooltipStyles.default)}
+          {...stylex.props(fontStyles.body, tooltipStyles.default, theme)}
         >
           {tooltip}
         </TooltipContent>

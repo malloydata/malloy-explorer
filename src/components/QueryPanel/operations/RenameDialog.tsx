@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import stylex from '@stylexjs/stylex';
 import * as Dialog from '@radix-ui/react-dialog';
 import {
@@ -21,6 +21,7 @@ import {ViewParent} from '../../utils/fields';
 import ErrorIcon from '../../primitives/ErrorIcon';
 import {dialogStyles} from '../dialogStyles';
 import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
+import {ThemeContext} from '../../primitives/contexts/ThemeContext';
 
 export interface RenameDialogProps {
   view: ViewParent;
@@ -35,6 +36,7 @@ export interface RenameDialogProps {
 }
 
 export function RenameDialog({view, target, open, setOpen}: RenameDialogProps) {
+  const {theme} = useContext(ThemeContext);
   const [name, setName] = useState('');
   const updateQuery = useUpdateQuery();
 
@@ -64,7 +66,7 @@ export function RenameDialog({view, target, open, setOpen}: RenameDialogProps) {
       <Dialog.Portal>
         <Dialog.Overlay {...stylex.props(dialogStyles.overlay)}>
           <Dialog.Content
-            {...stylex.props(dialogStyles.content, fontStyles.body)}
+            {...stylex.props(dialogStyles.content, fontStyles.body, theme)}
           >
             <Dialog.Description {...stylex.props(dialogStyles.displayNone)}>
               Rename {target.name}

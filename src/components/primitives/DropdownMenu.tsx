@@ -12,8 +12,14 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
 import {Icon, IconType} from '.';
 import {fontStyles, tooltipStyles} from './styles';
-import {backgroundColors, iconColors, textColors, utility} from './colors.stylex';
+import {
+  backgroundColors,
+  iconColors,
+  textColors,
+  utility,
+} from './colors.stylex';
 import {iconVars, labelVars, sublabelVars} from './dropdown-menu.stylex';
+import {ThemeContext} from './contexts/ThemeContext';
 
 type DropdownMenuChild =
   | React.ReactElement<DropdownMenuItemProps, typeof DropdownMenuItem>
@@ -41,6 +47,7 @@ export function DropdownMenu({
   children,
   tooltipProps,
 }: DropdownMenuProps) {
+  const {theme} = React.useContext(ThemeContext);
   const [isTooltipOpen, setIsTooltipOpen] = React.useState<
     boolean | undefined
   >();
@@ -71,7 +78,8 @@ export function DropdownMenu({
               {...stylex.props(
                 typeof tooltip === 'string'
                   ? tooltipStyles.default
-                  : tooltipStyles.card
+                  : tooltipStyles.card,
+                theme
               )}
             >
               {tooltip}
@@ -85,7 +93,7 @@ export function DropdownMenu({
       )}
       <PrimitiveDropdownMenu.Portal>
         <PrimitiveDropdownMenu.Content
-          {...stylex.props(fontStyles.body, styles.content)}
+          {...stylex.props(fontStyles.body, styles.content, theme)}
           side="bottom"
           align="start"
           sideOffset={4}

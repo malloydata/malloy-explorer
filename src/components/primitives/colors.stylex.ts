@@ -179,3 +179,5 @@ export const darkThemes = [
   darkIconTheme,
   darkUtilityTheme,
 ] as const;
+
+export type ColorTheme = typeof darkThemes;
