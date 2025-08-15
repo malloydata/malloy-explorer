@@ -17,6 +17,7 @@ import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {fontStyles} from '../primitives/styles';
 import {CodeEditorContext} from './CodeEditorContext';
+import {ThemeContext} from '../primitives/contexts/ThemeContext';
 
 export interface CodeEditorProps {
   language: string;
@@ -29,6 +30,7 @@ export default function CodeEditor({
   value,
   onChange,
 }: CodeEditorProps) {
+  const {dark} = useContext(ThemeContext);
   const {setQuery} = useContext(QueryEditorContext);
   const [validStableQuery, setValidStableQuery] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -110,6 +112,12 @@ export default function CodeEditor({
       editor.setValue(value);
     }
   }, [editor, value]);
+
+  useEffect(() => {
+    if (monaco) {
+      monaco.editor.setTheme(dark ? 'dark-plus' : 'light-plus');
+    }
+  }, [monaco, dark]);
 
   return (
     <div {...stylex.props(styles.container)}>

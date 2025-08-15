@@ -10,10 +10,6 @@ import * as monaco from 'monaco-editor-core';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import '../src/components/CodeEditor/monaco/monaco_worker';
 import stylex from '@stylexjs/stylex';
-import {
-  ColorTheme,
-  darkThemes,
-} from '../src/components/primitives/colors.stylex';
 import {useCallback, useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {

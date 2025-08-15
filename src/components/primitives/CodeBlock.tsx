@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import {
   highlightPre,
   SupportedLang,
@@ -15,6 +15,7 @@ import {
 import {LineSpacing} from './syntax_highlighting/transformers/lineSpacingTransformer';
 import DOMElement from './DOMElement';
 import ScrollableArea from './ScrollableArea';
+import {ThemeContext} from './contexts/ThemeContext';
 
 interface CodeBlockProps {
   /**
@@ -46,13 +47,16 @@ export default function CodeBlock({
   lineNumbers,
   spacing,
 }: CodeBlockProps) {
+  const {dark} = useContext(ThemeContext);
   const [codeEl, setCodeEl] = useState<HTMLElement>();
+
+  theme ??= dark ? 'dark-plus' : 'light-plus';
 
   useEffect(() => {
     let canceled = false;
 
     const updateCode = async () => {
-      const html = await highlightPre(code, language, theme ?? 'light-plus', {
+      const html = await highlightPre(code, language, theme, {
         showLineNumbers: lineNumbers ?? true,
         lineSpacing: spacing ?? 'double',
       });
