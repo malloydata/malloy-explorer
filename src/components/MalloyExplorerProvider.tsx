@@ -15,6 +15,8 @@ import {useQueryBuilder} from '../hooks/useQueryBuilder';
 import {MalloyQueryFocusProvider} from './MalloyQueryFocusProvider';
 import {UpdateQueryContext} from '../hooks/useQueryUpdate';
 import {SearchValueMapResult, TopValuesContext} from '../hooks/useTopValues';
+import {ColorTheme, darkThemes} from './primitives/colors.stylex';
+import {ThemeContext} from './primitives/contexts/ThemeContext';
 
 export interface MalloyExplorerProviderProps {
   /** Malloy source to extend for query */
@@ -32,6 +34,9 @@ export interface MalloyExplorerProviderProps {
   topValues?: SearchValueMapResult[];
   /** Default drill behavior override callback */
   onDrill?: ({stableQuery, stableDrillClauses}: DrillData) => void;
+  /** Color overrides */
+  theme?: ColorTheme;
+  dark?: boolean;
 }
 
 export function MalloyExplorerProvider({
@@ -43,12 +48,18 @@ export function MalloyExplorerProvider({
   children,
   topValues,
   onDrill,
+  theme,
+  dark,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
 
   const updateQuery = useCallback(() => {
     onQueryChange?.(rootQuery?.build());
   }, [onQueryChange, rootQuery]);
+
+  if (!theme && dark) {
+    theme = darkThemes;
+  }
 
   return (
     <TooltipProvider>
@@ -68,7 +79,9 @@ export function MalloyExplorerProvider({
                 query,
               }}
             >
-              {children}
+              <ThemeContext.Provider value={{theme, dark}}>
+                {children}
+              </ThemeContext.Provider>
             </QueryEditorContext.Provider>
           </TopValuesContext.Provider>
         </UpdateQueryContext.Provider>

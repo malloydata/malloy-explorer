@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import stylex from '@stylexjs/stylex';
+import {utility} from './colors.stylex';
 import {ReactNode, useState} from 'react';
 import Button from './Button';
 import {IconType} from './utils/icon';
@@ -76,12 +77,12 @@ export default function CollapsiblePanel({
 
 const styles = stylex.create({
   container: {
-    boxShadow: '0 0 0 1px #CCD3DB',
+    boxShadow: utility.outline,
     borderRadius: 5,
     padding: 0,
   },
   focused: {
-    boxShadow: '0 0 0 2px rgba(0, 100, 224, 1)',
+    boxShadow: utility.focusOutline,
   },
   topBar: {
     display: 'grid',

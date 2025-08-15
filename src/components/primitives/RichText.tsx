@@ -1,5 +1,6 @@
 import React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {textColors} from './colors.stylex';
 
 interface RichTextProps extends React.ComponentProps<'div'> {
   children: string;
@@ -23,7 +24,7 @@ export function RichText({
         <a
           key={idx}
           href={part}
-          {...stylex.props(isTooltipContent && styles.link)}
+          style={isTooltipContent ? {color: textColors.link} : {}}
         >
           {part}
         </a>
@@ -54,8 +55,5 @@ const styles = stylex.create({
   },
   breakWord: {
     wordWrap: 'break-word',
-  },
-  link: {
-    color: 'rgb(62, 158, 251) !important',
   },
 });

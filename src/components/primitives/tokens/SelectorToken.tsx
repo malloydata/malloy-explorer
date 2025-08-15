@@ -6,12 +6,14 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import * as Select from '@radix-ui/react-select';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {IconType} from '../utils/icon';
 import Icon from '../Icon';
 import {fontStyles} from '../styles';
 import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
+import {backgroundColors, iconColors} from '../colors.stylex';
 import {
   DEFAULT_TOKEN_COLOR,
   DEFAULT_TOKEN_SIZE,
@@ -19,6 +21,7 @@ import {
   TokenSize,
 } from './types';
 import TextInput from '../TextInput';
+import {ThemeContext} from '../contexts/ThemeContext';
 
 export interface SelectorTokenItem<T extends string> {
   label: string;
@@ -46,6 +49,7 @@ export default function SelectorToken<T extends string>({
   isSearchable = false,
   customStyle,
 }: SelectorTokenProps<T>) {
+  const {theme} = useContext(ThemeContext);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const filteredItems = React.useMemo(() => {
@@ -87,7 +91,7 @@ export default function SelectorToken<T extends string>({
       </Select.Trigger>
       <Select.Portal>
         <Select.Content side="bottom" position="popper" sideOffset={4}>
-          <Select.Viewport {...stylex.props(styles.selectViewport)}>
+          <Select.Viewport {...stylex.props(styles.selectViewport, theme)}>
             {isSearchable && (
               <TextInput
                 value={searchQuery}
@@ -160,7 +164,7 @@ const styles = stylex.create({
   },
   selectViewport: {
     borderRadius: '12px',
-    background: 'rgba(255, 255, 255, 1)',
+    background: backgroundColors.surface,
     boxShadow:
       '0px 2px 12px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.1)',
   },
@@ -180,21 +184,19 @@ const styles = stylex.create({
     borderRadius: '8px',
     cursor: 'pointer',
     outline: 'none',
-    ':is([data-highlighted])': {
-      background: 'rgba(0, 0, 0, 0.05)',
-    },
+    ':is([data-highlighted])': {background: backgroundColors.overlayHover},
     ':is([data-state="checked"])': {
       background: {
-        default: 'rgba(0, 130, 251, 0.2)',
-        ':is([data-highlighted])': 'rgba(0, 130, 251, 0.3)',
+        default: backgroundColors.accentDeemphasized,
+        ':is([data-highlighted])': backgroundColors.accentDeemphasized,
       },
     },
   },
   radioChecked: {
-    color: 'rgba(0, 100, 224, 1)',
+    color: iconColors.accent,
   },
   radioUnchecked: {
-    color: 'rgba(100, 118, 133, 1)',
+    color: iconColors.gray,
   },
   searchInput: {
     borderRadius: '12px',

@@ -8,7 +8,7 @@
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import * as React from 'react';
 import {styles} from './styles';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import {
   ASTAnnotation,
   ASTQuery,
@@ -20,6 +20,7 @@ import {Button} from '../../primitives';
 import {RENDERER_PREFIX} from '../../utils/renderer';
 import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
 import {setAtPath} from './utils';
+import {ThemeContext} from '../../primitives/contexts/ThemeContext';
 
 export interface VizEditorProps {
   plugin: CoreVizPluginInstance;
@@ -29,6 +30,7 @@ export interface VizEditorProps {
 }
 
 export function VizEditor({view, plugin, setOpen}: VizEditorProps) {
+  const {theme} = useContext(ThemeContext);
   const updateQuery = useUpdateQuery();
   const [current, setCurrent] = useState(plugin.getSettings());
 
@@ -43,7 +45,7 @@ export function VizEditor({view, plugin, setOpen}: VizEditorProps) {
   }, [current]);
 
   return (
-    <div {...stylex.props(styles.editor)}>
+    <div {...stylex.props(styles.editor, theme)}>
       <div {...stylex.props(styles.editorGrid)}>
         <ObjectEditor
           view={view}

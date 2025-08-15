@@ -12,6 +12,7 @@ import Icon from '../Icon';
 import {fontStyles} from '../styles';
 import {IconType} from '../utils/icon';
 import {tokenColorVariants, tokenSizeVariants, tokenStyles} from './styles';
+import {backgroundColors, utility} from '../../primitives/colors.stylex';
 import {
   DEFAULT_TOKEN_COLOR,
   DEFAULT_TOKEN_SIZE,
@@ -159,9 +160,8 @@ const styles = stylex.create({
     alignItems: 'center',
   },
   focused: {
-    background: 'rgba(255, 255, 255, 1)',
-    boxShadow:
-      '0px 0px 0px 1px rgb(0, 100, 224) inset, 0px 0px 0px 3px rgba(1, 113, 227, 0.3) inset',
+    background: backgroundColors.surface,
+    boxShadow: `0px 0px 0px 1px ${utility.focusRingColor} inset, ${utility.focusRingInner}`,
   },
   hasError: {
     border: '1px solid red',

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {RefObject, useEffect, useState} from 'react';
+import React, {RefObject, useContext, useEffect, useState} from 'react';
 import moment from 'moment';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {TemporalUnit} from '@malloydata/malloy-filter';
@@ -14,6 +14,7 @@ import {textColors} from './colors.stylex';
 import NumberInput from './NumberInput';
 import Button from './Button';
 import {formats} from '../DateInput';
+import {ThemeContext} from './contexts/ThemeContext';
 
 function monthName(month: number) {
   return [
@@ -51,6 +52,7 @@ export default function DatePicker({
   customStyle,
   forwardRef,
 }: DatePickerProps) {
+  const {theme} = useContext(ThemeContext);
   const [date, setDate] = useState(value);
   const calendar = getCalendar(date);
   const [pickLevel, setPickLevel] = useState<
@@ -157,7 +159,7 @@ export default function DatePicker({
   };
 
   return (
-    <div {...stylex.props(styles.outer, customStyle)} ref={forwardRef}>
+    <div {...stylex.props(styles.outer, customStyle, theme)} ref={forwardRef}>
       <div {...stylex.props(styles.controlRow)}>
         <div {...stylex.props(styles.arrowButton)}>
           <Button

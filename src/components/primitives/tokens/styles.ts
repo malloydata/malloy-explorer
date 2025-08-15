@@ -15,8 +15,8 @@ export const tokenStyles = stylex.create({
     cursor: 'pointer',
     overflow: 'hidden',
     background: {
-      default: backgroundColors.token,
-      ':hover': 'rgba(221, 226, 232, 1)',
+      default: backgroundColors.surfaceToken,
+      ':hover': backgroundColors.controlHover,
     },
     position: 'relative',
   },
