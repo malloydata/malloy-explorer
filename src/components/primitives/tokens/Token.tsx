@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import Icon from '../Icon';
@@ -21,6 +22,7 @@ import {
 import {backgroundColors} from '../colors.stylex';
 import {DraggableAttributes} from '@dnd-kit/core';
 import {SyntheticListenerMap} from '@dnd-kit/core/dist/hooks/utilities';
+import {ThemeContext} from '../contexts/ThemeContext';
 
 export interface TokenProps extends React.ComponentProps<'button'> {
   /**
@@ -95,6 +97,7 @@ export default function Token({
   dragProps,
   ...props
 }: TokenProps) {
+  const {theme} = useContext(ThemeContext);
   const isInteractive = onClick !== undefined || asButtonTrigger;
 
   const token = (
@@ -137,7 +140,8 @@ export default function Token({
             fontStyles.tooltipText,
             typeof tooltip === 'string'
               ? tooltipStyles.default
-              : tooltipStyles.card
+              : tooltipStyles.card,
+            theme
           )}
         >
           {tooltip}

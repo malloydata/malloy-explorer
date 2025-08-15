@@ -161,7 +161,7 @@ const styles = stylex.create({
   },
   focused: {
     background: backgroundColors.surface,
-    boxShadow: '0px 0px 0px 1px ' + (utility.focusRingColor as unknown as string) + ' inset, ' + (utility.focusRingInner as unknown as string),
+    boxShadow: `0px 0px 0px 1px ${utility.focusRingColor} inset, ${utility.focusRingInner}`,
   },
   hasError: {
     border: '1px solid red',

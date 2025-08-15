@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import * as Select from '@radix-ui/react-select';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {IconType} from '../utils/icon';
@@ -20,6 +21,7 @@ import {
   TokenSize,
 } from './types';
 import TextInput from '../TextInput';
+import {ThemeContext} from '../contexts/ThemeContext';
 
 export interface SelectorTokenItem<T extends string> {
   label: string;
@@ -47,6 +49,7 @@ export default function SelectorToken<T extends string>({
   isSearchable = false,
   customStyle,
 }: SelectorTokenProps<T>) {
+  const {theme} = useContext(ThemeContext);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const filteredItems = React.useMemo(() => {
@@ -88,7 +91,7 @@ export default function SelectorToken<T extends string>({
       </Select.Trigger>
       <Select.Portal>
         <Select.Content side="bottom" position="popper" sideOffset={4}>
-          <Select.Viewport {...stylex.props(styles.selectViewport)}>
+          <Select.Viewport {...stylex.props(styles.selectViewport, theme)}>
             {isSearchable && (
               <TextInput
                 value={searchQuery}

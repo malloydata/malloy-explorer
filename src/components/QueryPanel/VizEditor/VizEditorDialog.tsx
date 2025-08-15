@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import {useContext} from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import {ASTQuery, ASTView} from '@malloydata/malloy-query-builder';
 import {CoreVizPluginInstance} from '@malloydata/render';
@@ -15,6 +16,7 @@ import {VizEditor} from './VizEditor';
 import {fontStyles} from '../../primitives/styles';
 import {dialogStyles} from '../dialogStyles';
 import {Icon} from '../../primitives';
+import {ThemeContext} from '../../primitives/contexts/ThemeContext';
 
 export interface VizEditorDialogProps {
   plugin?: CoreVizPluginInstance;
@@ -31,6 +33,7 @@ export function VizEditorDialog({
   open,
   setOpen,
 }: VizEditorDialogProps) {
+  const {theme} = useContext(ThemeContext);
   if (!plugin || !open) {
     return null;
   }
@@ -38,7 +41,7 @@ export function VizEditorDialog({
   return (
     <Dialog.Root onOpenChange={open => setOpen(open)} open={open}>
       <Dialog.Portal>
-        <Dialog.Overlay {...stylex.props(dialogStyles.overlay)}>
+        <Dialog.Overlay {...stylex.props(dialogStyles.overlay, theme)}>
           <Dialog.Content
             {...stylex.props(
               fontStyles.body,

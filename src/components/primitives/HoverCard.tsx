@@ -5,10 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import {useContext} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {backgroundColors, utility} from './colors.stylex';
 import * as React from 'react';
 import {fontStyles} from './styles';
+import {ThemeContext} from './contexts/ThemeContext';
 
 interface HoverCardProps {
   children: React.ReactNode;
@@ -16,8 +18,11 @@ interface HoverCardProps {
 }
 
 export function HoverCard({children, customStyle}: HoverCardProps) {
+  const {theme} = useContext(ThemeContext);
   return (
-    <div {...stylex.props(styles.container, fontStyles.body, customStyle)}>
+    <div
+      {...stylex.props(styles.container, fontStyles.body, customStyle, theme)}
+    >
       {children}
     </div>
   );

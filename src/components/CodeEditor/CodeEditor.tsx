@@ -153,7 +153,9 @@ export default function CodeEditor({
 const styles = stylex.create({
   container: {
     paddingTop: 4,
-    borderTop: '1px solid ' + (backgroundColors.divider as unknown as string),
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    borderTopColor: backgroundColors.divider,
     width: '100%',
     height: 'calc(100% - 4px)',
     display: 'flex',

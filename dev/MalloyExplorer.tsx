@@ -10,7 +10,10 @@ import * as monaco from 'monaco-editor-core';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import '../src/components/CodeEditor/monaco/monaco_worker';
 import stylex from '@stylexjs/stylex';
-import {darkThemes} from '../src/components/primitives/colors.stylex';
+import {
+  ColorTheme,
+  darkThemes,
+} from '../src/components/primitives/colors.stylex';
 import {useCallback, useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {
@@ -25,6 +28,7 @@ import {
 import {topValues} from './sample_models/example_top_values';
 import {initCodeEditorContext, runQuery} from './utils/runtime';
 import {malloyToQuery, ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
+import {Button} from '../src/components/primitives';
 
 const modelUri = new URL(
   '../malloy-samples/faa/flights.malloy',
@@ -38,6 +42,7 @@ const App = () => {
   const [source, setSource] = useState<Malloy.SourceInfo | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = useState<string[]>([]);
   const [submittedQuery, setSubmittedQuery] = useState<SubmittedQuery>();
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const compile = async () => {
@@ -88,9 +93,16 @@ const App = () => {
           focusedNestViewPath={focusedNestViewPath}
           onFocusedNestViewPathChange={setFocusedNestViewPath}
           topValues={topValues}
+          dark={dark}
         >
-          <div {...stylex.props(styles.page, ...darkThemes)}>
+          <div {...stylex.props(styles.page)}>
             <div {...stylex.props(styles.content)}>
+              <Button
+                icon="gear"
+                onClick={() => setDark(!dark)}
+                style={{position: 'fixed', left: 4, bottom: 4, zIndex: 100}}
+                tooltip="Change Theme"
+              />
               <ResizableCollapsiblePanel
                 isInitiallyExpanded={true}
                 initialWidth={280}

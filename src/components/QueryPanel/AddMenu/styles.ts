@@ -1,12 +1,16 @@
 import stylex from '@stylexjs/stylex';
-import {colors} from './colors.stylex';
+import {
+  backgroundColors,
+  textColors,
+  utility,
+} from '../../primitives/colors.stylex';
 
 export const addMenuStyles = stylex.create({
   content: {
-    background: colors.background,
+    background: backgroundColors.surface,
     borderRadius: 4,
     borderWidth: 1,
-    boxShadow: `0px 2px 12px 0px ${colors.shadowElevation}`,
+    boxShadow: utility.elevationMedium,
     fontFamily: 'sans-serif',
     margin: 8,
     maxHeight: '50vh',
@@ -16,8 +20,8 @@ export const addMenuStyles = stylex.create({
   item: {
     alignItems: 'center',
     color: {
-      default: colors.text,
-      ':is([data-disabled])': colors.disabledText,
+      default: textColors.primary,
+      ':is([data-disabled])': textColors.disabled,
     },
     padding: 8,
     cursor: 'default',
@@ -28,7 +32,7 @@ export const addMenuStyles = stylex.create({
   },
   clickable: {
     backgroundColor: {
-      ':hover': colors.hover,
+      ':hover': backgroundColors.surfaceSubtle,
     },
   },
   label: {

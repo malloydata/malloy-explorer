@@ -20,7 +20,11 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {useClickOutside} from '../hooks/useClickOutside';
 import {DEFAULT_TOKEN_COLOR, TokenColor} from '../primitives/tokens/types';
 import {iconVars, labelVars} from '../primitives/tokens/token.stylex';
-import {iconColors, textColors} from '../primitives/colors.stylex';
+import {
+  backgroundColors,
+  iconColors,
+  textColors,
+} from '../primitives/colors.stylex';
 import ClearIcon from '../../assets/refinements/clear.svg?react';
 import {fontStyles} from '../primitives/styles';
 
@@ -233,7 +237,7 @@ const Pill = ({
 const styles = stylex.create({
   main: {
     borderRadius: 4,
-    border: '1px solid rgba(230, 235, 239, 1)',
+    border: `1px solid ${backgroundColors.divider}`,
     padding: '2px 3px',
     display: 'grid',
     minHeight: 0,
@@ -254,15 +258,15 @@ const styles = stylex.create({
     outline: 'none',
     fontFamily: 'sans-serif',
     fontSize: 14,
-    color: '#000000',
-    backgroundColor: '#fff',
+    color: textColors.primary,
+    backgroundColor: backgroundColors.surface,
     minWidth: 95,
     padding: '3.75px 7px',
     flexGrow: 1,
   },
 
   pill: {
-    backgroundColor: 'rgba(230, 235, 239, 1)',
+    backgroundColor: backgroundColors.surfaceToken,
     borderRadius: 5,
     color: labelVars.color,
     display: 'flex',

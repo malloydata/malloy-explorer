@@ -34,8 +34,8 @@ interface SpinnerProps {
 
 const SPREAD = 0.75;
 const START_POINT = 1.5;
-const INACTIVE_COLOR = utility.spinnerTrack as unknown as string;
-const ACTIVE_COLOR = backgroundColors.brandDefault as unknown as string;
+const INACTIVE_COLOR = utility.spinnerTrack;
+const ACTIVE_COLOR = backgroundColors.brandDefault;
 
 export default function Spinner({size, customStyle}: SpinnerProps) {
   const ref = React.useRef<HTMLCanvasElement>(null);

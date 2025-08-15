@@ -5,10 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {ReactNode, RefObject, useRef} from 'react';
+import React, {ReactNode, RefObject, useContext, useRef} from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {backgroundColors} from './colors.stylex';
 import * as RadixPopover from '@radix-ui/react-popover';
+import {ThemeContext} from './contexts/ThemeContext';
 
 // Define a type for the placement options that matches what was used with Popper.js
 type Placement =
@@ -45,10 +46,12 @@ const styleX = stylex.create({
     position: 'relative',
   },
   popoverContent: {
-    border: '1px solid var(--malloy-composer-menu-border, ' + (backgroundColors.divider as unknown as string) + ')',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: backgroundColors.divider,
     borderRadius: '4px',
     boxShadow: '0px 1px 5px 1px #0000001a',
-    backgroundColor: 'var(--malloy-composer-menu-background, ' + (backgroundColors.surface as unknown as string) + ')',
+    backgroundColor: backgroundColors.surface,
     fontSize: 'var(--malloy-composer-menu-fontSize, 14px)',
   },
 });
@@ -85,6 +88,7 @@ export const Popover: React.FC<PopoverProps> = ({
   disabled = false,
   customStyle,
 }) => {
+  const {theme} = useContext(ThemeContext);
   const triggerRef = useRef<HTMLDivElement>(null);
   const {side, align} = convertPlacementToRadixProps(placement);
 
@@ -113,7 +117,7 @@ export const Popover: React.FC<PopoverProps> = ({
         {open && !disabled && (
           <RadixPopover.Portal>
             <RadixPopover.Content
-              {...stylex.props(styleX.popoverContent)}
+              {...stylex.props(styleX.popoverContent, theme)}
               side={side}
               align={align}
               sideOffset={getSideOffset()}
