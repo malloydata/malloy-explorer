@@ -18,7 +18,7 @@ import {
   AccordionListItem,
 } from '../primitives';
 import * as Toast from '@radix-ui/react-toast';
-import {textColors} from '../primitives/colors.stylex';
+import {backgroundColors, textColors} from '../primitives/colors.stylex';
 import {fontStyles} from '../primitives/styles';
 import {sourceToFieldItems} from './utils';
 import SearchResultList from './SearchResultList';
@@ -27,12 +27,14 @@ import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {hasExplorerFilterFieldAnnotation} from '../utils/annotations';
 import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
+import {ThemeContext} from '../primitives/contexts/ThemeContext';
 
 export interface SourcePanelProps {
   onRefresh: () => void;
 }
 
 export function SourcePanel({onRefresh}: SourcePanelProps) {
+  const {theme} = useContext(ThemeContext);
   const {source, rootQuery} = React.useContext(QueryEditorContext);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
@@ -73,7 +75,7 @@ export function SourcePanel({onRefresh}: SourcePanelProps) {
 
   return (
     <Toast.ToastProvider duration={3000}>
-      <div {...stylex.props(styles.main)}>
+      <div {...stylex.props(styles.main, theme)}>
         <div {...stylex.props(fontStyles.body, styles.header)}>
           <div {...stylex.props(styles.headerTopRow)}>
             <div {...stylex.props(styles.heading)}>
@@ -200,8 +202,8 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    borderRight: '1px solid #C8CCD2',
+    backgroundColor: backgroundColors.app,
+    borderRight: '1px solid ' + backgroundColors.divider,
   },
   header: {
     display: 'flex',

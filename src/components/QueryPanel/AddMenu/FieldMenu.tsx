@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {Divider, TextInput} from '../../primitives';
@@ -14,6 +14,7 @@ import {addMenuStyles} from './styles';
 import {FieldList} from './FieldList';
 import {ViewParent} from '../../utils/fields';
 import {ParsedFilter} from '@malloydata/malloy-query-builder';
+import {ThemeContext} from '../../primitives/contexts/ThemeContext';
 export interface FieldMenuProps {
   view: ViewParent;
   fields: Array<Malloy.FieldInfo>;
@@ -39,10 +40,14 @@ export function FieldMenu({
   onAddOperation,
   isFilterOperation,
 }: FieldMenuProps) {
+  const {theme} = useContext(ThemeContext);
   const [search, setSearch] = useState('');
 
   return (
-    <div {...stylex.props(addMenuStyles.content, styles.content)} role="menu">
+    <div
+      {...stylex.props(addMenuStyles.content, styles.content, theme)}
+      role="menu"
+    >
       <div {...stylex.props(addMenuStyles.item)}>
         <TextInput
           icon="search"

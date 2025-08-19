@@ -16,11 +16,11 @@ import {CodeBlock, Icon} from '../primitives';
 import ResultDisplay from './ResultDisplay';
 import {SubmittedQuery} from './SubmittedQuery';
 import {useQueryBuilder} from '../../hooks/useQueryBuilder';
-import {useState, useEffect} from 'react';
-import {colors} from '../QueryPanel/AddMenu/colors.stylex';
+import {useState, useEffect, useContext} from 'react';
 import DebugPane, {DebugOptions} from './DebugPane';
 import CopyToClipboard from './CopyToClipboard';
 import {DownloadButton} from './DownloadButton';
+import {ThemeContext} from '../primitives/contexts/ThemeContext';
 
 enum Tab {
   RESULTS = 'Results',
@@ -49,6 +49,7 @@ export default function ResultPanel({
   submittedQuery,
   options,
 }: ResultPanelProps) {
+  const {theme} = useContext(ThemeContext);
   const [tab, setTab] = useState<Tab>(Tab.MALLOY);
   const malloyText = useQueryBuilder(source, draftQuery)?.toMalloy();
   const views = source.schema.fields.filter(f => f.kind === 'view');
@@ -79,7 +80,7 @@ export default function ResultPanel({
 
   return draftQuery || submittedQuery ? (
     <Root
-      {...stylex.props(styles.tabRoot, fontStyles.body)}
+      {...stylex.props(styles.tabRoot, fontStyles.body, theme)}
       value={tab}
       onValueChange={val => setTab(val as Tab)}
     >
@@ -248,6 +249,7 @@ const styles = stylex.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    backgroundColor: backgroundColors.surface,
   },
   tabsContainer: {
     display: 'flex',
@@ -274,13 +276,10 @@ const styles = stylex.create({
     },
   },
   disabledTab: {
-    color: colors.disabledText,
+    color: textColors.disabled,
     cursor: 'initial',
   },
-  contentContainer: {
-    flexGrow: '1',
-    overflow: 'hidden',
-  },
+  contentContainer: {flexGrow: '1', overflow: 'hidden'},
   content: {
     padding: '12px',
     width: '100%',

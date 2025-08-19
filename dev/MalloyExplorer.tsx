@@ -24,6 +24,7 @@ import {
 import {topValues} from './sample_models/example_top_values';
 import {initCodeEditorContext, runQuery} from './utils/runtime';
 import {malloyToQuery, ModelDef, modelDefToModelInfo} from '@malloydata/malloy';
+import {Button} from '../src/components/primitives';
 
 const modelUri = new URL(
   '../malloy-samples/faa/flights.malloy',
@@ -37,6 +38,7 @@ const App = () => {
   const [source, setSource] = useState<Malloy.SourceInfo | undefined>();
   const [focusedNestViewPath, setFocusedNestViewPath] = useState<string[]>([]);
   const [submittedQuery, setSubmittedQuery] = useState<SubmittedQuery>();
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const compile = async () => {
@@ -87,9 +89,16 @@ const App = () => {
           focusedNestViewPath={focusedNestViewPath}
           onFocusedNestViewPathChange={setFocusedNestViewPath}
           topValues={topValues}
+          dark={dark}
         >
           <div {...stylex.props(styles.page)}>
             <div {...stylex.props(styles.content)}>
+              <Button
+                icon="gear"
+                onClick={() => setDark(!dark)}
+                style={{position: 'fixed', left: 4, bottom: 4, zIndex: 100}}
+                tooltip="Change Theme"
+              />
               <ResizableCollapsiblePanel
                 isInitiallyExpanded={true}
                 initialWidth={280}
@@ -134,7 +143,7 @@ const styles = stylex.create({
   },
   banner: {
     height: '30px',
-    backgroundColor: 'rgba(225, 240, 255, 1)',
+    backgroundColor: 'transparent',
     display: 'flex',
     padding: '2px 10px',
     alignItems: 'center',
