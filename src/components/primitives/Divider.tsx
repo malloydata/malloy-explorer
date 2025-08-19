@@ -7,6 +7,7 @@
 
 import React from 'react';
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from './colors.stylex';
 import {StyleXStyles} from '@stylexjs/stylex/lib/StyleXTypes';
 
 const DEFAULT_ORIENTATION = 'horizontal';
@@ -41,7 +42,7 @@ export default function Divider({
 
 const styles = stylex.create({
   main: {
-    background: 'rgba(204, 211, 219, 1)',
+    background: backgroundColors.divider,
   },
 });
 

@@ -20,6 +20,7 @@ import {useContext} from 'react';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {ResizableCollapsiblePanelContext} from '../../contexts/ResizableCollapsiblePanelContext';
 import {useQueryFocus} from '../MalloyQueryFocusProvider';
+import {ThemeContext} from '../primitives/contexts/ThemeContext';
 
 /**
  * Source
@@ -33,6 +34,7 @@ export function QueryActionBar({
   runQuery,
   runQueryString,
 }: QueryActionBarProps) {
+  const {theme} = useContext(ThemeContext);
   const {query, rootQuery, setQuery, source} = useContext(QueryEditorContext);
 
   const {onCollapse} = useContext(ResizableCollapsiblePanelContext);
@@ -83,7 +85,9 @@ export function QueryActionBar({
           </TooltipTrigger>
           <TooltipPortal>
             <TooltipContent>
-              <div {...stylex.props(fontStyles.body, tooltipStyles.default)}>
+              <div
+                {...stylex.props(fontStyles.body, tooltipStyles.default, theme)}
+              >
                 {isRunEnabled
                   ? 'Execute the query.'
                   : isQueryEmpty

@@ -10,8 +10,8 @@ import stylex, {StyleXStyles} from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
 import {Token} from '../../primitives';
 import {SearchIndexResult, useSearch} from './hooks/useSearch';
-import {colors} from './colors.stylex';
 import {useMemo} from 'react';
+import {textColors} from '../../primitives/colors.stylex';
 
 export interface FieldListProps {
   search: string;
@@ -97,7 +97,7 @@ const styles = stylex.create({
     cursor: 'pointer',
   },
   field: {
-    color: colors.disabledText,
+    color: textColors.disabled,
   },
   token: {
     cursor: 'pointer',

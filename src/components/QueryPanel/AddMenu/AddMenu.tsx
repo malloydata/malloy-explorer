@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import stylex from '@stylexjs/stylex';
 import {Button, Divider, Icon, TextInput} from '../../primitives';
@@ -35,12 +35,15 @@ import {
 } from '../../utils/fields';
 import {AddItem} from './AddItem';
 import {useUpdateQuery} from '../../../hooks/useQueryUpdate';
+import {ThemeContext} from '../../primitives/contexts/ThemeContext';
+import {backgroundColors} from '../../primitives/colors.stylex';
 
 export interface AddMenuProps {
   view: ViewParent;
 }
 
 export function AddMenu({view}: AddMenuProps) {
+  const {theme} = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
   const updateQuery = useUpdateQuery();
@@ -77,7 +80,7 @@ export function AddMenu({view}: AddMenuProps) {
       <Popover.Portal>
         <Popover.Content
           onPointerDownOutside={() => setOpen(false)}
-          {...stylex.props(addMenuStyles.content)}
+          {...stylex.props(addMenuStyles.content, theme)}
           side="bottom"
           align="start"
           role="menu"
@@ -205,6 +208,7 @@ const styles = stylex.create({
     overflowY: 'auto',
     paddingBottom: 8,
     maxHeight: '20em',
+    background: backgroundColors.surface,
   },
   search: {
     width: '100%',

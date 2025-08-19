@@ -6,12 +6,13 @@
  */
 
 import * as React from 'react';
-import {ReactElement} from 'react';
+import {ReactElement, useContext} from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import stylex from '@stylexjs/stylex';
 import {addMenuStyles} from './styles';
-import {colors} from './colors.stylex';
 import {Icon} from '../../primitives';
+import {backgroundColors} from '../../primitives/colors.stylex';
+import {ThemeContext} from '../../primitives/contexts/ThemeContext';
 
 export interface AddItemProps {
   icon?: ReactElement;
@@ -30,6 +31,7 @@ export function AddItem({
   onClick,
   open,
 }: AddItemProps) {
+  const {theme} = useContext(ThemeContext);
   const disabled = disable?.();
   const doOnClick = () => {
     if (!disable?.()) onClick?.();
@@ -59,7 +61,7 @@ export function AddItem({
       {detail ? (
         <Tooltip.Portal>
           <Tooltip.Content
-            {...stylex.props(addMenuStyles.tooltip)}
+            {...stylex.props(addMenuStyles.tooltip, theme)}
             side="right"
             align="start"
             alignOffset={-16}
@@ -74,6 +76,6 @@ export function AddItem({
 
 const styles = stylex.create({
   open: {
-    background: colors.accentDeemphasized,
+    background: backgroundColors.accentDeemphasized,
   },
 });

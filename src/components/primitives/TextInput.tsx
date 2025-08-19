@@ -1,5 +1,6 @@
 import * as React from 'react';
 import stylex, {StyleXStyles} from '@stylexjs/stylex';
+import {backgroundColors, textColors, utility} from './colors.stylex';
 import {fontStyles} from './styles';
 import {IconType} from './utils/icon';
 import Icon from './Icon';
@@ -124,9 +125,9 @@ const styles = stylex.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    background: 'rgba(255, 255, 255, 1)',
+    background: backgroundColors.surface,
     borderRadius: '8px',
-    border: '1px solid rgba(204, 211, 219, 1)',
+    border: '1px solid ' + backgroundColors.divider,
     boxShadow: {
       default: null,
       ':hover': 'rgba(204, 211, 219, 0.3) 0px 0px 0px 3px inset',
@@ -134,8 +135,8 @@ const styles = stylex.create({
     gap: '8px',
   },
   focused: {
-    borderColor: 'rgb(0, 100, 224)',
-    boxShadow: 'rgba(1, 113, 227, 0.3) 0px 0px 0px 3px inset',
+    borderColor: utility.focusRingColor,
+    boxShadow: utility.focusRingInner,
   },
   input: {
     flexGrow: 1,
@@ -145,9 +146,7 @@ const styles = stylex.create({
     background: 'transparent',
     borderStyle: 'none',
     outline: 'none',
-    '::placeholder': {
-      color: 'rgba(78, 96, 111, 1)',
-    },
+    '::placeholder': {color: textColors.secondary},
   },
   actionButton: {
     display: 'inline-flex',
@@ -156,7 +155,7 @@ const styles = stylex.create({
     padding: '0px',
     marginLeft: '4px',
     cursor: 'pointer',
-    color: 'rgba(0, 100, 224, 1)',
+    color: textColors.link,
   },
   hidden: {
     visibility: 'hidden',

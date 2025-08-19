@@ -18,7 +18,7 @@ import {
 } from '../utils/download';
 import {Icon} from '../primitives';
 import {fontStyles} from '../primitives/styles';
-import {textColors} from '../primitives/colors.stylex';
+import {backgroundColors, textColors} from '../primitives/colors.stylex';
 
 export interface DownloadButtonProps {
   result?: Malloy.Result;
@@ -110,8 +110,8 @@ const styles = stylex.create({
     gap: 8,
     background: {
       default: 'transparent',
-      ':hover': 'rgba(0, 0, 0, 0.05)',
-      ':active': 'rgba(0, 0, 0, 0.1)',
+      ':hover': backgroundColors.overlayHover,
+      ':active': backgroundColors.overlayActive,
     },
     borderRadius: 8,
     padding: 4,

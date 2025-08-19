@@ -16,6 +16,7 @@ import {FieldHoverCard} from '../../FieldHoverCard';
 import {FilterPopover} from '../../filters/FilterPopover';
 import {ParsedFilter} from '@malloydata/malloy-query-builder';
 import {PopoverTrigger} from '@radix-ui/react-popover';
+import {backgroundColors, textColors} from '../../primitives/colors.stylex';
 
 interface Group {
   name: string;
@@ -233,7 +234,10 @@ const styles = stylex.create({
     position: 'sticky',
     top: 0,
     zIndex: 1,
-    backgroundColor: 'var(--malloy-color-background, white)',
-    borderBottom: '1px solid var(--malloy-color-border, #e0e0e0)',
+    color: textColors.primary,
+    backgroundColor: backgroundColors.surfaceSubtle,
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: backgroundColors.divider,
   },
 });

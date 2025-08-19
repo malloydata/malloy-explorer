@@ -9,6 +9,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import * as Monaco from './monaco/monaco_shim';
 import stylex from '@stylexjs/stylex';
+import {backgroundColors} from '../primitives/colors.stylex';
 import {initMonaco} from './monaco/monaco';
 import {diagnostics, registerModel} from './lsp';
 import {styles as componentStyles} from '../styles';
@@ -16,6 +17,7 @@ import {Button, DropdownMenu, DropdownMenuItem, Icon} from '../primitives';
 import {QueryEditorContext} from '../../contexts/QueryEditorContext';
 import {fontStyles} from '../primitives/styles';
 import {CodeEditorContext} from './CodeEditorContext';
+import {ThemeContext} from '../primitives/contexts/ThemeContext';
 
 export interface CodeEditorProps {
   language: string;
@@ -28,6 +30,7 @@ export default function CodeEditor({
   value,
   onChange,
 }: CodeEditorProps) {
+  const {dark} = useContext(ThemeContext);
   const {setQuery} = useContext(QueryEditorContext);
   const [validStableQuery, setValidStableQuery] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -110,6 +113,12 @@ export default function CodeEditor({
     }
   }, [editor, value]);
 
+  useEffect(() => {
+    if (monaco) {
+      monaco.editor.setTheme(dark ? 'dark-plus' : 'light-plus');
+    }
+  }, [monaco, dark]);
+
   return (
     <div {...stylex.props(styles.container)}>
       <div {...stylex.props(componentStyles.queryCard, styles.controls)}>
@@ -152,7 +161,9 @@ export default function CodeEditor({
 const styles = stylex.create({
   container: {
     paddingTop: 4,
-    borderTop: '1px solid #CCD3DB',
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    borderTopColor: backgroundColors.divider,
     width: '100%',
     height: 'calc(100% - 4px)',
     display: 'flex',
