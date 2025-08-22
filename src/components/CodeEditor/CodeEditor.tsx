@@ -144,8 +144,13 @@ export default function CodeEditor({
               label="Use Query Editor"
               onClick={() => {
                 if (malloy && malloyToQuery && validStableQuery) {
-                  const {query} = malloyToQuery(value);
-                  setQuery(query);
+                  const {query, logs} = malloyToQuery(value);
+                  if (logs.length) {
+                    console.error(logs);
+                  }
+                  if (query) {
+                    setQuery(query);
+                  }
                 }
               }}
               disabled={!validStableQuery}
