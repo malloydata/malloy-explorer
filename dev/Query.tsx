@@ -32,6 +32,7 @@ const App = () => {
 
   const onQueryChange = React.useCallback(
     (query: Malloy.Query | string | undefined) => {
+      setQuery(query);
       console.info('Pushing', query);
       window.history.pushState(
         query,
