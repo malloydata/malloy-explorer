@@ -35,7 +35,7 @@ export const dialogStyles = stylex.create({
     alignItems: 'center',
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    borderButtomColor: backgroundColors.divider,
+    borderBottomColor: backgroundColors.divider,
     lineHeight: '2.2em',
   },
   close: {
