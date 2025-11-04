@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import {useContext, useEffect, useMemo, useRef} from 'react';
+import {useContext, useEffect, useMemo, useRef,useState} from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import stylex from '@stylexjs/stylex';
 import {Banner, Button, Spinner} from '../primitives';
@@ -155,6 +155,7 @@ function RenderedResult({result, source}: RenderedResultProps) {
   const {onDrill, setQuery} = useContext(QueryEditorContext);
 
   const vizContainer = useRef<HTMLDivElement>(null);
+  const [vizError, setVizError] = useState<string | null>(null);
   const viz = useMemo(() => {
     const renderer = new MalloyRenderer();
     const viz = renderer.createViz({
@@ -168,6 +169,10 @@ function RenderedResult({result, source}: RenderedResultProps) {
         setQuery(rootQuery.build());
       },
       tableConfig: {enableDrill: true},
+      onError: (err: any) => {
+        const msg = String(err?.message || err);
+        setVizError(msg);
+      },
     });
     return viz;
   }, [onDrill, source, setQuery]);
@@ -179,6 +184,19 @@ function RenderedResult({result, source}: RenderedResultProps) {
       viz.render(vizContainer.current);
     }
   }, [viz, result]);
+
+  if (vizError) {
+    return (
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+      }}>
+        <b>Query Timeout</b>
+      </div>
+    );
+  }
 
   if (viz) {
     return (
