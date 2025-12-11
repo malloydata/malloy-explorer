@@ -60,14 +60,14 @@ const App = () => {
         onCancel: () => {},
       };
       setSubmittedQuery(submittedQuery);
-
+      
       runQuery(modelUri, query).then(({result}) => {
-        if (!result || !result.data) { 
+        if (!result || !result.data) {
           setSubmittedQuery({
             ...submittedQuery,
             executionState: 'finished' as const,
             response: {
-              result: result, // Pass partial result if any
+              result: result,  // Pass partial result if any
               error: {
                 title: 'Execution Error',
                 description: 'Query execution failed: No valid result returned',
@@ -84,8 +84,8 @@ const App = () => {
           response: {
             result,
           },
-        });
-      });
+        })
+    });
     },
     []
   );
