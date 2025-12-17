@@ -74,6 +74,12 @@ export function FilterLiteralEditor({
         filter = {kind: 'timestamp', parsed};
       }
       break;
+    case 'timestamptz_type': {
+      const {parsed} = TemporalFilterExpression.parse(
+        value.filter_expression_value
+      );
+      filter = {kind: 'timestamptz', parsed};
+    }
   }
 
   const {op, value: filterValue} = parsedToLabels(
@@ -117,6 +123,7 @@ export function FilterLiteralEditor({
         break;
       case 'date':
       case 'timestamp':
+      case 'timestamptz':
         setValue({
           kind: 'filter_expression_literal',
           filter_expression_value: TemporalFilterExpression.unparse(
