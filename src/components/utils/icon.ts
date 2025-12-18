@@ -62,6 +62,7 @@ const atomicTypeMap: Record<AtomicTypeType | ParameterTypeType, IconType> = {
   record_type: 'json',
   sql_native_type: 'sql_native',
   timestamp_type: 'date',
+  timestamptz_type: 'date',
   filter_expression_type: 'filter',
 } as const;
 

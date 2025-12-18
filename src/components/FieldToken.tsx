@@ -45,7 +45,9 @@ export default function FieldToken({
   let label = field.name;
   if (
     field.kind === 'dimension' &&
-    (field.type.kind === 'timestamp_type' || field.type.kind === 'date_type')
+    (field.type.kind === 'timestamp_type' ||
+      field.type.kind === 'timestamptz_type' ||
+      field.type.kind === 'date_type')
   ) {
     if (field.type.timeframe) {
       label += `.${field.type.timeframe}`;

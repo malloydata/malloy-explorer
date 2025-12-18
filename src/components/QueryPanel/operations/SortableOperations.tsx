@@ -200,6 +200,7 @@ function SortableOperation({
     primaryAxis !== null &&
     primaryAxis?.kind === 'dimension' &&
     (primaryAxis.type.kind === 'timestamp_type' ||
+      primaryAxis.type.kind === 'timestamptz_type' ||
       primaryAxis.type.kind === 'date_type');
 
   const enableSmoothing = useCallback(
@@ -429,7 +430,10 @@ function granularityMenuItems(
     return null;
   }
 
-  if (fieldInfo.type.kind === 'timestamp_type') {
+  if (
+    fieldInfo.type.kind === 'timestamp_type' ||
+    fieldInfo.type.kind === 'timestamptz_type'
+  ) {
     return {
       value: fieldInfo.type.timeframe ?? 'second',
       options: TimestampGranulation.map(value => ({label: value, value})),

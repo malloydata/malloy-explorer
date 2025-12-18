@@ -57,7 +57,8 @@ const findAxisFieldByType = (fields: FieldInfo[]): FieldInfo | undefined => {
       const dimension = field as FieldInfoWithDimension;
       if (
         dimension.type.kind === 'date_type' ||
-        dimension.type.kind === 'timestamp_type'
+        dimension.type.kind === 'timestamp_type' ||
+        dimension.type.kind === 'timestamptz_type'
       ) {
         return true;
       }
