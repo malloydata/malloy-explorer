@@ -62,7 +62,7 @@ const App = () => {
       setSubmittedQuery(submittedQuery);
 
       runQuery(modelUri, query).then(({result}) => {
-        if (!result || !result.data) {
+        if (!result || !result.data) { 
           setSubmittedQuery({
             ...submittedQuery,
             executionState: 'finished' as const,
