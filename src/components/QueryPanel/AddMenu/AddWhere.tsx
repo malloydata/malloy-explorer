@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import * as Malloy from '@malloydata/malloy-interfaces';
 import {AddFieldItem} from './AddFieldItem';
 import {
   getInputSchemaFromViewParent,
@@ -52,10 +53,11 @@ export function AddWhere({view, search}: AddWhereProps) {
   );
 }
 
-const FILTERABLE_TYPES = new Set([
+const FILTERABLE_TYPES = new Set<Malloy.AtomicTypeType>([
   'string_type',
   'boolean_type',
   'number_type',
   'date_type',
   'timestamp_type',
+  'timestamptz_type',
 ]);

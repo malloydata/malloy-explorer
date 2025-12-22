@@ -61,4 +61,5 @@ const ORDERABLE_TYPES: Malloy.AtomicTypeType[] = [
   'boolean_type',
   'date_type',
   'timestamp_type',
+  'timestamptz_type',
 ] as const;

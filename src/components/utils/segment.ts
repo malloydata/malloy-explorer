@@ -154,7 +154,7 @@ export function addGroupBy(
   }
   if (type === 'date_type') {
     segment.addDateGroupBy(field.name, path, 'day');
-  } else if (type === 'timestamp_type') {
+  } else if (type === 'timestamp_type' || type === 'timestamptz_type') {
     segment.addTimestampGroupBy(field.name, path, 'second');
   } else {
     segment.addGroupBy(field.name, path, rename);
@@ -186,6 +186,7 @@ export function recomputePartitionByAndPrimaryAxis(
     primaryAxis !== null &&
     primaryAxis?.kind === 'dimension' &&
     (primaryAxis.type.kind === 'timestamp_type' ||
+      primaryAxis.type.kind === 'timestamptz_type' ||
       primaryAxis.type.kind === 'date_type');
 
   // If there is no primary axis, convert the moving averages to measures
