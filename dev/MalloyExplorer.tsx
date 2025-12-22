@@ -60,15 +60,32 @@ const App = () => {
         onCancel: () => {},
       };
       setSubmittedQuery(submittedQuery);
-      runQuery(modelUri, query).then(({result}) =>
+
+      runQuery(modelUri, query).then(({result}) => {
+        if (!result || !result.data) {
+          setSubmittedQuery({
+            ...submittedQuery,
+            executionState: 'finished' as const,
+            response: {
+              result: result, // Pass partial result if any
+              error: {
+                title: 'Execution Error',
+                description: 'Query execution failed: No valid result returned',
+                severity: 'ERROR' as const,
+              },
+            },
+          });
+          return;
+        }
+        // // Success case
         setSubmittedQuery({
           ...submittedQuery,
           executionState: 'finished' as const,
           response: {
             result,
           },
-        })
-      );
+        });
+      });
     },
     []
   );
