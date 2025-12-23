@@ -1,6 +1,6 @@
 {
   "name": "@malloydata/malloy-explorer",
-  "version": "0.0.327",
+  "version": "0.0.329",
   "description": "Malloy visual query builder",
   "main": "dist/cjs/index.cjs",
   "types": "dist/types/index.d.ts",
@@ -84,8 +84,8 @@
     "@babel/preset-typescript": "^7.27.1",
     "@eslint/compat": "^1.2.7",
     "@eslint/js": "^9.21.0",
-    "@malloydata/db-duckdb": "^0.0.327",
-    "@malloydata/malloy": "^0.0.327",
+    "@malloydata/db-duckdb": ">=0.0.329",
+    "@malloydata/malloy": ">=0.0.329",
     "@rollup/plugin-replace": "^6.0.2",
     "@stylexjs/eslint-plugin": "^0.11.1",
     "@stylexjs/postcss-plugin": "^0.11.1",
@@ -117,11 +117,11 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "peerDependencies": {
-    "@malloydata/malloy-filter": ">=0.0.327",
-    "@malloydata/malloy-interfaces": ">=0.0.327",
-    "@malloydata/malloy-query-builder": ">=0.0.327",
-    "@malloydata/malloy-tag": ">=0.0.327",
-    "@malloydata/render": ">=0.0.327",
+    "@malloydata/malloy-filter": ">=0.0.329",
+    "@malloydata/malloy-interfaces": ">=0.0.329",
+    "@malloydata/malloy-query-builder": ">=0.0.329",
+    "@malloydata/malloy-tag": ">=0.0.329",
+    "@malloydata/render": ">=0.0.329",
     "monaco-editor-core": ">=0.52.2",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
