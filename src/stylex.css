@@ -10,3 +10,15 @@
 div[data-radix-popper-content-wrapper] {
   z-index: 100 !important;
 }
+
+  .malloy-table.root {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: fit-content !important;
+    max-height: 100% !important;
+    position: relative !important;
+    overflow: auto !important;
+    flex-direction: column !important;
+    overflow-anchor: none !important;
+    grid-template-columns: repeat(var(--total-header-size), minmax(auto, max-content)) !important;
+  }
