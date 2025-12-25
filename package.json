@@ -1,6 +1,6 @@
 {
   "name": "@malloydata/malloy-explorer",
-  "version": "0.0.329",
+  "version": "0.0.330",
   "description": "Malloy visual query builder",
   "main": "dist/cjs/index.cjs",
   "types": "dist/types/index.d.ts",
