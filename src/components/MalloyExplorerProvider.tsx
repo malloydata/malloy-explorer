@@ -17,6 +17,14 @@ import {UpdateQueryContext} from '../hooks/useQueryUpdate';
 import {SearchValueMapResult, TopValuesContext} from '../hooks/useTopValues';
 import {ColorTheme, darkThemes} from './primitives/colors.stylex';
 import {ThemeContext} from './primitives/contexts/ThemeContext';
+import {SubmittedQuery} from './ResultPanel/SubmittedQuery';
+
+export interface MalloyExplorerDownloadProps {
+  source: Malloy.SourceInfo;
+  submittedQuery: SubmittedQuery;
+  name: string;
+  format: 'json' | 'csv';
+}
 
 export interface MalloyExplorerProviderProps {
   /** Malloy source to extend for query */
@@ -37,6 +45,11 @@ export interface MalloyExplorerProviderProps {
   /** Color overrides */
   theme?: ColorTheme;
   dark?: boolean;
+  onDownload?: ({
+    submittedQuery,
+    name,
+    format,
+  }: MalloyExplorerDownloadProps) => void;
 }
 
 export function MalloyExplorerProvider({
@@ -50,6 +63,7 @@ export function MalloyExplorerProvider({
   onDrill,
   theme,
   dark,
+  onDownload,
 }: MalloyExplorerProviderProps) {
   const rootQuery = useQueryBuilder(source, query);
 
@@ -76,6 +90,7 @@ export function MalloyExplorerProvider({
                 rootQuery,
                 setQuery: onQueryChange,
                 onDrill,
+                onDownload,
                 query,
               }}
             >

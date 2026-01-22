@@ -139,7 +139,7 @@ export default function ResultPanel({
           <CopyToClipboard text={clipboardText} label="Copy Code" />
         )}
         {tab === Tab.RESULTS && (
-          <DownloadButton result={submittedQuery?.response?.result} />
+          <DownloadButton source={source} submittedQuery={submittedQuery} />
         )}
       </div>
       <div {...stylex.props(styles.contentContainer)}>

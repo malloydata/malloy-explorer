@@ -9,6 +9,7 @@ import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {ASTQuery} from '@malloydata/malloy-query-builder';
 import type {DrillData} from '@malloydata/render';
+import {MalloyExplorerDownloadProps} from '../components/MalloyExplorerProvider';
 
 export interface QueryEditorContextProps {
   /** Source object at the root level */
@@ -19,6 +20,11 @@ export interface QueryEditorContextProps {
   setQuery: (query: Malloy.Query | string | undefined) => void;
   query: Malloy.Query | string | undefined;
   onDrill?: (drillData: DrillData) => void;
+  onDownload?: ({
+    submittedQuery,
+    name,
+    format,
+  }: MalloyExplorerDownloadProps) => void;
 }
 
 /**
