@@ -6,9 +6,9 @@
  */
 
 import * as React from 'react';
-import {useEffect, useState} from 'react';
-import * as stylex from '@stylexjs/stylex';
 import * as Malloy from '@malloydata/malloy-interfaces';
+import {useContext, useEffect, useState} from 'react';
+import * as stylex from '@stylexjs/stylex';
 import {
   CSVWriter,
   dataIterator,
@@ -16,23 +16,40 @@ import {
   JSONWriter,
   WriteStream,
 } from '../utils/download';
-import {Icon} from '../primitives';
+import {Button, Icon} from '../primitives';
 import {fontStyles} from '../primitives/styles';
 import {backgroundColors, textColors} from '../primitives/colors.stylex';
+import {QueryEditorContext} from '../../contexts/QueryEditorContext';
+import {SubmittedQuery} from '../..';
 
 export interface DownloadButtonProps {
-  result?: Malloy.Result;
+  source: Malloy.SourceInfo;
+  submittedQuery?: SubmittedQuery;
   name?: string;
 }
 
-export function DownloadButton({name = 'malloy', result}: DownloadButtonProps) {
+export function DownloadButton({
+  name = 'malloy',
+  source,
+  submittedQuery,
+}: DownloadButtonProps) {
   const [href, setHref] = useState('');
   const [fileName, setFileName] = useState('');
   const [format, _setFormat] = useState('csv'); // TODO: JSON
+  const {onDownload} = useContext(QueryEditorContext);
 
   useEffect(() => {
+    if (onDownload) return;
+
+    const result = submittedQuery?.response?.result;
+
+    if (!result) {
+      setHref('');
+      return;
+    }
+
     const createBlob = async () => {
-      if (!result?.data) {
+      if (!submittedQuery?.response) {
         setHref('');
         return;
       }
@@ -59,7 +76,7 @@ export function DownloadButton({name = 'malloy', result}: DownloadButtonProps) {
       setFileName(fileName);
     };
     void createBlob();
-  }, [name, format, result]);
+  }, [name, format, onDownload, submittedQuery]);
 
   useEffect(() => {
     return () => {
@@ -83,6 +100,21 @@ export function DownloadButton({name = 'malloy', result}: DownloadButtonProps) {
         <Icon name="download" />
         <div>Download CSV</div>
       </a>
+    );
+  } else if (onDownload && submittedQuery?.response?.result) {
+    return (
+      <Button
+        onClick={() =>
+          onDownload({
+            source,
+            submittedQuery,
+            name,
+            format: 'csv',
+          })
+        }
+        icon="download"
+        label="Download CSV"
+      />
     );
   } else {
     return null;
