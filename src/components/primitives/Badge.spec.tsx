@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 /*
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *

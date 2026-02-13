@@ -8,7 +8,7 @@
 import * as React from 'react';
 import * as Malloy from '@malloydata/malloy-interfaces';
 import {Token} from '../primitives';
-import {Tag} from '@malloydata/malloy-tag';
+import {parseTag} from '@malloydata/malloy-tag';
 import {snakeToTitle} from '../QueryPanel/Visualization';
 import {tagToRenderer} from '../utils/renderer';
 
@@ -17,9 +17,7 @@ export interface VisualizationProps {
 }
 
 export function Visualization({annotations}: VisualizationProps) {
-  const {tag} = Tag.fromTagLines(
-    annotations.map(annotation => annotation.value)
-  );
+  const {tag} = parseTag(annotations.map(annotation => annotation.value));
 
   const renderer = tagToRenderer(tag) ?? 'table';
 

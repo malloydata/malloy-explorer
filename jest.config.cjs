@@ -21,7 +21,7 @@ module.exports = {
   },
   testTimeout: 100000,
   verbose: true,
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
   collectCoverage: true,
   coverageReporters: ['lcov', 'html'],
   collectCoverageFrom: ['<rootDir>/src/**/*.(ts|tsx)', '!**/*.stylex.ts'],
