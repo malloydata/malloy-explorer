@@ -33,6 +33,10 @@ export class StubConnection extends BaseConnection {
     super();
   }
 
+  getDigest(): string {
+    return 'stub';
+  }
+
   runSQL(): Promise<MalloyQueryData> {
     throw new Error('Stub connection cannot run SQL.');
   }
