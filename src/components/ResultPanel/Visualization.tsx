@@ -17,9 +17,7 @@ export interface VisualizationProps {
 }
 
 export function Visualization({annotations}: VisualizationProps) {
-  const {tag} = parseTag(
-    annotations.map(annotation => annotation.value)
-  );
+  const {tag} = parseTag(annotations.map(annotation => annotation.value));
 
   const renderer = tagToRenderer(tag) ?? 'table';
 
