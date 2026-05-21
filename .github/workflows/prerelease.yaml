@@ -10,6 +10,9 @@ jobs:
     needs:
       - test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,6 +21,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
+      - name: Upgrade npm for trusted publishing (OIDC)
+        run: npm install -g npm@latest
       - name: npm install, build, and publish
         run: |
           npm ci --loglevel error
@@ -27,4 +32,3 @@ jobs:
           npm publish --access=public
         env:
           CI: true
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
