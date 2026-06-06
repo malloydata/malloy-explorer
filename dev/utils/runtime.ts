@@ -35,16 +35,19 @@ class Fetcher implements API.LookupConnection<API.Connection>, URLReader {
     return this.connection;
   }
 
-  remoteTableCallback = async (tableName: string) => {
-    if (this.registeredTables[tableName]) {
-      return undefined;
+  remoteTableCallback = async (
+    tableName: string
+  ): Promise<Uint8Array<ArrayBufferLike>> => {
+    const url = new URL(`../${tableName}`, this.url);
+    try {
+      const result = await fetch(url);
+      if (!result.ok) {
+        throw new Error(`HTTP error! status: ${result.status}`);
+      }
+      return new Uint8Array(await result.arrayBuffer());
+    } catch (error) {
+      throw new Error(`Failed to fetch remote table from ${url}: ${error}`);
     }
-    this.duckdb.registerRemoteTable(
-      tableName,
-      new URL(tableName, this.url).toString()
-    );
-    this.registeredTables[tableName] = true;
-    return undefined;
   };
 }
 
